@@ -8,7 +8,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -21,8 +21,8 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -115,8 +115,7 @@ fun CustomTextField(
     value: String, onValueChange: (String) -> Unit, hint: String, modifier: Modifier
 ) {
     Box(
-        modifier = modifier
-            .then(
+        modifier = modifier.then(
                 Modifier
                     .background(
                         color = TextFieldBackground, shape = RoundedCornerShape(14.dp)
@@ -175,8 +174,7 @@ fun CustomPasswordTextField(
                 imeAction = if (onDone != null) ImeAction.Done else ImeAction.Default
             ),
             keyboardActions = KeyboardActions(
-                onDone = { onDone?.invoke() }
-            ),
+                onDone = { onDone?.invoke() }),
             modifier = Modifier.fillMaxWidth(),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             interactionSource = interaction,
@@ -184,7 +182,7 @@ fun CustomPasswordTextField(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
 
-                ) {
+                    ) {
                     Box(Modifier.weight(1f)) {
                         if (value.isEmpty()) {
                             Text(
@@ -203,11 +201,39 @@ fun CustomPasswordTextField(
                     ) {
                         Icon(
                             imageVector = if (visible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
-                            contentDescription = if (visible) "Hide password" else "Show password"
+                            contentDescription = if (visible) "Hide password" else "Show password",
+                            tint = TitleGray
                         )
                     }
                 }
-            }
+            })
+    }
+}
+
+@Composable
+@Suppress("FunctionName")
+fun TextDivider(modifier: Modifier) {
+    Row(
+        modifier = modifier.then(
+            Modifier.fillMaxWidth()
+        ), verticalAlignment = Alignment.CenterVertically
+    ) {
+        HorizontalDivider(
+            modifier = Modifier
+                .weight(1f)
+                .height(0.5.dp), color = TitleGray
+        )
+
+        Text(
+            text = "or continue with",
+            style = MaterialTheme.typography.titleSmall,
+            modifier = Modifier.padding(horizontal = 8.dp)
+        )
+
+        HorizontalDivider(
+            modifier = Modifier
+                .weight(1f)
+                .height(0.5.dp), color = TitleGray
         )
     }
 }
