@@ -2,16 +2,27 @@ package com.example.recipebook.ui
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,13 +30,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
@@ -99,11 +116,13 @@ fun CustomTextField(
 ) {
     Box(
         modifier = modifier
-            .then(Modifier)
-            .background(
-                color = TextFieldBackground, shape = RoundedCornerShape(14.dp)
+            .then(
+                Modifier
+                    .background(
+                        color = TextFieldBackground, shape = RoundedCornerShape(14.dp)
+                    )
+                    .padding(16.dp)
             )
-            .padding(16.dp)
     ) {
         if (value.isEmpty()) {
             Text(
@@ -117,6 +136,78 @@ fun CustomTextField(
             modifier = Modifier.fillMaxWidth(),
             textStyle = MaterialTheme.typography.titleSmall,
             singleLine = true,
-            )
+        )
+    }
+}
+
+@Composable
+@Suppress("FunctionName")
+fun CustomPasswordTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    hint: String = "Password",
+    modifier: Modifier,
+    enabled: Boolean = true,
+    onDone: (() -> Unit)? = null
+) {
+    val interaction = remember { MutableInteractionSource() }
+    var visible by remember { mutableStateOf(false) }
+
+    val background = TextFieldBackground
+    val shape = RoundedCornerShape(14.dp)
+
+    Box(
+        modifier = modifier.then(
+            Modifier
+                .background(background, shape = shape)
+                .padding(16.dp)
+        )
+    ) {
+        BasicTextField(
+            value = value,
+            onValueChange = onValueChange,
+            singleLine = true,
+            enabled = enabled,
+            textStyle = MaterialTheme.typography.titleSmall,
+            visualTransformation = if (visible) VisualTransformation.None else PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = if (onDone != null) ImeAction.Done else ImeAction.Default
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { onDone?.invoke() }
+            ),
+            modifier = Modifier.fillMaxWidth(),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            interactionSource = interaction,
+            decorationBox = { innerTextField ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+
+                ) {
+                    Box(Modifier.weight(1f)) {
+                        if (value.isEmpty()) {
+                            Text(
+                                text = hint,
+                                style = MaterialTheme.typography.titleSmall,
+                                color = TitleGray
+                            )
+                        }
+                        innerTextField()
+                    }
+                    Box(
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clickable { visible = !visible },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = if (visible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
+                            contentDescription = if (visible) "Hide password" else "Show password"
+                        )
+                    }
+                }
+            }
+        )
     }
 }

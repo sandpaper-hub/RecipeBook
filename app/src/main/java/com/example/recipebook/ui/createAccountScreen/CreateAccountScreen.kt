@@ -1,7 +1,9 @@
 package com.example.recipebook.ui.createAccountScreen
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -12,18 +14,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.example.recipebook.ui.CustomPasswordTextField
 import com.example.recipebook.ui.CustomTextField
+import com.example.recipebook.ui.SquareRoundedButton
 import com.example.recipebook.ui.SubHeadingClickableText
+import com.example.recipebook.ui.theme.TitleGray
 
 @Composable
 @Suppress
 fun CreateAccountScreen() {
 
     var name by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         ConstraintLayout(
@@ -31,29 +38,27 @@ fun CreateAccountScreen() {
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            val (headingText, subHeadingText, fullNameText, nameTextField) = createRefs()
+            val (headingText, subHeadingText, fullNameText, nameTextField, emailText, emailTextField, passwordText, passwordTextField, signUpButton, privacyText) = createRefs()
             val startGuideline = createGuidelineFromStart(24.dp)
             val endGuideline = createGuidelineFromEnd(24.dp)
 
             Text(
-                "Create Account",
-                modifier = Modifier
+                "Create Account", modifier = Modifier
                     .constrainAs(headingText) {
                         start.linkTo(startGuideline)
                         top.linkTo(parent.top)
                     }
-                    .padding(top = 24.dp),
-                style = MaterialTheme.typography.headlineMedium)
+                    .padding(top = 24.dp), style = MaterialTheme.typography.headlineMedium)
 
             SubHeadingClickableText(
-                "Enter your name, email and password\nfor sign up. ", "Already have account?",
+                "Enter your name, email and password\nfor sign up. ",
+                "Already have account?",
                 Modifier
                     .constrainAs(subHeadingText) {
                         start.linkTo(startGuideline)
                         top.linkTo(headingText.bottom)
                     }
-                    .padding(top = 12.dp)
-            )
+                    .padding(top = 12.dp))
 
             Text(
                 "Full Name", modifier = Modifier
@@ -61,12 +66,11 @@ fun CreateAccountScreen() {
                         start.linkTo(startGuideline)
                         top.linkTo(subHeadingText.bottom)
                     }
-                    .padding(top = 32.dp),
-                style = MaterialTheme.typography.bodyMedium)
+                    .padding(top = 32.dp), style = MaterialTheme.typography.bodyMedium)
 
             CustomTextField(
                 value = name,
-                onValueChange = { name = it},
+                onValueChange = { name = it },
                 hint = "Constantine Kim...",
                 modifier = Modifier
                     .constrainAs(nameTextField) {
@@ -77,6 +81,95 @@ fun CreateAccountScreen() {
                     }
                     .fillMaxWidth()
                     .padding(top = 8.dp))
+
+            Text(
+                "Email Address", modifier = Modifier
+                    .constrainAs(emailText) {
+                        start.linkTo(startGuideline)
+                        top.linkTo(nameTextField.bottom)
+                    }
+                    .padding(top = 20.dp), style = MaterialTheme.typography.bodyMedium)
+
+            CustomTextField(
+                value = name,
+                onValueChange = { name = it },
+                hint = "Constantine Kim...",
+                modifier = Modifier
+                    .constrainAs(emailTextField) {
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                        top.linkTo(emailText.bottom)
+                        width = Dimension.fillToConstraints
+                    }
+                    .fillMaxWidth()
+                    .padding(top = 8.dp))
+
+            Text(
+                "Email Address", modifier = Modifier
+                    .constrainAs(emailText) {
+                        start.linkTo(startGuideline)
+                        top.linkTo(nameTextField.bottom)
+                    }
+                    .padding(top = 20.dp), style = MaterialTheme.typography.bodyMedium)
+
+            CustomTextField(
+                value = email,
+                onValueChange = { email = it },
+                hint = "Constantine Kim...",
+                modifier = Modifier
+                    .constrainAs(emailTextField) {
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                        top.linkTo(emailText.bottom)
+                        width = Dimension.fillToConstraints
+                    }
+                    .fillMaxWidth()
+                    .padding(top = 8.dp))
+
+            Text(
+                "Password", modifier = Modifier
+                    .constrainAs(passwordText) {
+                        start.linkTo(startGuideline)
+                        top.linkTo(emailTextField.bottom)
+                    }
+                    .padding(top = 20.dp), style = MaterialTheme.typography.bodyMedium)
+
+            CustomPasswordTextField(
+                value = password,
+                onValueChange = { password = it },
+                hint = "Input password",
+                modifier = Modifier
+                    .constrainAs(passwordTextField) {
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                        top.linkTo(passwordText.bottom)
+                        width = Dimension.fillToConstraints
+                    }
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            )
+
+            SquareRoundedButton(
+                onClick = {},
+                text = "Sign Up",
+                containerColor = null,
+                modifier = Modifier
+                    .constrainAs(signUpButton) {
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                        top.linkTo(passwordTextField.bottom)
+                    }
+                    .padding(top = 32.dp))
+
+            SubHeadingClickableText(
+                "By signing up youre agree to our ",
+                "Terms Conditions\n & Privacy Policy",
+                modifier = Modifier
+                    .constrainAs(privacyText) {
+                        start.linkTo(startGuideline)
+                        top.linkTo(signUpButton.bottom)
+                    }
+                    .padding(top = 20.dp))
         }
     }
 }
