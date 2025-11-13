@@ -1,0 +1,7 @@
+<resources>
+    <string name="onboarding_image">Фоновое изображение главной страницы</string>
+    <string name="main_title" translatable="true">Готовим\n и наслаждаемся\n процессом</string>
+    <string name="main_subtitle" translatable="true">Лучшие рецепты — из того,\nчто есть у вас дома</string>
+    <string name="register_button">Зарегестрироваться</string>
+    <string name="sign_in_button">Войти</string>
+</resources>

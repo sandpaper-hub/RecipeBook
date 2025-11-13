@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -32,7 +33,7 @@ fun OnboardingScreen(onOpenRegistrationScreen: () -> Unit) {
 
             Image(
                 painter = painterResource(id = R.drawable.onboarding_image),
-                contentDescription = "onboarding image",
+                contentDescription = stringResource(R.string.onboarding_image),
                 modifier = Modifier
                     .fillMaxSize()
                     .constrainAs(onboardingImage) {
@@ -43,7 +44,7 @@ fun OnboardingScreen(onOpenRegistrationScreen: () -> Unit) {
             )
 
             Text(
-                text = "Cooking with\ngreat experiences",
+                text = stringResource(R.string.main_title),
                 modifier = Modifier
                     .constrainAs(headingText) {
                         centerHorizontallyTo(parent)
@@ -55,7 +56,7 @@ fun OnboardingScreen(onOpenRegistrationScreen: () -> Unit) {
             )
 
             Text(
-                text = "The best experience is given\nbased on the ingredients\nyou have at home",
+                text = stringResource(R.string.main_subtitle),
                 modifier = Modifier
                     .constrainAs(titleText) {
                         centerHorizontallyTo(parent)
@@ -67,7 +68,7 @@ fun OnboardingScreen(onOpenRegistrationScreen: () -> Unit) {
 
             SquareRoundedButton(
                 onClick = {onOpenRegistrationScreen()},
-                "Register",
+                stringResource(R.string.register_button),
                 containerColor = null,
                 modifier = Modifier
                     .constrainAs(registerButton) {
@@ -78,7 +79,7 @@ fun OnboardingScreen(onOpenRegistrationScreen: () -> Unit) {
 
             SquareRoundedButton(
                 onClick = {},
-                text = "Sign In",
+                text = stringResource(R.string.sign_in_button),
                 containerColor = Color.Transparent,
                 modifier = Modifier
                     .constrainAs(signInButton) {

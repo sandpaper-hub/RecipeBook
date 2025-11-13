@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">RecipeBook</string>
+    <string name="onboarding_image">Main background image</string>
+    <string name="main_title" translatable="true">Cooking with\ngreat experiences</string>
+    <string name="main_subtitle" translatable="true">The best experience is given\nbased on the ingredients\nyou have at home</string>
+    <string name="register_button">Register</string>
+    <string name="sign_in_button">Sign In</string>
 </resources>
