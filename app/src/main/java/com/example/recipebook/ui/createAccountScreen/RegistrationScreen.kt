@@ -26,7 +26,7 @@ import com.example.recipebook.ui.TextDivider
 
 @Composable
 @Suppress
-fun CreateAccountScreen() {
+fun RegistrationScreen() {
 
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }

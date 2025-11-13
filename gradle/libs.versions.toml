@@ -11,6 +11,8 @@ composeBom = "2024.09.00"
 
 #ConstraintLayout
 constraintLayout = "1.1.1"
+#Navigation
+composeNavigation = "2.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +34,8 @@ androidx-compose-material = {group = "androidx.compose.material", name = "materi
 #ConstraintLayout
 androidx-constraintLayout = {group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintLayout"}
 
+#Navigation
+androidx-navigation-compose = {group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigation"}
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
