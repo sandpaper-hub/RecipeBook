@@ -20,7 +20,7 @@ import com.example.recipebook.ui.theme.DarkModeBodyColor
 
 @Composable
 @Suppress("FunctionName")
-fun OnboardingScreen() {
+fun OnboardingScreen(onOpenRegistrationScreen: () -> Unit) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         ConstraintLayout(
             modifier = Modifier
@@ -66,7 +66,7 @@ fun OnboardingScreen() {
                 textAlign = TextAlign.Center, color = DarkModeBodyColor)
 
             SquareRoundedButton(
-                onClick = {},
+                onClick = {onOpenRegistrationScreen()},
                 "Register",
                 containerColor = null,
                 modifier = Modifier
