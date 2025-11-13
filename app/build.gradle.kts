@@ -61,4 +61,6 @@ dependencies {
 
     //ConstraintLayout
     implementation(libs.androidx.constraintLayout)
+    //Navigation
+    implementation(libs.androidx.navigation.compose)
 }
