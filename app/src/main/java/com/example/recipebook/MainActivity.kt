@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.recipebook.navigation.RootNavGraph
-import com.example.recipebook.ui.theme.RecipeBookTheme
+import com.example.recipebook.theme.RecipeBookTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
