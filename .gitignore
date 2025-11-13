@@ -160,6 +160,9 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+loc_history.csv
+loc_stats.sh
+
 ### AndroidStudio Patch ###
 
 !/gradle/wrapper/gradle-wrapper.jar
