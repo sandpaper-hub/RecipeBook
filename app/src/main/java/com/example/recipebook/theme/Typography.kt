@@ -1,4 +1,4 @@
-package com.example.recipebook.ui.theme
+package com.example.recipebook.theme
 
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily

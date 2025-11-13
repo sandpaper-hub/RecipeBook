@@ -1,4 +1,4 @@
-package com.example.recipebook.ui
+package com.example.recipebook.presentation.ui
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -50,8 +50,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.example.recipebook.ui.theme.GreenAccent
-import com.example.recipebook.ui.theme.TitleGray
+import com.example.recipebook.theme.GreenAccent
+import com.example.recipebook.theme.TitleGray
 
 @Composable
 @Suppress("FunctionName")
@@ -123,7 +123,8 @@ fun CustomTextField(
         modifier = modifier.then(
             Modifier
                 .background(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant, shape = RoundedCornerShape(14.dp)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    shape = RoundedCornerShape(14.dp)
                 )
                 .padding(16.dp)
         )
@@ -153,11 +154,12 @@ fun CustomPasswordTextField(
     onValueChange: (String) -> Unit,
     hint: String = "Password",
     modifier: Modifier,
+    visible: Boolean = false,
+    changeVisibility: () -> Unit,
     enabled: Boolean = true,
     onDone: (() -> Unit)? = null
 ) {
     val interaction = remember { MutableInteractionSource() }
-    var visible by remember { mutableStateOf(false) }
     val shape = RoundedCornerShape(14.dp)
 
     Box(
@@ -201,7 +203,7 @@ fun CustomPasswordTextField(
                     Box(
                         modifier = Modifier
                             .size(20.dp)
-                            .clickable { visible = !visible },
+                            .clickable { changeVisibility() },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(

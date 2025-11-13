@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.recipebook.ui.createAccountScreen.RegistrationScreen
-import com.example.recipebook.ui.onboardingScreen.OnboardingScreen
+import com.example.recipebook.presentation.ui.registrationScreen.RegistrationScreen
+import com.example.recipebook.presentation.ui.onboardingScreen.OnboardingScreen
 
 @Composable
 @Suppress("FunctionName")

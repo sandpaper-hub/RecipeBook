@@ -1,4 +1,4 @@
-package com.example.recipebook.ui.onboardingScreen
+package com.example.recipebook.presentation.ui.onboardingScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,8 +15,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.recipebook.R
-import com.example.recipebook.ui.SquareRoundedButton
-import com.example.recipebook.ui.theme.DarkModeBodyColor
+import com.example.recipebook.presentation.ui.SquareRoundedButton
+import com.example.recipebook.theme.DarkModeBodyColor
 
 @Composable
 @Suppress("FunctionName")

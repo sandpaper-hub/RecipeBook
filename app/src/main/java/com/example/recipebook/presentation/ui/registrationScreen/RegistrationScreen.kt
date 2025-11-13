@@ -1,4 +1,4 @@
-package com.example.recipebook.ui.createAccountScreen
+package com.example.recipebook.presentation.ui.registrationScreen
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -7,30 +7,29 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.recipebook.R
-import com.example.recipebook.ui.CustomPasswordTextField
-import com.example.recipebook.ui.CustomTextField
-import com.example.recipebook.ui.OutlinedIconButton
-import com.example.recipebook.ui.SquareRoundedButton
-import com.example.recipebook.ui.ClickableText
-import com.example.recipebook.ui.TextDivider
+import com.example.recipebook.presentation.ui.CustomPasswordTextField
+import com.example.recipebook.presentation.ui.CustomTextField
+import com.example.recipebook.presentation.ui.OutlinedIconButton
+import com.example.recipebook.presentation.ui.SquareRoundedButton
+import com.example.recipebook.presentation.ui.ClickableText
+import com.example.recipebook.presentation.ui.TextDivider
+import com.example.recipebook.presentation.viewModel.RegistrationViewModel
 
 @Composable
 @Suppress
-fun RegistrationScreen() {
+fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
 
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val name = viewModel.name
+    val email = viewModel.email
+    val password = viewModel.password
+    val passwordVisibility = viewModel.passwordVisibility
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         ConstraintLayout(
@@ -73,7 +72,7 @@ fun RegistrationScreen() {
 
             CustomTextField(
                 value = name,
-                onValueChange = { name = it },
+                onValueChange = viewModel::onNameChanged,
                 hint = "Constantine Kim...",
                 modifier = Modifier
                     .constrainAs(nameTextField) {
@@ -94,31 +93,9 @@ fun RegistrationScreen() {
                     .padding(top = 20.dp), style = MaterialTheme.typography.bodyMedium)
 
             CustomTextField(
-                value = name,
-                onValueChange = { name = it },
-                hint = "Constantine Kim...",
-                modifier = Modifier
-                    .constrainAs(emailTextField) {
-                        start.linkTo(startGuideline)
-                        end.linkTo(endGuideline)
-                        top.linkTo(emailText.bottom)
-                        width = Dimension.fillToConstraints
-                    }
-                    .fillMaxWidth()
-                    .padding(top = 8.dp))
-
-            Text(
-                "Email Address", modifier = Modifier
-                    .constrainAs(emailText) {
-                        start.linkTo(startGuideline)
-                        top.linkTo(nameTextField.bottom)
-                    }
-                    .padding(top = 20.dp), style = MaterialTheme.typography.bodyMedium)
-
-            CustomTextField(
                 value = email,
-                onValueChange = { email = it },
-                hint = "Constantine Kim...",
+                onValueChange = viewModel::onEmailChanged,
+                hint = "recipe@book.com",
                 modifier = Modifier
                     .constrainAs(emailTextField) {
                         start.linkTo(startGuideline)
@@ -139,8 +116,10 @@ fun RegistrationScreen() {
 
             CustomPasswordTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = viewModel::onPasswordChanged,
                 hint = "Input password",
+                visible = passwordVisibility,
+                changeVisibility = { viewModel.onPasswordVisibilityChange(!passwordVisibility) },
                 modifier = Modifier
                     .constrainAs(passwordTextField) {
                         start.linkTo(startGuideline)
