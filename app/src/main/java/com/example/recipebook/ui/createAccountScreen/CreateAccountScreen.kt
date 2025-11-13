@@ -3,7 +3,6 @@ package com.example.recipebook.ui.createAccountScreen
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,7 +21,7 @@ import com.example.recipebook.ui.CustomPasswordTextField
 import com.example.recipebook.ui.CustomTextField
 import com.example.recipebook.ui.OutlinedIconButton
 import com.example.recipebook.ui.SquareRoundedButton
-import com.example.recipebook.ui.SubHeadingClickableText
+import com.example.recipebook.ui.ClickableText
 import com.example.recipebook.ui.TextDivider
 
 @Composable
@@ -39,7 +38,10 @@ fun CreateAccountScreen() {
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            val (headingText, subHeadingText, fullNameText, nameTextField, emailText, emailTextField, passwordText, passwordTextField, signUpButton, privacyText, textDivider, googleSignUpButton) = createRefs()
+            val (headingText, subHeadingText, fullNameText, nameTextField,
+                emailText, emailTextField, passwordText, passwordTextField,
+                signUpButton, privacyText, textDivider, googleSignUpButton,
+                facebookSignUpButton) = createRefs()
             val startGuideline = createGuidelineFromStart(24.dp)
             val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -51,7 +53,7 @@ fun CreateAccountScreen() {
                     }
                     .padding(top = 24.dp), style = MaterialTheme.typography.headlineMedium)
 
-            SubHeadingClickableText(
+            ClickableText(
                 "Enter your name, email and password\nfor sign up. ",
                 "Already have account?",
                 Modifier
@@ -162,7 +164,7 @@ fun CreateAccountScreen() {
                     }
                     .padding(top = 32.dp))
 
-            SubHeadingClickableText(
+            ClickableText(
                 "By signing up you're agree to our ",
                 "Terms Conditions\n & Privacy Policy",
                 modifier = Modifier
@@ -185,12 +187,28 @@ fun CreateAccountScreen() {
                 onClick = {},
                 "Sign Up With Google",
                 painterResource(R.drawable.google_icon),
-                modifier = Modifier.constrainAs(googleSignUpButton){
-                    start.linkTo(startGuideline)
-                    end.linkTo(endGuideline)
-                    top.linkTo(textDivider.bottom)
-                    width = Dimension.fillToConstraints
-                }.padding(top = 24.dp)
+                modifier = Modifier
+                    .constrainAs(googleSignUpButton) {
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                        top.linkTo(textDivider.bottom)
+                        width = Dimension.fillToConstraints
+                    }
+                    .padding(top = 24.dp)
+            )
+
+            OutlinedIconButton(
+                onClick = {},
+                "Sign Up With Facebook",
+                painterResource(R.drawable.facebook_icon),
+                modifier = Modifier
+                    .constrainAs(facebookSignUpButton) {
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                        top.linkTo(googleSignUpButton.bottom)
+                        width = Dimension.fillToConstraints
+                    }
+                    .padding(top = 24.dp)
             )
         }
     }

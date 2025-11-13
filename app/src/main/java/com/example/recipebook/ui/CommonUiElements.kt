@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -52,7 +51,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.recipebook.ui.theme.GreenAccent
-import com.example.recipebook.ui.theme.TextFieldBackground
 import com.example.recipebook.ui.theme.TitleGray
 
 @Composable
@@ -77,10 +75,13 @@ fun SquareRoundedButton(
 
 @Composable
 @Suppress
-fun SubHeadingClickableText(simpleText: String, clickableText: String, modifier: Modifier) {
+fun ClickableText(simpleText: String, clickableText: String, modifier: Modifier) {
     var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
     val annotatedText = buildAnnotatedString {
-        append(simpleText)
+
+        withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.inversePrimary)) {
+            append(simpleText)
+        }
         pushStringAnnotation(tag = "CLICK", annotation = clickableText)
         withStyle(
             style = SpanStyle(
@@ -94,7 +95,7 @@ fun SubHeadingClickableText(simpleText: String, clickableText: String, modifier:
 
     Text(
         annotatedText,
-        style = MaterialTheme.typography.titleSmall,
+        style = MaterialTheme.typography.titleMedium,
         modifier = modifier.then(Modifier.pointerInput(Unit) {
             detectTapGestures { offset: Offset ->
                 val layoutResult = textLayoutResult ?: return@detectTapGestures
@@ -122,14 +123,16 @@ fun CustomTextField(
         modifier = modifier.then(
             Modifier
                 .background(
-                    color = TextFieldBackground, shape = RoundedCornerShape(14.dp)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant, shape = RoundedCornerShape(14.dp)
                 )
                 .padding(16.dp)
         )
     ) {
         if (value.isEmpty()) {
             Text(
-                text = hint, color = TitleGray, style = MaterialTheme.typography.titleMedium
+                text = hint,
+                color = TitleGray,
+                style = MaterialTheme.typography.titleSmall
             )
         }
 
@@ -137,8 +140,8 @@ fun CustomTextField(
             value = value,
             onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
-            textStyle = MaterialTheme.typography.titleSmall,
-            singleLine = true,
+            textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.inversePrimary),
+            singleLine = true
         )
     }
 }
@@ -155,14 +158,12 @@ fun CustomPasswordTextField(
 ) {
     val interaction = remember { MutableInteractionSource() }
     var visible by remember { mutableStateOf(false) }
-
-    val background = TextFieldBackground
     val shape = RoundedCornerShape(14.dp)
 
     Box(
         modifier = modifier.then(
             Modifier
-                .background(background, shape = shape)
+                .background(MaterialTheme.colorScheme.onSurfaceVariant, shape = shape)
                 .padding(16.dp)
         )
     ) {
@@ -171,7 +172,7 @@ fun CustomPasswordTextField(
             onValueChange = onValueChange,
             singleLine = true,
             enabled = enabled,
-            textStyle = MaterialTheme.typography.titleSmall,
+            textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.inversePrimary),
             visualTransformation = if (visible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
@@ -191,7 +192,7 @@ fun CustomPasswordTextField(
                         if (value.isEmpty()) {
                             Text(
                                 text = hint,
-                                style = MaterialTheme.typography.titleSmall,
+                                style = MaterialTheme.typography.titleMedium,
                                 color = TitleGray
                             )
                         }
@@ -230,7 +231,7 @@ fun TextDivider(modifier: Modifier) {
 
         Text(
             text = "or continue with",
-            style = MaterialTheme.typography.titleSmall,
+            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
 
@@ -256,8 +257,13 @@ fun OutlinedIconButton(
             .fillMaxWidth(),
         shape = RoundedCornerShape(14.dp)
     ) {
-        Icon(painter = icon, contentDescription = null, modifier = Modifier.size(24.dp))
+        Icon(
+            painter = icon,
+            contentDescription = null,
+            tint = Color.Unspecified,
+            modifier = Modifier.size(24.dp)
+        )
         Spacer(modifier = Modifier.width(12.dp))
-        Text(text = text)
+        Text(text = text, color = MaterialTheme.colorScheme.onPrimary)
     }
 }

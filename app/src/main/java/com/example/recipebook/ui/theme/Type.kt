@@ -42,14 +42,12 @@ val Typography = Typography(
     titleMedium = TextStyle(
         fontFamily = PoppinsRegular,
         fontWeight = FontWeight(400),
-        fontSize = 12.sp,
-        color = TitleGray
+        fontSize = 14.sp,
     ),
     titleSmall = TextStyle(
         fontFamily = PoppinsRegular,
         fontWeight = FontWeight(400),
-        fontSize = 14.sp,
-        lineHeight = 21.sp,
-        color = TitleGray
+        fontSize = 12.sp,
+        lineHeight = 21.sp
     )
 )

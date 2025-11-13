@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.recipebook.R
 import com.example.recipebook.ui.SquareRoundedButton
+import com.example.recipebook.ui.theme.DarkModeBodyColor
 
 @Composable
 @Suppress("FunctionName")
@@ -50,7 +51,7 @@ fun OnboardingScreen() {
                     }
                     .padding(start = 40.dp, end = 40.dp, bottom = 16.dp),
                 style = MaterialTheme.typography.headlineLarge,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center, color = Color.White
             )
 
             Text(
@@ -62,7 +63,7 @@ fun OnboardingScreen() {
                     }
                     .padding(bottom = 16.dp, start = 63.dp, end = 63.dp),
                 style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.Center)
+                textAlign = TextAlign.Center, color = DarkModeBodyColor)
 
             SquareRoundedButton(
                 onClick = {},
