@@ -232,7 +232,8 @@ fun TextDivider(modifier: Modifier) {
         Text(
             text = "or continue with",
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(horizontal = 8.dp)
+            modifier = Modifier.padding(horizontal = 8.dp),
+            color = TitleGray
         )
 
         HorizontalDivider(
