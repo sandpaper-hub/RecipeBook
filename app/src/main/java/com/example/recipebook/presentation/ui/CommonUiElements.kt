@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
@@ -50,6 +51,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.example.recipebook.R
 import com.example.recipebook.theme.GreenAccent
 import com.example.recipebook.theme.TitleGray
 
@@ -152,7 +154,7 @@ fun CustomTextField(
 fun CustomPasswordTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    hint: String = "Password",
+    hint: String,
     modifier: Modifier,
     visible: Boolean = false,
     changeVisibility: () -> Unit,
@@ -208,7 +210,13 @@ fun CustomPasswordTextField(
                     ) {
                         Icon(
                             imageVector = if (visible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
-                            contentDescription = if (visible) "Hide password" else "Show password",
+                            contentDescription = if (visible) {
+                                stringResource(R.string.hide_password)
+                            } else {
+                                stringResource(
+                                    R.string.show_password
+                                )
+                            },
                             tint = TitleGray
                         )
                     }
@@ -232,7 +240,7 @@ fun TextDivider(modifier: Modifier) {
         )
 
         Text(
-            text = "or continue with",
+            text = stringResource(R.string.or_continue),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(horizontal = 8.dp),
             color = TitleGray

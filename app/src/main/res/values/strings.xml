@@ -1,8 +1,24 @@
 <resources>
-    <string name="app_name">RecipeBook</string>
-    <string name="onboarding_image">Main background image</string>
+    <string name="app_name" translatable="false">RecipeBook</string>
+    <string name="onboarding_image" translatable="true">Main background image</string>
     <string name="main_title" translatable="true">Cooking with\ngreat experiences</string>
     <string name="main_subtitle" translatable="true">The best experience is given\nbased on the ingredients\nyou have at home</string>
-    <string name="register_button">Register</string>
-    <string name="sign_in_button">Sign In</string>
+    <string name="sign_up_button" translatable="true">Sign Up</string>
+    <string name="sign_in_button" translatable="true">Sign In</string>
+    <string name="create_account" translatable="true">Create Account</string>
+    <string name="fill_form" translatable="true">Enter your name, email and password\nfor sign up. </string>
+    <string name="already_have_account" translatable="true">Already have account?</string>
+    <string name="full_name" translatable="true">Full Name</string>
+    <string name="name_hint" translatable="false">Constantine Kim</string>
+    <string name="email" translatable="true">Email Address</string>
+    <string name="email_hint" translatable="false">recipe@book.com</string>
+    <string name="password" translatable="true">Password</string>
+    <string name="password_hint" translatable="true">Input password</string>
+    <string name="sign_up_agree" translatable="true">By signing up you\'re agree to our </string>
+    <string name="conditions_privacy_policy" translatable="true">Terms Conditions\n &amp; Privacy Policy</string>
+    <string name="or_continue" translatable="true">or continue with</string>
+    <string name="hide_password" translatable="true">Hide password</string>
+    <string name="show_password" translatable="true">Show password</string>
+    <string name="google_sign_up" translatable="true">Sign Up With Google</string>
+    <string name="facebook_sign_up" translatable="true">Sign Up With Facebook</string>
 </resources>

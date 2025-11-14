@@ -1,7 +1,24 @@
 <resources>
+    <!--app name non translatable-->
     <string name="onboarding_image">Фоновое изображение главной страницы</string>
-    <string name="main_title" translatable="true">Готовим\n и наслаждаемся\n процессом</string>
-    <string name="main_subtitle" translatable="true">Лучшие рецепты — из того,\nчто есть у вас дома</string>
-    <string name="register_button">Зарегестрироваться</string>
+    <string name="main_title">Готовим\n и наслаждаемся\n процессом</string>
+    <string name="main_subtitle">Лучшие рецепты — из того,\nчто есть у вас дома</string>
+    <string name="sign_up_button">Зарегестрироваться</string>
     <string name="sign_in_button">Войти</string>
+    <string name="create_account">Создать Аккаунт</string>
+    <string name="fill_form">Введите своё имя, email и пароль, чтобы\nзарегестрироваться. </string>
+    <string name="already_have_account">Уже есть аакаунт?</string>
+    <string name="full_name">Полное Имя</string>
+    <!--name hint non translatable-->
+    <string name="email">Электронная Почта</string>
+    <!-- email hint non tranlatable-->
+    <string name="password">Пароль</string>
+    <string name="password_hint">Введите пароль</string>
+    <string name="sign_up_agree">Регистрируясь, вы соглашаетесь с нашими\n</string>
+    <string name="conditions_privacy_policy">Условиями и Политикой Конфиденциальности</string>
+    <string name="or_continue" translatable="true">или продолжить с</string>
+    <string name="hide_password" translatable="true">Скрыть пароль</string>
+    <string name="show_password" translatable="true">Показать пароль</string>
+    <string name="google_sign_up">Зарегестрироваться с Google</string>
+    <string name="facebook_sign_up" translatable="true">Зарегистрироваться с Facebook</string>
 </resources>

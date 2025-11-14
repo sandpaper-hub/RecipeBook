@@ -68,7 +68,7 @@ fun OnboardingScreen(onOpenRegistrationScreen: () -> Unit) {
 
             SquareRoundedButton(
                 onClick = {onOpenRegistrationScreen()},
-                stringResource(R.string.register_button),
+                stringResource(R.string.sign_up_button),
                 containerColor = null,
                 modifier = Modifier
                     .constrainAs(registerButton) {
