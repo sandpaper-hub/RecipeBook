@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -45,7 +46,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
             val endGuideline = createGuidelineFromEnd(24.dp)
 
             Text(
-                "Create Account", modifier = Modifier
+                stringResource(R.string.create_account), modifier = Modifier
                     .constrainAs(headingText) {
                         start.linkTo(startGuideline)
                         top.linkTo(parent.top)
@@ -53,8 +54,8 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
                     .padding(top = 24.dp), style = MaterialTheme.typography.headlineMedium)
 
             ClickableText(
-                "Enter your name, email and password\nfor sign up. ",
-                "Already have account?",
+                stringResource(R.string.fill_form),
+                stringResource(R.string.already_have_account),
                 Modifier
                     .constrainAs(subHeadingText) {
                         start.linkTo(startGuideline)
@@ -63,7 +64,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
                     .padding(top = 12.dp))
 
             Text(
-                "Full Name", modifier = Modifier
+                stringResource(R.string.full_name), modifier = Modifier
                     .constrainAs(fullNameText) {
                         start.linkTo(startGuideline)
                         top.linkTo(subHeadingText.bottom)
@@ -73,7 +74,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
             CustomTextField(
                 value = name,
                 onValueChange = viewModel::onNameChanged,
-                hint = "Constantine Kim...",
+                hint = stringResource(R.string.name_hint),
                 modifier = Modifier
                     .constrainAs(nameTextField) {
                         start.linkTo(startGuideline)
@@ -85,7 +86,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
                     .padding(top = 8.dp))
 
             Text(
-                "Email Address", modifier = Modifier
+                stringResource(R.string.email), modifier = Modifier
                     .constrainAs(emailText) {
                         start.linkTo(startGuideline)
                         top.linkTo(nameTextField.bottom)
@@ -95,7 +96,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
             CustomTextField(
                 value = email,
                 onValueChange = viewModel::onEmailChanged,
-                hint = "recipe@book.com",
+                hint = stringResource(R.string.email_hint),
                 modifier = Modifier
                     .constrainAs(emailTextField) {
                         start.linkTo(startGuideline)
@@ -107,7 +108,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
                     .padding(top = 8.dp))
 
             Text(
-                "Password", modifier = Modifier
+                stringResource(R.string.password), modifier = Modifier
                     .constrainAs(passwordText) {
                         start.linkTo(startGuideline)
                         top.linkTo(emailTextField.bottom)
@@ -117,7 +118,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
             CustomPasswordTextField(
                 value = password,
                 onValueChange = viewModel::onPasswordChanged,
-                hint = "Input password",
+                hint = stringResource(R.string.password_hint),
                 visible = passwordVisibility,
                 changeVisibility = { viewModel.onPasswordVisibilityChange(!passwordVisibility) },
                 modifier = Modifier
@@ -133,7 +134,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
 
             SquareRoundedButton(
                 onClick = {},
-                text = "Sign Up",
+                text = stringResource(R.string.sign_up_button),
                 containerColor = null,
                 modifier = Modifier
                     .constrainAs(signUpButton) {
@@ -144,8 +145,8 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
                     .padding(top = 32.dp))
 
             ClickableText(
-                "By signing up you're agree to our ",
-                "Terms Conditions\n & Privacy Policy",
+                stringResource(R.string.sign_up_agree),
+                stringResource(R.string.conditions_privacy_policy),
                 modifier = Modifier
                     .constrainAs(privacyText) {
                         start.linkTo(startGuideline)
@@ -164,7 +165,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
 
             OutlinedIconButton(
                 onClick = {},
-                "Sign Up With Google",
+                stringResource(R.string.google_sign_up),
                 painterResource(R.drawable.google_icon),
                 modifier = Modifier
                     .constrainAs(googleSignUpButton) {
@@ -178,7 +179,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
 
             OutlinedIconButton(
                 onClick = {},
-                "Sign Up With Facebook",
+                stringResource(R.string.facebook_sign_up),
                 painterResource(R.drawable.facebook_icon),
                 modifier = Modifier
                     .constrainAs(facebookSignUpButton) {
