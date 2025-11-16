@@ -2,6 +2,7 @@ package com.example.recipebook.presentation.ui.registrationScreen
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -21,7 +22,7 @@ import com.example.recipebook.presentation.ui.OutlinedIconButton
 import com.example.recipebook.presentation.ui.SquareRoundedButton
 import com.example.recipebook.presentation.ui.ClickableText
 import com.example.recipebook.presentation.ui.TextDivider
-import com.example.recipebook.presentation.viewModel.RegistrationViewModel
+import com.example.recipebook.presentation.viewModel.registrationScreen.RegistrationViewModel
 
 @Composable
 @Suppress
@@ -31,6 +32,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
     val email = viewModel.email
     val password = viewModel.password
     val passwordVisibility = viewModel.passwordVisibility
+    val error = viewModel.errorMessage
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         ConstraintLayout(
@@ -41,7 +43,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
             val (headingText, subHeadingText, fullNameText, nameTextField,
                 emailText, emailTextField, passwordText, passwordTextField,
                 signUpButton, privacyText, textDivider, googleSignUpButton,
-                facebookSignUpButton) = createRefs()
+                facebookSignUpButton, errorText) = createRefs()
             val startGuideline = createGuidelineFromStart(24.dp)
             val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -133,7 +135,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
             )
 
             SquareRoundedButton(
-                onClick = {},
+                onClick = { viewModel.register() },
                 text = stringResource(R.string.sign_up_button),
                 containerColor = null,
                 modifier = Modifier
@@ -190,6 +192,17 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
                     }
                     .padding(top = 24.dp)
             )
+
+            if (error != null) {
+                Text(
+                    text = error, modifier = Modifier
+                        .height ( 20.dp)
+                        .constrainAs(errorText) {
+                            start.linkTo(startGuideline)
+                            end.linkTo(endGuideline)
+                            bottom.linkTo(parent.bottom)
+                        })
+            }
         }
     }
 }

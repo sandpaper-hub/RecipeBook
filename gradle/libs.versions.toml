@@ -8,11 +8,15 @@ espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.8.0"
 composeBom = "2024.09.00"
-
+#Google Services
+googleServices = "4.4.2"
 #ConstraintLayout
 constraintLayout = "1.1.1"
 #Navigation
 composeNavigation = "2.9.0"
+#Firebase
+firebaseBom = "33.5.1"
+firebaseAuthKtx = "23.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -30,9 +34,11 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-material = {group = "androidx.compose.material", name = "material-icons-extended"}
-
 #ConstraintLayout
 androidx-constraintLayout = {group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintLayout"}
+#Firebase
+google-firebase-bom = {group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom"}
+google-firebase-auth-ktx = {group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx"}
 
 #Navigation
 androidx-navigation-compose = {group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigation"}
@@ -40,4 +46,6 @@ androidx-navigation-compose = {group = "androidx.navigation", name = "navigation
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+#Google Services
+google-services = {id = "com.google.gms.google-services", version.ref = "googleServices"}
 
