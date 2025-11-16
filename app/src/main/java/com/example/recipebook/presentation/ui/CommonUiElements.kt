@@ -77,7 +77,7 @@ fun SquareRoundedButton(
 
 @Composable
 @Suppress
-fun ClickableText(simpleText: String, clickableText: String, modifier: Modifier) {
+fun MixedClickableText(simpleText: String, clickableText: String, modifier: Modifier) {
     var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
     val annotatedText = buildAnnotatedString {
 
@@ -236,20 +236,20 @@ fun TextDivider(modifier: Modifier) {
         HorizontalDivider(
             modifier = Modifier
                 .weight(1f)
-                .height(0.5.dp), color = TitleGray
+                .height(0.5.dp), color = MaterialTheme.colorScheme.inversePrimary
         )
 
         Text(
             text = stringResource(R.string.or_continue),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(horizontal = 8.dp),
-            color = TitleGray
+            color = MaterialTheme.colorScheme.inversePrimary
         )
 
         HorizontalDivider(
             modifier = Modifier
                 .weight(1f)
-                .height(0.5.dp), color = TitleGray
+                .height(0.5.dp), color = MaterialTheme.colorScheme.inversePrimary
         )
     }
 }
@@ -287,4 +287,59 @@ fun HeadingText(text: String, modifier: Modifier) {
         modifier = modifier.padding(top = 24.dp),
         style = MaterialTheme.typography.headlineMedium
     )
+}
+
+@Composable
+@Suppress("FunctionName")
+fun SubHeadingText(text: String, modifier: Modifier) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.inversePrimary
+    )
+}
+
+@Composable
+@Suppress("FunctionName")
+fun TitleText(text: String, modifier: Modifier) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.bodyMedium
+    )
+}
+
+@Composable
+@Suppress("FunctionName")
+fun ClickableText(clickableText: String, modifier: Modifier) {
+    var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
+    val clickableText = buildAnnotatedString {
+        pushStringAnnotation(tag = "CLICK", annotation = clickableText)
+        withStyle(
+            style = SpanStyle(
+                color = MaterialTheme.colorScheme.inversePrimary
+            )
+        ) {
+            append("Forgot password?")
+        }
+        pop()
+    }
+
+    Text(
+        text = clickableText,
+        style = MaterialTheme.typography.titleSmall,
+        modifier = modifier.then(Modifier.pointerInput(Unit) {
+            detectTapGestures { offset: Offset ->
+                val layoutResult = textLayoutResult ?: return@detectTapGestures
+                val position = layoutResult.getOffsetForPosition(offset)
+
+                clickableText.getStringAnnotations("CLICK", position, position).firstOrNull()
+                    ?.let { annotation ->
+                        //TODO
+                        Log.d("CLICKABLE TEXT", "CLICKED $annotation")
+                    }
+            }
+        }),
+        onTextLayout = { textLayoutResult = it })
 }

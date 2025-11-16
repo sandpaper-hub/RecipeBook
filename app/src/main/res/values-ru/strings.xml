@@ -22,4 +22,5 @@
     <string name="google_sign_up">Зарегестрироваться с Google</string>
     <string name="facebook_sign_up" translatable="true">Зарегистрироваться с Facebook</string>
     <string name="welcome" translatable="true">Добро пожаловать</string>
+    <string name="welcome_subheading" translatable="true">Введите свой номер телефона или Email\nадресс для входа</string>
 </resources>
