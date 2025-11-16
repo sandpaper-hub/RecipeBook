@@ -22,7 +22,9 @@ private val DarkColorScheme = darkColorScheme(
     tertiary = Pink80,
     onPrimary = Color.White,
     inversePrimary = DarkModeBodyColor,
-    onSurfaceVariant = DarkModeInputColor
+    onSurfaceVariant = DarkModeInputColor,
+    background = DarkModeBackgroundColor,
+    onBackground = Color.White
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -31,7 +33,9 @@ private val LightColorScheme = lightColorScheme(
     tertiary = Pink40,
     onPrimary = Color.Black,
     inversePrimary = TitleGray,
-    onSurfaceVariant = InputColor
+    onSurfaceVariant = InputColor,
+    background = Color.White,
+    onBackground = MainTextColor
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -64,7 +68,7 @@ fun RecipeBookTheme(
 
     val semibold = FontFamily(
         Font(
-            resId = when(locale.language) {
+            resId = when (locale.language) {
                 "en" -> R.font.poppins_semibold
                 else -> R.font.montserrat_semibold
             }

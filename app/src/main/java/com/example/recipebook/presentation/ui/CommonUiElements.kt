@@ -278,3 +278,13 @@ fun OutlinedIconButton(
         Text(text = text, color = MaterialTheme.colorScheme.onPrimary)
     }
 }
+
+@Composable
+@Suppress("FunctionName")
+fun HeadingText(text: String, modifier: Modifier) {
+    Text(
+        text = text,
+        modifier = modifier.padding(top = 24.dp),
+        style = MaterialTheme.typography.headlineMedium
+    )
+}
