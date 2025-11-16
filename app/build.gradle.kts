@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -63,4 +64,7 @@ dependencies {
     implementation(libs.androidx.constraintLayout)
     //Navigation
     implementation(libs.androidx.navigation.compose)
+    //Firebase
+    implementation(libs.google.firebase.bom)
+    implementation(libs.google.firebase.auth.ktx)
 }
