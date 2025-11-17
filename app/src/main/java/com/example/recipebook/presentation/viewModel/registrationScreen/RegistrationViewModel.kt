@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.userProfileChangeRequest
 
 class RegistrationViewModel : ViewModel() {
     var name by mutableStateOf("")
@@ -40,7 +41,7 @@ class RegistrationViewModel : ViewModel() {
         passwordVisibility = newValue
     }
 
-    fun register() {
+    fun register(onSuccess: () -> Unit) {
         if (email.isBlank() || password.isBlank()) {
             errorMessage = "Email & password shouldn't be blank"
             return
@@ -51,10 +52,20 @@ class RegistrationViewModel : ViewModel() {
 
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-                isLoading = false
                 if (task.isSuccessful) {
-                    errorMessage = "Success"
+                    val firebaseUser = task.result?.user
+                    val profileUpdates = userProfileChangeRequest {
+                        displayName = name
+                    }
+                    firebaseUser?.updateProfile(profileUpdates)
+                        ?.addOnCompleteListener { updateTask ->
+                            if (updateTask.isSuccessful) {
+                                isLoading = false
+                                onSuccess()
+                            }
+                        }
                 } else {
+                    isLoading = false
                     errorMessage = task.exception?.message ?: "Error"
                 }
             }
