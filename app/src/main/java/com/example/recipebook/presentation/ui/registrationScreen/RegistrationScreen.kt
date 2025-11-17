@@ -33,6 +33,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
     val email = viewModel.email
     val password = viewModel.password
     val passwordVisibility = viewModel.passwordVisibility
+    val isLoading = viewModel.isLoading
     val error = viewModel.errorMessage
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -142,6 +143,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
                 onClick = { viewModel.register() },
                 text = stringResource(R.string.sign_up_button),
                 containerColor = null,
+                isLoading = isLoading,
                 modifier = Modifier
                     .constrainAs(signUpButton) {
                         start.linkTo(startGuideline)

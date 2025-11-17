@@ -70,6 +70,7 @@ fun OnboardingScreen(onOpenRegistrationScreen: () -> Unit) {
                 onClick = {onOpenRegistrationScreen()},
                 stringResource(R.string.sign_up_button),
                 containerColor = null,
+                isLoading = false,
                 modifier = Modifier
                     .constrainAs(registerButton) {
                         centerHorizontallyTo(parent)
@@ -81,6 +82,7 @@ fun OnboardingScreen(onOpenRegistrationScreen: () -> Unit) {
                 onClick = {},
                 text = stringResource(R.string.sign_in_button),
                 containerColor = Color.Transparent,
+                isLoading = false,
                 modifier = Modifier
                     .constrainAs(signInButton) {
                         centerHorizontallyTo(parent)

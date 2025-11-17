@@ -131,6 +131,7 @@ fun LoginScreen() {
                 onClick = {},
                 text = stringResource(R.string.sign_in_button),
                 containerColor = null,
+                isLoading = false,//TODO
                 modifier = Modifier
                     .constrainAs(loginButton) {
                         start.linkTo(startGuideline)

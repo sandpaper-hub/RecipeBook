@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -61,7 +62,11 @@ import com.example.recipebook.theme.TitleGray
 @Composable
 @Suppress("FunctionName")
 fun SquareRoundedButton(
-    onClick: () -> Unit, text: String, containerColor: Color?, modifier: Modifier
+    onClick: () -> Unit,
+    text: String,
+    containerColor: Color?,
+    isLoading: Boolean,
+    modifier: Modifier
 ) {
     Button(
         onClick = onClick, modifier = modifier.then(
@@ -73,7 +78,14 @@ fun SquareRoundedButton(
             containerColor = containerColor ?: GreenAccent, contentColor = Color.White
         )
     ) {
-        Text(text = text)
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(18.dp),
+                strokeWidth = 2.dp
+            )
+        } else {
+            Text(text = text)
+        }
     }
 }
 
