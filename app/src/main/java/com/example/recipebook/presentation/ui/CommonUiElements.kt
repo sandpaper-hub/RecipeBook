@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -22,6 +23,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -40,6 +42,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
@@ -342,4 +345,36 @@ fun ClickableText(clickableText: String, modifier: Modifier) {
             }
         }),
         onTextLayout = { textLayoutResult = it })
+}
+
+@Composable
+@Suppress("FunctionName")
+fun ClickableTextCheckbox(
+    checked: Boolean,
+    onValueChange: () -> Unit,
+    modifier: Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier.then(
+            Modifier
+                .toggleable(
+                    value = checked,
+                    onValueChange = { onValueChange() },
+                    role = Role.Checkbox
+                )
+        )
+    ) {
+        Checkbox(
+            checked = checked,
+            onCheckedChange = null
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        Text(
+            text = stringResource(R.string.remember),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.inversePrimary
+        )
+    }
+
 }

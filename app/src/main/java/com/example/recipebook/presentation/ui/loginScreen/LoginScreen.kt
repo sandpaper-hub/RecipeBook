@@ -5,16 +5,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.ClickableText
+import com.example.recipebook.presentation.ui.ClickableTextCheckbox
 import com.example.recipebook.presentation.ui.CustomPasswordTextField
 import com.example.recipebook.presentation.ui.CustomTextField
 import com.example.recipebook.presentation.ui.HeadingText
+import com.example.recipebook.presentation.ui.MixedClickableText
+import com.example.recipebook.presentation.ui.OutlinedIconButton
+import com.example.recipebook.presentation.ui.SquareRoundedButton
 import com.example.recipebook.presentation.ui.SubHeadingText
+import com.example.recipebook.presentation.ui.TextDivider
 import com.example.recipebook.presentation.ui.TitleText
 
 @Composable
@@ -24,6 +30,7 @@ fun LoginScreen() {
     var emailValue: String = ""//TODO
     var passwordValue: String = ""//TODO
     var passwordVisibility: Boolean = false//TODO
+    var checked = true
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         ConstraintLayout(
@@ -32,7 +39,9 @@ fun LoginScreen() {
                 .padding(innerPadding)
         ) {
             val (headingText, subHeadingText, emailText, emailTextField,
-                passwordText, passwordTextField, forgotPasswordText) = createRefs()
+                passwordText, passwordTextField, forgotPasswordText, rememberCheckbox,
+                loginButton, dontHaveAccountText, textDivider, googleSignInButton,
+                facebookSignInButton) = createRefs()
             val startGuideline = createGuidelineFromStart(24.dp)
             val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -98,12 +107,86 @@ fun LoginScreen() {
                 visible = passwordVisibility,
                 changeVisibility = {}) //todo
 
-            ClickableText("Forgot password?",
-                modifier = Modifier.constrainAs(forgotPasswordText){
-                    end.linkTo(endGuideline)
-                    top.linkTo(passwordTextField.bottom)
-                }
+            ClickableTextCheckbox(
+                checked = checked,
+                onValueChange = { checked = !checked },
+                modifier = Modifier
+                    .constrainAs(rememberCheckbox) {
+                        start.linkTo(startGuideline)
+                        top.linkTo(passwordTextField.bottom)
+                    }
+                    .padding(top = 20.dp)
+            )
+
+            ClickableText(
+                "Forgot password?",
+                modifier = Modifier
+                    .constrainAs(forgotPasswordText) {
+                        end.linkTo(endGuideline)
+                        top.linkTo(passwordTextField.bottom)
+                    }
                     .padding(top = 25.dp, end = 5.dp))
+
+            SquareRoundedButton(
+                onClick = {},
+                text = stringResource(R.string.sign_in_button),
+                containerColor = null,
+                modifier = Modifier
+                    .constrainAs(loginButton) {
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                        top.linkTo(rememberCheckbox.bottom)
+                    }
+                    .padding(top = 32.dp)
+            )
+
+            MixedClickableText(
+                simpleText = stringResource(R.string.dont_have_account),
+                clickableText = stringResource(R.string.create_account),
+                modifier = Modifier
+                    .constrainAs(dontHaveAccountText) {
+                        start.linkTo(startGuideline)
+                        top.linkTo(loginButton.bottom)
+                    }
+                    .padding(top = 21.dp)
+            )
+
+            TextDivider(modifier = Modifier
+                .constrainAs(textDivider) {
+                    start.linkTo(startGuideline)
+                    end.linkTo(endGuideline)
+                    top.linkTo(dontHaveAccountText.bottom)
+                    width = Dimension.fillToConstraints
+                }
+                .padding(top = 24.dp))
+
+            OutlinedIconButton(
+                onClick = {},
+                text = stringResource(R.string.google_sign_in),
+                icon = painterResource(R.drawable.google_icon),
+                modifier = Modifier
+                    .constrainAs(googleSignInButton) {
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                        top.linkTo(textDivider.bottom)
+                        width = Dimension.fillToConstraints
+                    }
+                    .padding(top = 24.dp)
+            )
+
+            OutlinedIconButton(
+                onClick = {},
+                text = stringResource(R.string.facebook_sign_in),
+                icon = painterResource(R.drawable.facebook_icon),
+                modifier = Modifier
+                    .constrainAs(facebookSignInButton) {
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                        top.linkTo(googleSignInButton.bottom)
+                        width = Dimension.fillToConstraints
+                    }
+                    .padding(top = 20.dp)
+            )
         }
     }
 }
