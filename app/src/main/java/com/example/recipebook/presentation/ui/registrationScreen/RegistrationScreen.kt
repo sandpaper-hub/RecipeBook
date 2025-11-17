@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,8 +19,10 @@ import com.example.recipebook.presentation.ui.CustomPasswordTextField
 import com.example.recipebook.presentation.ui.CustomTextField
 import com.example.recipebook.presentation.ui.OutlinedIconButton
 import com.example.recipebook.presentation.ui.SquareRoundedButton
-import com.example.recipebook.presentation.ui.ClickableText
+import com.example.recipebook.presentation.ui.MixedClickableText
+import com.example.recipebook.presentation.ui.HeadingText
 import com.example.recipebook.presentation.ui.TextDivider
+import com.example.recipebook.presentation.ui.TitleText
 import com.example.recipebook.presentation.viewModel.registrationScreen.RegistrationViewModel
 
 @Composable
@@ -47,15 +48,14 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
             val startGuideline = createGuidelineFromStart(24.dp)
             val endGuideline = createGuidelineFromEnd(24.dp)
 
-            Text(
-                stringResource(R.string.create_account), modifier = Modifier
+            HeadingText(stringResource(R.string.create_account),
+                modifier = Modifier
                     .constrainAs(headingText) {
                         start.linkTo(startGuideline)
                         top.linkTo(parent.top)
-                    }
-                    .padding(top = 24.dp), style = MaterialTheme.typography.headlineMedium)
+                    })
 
-            ClickableText(
+            MixedClickableText(
                 stringResource(R.string.fill_form),
                 stringResource(R.string.already_have_account),
                 Modifier
@@ -65,13 +65,15 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
                     }
                     .padding(top = 12.dp))
 
-            Text(
-                stringResource(R.string.full_name), modifier = Modifier
+
+            TitleText(
+                text =  stringResource(R.string.full_name),
+                modifier = Modifier
                     .constrainAs(fullNameText) {
                         start.linkTo(startGuideline)
                         top.linkTo(subHeadingText.bottom)
                     }
-                    .padding(top = 32.dp), style = MaterialTheme.typography.bodyMedium)
+                    .padding(top = 32.dp))
 
             CustomTextField(
                 value = name,
@@ -87,13 +89,14 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
                     .fillMaxWidth()
                     .padding(top = 8.dp))
 
-            Text(
-                stringResource(R.string.email), modifier = Modifier
+            TitleText(
+                text = stringResource(R.string.email),
+                modifier = Modifier
                     .constrainAs(emailText) {
                         start.linkTo(startGuideline)
                         top.linkTo(nameTextField.bottom)
                     }
-                    .padding(top = 20.dp), style = MaterialTheme.typography.bodyMedium)
+                    .padding(top = 20.dp))
 
             CustomTextField(
                 value = email,
@@ -109,13 +112,14 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
                     .fillMaxWidth()
                     .padding(top = 8.dp))
 
-            Text(
-                stringResource(R.string.password), modifier = Modifier
+            TitleText(
+                text = stringResource(R.string.password),
+                modifier = Modifier
                     .constrainAs(passwordText) {
                         start.linkTo(startGuideline)
                         top.linkTo(emailTextField.bottom)
-                    }
-                    .padding(top = 20.dp), style = MaterialTheme.typography.bodyMedium)
+                    }.padding(top = 20.dp)
+            )
 
             CustomPasswordTextField(
                 value = password,
@@ -146,7 +150,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
                     }
                     .padding(top = 32.dp))
 
-            ClickableText(
+            MixedClickableText(
                 stringResource(R.string.sign_up_agree),
                 stringResource(R.string.conditions_privacy_policy),
                 modifier = Modifier

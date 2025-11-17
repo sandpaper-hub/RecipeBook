@@ -16,9 +16,15 @@
     <string name="password_hint">Введите пароль</string>
     <string name="sign_up_agree">Регистрируясь, вы соглашаетесь с нашими\n</string>
     <string name="conditions_privacy_policy">Условиями и Политикой Конфиденциальности</string>
-    <string name="or_continue" translatable="true">или продолжить с</string>
-    <string name="hide_password" translatable="true">Скрыть пароль</string>
-    <string name="show_password" translatable="true">Показать пароль</string>
+    <string name="or_continue">или продолжить с</string>
+    <string name="hide_password">Скрыть пароль</string>
+    <string name="show_password">Показать пароль</string>
     <string name="google_sign_up">Зарегестрироваться с Google</string>
-    <string name="facebook_sign_up" translatable="true">Зарегистрироваться с Facebook</string>
+    <string name="google_sign_in">Войти с Google</string>
+    <string name="facebook_sign_up">Зарегистрироваться с Facebook</string>
+    <string name="facebook_sign_in">Войти в Facebook</string>
+    <string name="welcome">Добро пожаловать</string>
+    <string name="welcome_subheading">Введите свой номер телефона или Email\nадресс для входа</string>
+    <string name="remember">Запомнить меня</string>
+    <string name="dont_have_account">У Вас нет аккаунта?\ </string>
 </resources>

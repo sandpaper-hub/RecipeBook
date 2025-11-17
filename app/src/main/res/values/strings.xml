@@ -20,5 +20,11 @@
     <string name="hide_password" translatable="true">Hide password</string>
     <string name="show_password" translatable="true">Show password</string>
     <string name="google_sign_up" translatable="true">Sign Up With Google</string>
+    <string name="google_sign_in" translatable="true">Sign In With Google</string>
     <string name="facebook_sign_up" translatable="true">Sign Up With Facebook</string>
+    <string name="facebook_sign_in" translatable="true">Sign In With Facebook</string>
+    <string name="welcome" translatable="true">Welcome</string>
+    <string name="welcome_subheading" translatable="true">Enter your Phone number or Email\naddress for sign in</string>
+    <string name="remember" translatable="true">Remember me</string>
+    <string name="dont_have_account" translatable="true">Don\'t have account?\ </string>
 </resources>

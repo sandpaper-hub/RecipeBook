@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.recipebook.navigation.RootNavGraph
+import com.example.recipebook.presentation.ui.loginScreen.LoginScreen
 import com.example.recipebook.theme.RecipeBookTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,7 +14,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RecipeBookTheme {
-                RootNavGraph()
+                LoginScreen()
             }
         }
     }
