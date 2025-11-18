@@ -21,8 +21,10 @@ import com.example.recipebook.theme.DarkModeBodyColor
 
 @Composable
 @Suppress("FunctionName")
-fun OnboardingScreen(onOpenRegistrationScreen: () -> Unit,
-                     onOpenLoginScreen:() -> Unit) {
+fun OnboardingScreen(
+    onOpenRegistrationScreen: () -> Unit,
+    onOpenLoginScreen: () -> Unit
+) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         ConstraintLayout(
             modifier = Modifier
@@ -68,7 +70,7 @@ fun OnboardingScreen(onOpenRegistrationScreen: () -> Unit,
                 textAlign = TextAlign.Center, color = DarkModeBodyColor)
 
             SquareRoundedButton(
-                onClick = {onOpenRegistrationScreen()},
+                onClick = { onOpenRegistrationScreen() },
                 stringResource(R.string.sign_up_button),
                 containerColor = null,
                 isLoading = false,
@@ -80,7 +82,7 @@ fun OnboardingScreen(onOpenRegistrationScreen: () -> Unit,
                     .padding(bottom = 8.dp))
 
             SquareRoundedButton(
-                onClick = {onOpenLoginScreen()},
+                onClick = { onOpenLoginScreen() },
                 text = stringResource(R.string.sign_in_button),
                 containerColor = Color.Transparent,
                 isLoading = false,

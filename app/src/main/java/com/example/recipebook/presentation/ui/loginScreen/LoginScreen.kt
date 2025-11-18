@@ -10,6 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.ClickableText
 import com.example.recipebook.presentation.ui.ClickableTextCheckbox
@@ -22,15 +23,16 @@ import com.example.recipebook.presentation.ui.SquareRoundedButton
 import com.example.recipebook.presentation.ui.SubHeadingText
 import com.example.recipebook.presentation.ui.TextDivider
 import com.example.recipebook.presentation.ui.TitleText
+import com.example.recipebook.presentation.viewModel.registrationScreen.LoginViewModel
 
 @Composable
 @Suppress("FunctionName")
-fun LoginScreen() {
+fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
 
-    var emailValue: String = ""//TODO
-    var passwordValue: String = ""//TODO
-    var passwordVisibility: Boolean = false//TODO
-    var checked = true
+    val emailValue = viewModel.email
+    val passwordValue = viewModel.password
+    val passwordVisibility = viewModel.passwordVisibility
+    val isRememberMeChecked = viewModel.isRememberMeChecked
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         ConstraintLayout(
@@ -72,7 +74,7 @@ fun LoginScreen() {
 
             CustomTextField(
                 value = emailValue,
-                onValueChange = {}, //TODO
+                onValueChange = viewModel::onEmailChanged,
                 hint = stringResource(R.string.email_hint),
                 modifier = Modifier
                     .constrainAs(emailTextField) {
@@ -94,7 +96,7 @@ fun LoginScreen() {
 
             CustomPasswordTextField(
                 value = passwordValue,
-                onValueChange = {},//todo
+                onValueChange = viewModel::onPasswordChange,
                 hint = stringResource(R.string.password_hint),
                 modifier = Modifier
                     .constrainAs(passwordTextField) {
@@ -105,11 +107,11 @@ fun LoginScreen() {
                     }
                     .padding(top = 8.dp),
                 visible = passwordVisibility,
-                changeVisibility = {}) //todo
+                changeVisibility = { viewModel.onPasswordVisibilityChange(!passwordVisibility) })
 
             ClickableTextCheckbox(
-                checked = checked,
-                onValueChange = { checked = !checked },
+                checked = isRememberMeChecked,
+                onValueChange = { viewModel.onRememberMeChecked(!isRememberMeChecked) },
                 modifier = Modifier
                     .constrainAs(rememberCheckbox) {
                         start.linkTo(startGuideline)
@@ -152,14 +154,15 @@ fun LoginScreen() {
                     .padding(top = 21.dp)
             )
 
-            TextDivider(modifier = Modifier
-                .constrainAs(textDivider) {
-                    start.linkTo(startGuideline)
-                    end.linkTo(endGuideline)
-                    top.linkTo(dontHaveAccountText.bottom)
-                    width = Dimension.fillToConstraints
-                }
-                .padding(top = 24.dp))
+            TextDivider(
+                modifier = Modifier
+                    .constrainAs(textDivider) {
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                        top.linkTo(dontHaveAccountText.bottom)
+                        width = Dimension.fillToConstraints
+                    }
+                    .padding(top = 24.dp))
 
             OutlinedIconButton(
                 onClick = {},
