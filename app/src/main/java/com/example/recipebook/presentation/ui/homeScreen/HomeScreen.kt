@@ -1,4 +1,4 @@
-package com.example.recipebook.presentation.ui.HomeScreen
+package com.example.recipebook.presentation.ui.homeScreen
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
