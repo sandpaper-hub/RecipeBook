@@ -4,10 +4,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.userProfileChangeRequest
+import com.example.recipebook.domain.interactor.RegistrationInteractor
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class RegistrationViewModel : ViewModel() {
+@HiltViewModel
+class RegistrationViewModel @Inject constructor(
+    private val registrationInteractor: RegistrationInteractor
+) : ViewModel() {
     var name by mutableStateOf("")
         private set
     var email by mutableStateOf("")
@@ -22,8 +26,6 @@ class RegistrationViewModel : ViewModel() {
 
     var errorMessage by mutableStateOf<String?>(null)
         private set
-
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     fun onNameChanged(newName: String) {
         name = newName
@@ -48,26 +50,19 @@ class RegistrationViewModel : ViewModel() {
         }
 
         isLoading = true
-        errorMessage = null
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val firebaseUser = task.result?.user
-                    val profileUpdates = userProfileChangeRequest {
-                        displayName = name
-                    }
-                    firebaseUser?.updateProfile(profileUpdates)
-                        ?.addOnCompleteListener { updateTask ->
-                            if (updateTask.isSuccessful) {
-                                isLoading = false
-                                onSuccess()
-                            }
-                        }
-                } else {
-                    isLoading = false
-                    errorMessage = task.exception?.message ?: "Error"
-                }
+        registrationInteractor.register(
+            name = name,
+            email = email,
+            password = password,
+            onSuccess = {
+                isLoading = false
+                onSuccess()
+            },
+            onError = { message ->
+                isLoading = false
+                errorMessage = message
             }
+        )
+        errorMessage = null
     }
 }

@@ -1,6 +1,6 @@
-package com.example.recipebook.domain.repository
+package com.example.recipebook.domain.interactor
 
-interface RegistrationRepository {
+interface RegistrationInteractor {
     fun register(
         name: String,
         email: String,

@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.CustomPasswordTextField
 import com.example.recipebook.presentation.ui.CustomTextField
@@ -29,7 +29,7 @@ import com.example.recipebook.presentation.viewModel.registrationScreen.Registra
 @Suppress
 fun RegistrationScreen(
     onHomeScreen: () -> Unit,
-    viewModel: RegistrationViewModel = viewModel()
+    viewModel: RegistrationViewModel = hiltViewModel()
 ) {
 
     val name = viewModel.name
