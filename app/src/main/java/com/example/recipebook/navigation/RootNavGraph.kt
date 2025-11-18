@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.recipebook.presentation.ui.homeScreen.HomeScreen
 import com.example.recipebook.presentation.ui.registrationScreen.RegistrationScreen
 import com.example.recipebook.presentation.ui.onboardingScreen.OnboardingScreen
 
@@ -22,7 +23,13 @@ fun RootNavGraph() {
         }
 
         composable(route = Routes.Registration.route) {
-            RegistrationScreen()
+            RegistrationScreen(
+                onHomeScreen = {navController.navigate(Routes.Home.route)}
+            )
+        }
+
+        composable(route = Routes.Home.route){
+            HomeScreen()
         }
     }
 }

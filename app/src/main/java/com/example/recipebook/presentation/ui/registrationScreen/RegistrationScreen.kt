@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.CustomPasswordTextField
 import com.example.recipebook.presentation.ui.CustomTextField
@@ -27,12 +27,16 @@ import com.example.recipebook.presentation.viewModel.registrationScreen.Registra
 
 @Composable
 @Suppress
-fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
+fun RegistrationScreen(
+    onHomeScreen: () -> Unit,
+    viewModel: RegistrationViewModel = hiltViewModel()
+) {
 
     val name = viewModel.name
     val email = viewModel.email
     val password = viewModel.password
     val passwordVisibility = viewModel.passwordVisibility
+    val isLoading = viewModel.isLoading
     val error = viewModel.errorMessage
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -48,7 +52,8 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
             val startGuideline = createGuidelineFromStart(24.dp)
             val endGuideline = createGuidelineFromEnd(24.dp)
 
-            HeadingText(stringResource(R.string.create_account),
+            HeadingText(
+                stringResource(R.string.create_account),
                 modifier = Modifier
                     .constrainAs(headingText) {
                         start.linkTo(startGuideline)
@@ -67,7 +72,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
 
 
             TitleText(
-                text =  stringResource(R.string.full_name),
+                text = stringResource(R.string.full_name),
                 modifier = Modifier
                     .constrainAs(fullNameText) {
                         start.linkTo(startGuideline)
@@ -118,7 +123,8 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
                     .constrainAs(passwordText) {
                         start.linkTo(startGuideline)
                         top.linkTo(emailTextField.bottom)
-                    }.padding(top = 20.dp)
+                    }
+                    .padding(top = 20.dp)
             )
 
             CustomPasswordTextField(
@@ -139,9 +145,10 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
             )
 
             SquareRoundedButton(
-                onClick = { viewModel.register() },
+                onClick = { viewModel.register(onSuccess = onHomeScreen) },
                 text = stringResource(R.string.sign_up_button),
                 containerColor = null,
+                isLoading = isLoading,
                 modifier = Modifier
                     .constrainAs(signUpButton) {
                         start.linkTo(startGuideline)
@@ -200,7 +207,7 @@ fun RegistrationScreen(viewModel: RegistrationViewModel = viewModel()) {
             if (error != null) {
                 Text(
                     text = error, modifier = Modifier
-                        .height ( 20.dp)
+                        .height(20.dp)
                         .constrainAs(errorText) {
                             start.linkTo(startGuideline)
                             end.linkTo(endGuideline)

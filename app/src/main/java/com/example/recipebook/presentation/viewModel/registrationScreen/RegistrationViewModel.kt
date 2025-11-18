@@ -4,9 +4,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
+import com.example.recipebook.domain.interactor.RegistrationInteractor
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class RegistrationViewModel : ViewModel() {
+@HiltViewModel
+class RegistrationViewModel @Inject constructor(
+    private val registrationInteractor: RegistrationInteractor
+) : ViewModel() {
     var name by mutableStateOf("")
         private set
     var email by mutableStateOf("")
@@ -21,8 +26,6 @@ class RegistrationViewModel : ViewModel() {
 
     var errorMessage by mutableStateOf<String?>(null)
         private set
-
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     fun onNameChanged(newName: String) {
         name = newName
@@ -40,23 +43,26 @@ class RegistrationViewModel : ViewModel() {
         passwordVisibility = newValue
     }
 
-    fun register() {
+    fun register(onSuccess: () -> Unit) {
         if (email.isBlank() || password.isBlank()) {
             errorMessage = "Email & password shouldn't be blank"
             return
         }
 
         isLoading = true
-        errorMessage = null
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
+        registrationInteractor.register(
+            name = name,
+            email = email,
+            password = password,
+            onSuccess = {
                 isLoading = false
-                if (task.isSuccessful) {
-                    errorMessage = "Success"
-                } else {
-                    errorMessage = task.exception?.message ?: "Error"
-                }
+                onSuccess()
+            },
+            onError = { message ->
+                isLoading = false
+                errorMessage = message
             }
+        )
+        errorMessage = null
     }
 }

@@ -7,14 +7,16 @@ import androidx.activity.enableEdgeToEdge
 import com.example.recipebook.navigation.RootNavGraph
 import com.example.recipebook.presentation.ui.loginScreen.LoginScreen
 import com.example.recipebook.theme.RecipeBookTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             RecipeBookTheme {
-                LoginScreen()
+                RootNavGraph()
             }
         }
     }
