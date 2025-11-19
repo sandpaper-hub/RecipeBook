@@ -53,4 +53,8 @@ class FirebaseRepositoryImpl @Inject constructor(
                     }
                 }
         }
+
+    override fun isLoggedIn(): Boolean {
+        return auth.currentUser != null
+    }
 }
