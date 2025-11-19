@@ -10,4 +10,6 @@ interface FirebaseRepository {
     )
 
     suspend fun signIn(email: String, password: String): Result<Unit>
+
+    fun isLoggedIn(): Boolean
 }
