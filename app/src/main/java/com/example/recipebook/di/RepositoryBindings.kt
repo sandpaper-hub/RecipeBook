@@ -1,7 +1,7 @@
 package com.example.recipebook.di
 
-import com.example.recipebook.data.repository.RegistrationRepositoryImpl
-import com.example.recipebook.domain.repository.RegistrationRepository
+import com.example.recipebook.data.repository.FirebaseRepositoryImpl
+import com.example.recipebook.domain.repository.FirebaseRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,7 +13,7 @@ import javax.inject.Singleton
 abstract class RepositoryBindings {
     @Binds
     @Singleton
-    abstract fun bindRegistrationRepository(
-        impl: RegistrationRepositoryImpl
-    ): RegistrationRepository
+    abstract fun bindFirebaseRepository(
+        impl: FirebaseRepositoryImpl
+    ): FirebaseRepository
 }

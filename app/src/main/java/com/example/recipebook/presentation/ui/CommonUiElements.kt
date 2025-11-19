@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -159,7 +160,8 @@ fun CustomTextField(
             onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
             textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.inversePrimary),
-            singleLine = true
+            singleLine = true,
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
         )
     }
 }
@@ -220,7 +222,11 @@ fun CustomPasswordTextField(
                     Box(
                         modifier = Modifier
                             .size(20.dp)
-                            .clickable { changeVisibility() },
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = {changeVisibility()}
+                            ),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -373,14 +379,29 @@ fun ClickableTextCheckbox(
                 .toggleable(
                     value = checked,
                     onValueChange = { onValueChange() },
-                    role = Role.Checkbox
+                    role = Role.Checkbox,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
                 )
         )
     ) {
-        Checkbox(
-            checked = checked,
-            onCheckedChange = null
-        )
+        Box(
+            modifier = Modifier.background(
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                shape = RoundedCornerShape(8.dp)
+            )
+        ) {
+            Checkbox(
+                checked = checked,
+                onCheckedChange = null,
+                colors = CheckboxDefaults.colors(
+                    checkedColor = Color.Transparent,
+                    uncheckedColor = Color.Transparent,
+                    checkmarkColor = MaterialTheme.colorScheme.primary
+
+                )
+            )
+        }
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = stringResource(R.string.remember),

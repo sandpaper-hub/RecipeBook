@@ -1,13 +1,15 @@
 package com.example.recipebook.data.repository
 
-import com.example.recipebook.domain.repository.RegistrationRepository
+import com.example.recipebook.domain.repository.FirebaseRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
+import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
+import kotlin.coroutines.resume
 
-class RegistrationRepositoryImpl @Inject constructor(
+class FirebaseRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth
-) : RegistrationRepository {
+) : FirebaseRepository {
 
     override fun register(
         name: String,
@@ -35,4 +37,20 @@ class RegistrationRepositoryImpl @Inject constructor(
             }
     }
 
+    override suspend fun signIn(
+        email: String,
+        password: String
+    ): Result<Unit> =
+        suspendCancellableCoroutine { continuation ->
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (!continuation.isActive) return@addOnCompleteListener
+                    if (task.isSuccessful) {
+                        continuation.resume(Result.success(Unit))
+                    } else {
+                        val exception = task.exception ?: Exception("Unknown error")
+                        continuation.resume(Result.failure(exception))
+                    }
+                }
+        }
 }

@@ -3,13 +3,16 @@ package com.example.recipebook.presentation.ui.loginScreen
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.ClickableText
 import com.example.recipebook.presentation.ui.ClickableTextCheckbox
@@ -22,15 +25,19 @@ import com.example.recipebook.presentation.ui.SquareRoundedButton
 import com.example.recipebook.presentation.ui.SubHeadingText
 import com.example.recipebook.presentation.ui.TextDivider
 import com.example.recipebook.presentation.ui.TitleText
+import com.example.recipebook.presentation.viewModel.loginScreen.LoginViewModel
 
 @Composable
 @Suppress("FunctionName")
-fun LoginScreen() {
+fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
 
-    var emailValue: String = ""//TODO
-    var passwordValue: String = ""//TODO
-    var passwordVisibility: Boolean = false//TODO
-    var checked = true
+    val uiState = viewModel.uiState
+
+    LaunchedEffect(uiState.isSignedIn) {
+        if (uiState.isSignedIn) {
+            //TODO
+        }
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         ConstraintLayout(
@@ -41,7 +48,7 @@ fun LoginScreen() {
             val (headingText, subHeadingText, emailText, emailTextField,
                 passwordText, passwordTextField, forgotPasswordText, rememberCheckbox,
                 loginButton, dontHaveAccountText, textDivider, googleSignInButton,
-                facebookSignInButton) = createRefs()
+                facebookSignInButton, errorSampleText) = createRefs()
             val startGuideline = createGuidelineFromStart(24.dp)
             val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -71,8 +78,8 @@ fun LoginScreen() {
                     .padding(top = 32.dp))
 
             CustomTextField(
-                value = emailValue,
-                onValueChange = {}, //TODO
+                value = uiState.email,
+                onValueChange = viewModel::onEmailChanged,
                 hint = stringResource(R.string.email_hint),
                 modifier = Modifier
                     .constrainAs(emailTextField) {
@@ -93,8 +100,8 @@ fun LoginScreen() {
                     .padding(top = 20.dp))
 
             CustomPasswordTextField(
-                value = passwordValue,
-                onValueChange = {},//todo
+                value = uiState.password,
+                onValueChange = viewModel::onPasswordChange,
                 hint = stringResource(R.string.password_hint),
                 modifier = Modifier
                     .constrainAs(passwordTextField) {
@@ -104,12 +111,12 @@ fun LoginScreen() {
                         width = Dimension.fillToConstraints
                     }
                     .padding(top = 8.dp),
-                visible = passwordVisibility,
-                changeVisibility = {}) //todo
+                visible = uiState.passwordVisibility,
+                changeVisibility = { viewModel.onPasswordVisibilityChange(!uiState.passwordVisibility) })
 
             ClickableTextCheckbox(
-                checked = checked,
-                onValueChange = { checked = !checked },
+                checked = uiState.isRememberMeChecked,
+                onValueChange = { viewModel.onRememberMeChecked(!uiState.isRememberMeChecked) },
                 modifier = Modifier
                     .constrainAs(rememberCheckbox) {
                         start.linkTo(startGuideline)
@@ -128,10 +135,10 @@ fun LoginScreen() {
                     .padding(top = 25.dp, end = 5.dp))
 
             SquareRoundedButton(
-                onClick = {},
+                onClick = { viewModel.signIn() },
                 text = stringResource(R.string.sign_in_button),
                 containerColor = null,
-                isLoading = false,//TODO
+                isLoading = uiState.isLoading,
                 modifier = Modifier
                     .constrainAs(loginButton) {
                         start.linkTo(startGuideline)
@@ -152,14 +159,15 @@ fun LoginScreen() {
                     .padding(top = 21.dp)
             )
 
-            TextDivider(modifier = Modifier
-                .constrainAs(textDivider) {
-                    start.linkTo(startGuideline)
-                    end.linkTo(endGuideline)
-                    top.linkTo(dontHaveAccountText.bottom)
-                    width = Dimension.fillToConstraints
-                }
-                .padding(top = 24.dp))
+            TextDivider(
+                modifier = Modifier
+                    .constrainAs(textDivider) {
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                        top.linkTo(dontHaveAccountText.bottom)
+                        width = Dimension.fillToConstraints
+                    }
+                    .padding(top = 24.dp))
 
             OutlinedIconButton(
                 onClick = {},
@@ -188,6 +196,14 @@ fun LoginScreen() {
                     }
                     .padding(top = 20.dp)
             )
+//TODO убрать заглушку, поставить snackbar
+            Text(
+                text = uiState.errorMessage ?: "ok",
+                modifier = Modifier.constrainAs(errorSampleText) {
+                    start.linkTo(startGuideline)
+                    end.linkTo(endGuideline)
+                    bottom.linkTo(parent.bottom)
+                })
         }
     }
 }
