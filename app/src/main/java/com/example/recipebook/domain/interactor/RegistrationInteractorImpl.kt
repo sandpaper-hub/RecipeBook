@@ -1,10 +1,10 @@
 package com.example.recipebook.domain.interactor
 
-import com.example.recipebook.domain.repository.RegistrationRepository
+import com.example.recipebook.domain.repository.FirebaseRepository
 import javax.inject.Inject
 
 class RegistrationInteractorImpl @Inject constructor(
-    private val registrationRepository: RegistrationRepository
+    private val firebaseRepository: FirebaseRepository
 ) : RegistrationInteractor {
     override fun register(
         name: String,
@@ -13,7 +13,7 @@ class RegistrationInteractorImpl @Inject constructor(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-        registrationRepository.register(
+        firebaseRepository.register(
             name = name,
             email = email,
             password = password,

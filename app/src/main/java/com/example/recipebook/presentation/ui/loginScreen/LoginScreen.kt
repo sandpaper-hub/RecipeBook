@@ -3,7 +3,9 @@ package com.example.recipebook.presentation.ui.loginScreen
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -23,16 +25,19 @@ import com.example.recipebook.presentation.ui.SquareRoundedButton
 import com.example.recipebook.presentation.ui.SubHeadingText
 import com.example.recipebook.presentation.ui.TextDivider
 import com.example.recipebook.presentation.ui.TitleText
-import com.example.recipebook.presentation.viewModel.registrationScreen.LoginViewModel
+import com.example.recipebook.presentation.viewModel.loginScreen.LoginViewModel
 
 @Composable
 @Suppress("FunctionName")
 fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
 
-    val emailValue = viewModel.email
-    val passwordValue = viewModel.password
-    val passwordVisibility = viewModel.passwordVisibility
-    val isRememberMeChecked = viewModel.isRememberMeChecked
+    val uiState = viewModel.uiState
+
+    LaunchedEffect(uiState.isSignedIn) {
+        if (uiState.isSignedIn) {
+            //TODO
+        }
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         ConstraintLayout(
@@ -43,7 +48,7 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
             val (headingText, subHeadingText, emailText, emailTextField,
                 passwordText, passwordTextField, forgotPasswordText, rememberCheckbox,
                 loginButton, dontHaveAccountText, textDivider, googleSignInButton,
-                facebookSignInButton) = createRefs()
+                facebookSignInButton, errorSampleText) = createRefs()
             val startGuideline = createGuidelineFromStart(24.dp)
             val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -73,7 +78,7 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
                     .padding(top = 32.dp))
 
             CustomTextField(
-                value = emailValue,
+                value = uiState.email,
                 onValueChange = viewModel::onEmailChanged,
                 hint = stringResource(R.string.email_hint),
                 modifier = Modifier
@@ -95,7 +100,7 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
                     .padding(top = 20.dp))
 
             CustomPasswordTextField(
-                value = passwordValue,
+                value = uiState.password,
                 onValueChange = viewModel::onPasswordChange,
                 hint = stringResource(R.string.password_hint),
                 modifier = Modifier
@@ -106,12 +111,12 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
                         width = Dimension.fillToConstraints
                     }
                     .padding(top = 8.dp),
-                visible = passwordVisibility,
-                changeVisibility = { viewModel.onPasswordVisibilityChange(!passwordVisibility) })
+                visible = uiState.passwordVisibility,
+                changeVisibility = { viewModel.onPasswordVisibilityChange(!uiState.passwordVisibility) })
 
             ClickableTextCheckbox(
-                checked = isRememberMeChecked,
-                onValueChange = { viewModel.onRememberMeChecked(!isRememberMeChecked) },
+                checked = uiState.isRememberMeChecked,
+                onValueChange = { viewModel.onRememberMeChecked(!uiState.isRememberMeChecked) },
                 modifier = Modifier
                     .constrainAs(rememberCheckbox) {
                         start.linkTo(startGuideline)
@@ -130,10 +135,10 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
                     .padding(top = 25.dp, end = 5.dp))
 
             SquareRoundedButton(
-                onClick = {},
+                onClick = { viewModel.signIn() },
                 text = stringResource(R.string.sign_in_button),
                 containerColor = null,
-                isLoading = false,//TODO
+                isLoading = uiState.isLoading,
                 modifier = Modifier
                     .constrainAs(loginButton) {
                         start.linkTo(startGuideline)
@@ -191,6 +196,14 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
                     }
                     .padding(top = 20.dp)
             )
+//TODO убрать заглушку, поставить snackbar
+            Text(
+                text = uiState.errorMessage ?: "ok",
+                modifier = Modifier.constrainAs(errorSampleText) {
+                    start.linkTo(startGuideline)
+                    end.linkTo(endGuideline)
+                    bottom.linkTo(parent.bottom)
+                })
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.example.recipebook.domain.repository
 
-interface RegistrationRepository {
+interface FirebaseRepository {
     fun register(
         name: String,
         email: String,
@@ -8,4 +8,6 @@ interface RegistrationRepository {
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     )
+
+    suspend fun signIn(email: String, password: String): Result<Unit>
 }
