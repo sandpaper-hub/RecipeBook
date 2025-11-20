@@ -19,7 +19,7 @@ class SplashViewModel @Inject constructor(
         viewModelScope.launch {
             val isLoggedIn = splashInteractor.isLoggedIn()
             startDestination.value = if (isLoggedIn) {
-                Routes.Home.route
+                Routes.MainHome.route
             } else {
                 Routes.Onboarding.route
             }

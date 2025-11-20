@@ -17,7 +17,7 @@ fun SplashScreen(
 
     LaunchedEffect(destination) {
         when(destination) {
-            Routes.Home.route -> onHomeScreen()
+            Routes.MainHome.route -> onHomeScreen()
             Routes.Onboarding.route -> onOnboardingScreen()
             else -> Unit
         }
