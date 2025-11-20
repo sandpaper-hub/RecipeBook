@@ -1,54 +1,41 @@
 package com.example.recipebook.navigation.rootNavGraph
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.recipebook.navigation.Routes
-import com.example.recipebook.navigation.rootNavGraph.homeMainScreen.homeNavGraph
-import com.example.recipebook.navigation.rootNavGraph.loginNavGraph.loginNavGraph
-import com.example.recipebook.navigation.rootNavGraph.onBoardingScreen.onboardingNavGraph
-import com.example.recipebook.navigation.rootNavGraph.registrationScreen.registrationNavGraph
-import com.example.recipebook.navigation.rootNavGraph.splashScreen.splashNavGraph
+import com.example.recipebook.navigation.rootNavGraph.authenticationGraph.authenticationGraph
+
+import com.example.recipebook.presentation.ui.mainScreenHome.MainHomeScreen
+import com.example.recipebook.presentation.ui.splashScreen.SplashScreen
 
 @Composable
 @Suppress("FunctionName")
-fun RootNavGraph() {
-    val navController = rememberNavController()
-
+fun RootNavGraph(navController: NavHostController = rememberNavController()) {
     NavHost(
-        navController = navController, startDestination = Routes.Splash.route
+        navController = navController,
+        route = Graph.ROOT,
+        startDestination = Root.Splash.route
     ) {
-        splashNavGraph(
-            onOnboardingScreen = {
-                navController.navigate(Routes.Onboarding.route) {
-                    popUpTo(Routes.Splash.route) { inclusive = true }
+        composable(Root.Splash.route) {
+            SplashScreen(
+                onOnboardingScreen = {
+                    navController.navigate(Graph.AUTH) {
+                        popUpTo(Root.Splash.route) { inclusive = true }
+                    }
+                }, onHomeScreen = {
+                    navController.navigate(Home.MainHome.route) {
+                        popUpTo(Root.Splash.route) { inclusive = true }
+                    }
                 }
-            },
-            onHomeScreen = {
-                navController.navigate(Routes.MainHome.route) {
-                    popUpTo(Routes.Splash.route) { inclusive = true }
-                }
-            })
+            )
+        }
 
-        onboardingNavGraph(
-            onRegistrationScreen = { navController.navigate(Routes.Registration.route) },
-            onLoginScreen = { navController.navigate(Routes.Login.route) }
-        )
+        authenticationGraph(navController = navController)
 
-        registrationNavGraph(onHomeScreen = {
-            navController.navigate(Routes.MainHome.route) {
-                popUpTo(Routes.Onboarding.route) { inclusive = true }
-                launchSingleTop = true
-            }
-        })
-
-        homeNavGraph()
-
-        loginNavGraph(onMainHome = {
-            navController.navigate(Routes.MainHome.route) {
-                popUpTo(Routes.Onboarding.route) { inclusive = true }
-                launchSingleTop = true
-            }
-        })
+        composable(Home.MainHome.route) {
+            MainHomeScreen()
+        }
     }
 }

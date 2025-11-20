@@ -4,7 +4,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.SplashInteractor
-import com.example.recipebook.navigation.Routes
+import com.example.recipebook.navigation.rootNavGraph.Auth
+import com.example.recipebook.navigation.rootNavGraph.Home
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,9 +20,9 @@ class SplashViewModel @Inject constructor(
         viewModelScope.launch {
             val isLoggedIn = splashInteractor.isLoggedIn()
             startDestination.value = if (isLoggedIn) {
-                Routes.MainHome.route
+                Home.MainHome.route
             } else {
-                Routes.Onboarding.route
+                Auth.Onboarding.route
             }
         }
     }
