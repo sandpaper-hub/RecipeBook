@@ -14,30 +14,30 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
-import com.example.recipebook.presentation.ui.ClickableText
-import com.example.recipebook.presentation.ui.ClickableTextCheckbox
-import com.example.recipebook.presentation.ui.CustomPasswordTextField
-import com.example.recipebook.presentation.ui.CustomTextField
-import com.example.recipebook.presentation.ui.HeadingText
-import com.example.recipebook.presentation.ui.MixedClickableText
-import com.example.recipebook.presentation.ui.OutlinedIconButton
-import com.example.recipebook.presentation.ui.SquareRoundedButton
-import com.example.recipebook.presentation.ui.SubHeadingText
-import com.example.recipebook.presentation.ui.TextDivider
-import com.example.recipebook.presentation.ui.TitleText
+import com.example.recipebook.presentation.ui.commonUi.ClickableText
+import com.example.recipebook.presentation.ui.commonUi.ClickableTextCheckbox
+import com.example.recipebook.presentation.ui.commonUi.CustomPasswordTextField
+import com.example.recipebook.presentation.ui.commonUi.CustomTextField
+import com.example.recipebook.presentation.ui.commonUi.HeadingText
+import com.example.recipebook.presentation.ui.commonUi.MixedClickableText
+import com.example.recipebook.presentation.ui.commonUi.SubHeadingText
+import com.example.recipebook.presentation.ui.commonUi.TextDivider
+import com.example.recipebook.presentation.ui.commonUi.TitleText
+import com.example.recipebook.presentation.ui.commonUi.OutlinedIconButton
+import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.viewModel.loginScreen.LoginViewModel
 
 @Composable
 @Suppress("FunctionName")
 fun LoginScreen(
-    onMainHome: () -> Unit,
+    onHomeScreen: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()) {
 
     val uiState = viewModel.uiState
 
     LaunchedEffect(uiState.isSignedIn) {
         if (uiState.isSignedIn) {
-            onMainHome()
+            onHomeScreen()
         }
     }
 

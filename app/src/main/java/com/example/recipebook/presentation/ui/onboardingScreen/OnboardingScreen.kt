@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.recipebook.R
-import com.example.recipebook.presentation.ui.SquareRoundedButton
+import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.theme.DarkModeBodyColor
 
 @Composable
