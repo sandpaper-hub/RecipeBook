@@ -5,9 +5,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.recipebook.navigation.rootNavGraph.authenticationGraph.authenticationGraph
+import com.example.recipebook.navigation.Graph
+import com.example.recipebook.navigation.Root
+import com.example.recipebook.navigation.authenticationGraph.authenticationGraph
 
-import com.example.recipebook.presentation.ui.mainScreenHome.MainHomeScreen
+import com.example.recipebook.presentation.ui.mainScreenContainer.MainScreenContainer
 import com.example.recipebook.presentation.ui.splashScreen.SplashScreen
 
 @Composable
@@ -25,7 +27,7 @@ fun RootNavGraph(navController: NavHostController = rememberNavController()) {
                         popUpTo(Root.Splash.route) { inclusive = true }
                     }
                 }, onHomeScreen = {
-                    navController.navigate(Home.MainHome.route) {
+                    navController.navigate(Graph.MAIN_HOME) {
                         popUpTo(Root.Splash.route) { inclusive = true }
                     }
                 }
@@ -34,8 +36,8 @@ fun RootNavGraph(navController: NavHostController = rememberNavController()) {
 
         authenticationGraph(navController = navController)
 
-        composable(Home.MainHome.route) {
-            MainHomeScreen()
+        composable(Graph.MAIN_HOME) {
+            MainScreenContainer()
         }
     }
 }

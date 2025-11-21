@@ -1,12 +1,11 @@
-package com.example.recipebook.navigation.rootNavGraph.authenticationGraph
+package com.example.recipebook.navigation.authenticationGraph
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.example.recipebook.navigation.rootNavGraph.Auth
-import com.example.recipebook.navigation.rootNavGraph.Graph
-import com.example.recipebook.navigation.rootNavGraph.Home
+import com.example.recipebook.navigation.Auth
+import com.example.recipebook.navigation.Graph
 import com.example.recipebook.presentation.ui.loginScreen.LoginScreen
 import com.example.recipebook.presentation.ui.onboardingScreen.OnboardingScreen
 import com.example.recipebook.presentation.ui.registrationScreen.RegistrationScreen
@@ -27,7 +26,7 @@ fun NavGraphBuilder.authenticationGraph(
 
         composable(Auth.Login.route) {
             LoginScreen(
-                onMainHome = {navController.navigate(Home.MainHome.route){
+                onHomeScreen = {navController.navigate(Graph.MAIN_HOME){
                     popUpTo(Graph.AUTH) { inclusive = true }
                 } }
             )
@@ -35,7 +34,7 @@ fun NavGraphBuilder.authenticationGraph(
 
         composable(Auth.Registration.route) {
             RegistrationScreen(
-                onHomeScreen = {navController.navigate(Auth.Registration.route) {
+                onHomeScreen = {navController.navigate(Graph.MAIN_HOME) {
                     popUpTo(Graph.AUTH) {inclusive = true}
                 } }
             )
