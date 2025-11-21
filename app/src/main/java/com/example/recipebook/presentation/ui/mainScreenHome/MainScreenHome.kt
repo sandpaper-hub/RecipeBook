@@ -1,4 +1,4 @@
-package com.example.recipebook.presentation.ui.homeScreen
+package com.example.recipebook.presentation.ui.mainScreenHome
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,7 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 @Suppress("FunctionName")
-fun HomeScreen() {
+fun MainHomeScreen() {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         ConstraintLayout(modifier = Modifier
             .fillMaxSize()

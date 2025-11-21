@@ -30,14 +30,14 @@ import com.example.recipebook.presentation.viewModel.loginScreen.LoginViewModel
 @Composable
 @Suppress("FunctionName")
 fun LoginScreen(
-    onHomeScreen: () -> Unit,
+    onMainHome: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()) {
 
     val uiState = viewModel.uiState
 
     LaunchedEffect(uiState.isSignedIn) {
         if (uiState.isSignedIn) {
-            onHomeScreen()
+            onMainHome()
         }
     }
 
