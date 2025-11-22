@@ -117,6 +117,12 @@ fun RecipeBookTheme(
             fontWeight = FontWeight(400),
             fontSize = 12.sp,
             lineHeight = 21.sp
+        ),
+        displayLarge = TextStyle(
+            fontFamily = semibold,
+            fontWeight = FontWeight(600),
+            fontSize = 16.sp,
+            lineHeight = 24.sp
         )
     )
 

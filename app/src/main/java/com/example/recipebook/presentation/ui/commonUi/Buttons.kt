@@ -56,21 +56,24 @@ fun SquareRoundedButton(
 fun OutlinedIconButton(
     onClick: () -> Unit,
     text: String,
-    icon: Painter,
+    icon: Painter?,
     modifier: Modifier
 ) {
     OutlinedButton(
-        onClick = onClick, modifier = modifier
+        onClick = onClick,
+        modifier = modifier
             .height(52.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(14.dp)
     ) {
-        Icon(
-            painter = icon,
-            contentDescription = null,
-            tint = Color.Unspecified,
-            modifier = Modifier.size(24.dp)
-        )
+        if (icon != null) {
+            Icon(
+                painter = icon,
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier.size(24.dp)
+            )
+        }
         Spacer(modifier = Modifier.width(12.dp))
         Text(text = text, color = MaterialTheme.colorScheme.onPrimary)
     }

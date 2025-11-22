@@ -27,4 +27,6 @@
     <string name="welcome_subheading" translatable="true">Enter your Phone number or Email\naddress for sign in</string>
     <string name="remember" translatable="true">Remember me</string>
     <string name="dont_have_account" translatable="true">Don\'t have account?\ </string>
+    <string name="banner_description" translatable="true">Profile banner</string>
+    <string name="profile_image" translatable="true">Profile photo</string>
 </resources>
