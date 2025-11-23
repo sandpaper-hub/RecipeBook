@@ -63,7 +63,7 @@ sealed class BottomNavigationItem(
 
     data object Upload : BottomNavigationItem(
         route = "upload",
-        icon = R.drawable.upload_recipes,
+        icon = R.drawable.upload_recipe,
         label = "Upload"
     )
 

@@ -27,4 +27,9 @@
     <string name="welcome_subheading">Введите свой номер телефона или Email\nадресс для входа</string>
     <string name="remember">Запомнить меня</string>
     <string name="dont_have_account">У Вас нет аккаунта?\ </string>
+    <string name="banner_description" translatable="true">Баннер профиля</string>
+    <string name="profile_image" translatable="true">Фото профиля</string>
+    <string name="followers" translatable="true">Подписчиков</string>
+    <string name="following" translatable="true">Подписки</string>
+    <string name="recipes" translatable="true">Рецептов</string>
 </resources>
