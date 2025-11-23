@@ -5,6 +5,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -47,7 +48,7 @@ fun MainBottomNavigationBar(navController: NavController) {
                     Icon(
                         painter = painterResource(item.icon),
                         contentDescription = item.label,
-                        tint = if (selected) GreenAccent else DarkModeBodyColor
+                        tint = if (selected) GreenAccent else Color.Unspecified
                     )
                 }
             )
