@@ -73,6 +73,8 @@ dependencies {
     //Firebase
     implementation(platform(libs.google.firebase.bom))
     implementation(libs.google.firebase.auth.ktx)
+    //firestore
+    implementation(libs.google.firebase.firestore)
     //hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation)

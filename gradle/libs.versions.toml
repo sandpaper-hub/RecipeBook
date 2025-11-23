@@ -17,6 +17,8 @@ composeNavigation = "2.9.6"
 #Firebase
 firebaseBom = "34.6.0"
 firebaseAuthKtx = "23.2.1"
+#Firestore
+firestoreKtx = "26.0.2"
 #ksp
 ksp = "2.2.20-2.0.2"
 #hilt
@@ -41,9 +43,11 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 androidx-compose-material = {group = "androidx.compose.material", name = "material-icons-extended"}
 #ConstraintLayout
 androidx-constraintLayout = {group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintLayout"}
-#Firebase
+#FirebaseAuth
 google-firebase-bom = {group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom"}
 google-firebase-auth-ktx = {group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx"}
+#Firestore
+google-firebase-firestore = {group = "com.google.firebase", name = "firebase-firestore", version.ref = "firestoreKtx"}
 #Navigation
 androidx-navigation-compose = {group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigation"}
 #hilt
