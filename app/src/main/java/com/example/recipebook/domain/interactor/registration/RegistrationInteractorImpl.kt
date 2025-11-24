@@ -1,12 +1,12 @@
 package com.example.recipebook.domain.interactor.registration
 
-import com.example.recipebook.domain.interactor.profile.FirestoreRepository
-import com.example.recipebook.domain.repository.FirebaseRepository
+import com.example.recipebook.domain.repository.ProfileRepository
+import com.example.recipebook.domain.repository.AuthenticationRepository
 import javax.inject.Inject
 
 class RegistrationInteractorImpl @Inject constructor(
-    private val firebaseRepository: FirebaseRepository,
-    private val firestoreRepository: FirestoreRepository
+    private val authenticationRepository: AuthenticationRepository,
+    private val profileRepository: ProfileRepository
 ) : RegistrationInteractor {
     override suspend fun register(
         name: String,
@@ -14,7 +14,7 @@ class RegistrationInteractorImpl @Inject constructor(
         password: String
     ): Result<Unit> {
         val authenticationResult =
-            firebaseRepository.register(
+            authenticationRepository.register(
                 name = name,
                 email = email,
                 password = password
@@ -22,7 +22,7 @@ class RegistrationInteractorImpl @Inject constructor(
 
         return authenticationResult.fold(
             onSuccess = { authenticatedUser ->
-                firestoreRepository.createUserDocumentIfNeeded(authenticatedUser)
+                profileRepository.createUserDocumentIfNeeded(authenticatedUser)
             },
             onFailure = { exception ->
                 Result.failure(exception)

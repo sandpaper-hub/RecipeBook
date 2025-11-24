@@ -1,12 +1,12 @@
 package com.example.recipebook.domain.interactor.login
 
-import com.example.recipebook.domain.repository.FirebaseRepository
+import com.example.recipebook.domain.repository.AuthenticationRepository
 import javax.inject.Inject
 
 class LoginInteractorImpl @Inject constructor(
-    private val firebaseRepository: FirebaseRepository
+    private val authenticationRepository: AuthenticationRepository
 ) : LoginInteractor {
 
     override suspend fun signIn(email: String, password: String): Result<Unit> =
-        firebaseRepository.signIn(email = email, password = password)
+        authenticationRepository.signIn(email = email, password = password)
 }

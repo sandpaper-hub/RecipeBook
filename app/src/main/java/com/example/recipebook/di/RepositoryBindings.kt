@@ -1,9 +1,9 @@
 package com.example.recipebook.di
 
-import com.example.recipebook.data.repository.FirebaseRepositoryImpl
-import com.example.recipebook.data.repository.FirestoreRepositoryImpl
-import com.example.recipebook.domain.interactor.profile.FirestoreRepository
-import com.example.recipebook.domain.repository.FirebaseRepository
+import com.example.recipebook.data.repository.AuthenticationRepositoryImpl
+import com.example.recipebook.data.repository.ProfileRepositoryImpl
+import com.example.recipebook.domain.repository.ProfileRepository
+import com.example.recipebook.domain.repository.AuthenticationRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -16,12 +16,12 @@ abstract class RepositoryBindings {
     @Binds
     @Singleton
     abstract fun bindFirebaseRepository(
-        impl: FirebaseRepositoryImpl
-    ): FirebaseRepository
+        impl: AuthenticationRepositoryImpl
+    ): AuthenticationRepository
 
     @Binds
     @Singleton
     abstract fun bindFirestoreRepository(
-        impl: FirestoreRepositoryImpl
-    ): FirestoreRepository
+        impl: ProfileRepositoryImpl
+    ): ProfileRepository
 }

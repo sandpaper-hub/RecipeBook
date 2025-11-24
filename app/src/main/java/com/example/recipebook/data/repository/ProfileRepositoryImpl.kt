@@ -1,15 +1,17 @@
 package com.example.recipebook.data.repository
 
-import com.example.recipebook.domain.interactor.profile.FirestoreRepository
+import com.example.recipebook.domain.repository.ProfileRepository
 import com.example.recipebook.domain.model.UserProfile
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
-class FirestoreRepositoryImpl @Inject constructor(
-    firestore: FirebaseFirestore
-) : FirestoreRepository {
+class ProfileRepositoryImpl @Inject constructor(
+    private val firebaseAuth: FirebaseAuth,
+   private val firestore: FirebaseFirestore
+) : ProfileRepository {
 
     private val usersCollection = firestore.collection("users")
 
@@ -52,17 +54,27 @@ class FirestoreRepositoryImpl @Inject constructor(
                 }
         }
 
-    override suspend fun getUserProfile(uid: String): Result<UserProfile> =
+    override suspend fun getUserProfile(): Result<UserProfile> =
         suspendCancellableCoroutine { continuation ->
+            val uid = firebaseAuth.currentUser?.uid
+            if (uid == null) {
+                if (continuation.isActive) {
+                    continuation.resume(
+                        Result.failure(Exception("User is not authenticated"))
+                    )
+                }
+                return@suspendCancellableCoroutine
+            }
+
             usersCollection.document(uid)
                 .get()
                 .addOnSuccessListener { snapshot ->
+                    if (!continuation.isActive) return@addOnSuccessListener
                     val user = snapshot.toObject(UserProfile::class.java)
                     if (user != null) {
-                        if (continuation.isActive) continuation.resume(Result.success(user))
+                        continuation.resume(Result.success(user))
                     } else {
-                        if (continuation.isActive)
-                            continuation.resume(Result.failure(Exception("User not found")))
+                        continuation.resume(Result.failure(Exception("User not found")))
                     }
                 }
                 .addOnFailureListener { error ->

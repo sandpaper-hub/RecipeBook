@@ -2,7 +2,7 @@ package com.example.recipebook.domain.repository
 
 import com.example.recipebook.domain.model.UserProfile
 
-interface FirebaseRepository {
+interface AuthenticationRepository {
     suspend fun register(
         name: String,
         email: String,

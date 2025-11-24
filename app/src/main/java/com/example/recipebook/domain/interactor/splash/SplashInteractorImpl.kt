@@ -1,11 +1,11 @@
 package com.example.recipebook.domain.interactor.splash
 
-import com.example.recipebook.domain.repository.FirebaseRepository
+import com.example.recipebook.domain.repository.AuthenticationRepository
 import javax.inject.Inject
 
 class SplashInteractorImpl @Inject constructor(
-    private val firebaseRepository: FirebaseRepository
+    private val authenticationRepository: AuthenticationRepository
 ) : SplashInteractor {
     override fun isLoggedIn(): Boolean =
-        firebaseRepository.isLoggedIn()
+        authenticationRepository.isLoggedIn()
 }

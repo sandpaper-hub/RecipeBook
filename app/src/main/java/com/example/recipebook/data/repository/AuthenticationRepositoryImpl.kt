@@ -1,16 +1,16 @@
 package com.example.recipebook.data.repository
 
 import com.example.recipebook.domain.model.UserProfile
-import com.example.recipebook.domain.repository.FirebaseRepository
+import com.example.recipebook.domain.repository.AuthenticationRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
-class FirebaseRepositoryImpl @Inject constructor(
+class AuthenticationRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth
-) : FirebaseRepository {
+) : AuthenticationRepository {
 
     override suspend fun register(
         name: String,
