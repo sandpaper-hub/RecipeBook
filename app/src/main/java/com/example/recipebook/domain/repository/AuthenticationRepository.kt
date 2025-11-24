@@ -1,13 +1,13 @@
 package com.example.recipebook.domain.repository
 
-interface FirebaseRepository {
-    fun register(
+import com.example.recipebook.domain.model.UserProfile
+
+interface AuthenticationRepository {
+    suspend fun register(
         name: String,
         email: String,
         password: String,
-        onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    )
+    ) : Result<UserProfile>
 
     suspend fun signIn(email: String, password: String): Result<Unit>
 

@@ -145,7 +145,14 @@ fun RegistrationScreen(
             )
 
             SquareRoundedButton(
-                onClick = { viewModel.register(onSuccess = onHomeScreen) },
+                onClick = {
+                    viewModel.register(
+                        name = name,
+                        email = email,
+                        password = password,
+                        onSuccess = onHomeScreen
+                    )
+                },
                 text = stringResource(R.string.sign_up_button),
                 containerColor = null,
                 isLoading = isLoading,
