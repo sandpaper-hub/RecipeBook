@@ -1,5 +1,6 @@
 package com.example.recipebook.data.repository
 
+import com.example.recipebook.domain.model.UserProfile
 import com.example.recipebook.domain.repository.FirebaseRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
@@ -11,31 +12,50 @@ class FirebaseRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth
 ) : FirebaseRepository {
 
-    override fun register(
+    override suspend fun register(
         name: String,
         email: String,
-        password: String,
-        onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+        password: String
+    ): Result<UserProfile> =
+        suspendCancellableCoroutine { continuation ->
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (!continuation.isActive) return@addOnCompleteListener
+
+                    if (!task.isSuccessful) {
+                        val error = task.exception ?: Exception("Registration error")
+                        continuation.resume(Result.failure(error))
+                        return@addOnCompleteListener
+                    }
+
                     val firebaseUser = task.result?.user
+                    if (firebaseUser == null) {
+                        continuation.resume(Result.failure(Exception("User is null after registration")))
+                        return@addOnCompleteListener
+                    }
                     val profileUpdates = userProfileChangeRequest {
                         displayName = name
                     }
-                    firebaseUser?.updateProfile(profileUpdates)
-                        ?.addOnCompleteListener { updateTask ->
-                            if (updateTask.isSuccessful) {
-                                onSuccess()
+
+                    firebaseUser.updateProfile(profileUpdates)
+                        .addOnCompleteListener { updateTask ->
+                            if (!continuation.isActive) return@addOnCompleteListener
+                            if (!updateTask.isSuccessful) {
+                                val error =
+                                    updateTask.exception ?: Exception("Profile update error")
+                                continuation.resume(Result.failure(error))
                             }
+                            val domainUser = UserProfile(
+                                uid = firebaseUser.uid,
+                                fullName = name,
+                                email = firebaseUser.email ?: email
+                            )
+
+                            continuation.resume(Result.success(domainUser))
                         }
-                } else {
-                    onError(task.exception?.message ?: "Error")
                 }
-            }
-    }
+        }
+
 
     override suspend fun signIn(
         email: String,

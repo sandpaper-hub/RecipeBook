@@ -3,7 +3,7 @@ package com.example.recipebook.presentation.viewModel.splashScreen
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.SplashInteractor
+import com.example.recipebook.domain.interactor.splash.SplashInteractor
 import com.example.recipebook.navigation.Auth
 import com.example.recipebook.navigation.Graph
 import dagger.hilt.android.lifecycle.HiltViewModel

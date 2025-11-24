@@ -4,8 +4,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.recipebook.domain.interactor.RegistrationInteractor
+import androidx.lifecycle.viewModelScope
+import com.example.recipebook.domain.interactor.registration.RegistrationInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,26 +45,33 @@ class RegistrationViewModel @Inject constructor(
         passwordVisibility = newValue
     }
 
-    fun register(onSuccess: () -> Unit) {
-        if (email.isBlank() || password.isBlank()) {
-            errorMessage = "Email & password shouldn't be blank"
-            return
-        }
-
-        isLoading = true
-        registrationInteractor.register(
-            name = name,
-            email = email,
-            password = password,
-            onSuccess = {
-                isLoading = false
-                onSuccess()
-            },
-            onError = { message ->
-                isLoading = false
-                errorMessage = message
+    fun register(
+        name: String,
+        email: String,
+        password: String,
+        onSuccess: () -> Unit
+    ) {
+        viewModelScope.launch {
+            if (email.isBlank() || password.isBlank()) {
+                errorMessage = "Email & password shouldn't be blank"
+                return@launch
             }
-        )
-        errorMessage = null
+            isLoading = true
+            val result = registrationInteractor.register(
+                name = name,
+                email = email,
+                password = password
+            )
+
+            result
+                .onSuccess {
+                    isLoading = false
+                    onSuccess()
+                }
+                .onFailure { exception ->
+                    isLoading = false
+                    errorMessage = exception.message
+                }
+        }
     }
 }

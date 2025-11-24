@@ -1,6 +1,8 @@
 package com.example.recipebook.di
 
 import com.example.recipebook.data.repository.FirebaseRepositoryImpl
+import com.example.recipebook.data.repository.FirestoreRepositoryImpl
+import com.example.recipebook.domain.interactor.profile.FirestoreRepository
 import com.example.recipebook.domain.repository.FirebaseRepository
 import dagger.Binds
 import dagger.Module
@@ -16,4 +18,10 @@ abstract class RepositoryBindings {
     abstract fun bindFirebaseRepository(
         impl: FirebaseRepositoryImpl
     ): FirebaseRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindFirestoreRepository(
+        impl: FirestoreRepositoryImpl
+    ): FirestoreRepository
 }

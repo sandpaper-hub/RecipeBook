@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.interactor
+package com.example.recipebook.domain.interactor.login
 
 import com.example.recipebook.domain.repository.FirebaseRepository
 import javax.inject.Inject
