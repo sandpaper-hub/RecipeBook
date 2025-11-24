@@ -17,7 +17,7 @@ import com.example.recipebook.R
 
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Color.White,
+    primary = GreenAccent,
     secondary = PurpleGrey80,
     tertiary = Pink80,
     onPrimary = Color.White,

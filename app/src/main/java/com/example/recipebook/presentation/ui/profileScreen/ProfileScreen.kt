@@ -1,11 +1,14 @@
 package com.example.recipebook.presentation.ui.profileScreen
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -15,6 +18,8 @@ import com.example.recipebook.presentation.viewModel.profileScreen.ProfileViewMo
 @Composable
 @Suppress("FunctionName")
 fun ProfileScreen(
+    onSettings: () -> Unit,
+    onEditProfile: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val listState = rememberLazyListState()
@@ -25,7 +30,12 @@ fun ProfileScreen(
     }
 
     if (viewModel.isLoading) {
-        CircularProgressIndicator()
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+        }
     } else {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -39,7 +49,9 @@ fun ProfileScreen(
                     profileNickName = uiState.nickName,
                     followersCount = 123123,
                     followingCount = 93213,
-                    recipesCount = 123
+                    recipesCount = 123,
+                    onSettings = {onSettings()},
+                    onEditScreen = {onEditProfile()}
                 )
             }
         }

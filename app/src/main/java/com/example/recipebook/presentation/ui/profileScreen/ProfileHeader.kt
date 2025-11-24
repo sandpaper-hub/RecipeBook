@@ -1,14 +1,21 @@
 package com.example.recipebook.presentation.ui.profileScreen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.example.recipebook.R
+import com.example.recipebook.presentation.ui.commonUi.OutlinedIconButton
 
 @Composable
 @Suppress("FunctionName")
@@ -19,7 +26,9 @@ fun ProfileHeader(
     profileNickName: String,
     followersCount: Int,
     followingCount: Int,
-    recipesCount: Int
+    recipesCount: Int,
+    onSettings: () -> Unit,
+    onEditScreen: () -> Unit
 //    recipeList: TODO
 ) {
     ConstraintLayout(
@@ -27,7 +36,8 @@ fun ProfileHeader(
             .fillMaxWidth()
     ) {
         val (profileBanner, profilePhoto, profileCard, followersCountItem,
-            followingCountItem, recipesCountItem, divider1, divider2) = createRefs()
+            followingCountItem, recipesCountItem, divider1, divider2,
+            editProfileButton, settingsButton) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -42,6 +52,20 @@ fun ProfileHeader(
             modifier = Modifier.constrainAs(profileBanner) {
                 top.linkTo(profileBanner.top)
             }
+        )
+
+        Icon(
+            painter = painterResource(R.drawable.settings),
+            contentDescription = "Settings button",
+            modifier = Modifier
+                .constrainAs(settingsButton) {
+                    top.linkTo(parent.top)
+                    end.linkTo(endGuideline)
+                }
+                .padding(top = 12.dp)
+                .clickable(
+                    onClick = onSettings
+                )
         )
 
         ProfileCard(
@@ -116,6 +140,20 @@ fun ProfileHeader(
                     )
                 }
         )
+
+        OutlinedIconButton(
+            modifier = Modifier
+                .constrainAs(editProfileButton) {
+                    start.linkTo(startGuideline)
+                    end.linkTo(endGuideline)
+                    top.linkTo(followersCountItem.bottom)
+                    width = Dimension.fillToConstraints
+                }
+                .padding(top = 24.dp),
+            onClick = onEditScreen,
+            icon = null,
+            text = "Edit Profile",
+            textColor = MaterialTheme.colorScheme.inversePrimary)
 
         ProfileAvatar(
             painter = profileImage,

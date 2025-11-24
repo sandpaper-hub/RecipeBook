@@ -39,7 +39,7 @@ fun MainHomeGraph(
         }
 
         composable(BottomNavigationItem.Profile.route){
-            ProfileScreen()
+//            ProfileScreen()
         }
     }
 }

@@ -11,7 +11,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,6 +55,7 @@ fun SquareRoundedButton(
 fun OutlinedIconButton(
     onClick: () -> Unit,
     text: String,
+    textColor: Color,
     icon: Painter?,
     modifier: Modifier
 ) {
@@ -73,8 +73,8 @@ fun OutlinedIconButton(
                 tint = Color.Unspecified,
                 modifier = Modifier.size(24.dp)
             )
+            Spacer(modifier = Modifier.width(12.dp))
         }
-        Spacer(modifier = Modifier.width(12.dp))
-        Text(text = text, color = MaterialTheme.colorScheme.onPrimary)
+        Text(text = text, color = textColor)
     }
 }
