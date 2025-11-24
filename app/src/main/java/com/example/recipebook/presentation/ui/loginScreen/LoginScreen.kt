@@ -2,6 +2,7 @@ package com.example.recipebook.presentation.ui.loginScreen
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -174,6 +175,7 @@ fun LoginScreen(
             OutlinedIconButton(
                 onClick = {},
                 text = stringResource(R.string.google_sign_in),
+                textColor = MaterialTheme.colorScheme.onPrimary,
                 icon = painterResource(R.drawable.google_icon),
                 modifier = Modifier
                     .constrainAs(googleSignInButton) {
@@ -188,6 +190,7 @@ fun LoginScreen(
             OutlinedIconButton(
                 onClick = {},
                 text = stringResource(R.string.facebook_sign_in),
+                textColor = MaterialTheme.colorScheme.onPrimary     ,
                 icon = painterResource(R.drawable.facebook_icon),
                 modifier = Modifier
                     .constrainAs(facebookSignInButton) {
