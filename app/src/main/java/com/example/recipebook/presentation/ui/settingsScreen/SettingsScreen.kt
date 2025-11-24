@@ -13,5 +13,7 @@ fun SettingsScreen() {
     Box(modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center){
         Text("Settings Screen")
+
+
     }
 }
