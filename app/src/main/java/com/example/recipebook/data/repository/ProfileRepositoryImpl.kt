@@ -10,7 +10,7 @@ import kotlin.coroutines.resume
 
 class ProfileRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-   private val firestore: FirebaseFirestore
+    firestore: FirebaseFirestore
 ) : ProfileRepository {
 
     private val usersCollection = firestore.collection("users")
