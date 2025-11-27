@@ -1,4 +1,4 @@
-package com.example.recipebook.presentation.ui.settingsScreen
+package com.example.recipebook.presentation.ui.editScreen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,9 +9,10 @@ import androidx.compose.ui.Modifier
 
 @Composable
 @Suppress("FunctionName")
-fun SettingsScreen() {
-    Box(modifier = Modifier.fillMaxSize(),
+fun EditScreen() {
+    Box(modifier = Modifier
+        .fillMaxSize(),
         contentAlignment = Alignment.Center){
-        Text("Settings Screen")
+        Text("Edit Screen")
     }
 }
