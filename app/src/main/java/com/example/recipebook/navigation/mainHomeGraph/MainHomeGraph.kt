@@ -5,12 +5,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.mainHomeScreen.MainHomeScreen
 import com.example.recipebook.presentation.ui.uploadScreen.UploadScreen
 import com.example.recipebook.presentation.ui.collaborationScreen.CollaborationScreen
+import com.example.recipebook.presentation.ui.editScreen.EditScreen
 import com.example.recipebook.presentation.ui.profileScreen.ProfileScreen
 import com.example.recipebook.presentation.ui.savedScreen.SavedScreen
+import com.example.recipebook.presentation.ui.settingsScreen.SettingsScreen
 
 @Composable
 fun MainHomeGraph(
@@ -38,8 +41,28 @@ fun MainHomeGraph(
             SavedScreen()
         }
 
-        composable(BottomNavigationItem.Profile.route){
-//            ProfileScreen()
+        navigation(
+            startDestination = ProfileRoutes.ProfileMain.route,
+            route = BottomNavigationItem.Profile.route
+        ) {
+            composable(ProfileRoutes.ProfileMain.route) {
+                ProfileScreen(
+                    onEditProfile = {
+                        navController.navigate(ProfileRoutes.EditProfile.route)
+                    },
+                    onSettings = {
+                        navController.navigate(ProfileRoutes.Settings.route)
+                    }
+                )
+            }
+
+            composable(ProfileRoutes.EditProfile.route) {
+                EditScreen()
+            }
+
+            composable(ProfileRoutes.Settings.route){
+                SettingsScreen()
+            }
         }
     }
 }
