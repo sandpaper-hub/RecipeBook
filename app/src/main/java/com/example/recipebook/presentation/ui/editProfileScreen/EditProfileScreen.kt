@@ -1,9 +1,11 @@
 package com.example.recipebook.presentation.ui.editProfileScreen
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -20,7 +22,7 @@ import com.example.recipebook.presentation.ui.commonUi.TitleText
 
 @Composable
 @Suppress("FunctionName")
-fun EditProfileScreen() {
+fun EditProfileScreen(onBackNavigation: () -> Unit) {
 
     val fullName = ""
     val userName = ""
@@ -44,8 +46,11 @@ fun EditProfileScreen() {
                     start.linkTo(startGuideline)
                     top.linkTo(parent.top, margin = 21.dp)
                 }
-                .clickable(onClick = {
-
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = {
+                    onBackNavigation()
                 })
         )
 
@@ -60,7 +65,7 @@ fun EditProfileScreen() {
         )
 
         RoundedPrimaryButton(
-            onClick = {},
+            onClick = { onBackNavigation() },
             text = stringResource(R.string.save_button),
             modifier = Modifier
                 .constrainAs(saveButton) {

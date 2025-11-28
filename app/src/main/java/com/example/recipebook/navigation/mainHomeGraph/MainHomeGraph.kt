@@ -57,7 +57,11 @@ fun MainHomeGraph(
             }
 
             composable(ProfileRoutes.EditProfile.route) {
-                EditProfileScreen()
+                EditProfileScreen(
+                    onBackNavigation = {
+                        navController.popBackStack()
+                    }
+                )
             }
 
             composable(ProfileRoutes.Settings.route){
