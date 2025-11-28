@@ -1,6 +1,9 @@
 package com.example.recipebook.presentation.ui.commonUi
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -19,9 +22,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -37,11 +45,24 @@ import com.example.recipebook.theme.TitleGray
 fun CustomTextField(
     value: String, onValueChange: (String) -> Unit, hint: String, modifier: Modifier
 ) {
+    var isFocused by remember { mutableStateOf(false) }
+    val borderColor by animateColorAsState(
+        if (isFocused) MaterialTheme.colorScheme.primary else Color.Transparent
+    )
+    val borderWidth by animateDpAsState(
+        if (isFocused) 0.5.dp else 1.dp
+    )
+
     Box(
         modifier = modifier.then(
             Modifier
                 .background(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    shape = RoundedCornerShape(14.dp)
+                )
+                .border(
+                    width = borderWidth,
+                    color = borderColor,
                     shape = RoundedCornerShape(14.dp)
                 )
                 .padding(16.dp)
@@ -58,7 +79,11 @@ fun CustomTextField(
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged{ state ->
+                    isFocused = state.isFocused
+                },
             textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.inversePrimary),
             singleLine = true,
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
@@ -125,7 +150,7 @@ fun CustomPasswordTextField(
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null,
-                                onClick = {changeVisibility()}
+                                onClick = { changeVisibility() }
                             ),
                         contentAlignment = Alignment.Center
                     ) {

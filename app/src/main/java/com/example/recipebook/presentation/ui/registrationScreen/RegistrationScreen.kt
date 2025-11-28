@@ -21,7 +21,7 @@ import com.example.recipebook.presentation.ui.commonUi.CustomTextField
 import com.example.recipebook.presentation.ui.commonUi.OutlinedIconButton
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.MixedClickableText
-import com.example.recipebook.presentation.ui.commonUi.HeadingText
+import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
 import com.example.recipebook.presentation.ui.commonUi.TextDivider
 import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.viewModel.registrationScreen.RegistrationViewModel
@@ -53,7 +53,7 @@ fun RegistrationScreen(
             val startGuideline = createGuidelineFromStart(24.dp)
             val endGuideline = createGuidelineFromEnd(24.dp)
 
-            HeadingText(
+            HeadingTextLarge(
                 stringResource(R.string.create_account),
                 modifier = Modifier
                     .constrainAs(headingText) {

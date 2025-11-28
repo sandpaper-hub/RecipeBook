@@ -16,6 +16,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.OutlinedIconButton
+import com.example.recipebook.presentation.ui.commonUi.ProfileAvatar
+import com.example.recipebook.presentation.ui.commonUi.ProfileBanner
 
 @Composable
 @Suppress("FunctionName")
@@ -158,6 +160,7 @@ fun ProfileHeader(
         ProfileAvatar(
             painter = profileImage,
             contentDescription = stringResource(R.string.profile_image),
+            size = 100.dp,
             modifier = Modifier
                 .constrainAs(profilePhoto) {
                     centerHorizontallyTo(parent)
