@@ -10,7 +10,7 @@ import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.mainHomeScreen.MainHomeScreen
 import com.example.recipebook.presentation.ui.uploadScreen.UploadScreen
 import com.example.recipebook.presentation.ui.collaborationScreen.CollaborationScreen
-import com.example.recipebook.presentation.ui.editScreen.EditScreen
+import com.example.recipebook.presentation.ui.editProfileScreen.EditProfileScreen
 import com.example.recipebook.presentation.ui.profileScreen.ProfileScreen
 import com.example.recipebook.presentation.ui.savedScreen.SavedScreen
 import com.example.recipebook.presentation.ui.settingsScreen.SettingsScreen
@@ -57,7 +57,7 @@ fun MainHomeGraph(
             }
 
             composable(ProfileRoutes.EditProfile.route) {
-                EditScreen()
+                EditProfileScreen()
             }
 
             composable(ProfileRoutes.Settings.route){

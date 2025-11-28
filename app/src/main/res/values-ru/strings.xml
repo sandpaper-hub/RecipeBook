@@ -33,4 +33,7 @@
     <string name="following" translatable="true">Подписки</string>
     <string name="recipes" translatable="true">Рецептов</string>
     <string name="settings" translatable="true">Настройки</string>
+    <string name="back_button" translatable="true">Кнопка назад</string>
+    <string name="edit_profile" translatable="true">Редактировать</string>
+    <string name="save_button" translatable="true">Сохранить</string>
 </resources>

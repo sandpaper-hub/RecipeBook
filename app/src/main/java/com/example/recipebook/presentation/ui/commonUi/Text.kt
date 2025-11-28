@@ -101,11 +101,21 @@ fun TextDivider(modifier: Modifier) {
 
 @Composable
 @Suppress("FunctionName")
-fun HeadingText(text: String, modifier: Modifier) {
+fun HeadingTextLarge(text: String, modifier: Modifier) {
     Text(
         text = text,
         modifier = modifier.padding(top = 24.dp),
         style = MaterialTheme.typography.headlineMedium
+    )
+}
+
+@Composable
+@Suppress
+fun HeadingTextMedium(text: String, modifier: Modifier) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodySmall,
+        modifier = modifier
     )
 }
 

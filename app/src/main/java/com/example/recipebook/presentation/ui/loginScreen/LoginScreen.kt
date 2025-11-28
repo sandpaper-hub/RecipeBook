@@ -19,7 +19,7 @@ import com.example.recipebook.presentation.ui.commonUi.ClickableText
 import com.example.recipebook.presentation.ui.commonUi.ClickableTextCheckbox
 import com.example.recipebook.presentation.ui.commonUi.CustomPasswordTextField
 import com.example.recipebook.presentation.ui.commonUi.CustomTextField
-import com.example.recipebook.presentation.ui.commonUi.HeadingText
+import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
 import com.example.recipebook.presentation.ui.commonUi.MixedClickableText
 import com.example.recipebook.presentation.ui.commonUi.SubHeadingText
 import com.example.recipebook.presentation.ui.commonUi.TextDivider
@@ -55,7 +55,7 @@ fun LoginScreen(
             val startGuideline = createGuidelineFromStart(24.dp)
             val endGuideline = createGuidelineFromEnd(24.dp)
 
-            HeadingText(
+            HeadingTextLarge(
                 text = stringResource(R.string.welcome),
                 modifier = Modifier.constrainAs(headingText) {
                     start.linkTo(startGuideline)

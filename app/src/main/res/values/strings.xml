@@ -33,4 +33,7 @@
     <string name="following" translatable="true">Following</string>
     <string name="recipes" translatable="true">Recipes</string>
     <string name="settings" translatable="true">Settings button</string>
+    <string name="back_button" translatable="true">Back button</string>
+    <string name="edit_profile" translatable="true">Edit Profile</string>
+    <string name="save_button" translatable="true">Save</string>
 </resources>
