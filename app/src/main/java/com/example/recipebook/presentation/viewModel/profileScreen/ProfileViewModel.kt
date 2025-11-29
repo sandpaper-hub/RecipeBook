@@ -33,7 +33,9 @@ class ProfileViewModel @Inject constructor(
                 .onSuccess {
                     uiState = uiState.copy(
                         fullName = it.fullName,
-                        nickName = it.email
+                        nickName = it.email,
+                        banner = it.photoUrl
+
                     )
                     isLoading = false
                 }

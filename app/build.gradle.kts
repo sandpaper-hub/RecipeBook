@@ -75,6 +75,10 @@ dependencies {
     implementation(libs.google.firebase.auth.ktx)
     //firestore
     implementation(libs.google.firebase.firestore)
+    //FirebaseStorage
+    implementation(libs.google.firebase.storage)
+    //Coil
+    implementation(libs.io.coil.compose)
     //hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation)

@@ -22,7 +22,7 @@ import com.example.recipebook.presentation.ui.commonUi.ProfileBanner
 @Composable
 @Suppress("FunctionName")
 fun ProfileHeader(
-    bannerImage: Painter,
+    imageUrl: String?,
     profileImage: Painter,
     profileName: String,
     profileNickName: String,
@@ -49,7 +49,7 @@ fun ProfileHeader(
         )
 
         ProfileBanner(
-            painter = bannerImage,
+            imageUrl = imageUrl,
             contentDescription = stringResource(R.string.banner_description),
             modifier = Modifier.constrainAs(profileBanner) {
                 top.linkTo(profileBanner.top)
@@ -57,7 +57,7 @@ fun ProfileHeader(
         )
 
         Icon(
-            painter = painterResource(R.drawable.settings),
+            painter = painterResource(R.drawable.settings_icon),
             contentDescription = "Settings button",
             modifier = Modifier
                 .constrainAs(settingsButton) {
@@ -158,7 +158,7 @@ fun ProfileHeader(
             textColor = MaterialTheme.colorScheme.inversePrimary)
 
         ProfileAvatar(
-            painter = profileImage,
+            imageUrl = imageUrl,
             contentDescription = stringResource(R.string.profile_image),
             size = 100.dp,
             modifier = Modifier
