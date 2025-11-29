@@ -9,4 +9,9 @@ class ProfileInteractorImpl @Inject constructor (
     override suspend fun getUserProfile(): Result<UserProfile> {
         return profileRepository.getUserProfile()
     }
+
+    override suspend fun updateUserData(data: Map<String, Any>): Result<Unit> =
+        profileRepository.updateUserData(data = data)
+
+
 }
