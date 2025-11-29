@@ -10,17 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.example.recipebook.R
 import com.example.recipebook.presentation.viewModel.profileScreen.ProfileViewModel
 
 @Composable
 @Suppress("FunctionName")
 fun ProfileScreen(
+    viewModel: ProfileViewModel,
     onSettings: () -> Unit,
-    onEditProfile: () -> Unit,
-    viewModel: ProfileViewModel = hiltViewModel()
+    onEditProfile: () -> Unit
 ) {
     val listState = rememberLazyListState()
     val uiState = viewModel.uiState
@@ -43,8 +40,7 @@ fun ProfileScreen(
         ) {
             item {
                 ProfileHeader(
-                    imageUrl = uiState.banner,
-                    profileImage = painterResource(R.drawable.onboarding_image),
+                    imageUrl = uiState.image,
                     profileName = uiState.fullName,
                     profileNickName = uiState.nickName,
                     followersCount = 123123,
@@ -56,5 +52,4 @@ fun ProfileScreen(
             }
         }
     }
-
 }

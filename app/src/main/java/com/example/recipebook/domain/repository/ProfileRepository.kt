@@ -5,4 +5,6 @@ import com.example.recipebook.domain.model.UserProfile
 interface ProfileRepository {
     suspend fun createUserDocumentIfNeeded(userProfile: UserProfile): Result<Unit>
     suspend fun getUserProfile(): Result<UserProfile>
+
+    suspend fun updateUserData(data: Map<String, Any>): Result<Unit>
 }

@@ -31,6 +31,7 @@ class ProfileRepositoryImpl @Inject constructor(
                             "uid" to userProfile.uid,
                             "fullName" to userProfile.fullName,
                             "email" to userProfile.email,
+                            "nickname" to userProfile.nickName,
                             "photoUrl" to userProfile.photoUrl,
                             "createdAt" to userProfile.createdAt,
                             "lastLoginAt" to userProfile.lastLoginAt
@@ -54,18 +55,10 @@ class ProfileRepositoryImpl @Inject constructor(
                 }
         }
 
-    override suspend fun getUserProfile(): Result<UserProfile> =
-        suspendCancellableCoroutine { continuation ->
-            val uid = firebaseAuth.currentUser?.uid
-            if (uid == null) {
-                if (continuation.isActive) {
-                    continuation.resume(
-                        Result.failure(Exception("User is not authenticated"))
-                    )
-                }
-                return@suspendCancellableCoroutine
-            }
-
+    override suspend fun getUserProfile(): Result<UserProfile> {
+        val uid = getCurrentUserUidOrNull()
+            ?: return Result.failure(Exception("User isn't authenticated"))
+        return suspendCancellableCoroutine { continuation ->
             usersCollection.document(uid)
                 .get()
                 .addOnSuccessListener { snapshot ->
@@ -81,4 +74,28 @@ class ProfileRepositoryImpl @Inject constructor(
                     if (continuation.isActive) continuation.resume(Result.failure(error))
                 }
         }
+    }
+
+    override suspend fun updateUserData(data: Map<String, Any>): Result<Unit> {
+        val uid = getCurrentUserUidOrNull()
+            ?: return Result.failure(Exception("User isn't authenticated"))
+        return suspendCancellableCoroutine { continuation ->
+            usersCollection
+                .document(uid)
+                .update(data)
+                .addOnSuccessListener {
+                    if (continuation.isActive) {
+                        continuation.resume(Result.success(Unit))
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    if (continuation.isActive) {
+                        continuation.resume(Result.failure(exception = exception))
+                    }
+                }
+        }
+    }
+
+    private fun getCurrentUserUidOrNull(): String? =
+        firebaseAuth.currentUser?.uid
 }

@@ -63,6 +63,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
                                     val domainUser = UserProfile(
                                         uid = firebaseUser.uid,
                                         fullName = name,
+                                        nickName = firebaseUser.email ?: email,
                                         email = firebaseUser.email ?: email,
                                         photoUrl = uri.toString()
                                     )

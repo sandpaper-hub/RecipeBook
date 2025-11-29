@@ -19,13 +19,16 @@ import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.ProfileAvatar
 import com.example.recipebook.presentation.ui.commonUi.RoundedPrimaryButton
 import com.example.recipebook.presentation.ui.commonUi.TitleText
+import com.example.recipebook.presentation.viewModel.profileScreen.ProfileViewModel
 
 @Composable
 @Suppress("FunctionName")
-fun EditProfileScreen(onBackNavigation: () -> Unit) {
+fun EditProfileScreen(
+    viewModel: ProfileViewModel,
+    onBackNavigation: () -> Unit
+) {
 
-    val fullName = ""
-    val userName = ""
+    val uiState = viewModel.uiState
 
     ConstraintLayout(
         modifier = Modifier
@@ -51,7 +54,7 @@ fun EditProfileScreen(onBackNavigation: () -> Unit) {
                     indication = null,
                     onClick = {
                         onBackNavigation()
-                })
+                    })
         )
 
 
@@ -65,7 +68,10 @@ fun EditProfileScreen(onBackNavigation: () -> Unit) {
         )
 
         RoundedPrimaryButton(
-            onClick = { onBackNavigation() },
+            onClick = {
+                viewModel.updateUserData()
+                onBackNavigation()
+            },
             text = stringResource(R.string.save_button),
             modifier = Modifier
                 .constrainAs(saveButton) {
@@ -75,7 +81,7 @@ fun EditProfileScreen(onBackNavigation: () -> Unit) {
         )
 
         ProfileAvatar(
-            imageUrl = null,
+            imageUrl = uiState.image,
             contentDescription = stringResource(R.string.profile_image),
             size = 120.dp,
             modifier = Modifier
@@ -106,8 +112,8 @@ fun EditProfileScreen(onBackNavigation: () -> Unit) {
         )
 
         CustomTextField(
-            value = fullName,
-            onValueChange = {},
+            value = uiState.fullName,
+            onValueChange = viewModel::onNameChanged,
             hint = stringResource(R.string.name_hint),
             modifier = Modifier
                 .constrainAs(nameTextField) {
@@ -118,7 +124,7 @@ fun EditProfileScreen(onBackNavigation: () -> Unit) {
         )
 
         TitleText(
-            text = stringResource(R.string.email),
+            text = stringResource(R.string.nick_name),
             modifier = Modifier
                 .constrainAs(usernameText) {
                     start.linkTo(startGuideline)
@@ -127,8 +133,8 @@ fun EditProfileScreen(onBackNavigation: () -> Unit) {
         )
 
         CustomTextField(
-            value = userName,
-            onValueChange = {},
+            value = uiState.nickName,
+            onValueChange = viewModel::onNickNameChanged,
             hint = stringResource(R.string.email_hint),
             modifier = Modifier
                 .constrainAs(usernameTextField) {

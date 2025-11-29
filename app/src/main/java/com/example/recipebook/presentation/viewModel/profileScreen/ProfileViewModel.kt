@@ -32,9 +32,10 @@ class ProfileViewModel @Inject constructor(
             result
                 .onSuccess {
                     uiState = uiState.copy(
+                        uid = it.uid,
                         fullName = it.fullName,
-                        nickName = it.email,
-                        banner = it.photoUrl
+                        nickName = it.nickName,
+                        image = it.photoUrl ?: ""
 
                     )
                     isLoading = false
@@ -43,6 +44,27 @@ class ProfileViewModel @Inject constructor(
                     errorMessage = error.message
                     isLoading = false
                 }
+        }
+    }
+
+    fun onNameChanged(newValue: String) {
+        uiState = uiState.copy(fullName = newValue)
+    }
+
+    fun onNickNameChanged(newValue: String) {
+        uiState = uiState.copy(nickName = newValue)
+    }
+
+    fun updateUserData() {
+        viewModelScope.launch {
+            profileInteractor.updateUserData(
+                data = mapOf(
+                    "fullName" to uiState.fullName,
+                    "nickName" to uiState.nickName,
+                    "photoUrl" to uiState.image
+
+                )
+            )
         }
     }
 }
