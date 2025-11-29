@@ -39,7 +39,7 @@ fun EditProfileScreen(onBackNavigation: () -> Unit) {
         val endGuideline = createGuidelineFromEnd(24.dp)
 
         Icon(
-            painter = painterResource(R.drawable.back_arrow),
+            painter = painterResource(R.drawable.back_arrow_icon),
             contentDescription = stringResource(R.string.back_button),
             modifier = Modifier
                 .constrainAs(backButton) {
@@ -50,7 +50,7 @@ fun EditProfileScreen(onBackNavigation: () -> Unit) {
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null,
                     onClick = {
-                    onBackNavigation()
+                        onBackNavigation()
                 })
         )
 
@@ -75,7 +75,7 @@ fun EditProfileScreen(onBackNavigation: () -> Unit) {
         )
 
         ProfileAvatar(
-            painter = painterResource(R.drawable.onboarding_image),
+            imageUrl = null,
             contentDescription = stringResource(R.string.profile_image),
             size = 120.dp,
             modifier = Modifier

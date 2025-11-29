@@ -43,7 +43,7 @@ fun ProfileScreen(
         ) {
             item {
                 ProfileHeader(
-                    bannerImage = painterResource(R.drawable.onboarding_image),
+                    imageUrl = uiState.banner,
                     profileImage = painterResource(R.drawable.onboarding_image),
                     profileName = uiState.fullName,
                     profileNickName = uiState.nickName,

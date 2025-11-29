@@ -12,24 +12,29 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import com.example.recipebook.R
 
 @Composable
 @Suppress("FunctionName")
 fun ProfileAvatar(
-    painter: Painter,
+   imageUrl: String?,
     contentDescription: String,
     size: Dp,
-    modifier: Modifier) {
+    modifier: Modifier
+) {
     Box(
-        modifier = modifier.then(Modifier
-            .size(size = size)
-            .clip(CircleShape)
+        modifier = modifier.then(
+            Modifier
+                .size(size = size)
+                .clip(CircleShape)
         )
     ) {
-        Image(
-            painter = painter,
+        AsyncImage(
+            model = imageUrl ?: R.drawable.profile_image,
             contentDescription = contentDescription,
             contentScale = ContentScale.Crop
         )
@@ -39,19 +44,18 @@ fun ProfileAvatar(
 @Composable
 @Suppress("FunctionName")
 fun ProfileBanner(
-    painter: Painter,
+    imageUrl: String?,
     contentDescription: String,
     modifier: Modifier
 ) {
-    Image(
-        painter = painter,
+    AsyncImage(
+        model = imageUrl ?: R.drawable.profile_image,
         contentDescription = contentDescription,
-        contentScale = ContentScale.Crop,
-        modifier = modifier.then(
-            Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .blur(10.dp)
-        )
+        placeholder = painterResource(R.drawable.profile_image),
+        modifier = modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .blur(10.dp),
+        contentScale = ContentScale.Crop
     )
 }

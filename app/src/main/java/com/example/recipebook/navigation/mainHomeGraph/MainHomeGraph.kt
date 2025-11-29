@@ -78,31 +78,31 @@ sealed class BottomNavigationItem(
 ) {
     data object Home : BottomNavigationItem(
         route = "home",
-        icon = R.drawable.home,
+        icon = R.drawable.home_icon,
         label = "Home"
     )
 
     data object Collaboration : BottomNavigationItem(
         route = "collaboration",
-        icon = R.drawable.collaboration,
+        icon = R.drawable.collaboration_icon,
         label = "Collaboration"
     )
 
     data object Upload : BottomNavigationItem(
         route = "upload",
-        icon = R.drawable.upload_recipe,
+        icon = R.drawable.upload_recipe_icon,
         label = "Upload"
     )
 
     data object Saved : BottomNavigationItem(
         route = "saved",
-        icon = R.drawable.saved,
+        icon = R.drawable.saved_icon,
         label = "Saved"
     )
 
     data object Profile : BottomNavigationItem(
         route = "profile",
-        icon = R.drawable.profile,
+        icon = R.drawable.profile_icon,
         label = "Profile"
     )
 }
