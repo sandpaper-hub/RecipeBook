@@ -1,5 +1,6 @@
 package com.example.recipebook.presentation.viewModel.profileScreen
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -7,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.profile.ProfileInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,7 +36,7 @@ class ProfileViewModel @Inject constructor(
                         uid = it.uid,
                         fullName = it.fullName,
                         nickName = it.nickName,
-                        image = it.photoUrl ?: ""
+                        remoteImageUrl = it.photoUrl ?: ""
 
                     )
                     isLoading = false
@@ -60,14 +62,32 @@ class ProfileViewModel @Inject constructor(
 
     fun updateUserData() {
         viewModelScope.launch {
-            profileInteractor.updateUserData(
+            uiState = uiState.copy(isSaving = true)
+
+            val result = profileInteractor.updateUserData(
                 data = mapOf(
                     "fullName" to uiState.fullName,
-                    "nickName" to uiState.nickName,
-                    "photoUrl" to uiState.image
-
-                )
+                    "nickName" to uiState.nickName
+                ),
+                uriString = uiState.localImageUri.toString()
             )
+            delay(2000)
+            uiState = if (result.isSuccess) {
+                uiState.copy(isSaving = false, localImageUri = null)
+            } else {
+                uiState.copy(isSaving = false, errorMessage = result.exceptionOrNull()?.message)
+            }
+        }
+    }
+
+    fun onImagePicked(uri: Uri?) {
+        uiState = uiState.copy(localImageUri = uri)
+    }
+
+    fun refreshImageUri() {
+        viewModelScope.launch {
+            delay(2000L)
+            uiState = uiState.copy(localImageUri = null)
         }
     }
 }

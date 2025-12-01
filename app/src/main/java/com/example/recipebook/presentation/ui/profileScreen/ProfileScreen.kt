@@ -40,7 +40,7 @@ fun ProfileScreen(
         ) {
             item {
                 ProfileHeader(
-                    imageUrl = uiState.image,
+                    imageUrl = uiState.remoteImageUrl,
                     profileName = uiState.fullName,
                     profileNickName = uiState.nickName,
                     followersCount = 123123,
