@@ -1,12 +1,11 @@
 package com.example.recipebook.domain.interactor.registration
 
-import com.example.recipebook.domain.repository.ProfileRepository
 import com.example.recipebook.domain.repository.AuthenticationRepository
+import com.example.recipebook.util.convertToNickName
 import javax.inject.Inject
 
 class RegistrationInteractorImpl @Inject constructor(
     private val authenticationRepository: AuthenticationRepository,
-    private val profileRepository: ProfileRepository
 ) : RegistrationInteractor {
     override suspend fun register(
         name: String,
@@ -17,12 +16,13 @@ class RegistrationInteractorImpl @Inject constructor(
             authenticationRepository.register(
                 name = name,
                 email = email,
-                password = password
+                password = password,
+                nickName = email.convertToNickName()
             )
 
         return authenticationResult.fold(
             onSuccess = { authenticatedUser ->
-                profileRepository.createUserDocumentIfNeeded(authenticatedUser)
+                authenticationRepository.createUserDocumentIfNeeded(authenticatedUser)
             },
             onFailure = { exception ->
                 Result.failure(exception)

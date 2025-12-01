@@ -7,3 +7,5 @@ fun Int.convertToFollowersFormat(): String {
         else -> this.toString()
     }.replace(".0", "")
 }
+
+fun String.convertToNickName(): String = this.substringBefore("@")

@@ -44,13 +44,14 @@ fun SquareRoundedButton(
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp)
         ), shape = RoundedCornerShape(14.dp), colors = ButtonDefaults.buttonColors(
-            containerColor = containerColor ?: GreenAccent, contentColor = Color.White
+            containerColor = containerColor ?: GreenAccent
         )
     ) {
         if (isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.size(18.dp),
-                strokeWidth = 2.dp
+                strokeWidth = 2.dp,
+                color = Color.White
             )
         } else {
             Text(text = text)
