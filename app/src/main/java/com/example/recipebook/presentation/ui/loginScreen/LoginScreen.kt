@@ -16,7 +16,6 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableText
-import com.example.recipebook.presentation.ui.commonUi.ClickableTextCheckbox
 import com.example.recipebook.presentation.ui.commonUi.CustomPasswordTextField
 import com.example.recipebook.presentation.ui.commonUi.CustomTextField
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
@@ -49,7 +48,7 @@ fun LoginScreen(
                 .padding(innerPadding)
         ) {
             val (headingText, subHeadingText, emailText, emailTextField,
-                passwordText, passwordTextField, forgotPasswordText, rememberCheckbox,
+                passwordText, passwordTextField, forgotPasswordText,
                 loginButton, dontHaveAccountText, textDivider, googleSignInButton,
                 facebookSignInButton, errorSampleText) = createRefs()
             val startGuideline = createGuidelineFromStart(24.dp)
@@ -117,17 +116,6 @@ fun LoginScreen(
                 visible = uiState.passwordVisibility,
                 changeVisibility = { viewModel.onPasswordVisibilityChange(!uiState.passwordVisibility) })
 
-            ClickableTextCheckbox(
-                checked = uiState.isRememberMeChecked,
-                onValueChange = { viewModel.onRememberMeChecked(!uiState.isRememberMeChecked) },
-                modifier = Modifier
-                    .constrainAs(rememberCheckbox) {
-                        start.linkTo(startGuideline)
-                        top.linkTo(passwordTextField.bottom)
-                    }
-                    .padding(top = 20.dp)
-            )
-
             ClickableText(
                 "Forgot password?",
                 modifier = Modifier
@@ -146,7 +134,7 @@ fun LoginScreen(
                     .constrainAs(loginButton) {
                         start.linkTo(startGuideline)
                         end.linkTo(endGuideline)
-                        top.linkTo(rememberCheckbox.bottom)
+                        top.linkTo(forgotPasswordText.bottom)
                     }
                     .padding(top = 32.dp)
             )

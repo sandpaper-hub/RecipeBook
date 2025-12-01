@@ -5,6 +5,7 @@ import com.example.recipebook.domain.repository.AuthenticationRepository
 import com.example.recipebook.util.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
@@ -12,14 +13,17 @@ import kotlin.coroutines.resume
 
 class AuthenticationRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
-    private val storage: FirebaseStorage
+    private val storage: FirebaseStorage,
+    firestore: FirebaseFirestore
 ) : AuthenticationRepository {
 
+    private val usersCollection = firestore.collection("users")
 
     override suspend fun register(
         name: String,
         email: String,
-        password: String
+        password: String,
+        nickName: String
     ): Result<UserProfile> =
         suspendCancellableCoroutine { continuation ->
             auth.createUserWithEmailAndPassword(email, password)
@@ -63,7 +67,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
                                     val domainUser = UserProfile(
                                         uid = firebaseUser.uid,
                                         fullName = name,
-                                        nickName = firebaseUser.email ?: email,
+                                        nickName = nickName,
                                         email = firebaseUser.email ?: email,
                                         photoUrl = uri.toString()
                                     )
@@ -93,6 +97,46 @@ class AuthenticationRepositoryImpl @Inject constructor(
                         val exception = task.exception ?: Exception("Unknown error")
                         continuation.resume(Result.failure(exception))
                     }
+                }
+        }
+
+    override suspend fun createUserDocumentIfNeeded(userProfile: UserProfile): Result<Unit> =
+        suspendCancellableCoroutine { continuation ->
+
+            val docRef = usersCollection.document(userProfile.uid)
+
+            docRef.get()
+                .addOnSuccessListener { snapshot ->
+                    if (!continuation.isActive) return@addOnSuccessListener
+
+                    if (snapshot.exists()) {
+                        continuation.resume(Result.success(Unit))
+                    } else {
+                        val data = mapOf(
+                            "uid" to userProfile.uid,
+                            "fullName" to userProfile.fullName,
+                            "email" to userProfile.email,
+                            "nickName" to userProfile.nickName,
+                            "photoUrl" to userProfile.photoUrl,
+                            "createdAt" to userProfile.createdAt,
+                            "lastLoginAt" to userProfile.lastLoginAt
+                        )
+
+                        docRef.set(data)
+                            .addOnSuccessListener {
+                                if (continuation.isActive) {
+                                    continuation.resume(Result.success(Unit))
+                                }
+                            }
+                            .addOnFailureListener { exception ->
+                                if (continuation.isActive) {
+                                    continuation.resume(Result.failure(exception = exception))
+                                }
+                            }
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    if (continuation.isActive) continuation.resume(Result.failure(exception))
                 }
         }
 

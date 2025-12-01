@@ -7,9 +7,12 @@ interface AuthenticationRepository {
         name: String,
         email: String,
         password: String,
+        nickName: String
     ) : Result<UserProfile>
 
     suspend fun signIn(email: String, password: String): Result<Unit>
+
+    suspend fun createUserDocumentIfNeeded(userProfile: UserProfile): Result<Unit>
 
     fun isLoggedIn(): Boolean
 }

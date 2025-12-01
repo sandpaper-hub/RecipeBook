@@ -4,5 +4,6 @@ data class ProfileState(
     val uid: String = "",
     val fullName: String = "",
     val nickName: String = "",
-    val image: String = ""
+    val image: String = "",
+    val errorMessage: String? = null
 )

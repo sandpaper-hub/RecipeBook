@@ -20,8 +20,7 @@ class ProfileViewModel @Inject constructor(
     var isLoading by mutableStateOf(false)
         private set
 
-    var errorMessage by mutableStateOf<String?>(null)
-        private set
+    val allowedRegex = Regex("^[A-Za-z0-9._]*$")
 
     fun loadProfile() {
         viewModelScope.launch {
@@ -41,7 +40,7 @@ class ProfileViewModel @Inject constructor(
                     isLoading = false
                 }
                 .onFailure { error ->
-                    errorMessage = error.message
+                    uiState = uiState.copy(errorMessage = error.message)
                     isLoading = false
                 }
         }
@@ -52,7 +51,11 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun onNickNameChanged(newValue: String) {
-        uiState = uiState.copy(nickName = newValue)
+        uiState = if (allowedRegex.matches(newValue)) {
+            uiState.copy(nickName = newValue)
+        } else {
+            uiState.copy(errorMessage = "No specific symbols")
+        }
     }
 
     fun updateUserData() {
