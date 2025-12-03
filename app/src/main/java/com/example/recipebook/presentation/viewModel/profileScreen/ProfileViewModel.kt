@@ -1,5 +1,6 @@
 package com.example.recipebook.presentation.viewModel.profileScreen
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -7,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.profile.ProfileInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,31 +20,25 @@ class ProfileViewModel @Inject constructor(
     var uiState by mutableStateOf(ProfileState())
         private set
 
-    var isLoading by mutableStateOf(false)
-        private set
-
     val allowedRegex = Regex("^[A-Za-z0-9._]*$")
 
-    fun loadProfile() {
+    init {
+        observeUserProfile()
+    }
+
+    private fun observeUserProfile() {
         viewModelScope.launch {
-            isLoading = true
-
-            val result = profileInteractor.getUserProfile()
-
-            result
-                .onSuccess {
-                    uiState = uiState.copy(
-                        uid = it.uid,
-                        fullName = it.fullName,
-                        nickName = it.nickName,
-                        image = it.photoUrl ?: ""
-
-                    )
-                    isLoading = false
-                }
-                .onFailure { error ->
+            profileInteractor.observerUserProfile()
+                .catch { error ->
                     uiState = uiState.copy(errorMessage = error.message)
-                    isLoading = false
+                }
+                .collect { userProfile ->
+                    uiState = uiState.copy(
+                        uid = userProfile.uid,
+                        fullName = userProfile.fullName,
+                        nickName = userProfile.nickName,
+                        remoteImageUrl = userProfile.photoUrl
+                    )
                 }
         }
     }
@@ -58,16 +55,51 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun updateUserData() {
+    fun updateUserData(onBackNavigation: () -> Unit) {
         viewModelScope.launch {
-            profileInteractor.updateUserData(
+            uiState = uiState.copy(isSaving = true)
+
+            if (uiState.fullName.isBlank() || uiState.nickName.isBlank()) {
+                uiState = uiState.copy(
+                    errorMessage = "Full Name or NickName shouldn't be blank",
+                    isSaving = false
+                )
+                return@launch
+            }
+
+            val result = profileInteractor.updateUserData(
                 data = mapOf(
                     "fullName" to uiState.fullName,
-                    "nickName" to uiState.nickName,
-                    "photoUrl" to uiState.image
-
-                )
+                    "nickName" to uiState.nickName
+                ),
+                uriString = if (uiState.localImageUri == null) null else uiState.localImageUri.toString()
             )
+            delay(2000)
+            uiState = if (result.isSuccess) {
+                uiState.copy(
+                    isSaving = false,
+                    localImageUri = null
+                )
+            } else {
+                uiState.copy(
+                    isSaving = false,
+                    errorMessage = result.exceptionOrNull()?.message
+                )
+            }
+            if (result.isSuccess) {
+                onBackNavigation()
+            }
+        }
+    }
+
+    fun onImagePicked(uri: Uri?) {
+        uiState = uiState.copy(localImageUri = uri)
+    }
+
+    fun refreshImageUri() {
+        viewModelScope.launch {
+            delay(2000L)
+            uiState = uiState.copy(localImageUri = null)
         }
     }
 }

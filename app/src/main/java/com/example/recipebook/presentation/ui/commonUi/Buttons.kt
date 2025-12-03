@@ -93,16 +93,25 @@ fun OutlinedIconButton(
 fun RoundedPrimaryButton(
     onClick: () -> Unit,
     text: String,
+    isLoading: Boolean,
     modifier: Modifier
 ) {
     Button(
         onClick = onClick,
         modifier = modifier
     ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.titleSmall
-        )
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(18.dp),
+                strokeWidth = 2.dp,
+                color = Color.White
+            )
+        } else {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.titleSmall
+            )
+        }
     }
 }
 

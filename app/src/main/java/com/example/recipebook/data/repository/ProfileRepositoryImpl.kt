@@ -1,20 +1,49 @@
 package com.example.recipebook.data.repository
 
-import android.util.Log
 import com.example.recipebook.domain.repository.ProfileRepository
 import com.example.recipebook.domain.model.UserProfile
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
 class ProfileRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    firestore: FirebaseFirestore
+    firestore: FirebaseFirestore,
+    private val firebaseStorage: FirebaseStorage
 ) : ProfileRepository {
 
     private val usersCollection = firestore.collection("users")
+
+    override fun observeUserProfile(): Flow<UserProfile> = callbackFlow {
+        val uid = getCurrentUserUidOrNull()
+        if (uid == null) {
+            close(Exception("User isn't authenticated"))
+            return@callbackFlow
+        }
+
+        val registration = usersCollection
+            .document(uid)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                val user = snapshot?.toObject(UserProfile::class.java)
+                if (user != null) {
+                    trySend(user).isSuccess
+                }
+            }
+        awaitClose {
+            registration.remove()
+        }
+    }
 
     override suspend fun getUserProfile(): Result<UserProfile> {
         val uid = getCurrentUserUidOrNull()
@@ -26,7 +55,6 @@ class ProfileRepositoryImpl @Inject constructor(
                     if (!continuation.isActive) return@addOnSuccessListener
                     val user = snapshot.toObject(UserProfile::class.java)
                     if (user != null) {
-                        Log.d("UI_STATE_PROFILE", user.nickName)
                         continuation.resume(Result.success(user))
                     } else {
                         continuation.resume(Result.failure(Exception("User not found")))
@@ -38,7 +66,41 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateUserData(data: Map<String, Any>): Result<Unit> {
+    override suspend fun uploadUserAvatar(bytes: ByteArray): Result<String> {
+        val uid = getCurrentUserUidOrNull()
+            ?: return Result.failure(Exception("User isn't authenticated"))
+
+        return suspendCancellableCoroutine { continuation ->
+            val ref = firebaseStorage.reference.child("users_avatar/$uid/avatar.jpg")
+            val uploadTask = ref.putBytes(bytes)
+
+            uploadTask
+                .addOnSuccessListener {
+                    ref.downloadUrl
+                        .addOnSuccessListener { uri ->
+                            if (continuation.isActive) {
+                                continuation.resume(Result.success(uri.toString()))
+                            }
+                        }
+                        .addOnFailureListener { exception ->
+                            if (continuation.isActive) {
+                                continuation.resume(Result.failure(exception))
+                            }
+                        }
+                }
+                .addOnFailureListener { exception ->
+                    if (continuation.isActive) {
+                        continuation.resume(Result.failure(exception))
+                    }
+                }
+
+            continuation.invokeOnCancellation {
+                uploadTask.cancel()
+            }
+        }
+    }
+
+    override suspend fun updateUserData(data: Map<String, Any?>): Result<Unit> {
         val uid = getCurrentUserUidOrNull()
             ?: return Result.failure(Exception("User isn't authenticated"))
         return suspendCancellableCoroutine { continuation ->
@@ -52,7 +114,7 @@ class ProfileRepositoryImpl @Inject constructor(
                 }
                 .addOnFailureListener { exception ->
                     if (continuation.isActive) {
-                        continuation.resume(Result.failure(exception = exception))
+                        continuation.resume(Result.failure(exception))
                     }
                 }
         }

@@ -1,5 +1,8 @@
 package com.example.recipebook.presentation.ui.editProfileScreen
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +33,14 @@ fun EditProfileScreen(
 
     val uiState = viewModel.uiState
 
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            viewModel.onImagePicked(uri)
+        }
+    }
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -53,6 +64,7 @@ fun EditProfileScreen(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null,
                     onClick = {
+                        viewModel.refreshImageUri()
                         onBackNavigation()
                     })
         )
@@ -69,10 +81,10 @@ fun EditProfileScreen(
 
         RoundedPrimaryButton(
             onClick = {
-                viewModel.updateUserData()
-                onBackNavigation()
+                viewModel.updateUserData(onBackNavigation)
             },
             text = stringResource(R.string.save_button),
+            isLoading = uiState.isSaving,
             modifier = Modifier
                 .constrainAs(saveButton) {
                     end.linkTo(endGuideline)
@@ -80,8 +92,16 @@ fun EditProfileScreen(
                 }
         )
 
+
         ProfileAvatar(
-            imageUrl = uiState.image,
+            imageUrl = when {
+                uiState.localImageUri != null -> {
+                    uiState.localImageUri
+                }
+                else -> {
+                    uiState.remoteImageUrl
+                }
+            },
             contentDescription = stringResource(R.string.profile_image),
             size = 120.dp,
             modifier = Modifier
@@ -95,7 +115,7 @@ fun EditProfileScreen(
             size = 35.dp,
             painter = painterResource(R.drawable.edit_icon),
             contentDescription = stringResource(R.string.edit_profile),
-            onClick = {},
+            onClick = { imagePickerLauncher.launch("image/*") },
             modifier = Modifier.constrainAs(editProfileImageButton) {
                 bottom.linkTo(profileImage.bottom)
                 end.linkTo(profileImage.end)

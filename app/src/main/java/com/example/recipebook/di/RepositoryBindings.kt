@@ -2,8 +2,10 @@ package com.example.recipebook.di
 
 import com.example.recipebook.data.repository.AuthenticationRepositoryImpl
 import com.example.recipebook.data.repository.ProfileRepositoryImpl
+import com.example.recipebook.data.util.ImageCompressorImpl
 import com.example.recipebook.domain.repository.ProfileRepository
 import com.example.recipebook.domain.repository.AuthenticationRepository
+import com.example.recipebook.domain.util.ImageCompressor
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -24,4 +26,9 @@ abstract class RepositoryBindings {
     abstract fun bindFirestoreRepository(
         impl: ProfileRepositoryImpl
     ): ProfileRepository
+
+    @Binds
+    abstract fun bindImageCompressor(
+        imageCompressorImpl: ImageCompressorImpl
+    ): ImageCompressor
 }

@@ -1,6 +1,5 @@
 package com.example.recipebook.presentation.ui.commonUi
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -10,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
+
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
@@ -21,7 +20,7 @@ import com.example.recipebook.R
 @Composable
 @Suppress("FunctionName")
 fun ProfileAvatar(
-   imageUrl: String?,
+    imageUrl: Any?,
     contentDescription: String,
     size: Dp,
     modifier: Modifier
@@ -35,6 +34,7 @@ fun ProfileAvatar(
     ) {
         AsyncImage(
             model = imageUrl ?: R.drawable.profile_image,
+            placeholder = painterResource(R.drawable.profile_image),
             contentDescription = contentDescription,
             contentScale = ContentScale.Crop
         )
