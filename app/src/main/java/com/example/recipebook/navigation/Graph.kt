@@ -6,12 +6,13 @@ object Graph {
     const val MAIN_HOME = "main_home"
 }
 
-sealed class Root(val route: String){
-    data object Splash: Root("splash")
+sealed class Root(val route: String) {
+    data object Splash : Root("splash")
 }
 
 sealed class Auth(val route: String) {
-    data object Onboarding : Auth("onboarding")
-    data object Login : Auth("login")
-    data object Registration : Auth("registration")
+    data object Onboarding : Auth(route = "onboarding")
+    data object Login : Auth(route = "login")
+    data object Registration : Auth(route = "registration")
+    data object PrivacyPolicy : Auth(route = "privacy")
 }

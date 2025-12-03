@@ -31,7 +31,12 @@ import com.example.recipebook.theme.GreenAccent
 
 @Composable
 @Suppress
-fun MixedClickableText(simpleText: String, clickableText: String, modifier: Modifier) {
+fun MixedClickableText(
+    simpleText: String,
+    clickableText: String,
+    onTextClicked: () -> Unit,
+    modifier: Modifier
+) {
     var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
     val annotatedText = buildAnnotatedString {
 
@@ -58,9 +63,8 @@ fun MixedClickableText(simpleText: String, clickableText: String, modifier: Modi
                 val position = layoutResult.getOffsetForPosition(offset)
 
                 annotatedText.getStringAnnotations("CLICK", position, position).firstOrNull()
-                    ?.let { annotation ->
-                        //TODO
-                        Log.d("CLICKABLE TEXT", "CLICKED $annotation")
+                    ?.let {
+                        onTextClicked()
                     }
             }
         }),

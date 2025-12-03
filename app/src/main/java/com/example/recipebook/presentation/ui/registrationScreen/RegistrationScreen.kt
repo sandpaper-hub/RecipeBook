@@ -30,6 +30,8 @@ import com.example.recipebook.presentation.viewModel.registrationScreen.Registra
 @Suppress
 fun RegistrationScreen(
     onHomeScreen: () -> Unit,
+    onLoginScreen: () -> Unit,
+    onPrivacyScreen: () -> Unit,
     viewModel: RegistrationViewModel = hiltViewModel()
 ) {
 
@@ -64,6 +66,7 @@ fun RegistrationScreen(
             MixedClickableText(
                 stringResource(R.string.fill_form),
                 stringResource(R.string.already_have_account),
+                onTextClicked = onLoginScreen,
                 Modifier
                     .constrainAs(subHeadingText) {
                         start.linkTo(startGuideline)
@@ -168,6 +171,7 @@ fun RegistrationScreen(
             MixedClickableText(
                 stringResource(R.string.sign_up_agree),
                 stringResource(R.string.conditions_privacy_policy),
+                onTextClicked = onPrivacyScreen,
                 modifier = Modifier
                     .constrainAs(privacyText) {
                         start.linkTo(startGuideline)

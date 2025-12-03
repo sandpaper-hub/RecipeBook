@@ -31,6 +31,7 @@ import com.example.recipebook.presentation.viewModel.loginScreen.LoginViewModel
 @Suppress("FunctionName")
 fun LoginScreen(
     onHomeScreen: () -> Unit,
+    onRegistrationScreen: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()) {
 
     val uiState = viewModel.uiState
@@ -142,6 +143,7 @@ fun LoginScreen(
             MixedClickableText(
                 simpleText = stringResource(R.string.dont_have_account),
                 clickableText = stringResource(R.string.create_account),
+                onTextClicked = onRegistrationScreen,
                 modifier = Modifier
                     .constrainAs(dontHaveAccountText) {
                         start.linkTo(startGuideline)
