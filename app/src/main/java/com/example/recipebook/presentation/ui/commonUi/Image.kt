@@ -34,6 +34,7 @@ fun ProfileAvatar(
     ) {
         AsyncImage(
             model = imageUrl ?: R.drawable.profile_image,
+            placeholder = painterResource(R.drawable.profile_image),
             contentDescription = contentDescription,
             contentScale = ContentScale.Crop
         )

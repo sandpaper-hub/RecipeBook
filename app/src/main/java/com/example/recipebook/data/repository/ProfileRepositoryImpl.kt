@@ -5,6 +5,9 @@ import com.example.recipebook.domain.model.UserProfile
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -16,6 +19,31 @@ class ProfileRepositoryImpl @Inject constructor(
 ) : ProfileRepository {
 
     private val usersCollection = firestore.collection("users")
+
+    override fun observeUserProfile(): Flow<UserProfile> = callbackFlow {
+        val uid = getCurrentUserUidOrNull()
+        if (uid == null) {
+            close(Exception("User isn't authenticated"))
+            return@callbackFlow
+        }
+
+        val registration = usersCollection
+            .document(uid)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                val user = snapshot?.toObject(UserProfile::class.java)
+                if (user != null) {
+                    trySend(user).isSuccess
+                }
+            }
+        awaitClose {
+            registration.remove()
+        }
+    }
 
     override suspend fun getUserProfile(): Result<UserProfile> {
         val uid = getCurrentUserUidOrNull()

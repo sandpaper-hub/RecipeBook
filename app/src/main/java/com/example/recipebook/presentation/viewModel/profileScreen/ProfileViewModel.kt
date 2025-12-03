@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.profile.ProfileInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,31 +20,25 @@ class ProfileViewModel @Inject constructor(
     var uiState by mutableStateOf(ProfileState())
         private set
 
-    var isLoading by mutableStateOf(false)
-        private set
-
     val allowedRegex = Regex("^[A-Za-z0-9._]*$")
 
-    fun loadProfile() {
+    init {
+        observeUserProfile()
+    }
+
+    private fun observeUserProfile() {
         viewModelScope.launch {
-            isLoading = true
-
-            val result = profileInteractor.getUserProfile()
-
-            result
-                .onSuccess {
-                    uiState = uiState.copy(
-                        uid = it.uid,
-                        fullName = it.fullName,
-                        nickName = it.nickName,
-                        remoteImageUrl = it.photoUrl ?: ""
-
-                    )
-                    isLoading = false
-                }
-                .onFailure { error ->
+            profileInteractor.observerUserProfile()
+                .catch { error ->
                     uiState = uiState.copy(errorMessage = error.message)
-                    isLoading = false
+                }
+                .collect { userProfile ->
+                    uiState = uiState.copy(
+                        uid = userProfile.uid,
+                        fullName = userProfile.fullName,
+                        nickName = userProfile.nickName,
+                        remoteImageUrl = userProfile.photoUrl
+                    )
                 }
         }
     }
@@ -81,11 +76,19 @@ class ProfileViewModel @Inject constructor(
             )
             delay(2000)
             uiState = if (result.isSuccess) {
-                uiState.copy(isSaving = false, localImageUri = null)
+                uiState.copy(
+                    isSaving = false,
+                    localImageUri = null
+                )
             } else {
-                uiState.copy(isSaving = false, errorMessage = result.exceptionOrNull()?.message)
+                uiState.copy(
+                    isSaving = false,
+                    errorMessage = result.exceptionOrNull()?.message
+                )
             }
-            onBackNavigation()
+            if (result.isSuccess) {
+                onBackNavigation()
+            }
         }
     }
 
