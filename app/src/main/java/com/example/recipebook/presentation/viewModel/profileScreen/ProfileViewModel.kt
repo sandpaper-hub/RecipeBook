@@ -69,7 +69,7 @@ class ProfileViewModel @Inject constructor(
                     "fullName" to uiState.fullName,
                     "nickName" to uiState.nickName
                 ),
-                uriString = uiState.localImageUri.toString()
+                uriString = if (uiState.localImageUri == null) null else uiState.localImageUri.toString()
             )
             delay(2000)
             uiState = if (result.isSuccess) {
