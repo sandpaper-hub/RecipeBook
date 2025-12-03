@@ -64,6 +64,14 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             uiState = uiState.copy(isSaving = true)
 
+            if (uiState.fullName.isBlank() || uiState.nickName.isBlank()) {
+                uiState = uiState.copy(
+                    errorMessage = "Full Name or NickName shouldn't be blank",
+                    isSaving = false
+                )
+                return@launch
+            }
+
             val result = profileInteractor.updateUserData(
                 data = mapOf(
                     "fullName" to uiState.fullName,
