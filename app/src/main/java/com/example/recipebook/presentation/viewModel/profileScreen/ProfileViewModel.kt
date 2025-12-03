@@ -60,7 +60,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun updateUserData() {
+    fun updateUserData(onBackNavigation: () -> Unit) {
         viewModelScope.launch {
             uiState = uiState.copy(isSaving = true)
 
@@ -77,6 +77,7 @@ class ProfileViewModel @Inject constructor(
             } else {
                 uiState.copy(isSaving = false, errorMessage = result.exceptionOrNull()?.message)
             }
+            onBackNavigation()
         }
     }
 

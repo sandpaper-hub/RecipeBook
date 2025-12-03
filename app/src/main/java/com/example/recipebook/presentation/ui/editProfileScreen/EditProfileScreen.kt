@@ -81,8 +81,7 @@ fun EditProfileScreen(
 
         RoundedPrimaryButton(
             onClick = {
-                viewModel.updateUserData()
-                onBackNavigation()
+                viewModel.updateUserData(onBackNavigation)
             },
             text = stringResource(R.string.save_button),
             isLoading = uiState.isSaving,
