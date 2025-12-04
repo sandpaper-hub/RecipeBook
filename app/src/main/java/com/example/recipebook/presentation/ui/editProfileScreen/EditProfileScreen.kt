@@ -3,12 +3,8 @@ package com.example.recipebook.presentation.ui.editProfileScreen
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -16,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.recipebook.R
+import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.CustomIconButton
 import com.example.recipebook.presentation.ui.commonUi.CustomTextField
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
@@ -52,23 +49,18 @@ fun EditProfileScreen(
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
-        Icon(
+        ClickableIcon(
             painter = painterResource(R.drawable.back_arrow_icon),
             contentDescription = stringResource(R.string.back_button),
             modifier = Modifier
                 .constrainAs(backButton) {
                     start.linkTo(startGuideline)
                     top.linkTo(parent.top, margin = 21.dp)
-                }
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = {
-                        viewModel.refreshImageUri()
-                        onBackNavigation()
-                    })
-        )
-
+                },
+            onClick = {
+                viewModel.refreshImageUri()
+                onBackNavigation()
+            })
 
         HeadingTextMedium(
             text = stringResource(R.string.edit_profile),
@@ -98,6 +90,7 @@ fun EditProfileScreen(
                 uiState.localImageUri != null -> {
                     uiState.localImageUri
                 }
+
                 else -> {
                     uiState.remoteImageUrl
                 }
