@@ -32,9 +32,17 @@
     <string name="followers" translatable="true">Followers</string>
     <string name="following" translatable="true">Following</string>
     <string name="recipes" translatable="true">Recipes</string>
-    <string name="settings" translatable="true">Settings button</string>
+    <string name="settings_button" translatable="true">Settings button</string>
     <string name="back_button" translatable="true">Back button</string>
     <string name="edit_profile" translatable="true">Edit Profile</string>
     <string name="save_button" translatable="true">Save</string>
     <string name="nick_name" translatable="true">Nickname</string>
+    <string name="settings_text" translatable="true">Settings</string>
+    <string name="profile_text" translatable="true">Profile</string>
+    <string name="details" translatable="true">Details</string>
+    <string name="notification" translatable="true">Notification</string>
+    <string name="language" translatable="true">Language</string>
+    <string name="theme" translatable="true">Theme</string>
+    <string name="help" translatable="true">Help</string>
+    <string name="logout" translatable="true">Logout</string>
 </resources>

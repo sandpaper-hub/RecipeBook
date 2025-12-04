@@ -32,9 +32,17 @@
     <string name="followers" translatable="true">Подписчиков</string>
     <string name="following" translatable="true">Подписки</string>
     <string name="recipes" translatable="true">Рецептов</string>
-    <string name="settings" translatable="true">Настройки</string>
+    <string name="settings_button" translatable="true">Настройки</string>
     <string name="back_button" translatable="true">Кнопка назад</string>
     <string name="edit_profile" translatable="true">Редактировать</string>
     <string name="save_button" translatable="true">Сохранить</string>
     <string name="nick_name" translatable="true">Никнейм</string>
+    <string name="settings_text" translatable="true">Настройки</string>
+    <string name="profile_text" translatable="true">Профиль</string>
+    <string name="details" translatable="true">Подробнее</string>
+    <string name="notification" translatable="true">Уведомления</string>
+    <string name="language" translatable="true">Язык</string>
+    <string name="theme" translatable="true">Тема</string>
+    <string name="help" translatable="true">Помощь</string>
+    <string name="logout" translatable="true">Выход</string>
 </resources>

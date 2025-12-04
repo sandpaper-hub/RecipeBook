@@ -20,7 +20,7 @@ import com.example.recipebook.presentation.ui.commonUi.CustomPasswordTextField
 import com.example.recipebook.presentation.ui.commonUi.CustomTextField
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
 import com.example.recipebook.presentation.ui.commonUi.MixedClickableText
-import com.example.recipebook.presentation.ui.commonUi.SubHeadingText
+import com.example.recipebook.presentation.ui.commonUi.SubHeadingTextSmall
 import com.example.recipebook.presentation.ui.commonUi.TextDivider
 import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.ui.commonUi.OutlinedIconButton
@@ -62,7 +62,7 @@ fun LoginScreen(
                     top.linkTo(parent.top)
                 })
 
-            SubHeadingText(
+            SubHeadingTextSmall(
                 text = stringResource(R.string.welcome_subheading),
                 modifier = Modifier
                     .constrainAs(subHeadingText) {
