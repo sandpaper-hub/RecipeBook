@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.recipebook.navigation.Graph
 import com.example.recipebook.navigation.Root
-import com.example.recipebook.navigation.authenticationGraph.authenticationGraph
+import com.example.recipebook.navigation.rootNavGraph.authenticationGraph.authenticationGraph
 
 import com.example.recipebook.presentation.ui.mainScreenContainer.MainScreenContainer
 import com.example.recipebook.presentation.ui.splashScreen.SplashScreen

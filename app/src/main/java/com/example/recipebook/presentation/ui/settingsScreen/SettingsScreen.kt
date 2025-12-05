@@ -1,5 +1,6 @@
 package com.example.recipebook.presentation.ui.settingsScreen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -23,7 +24,13 @@ import com.example.recipebook.presentation.ui.commonUi.SubheadingBackgroundText
 
 @Composable
 @Suppress("FunctionName")
-fun SettingsScreen() {
+fun SettingsScreen(
+    onBackNavigation: () -> Unit,
+    onAccountScreen: () -> Unit,
+    onNotificationScreen: () -> Unit,
+    onLanguageScreen: () -> Unit,
+    onThemeScreen: () -> Unit
+) {
     Scaffold { innerPadding ->
         ConstraintLayout(
             modifier = Modifier
@@ -46,7 +53,7 @@ fun SettingsScreen() {
                         start.linkTo(startGuideline)
                         top.linkTo(parent.top, margin = 16.dp)
                     },
-                onClick = {}//TODO
+                onClick = onBackNavigation
             )
 
             HeadingTextMedium(
@@ -102,6 +109,7 @@ fun SettingsScreen() {
                 contentDescription = stringResource(R.string.details),
                 tint = MaterialTheme.colorScheme.inversePrimary,
                 modifier = Modifier
+                    .clickable(onClick = onAccountScreen)
                     .constrainAs(detailsIcon) {
                         end.linkTo(endGuideline)
                         linkTo(top = profileNameText.top, bottom = nickNameText.bottom)
@@ -123,6 +131,7 @@ fun SettingsScreen() {
                 mainText = stringResource(R.string.notification),
                 detailText = null,
                 isLogout = false,
+                onClick = onNotificationScreen,
                 modifier = Modifier
                     .constrainAs(notificationBox) {
                         linkTo(start = startGuideline, end = endGuideline)
@@ -136,6 +145,7 @@ fun SettingsScreen() {
                 mainText = stringResource(R.string.language),
                 detailText = stringResource(R.string.language),
                 isLogout = false,
+                onClick = onLanguageScreen,
                 modifier = Modifier
                     .constrainAs(languageBox) {
                         linkTo(start = startGuideline, end = endGuideline)
@@ -150,6 +160,7 @@ fun SettingsScreen() {
                 mainText = stringResource(R.string.theme),
                 detailText = stringResource(R.string.details),
                 isLogout = false,
+                onClick = { onThemeScreen() },
                 modifier = Modifier
                     .constrainAs(themeBox) {
                         linkTo(start = startGuideline, end = endGuideline)
@@ -164,6 +175,7 @@ fun SettingsScreen() {
                 mainText = stringResource(R.string.help),
                 detailText = null,
                 isLogout = false,
+                onClick = {},//TODO
                 modifier = Modifier
                     .constrainAs(helpBox) {
                         linkTo(start = startGuideline, end = endGuideline)
@@ -178,9 +190,10 @@ fun SettingsScreen() {
                 mainText = stringResource(R.string.logout),
                 detailText = null,
                 isLogout = true,
+                onClick = {},//TODO
                 modifier = Modifier
                     .constrainAs(logoutBox) {
-                        linkTo(start=startGuideline, end = endGuideline)
+                        linkTo(start = startGuideline, end = endGuideline)
                         top.linkTo(helpBox.bottom)
                         width = Dimension.fillToConstraints
                     }
