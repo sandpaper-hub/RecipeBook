@@ -3,8 +3,8 @@ package com.example.recipebook.presentation.ui.splashScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.example.recipebook.navigation.Auth
 import com.example.recipebook.navigation.Graph
+import com.example.recipebook.navigation.rootNavGraph.authenticationGraph.AuthenticationRoutes
 import com.example.recipebook.presentation.viewModel.splashScreen.SplashViewModel
 
 @Composable
@@ -19,7 +19,7 @@ fun SplashScreen(
     LaunchedEffect(destination) {
         when(destination) {
             Graph.MAIN_HOME -> onHomeScreen()
-            Auth.Onboarding.route -> onOnboardingScreen()
+            AuthenticationRoutes.Onboarding.route -> onOnboardingScreen()
             else -> Unit
         }
     }

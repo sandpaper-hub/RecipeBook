@@ -10,7 +10,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.recipebook.navigation.mainHomeGraph.BottomNavigationItem
 import com.example.recipebook.navigation.mainHomeGraph.MainHomeGraph
-import com.example.recipebook.navigation.mainHomeGraph.ProfileRoutes
+import com.example.recipebook.navigation.mainHomeGraph.profileGraph.ProfileRoutes
 import com.example.recipebook.presentation.ui.commonUi.MainBottomNavigationBar
 
 @Composable

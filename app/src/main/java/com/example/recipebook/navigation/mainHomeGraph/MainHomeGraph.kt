@@ -1,22 +1,16 @@
 package com.example.recipebook.navigation.mainHomeGraph
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
 import com.example.recipebook.R
+import com.example.recipebook.navigation.mainHomeGraph.profileGraph.profileNavGraph
 import com.example.recipebook.presentation.ui.mainHomeScreen.MainHomeScreen
 import com.example.recipebook.presentation.ui.uploadScreen.UploadScreen
 import com.example.recipebook.presentation.ui.collaborationScreen.CollaborationScreen
-import com.example.recipebook.presentation.ui.editProfileScreen.EditProfileScreen
-import com.example.recipebook.presentation.ui.profileScreen.ProfileScreen
 import com.example.recipebook.presentation.ui.savedScreen.SavedScreen
-import com.example.recipebook.presentation.ui.settingsScreen.SettingsScreen
-import com.example.recipebook.presentation.viewModel.profileScreen.ProfileViewModel
 
 @Composable
 fun MainHomeGraph(
@@ -44,45 +38,7 @@ fun MainHomeGraph(
             SavedScreen()
         }
 
-        navigation(
-            startDestination = ProfileRoutes.ProfileMain.route,
-            route = BottomNavigationItem.Profile.route
-        ) {
-            composable(ProfileRoutes.ProfileMain.route) { backStackEntry ->
-
-                val parentEntry = remember(backStackEntry) {
-                    navController.getBackStackEntry(BottomNavigationItem.Profile.route)
-                }
-                val viewModel: ProfileViewModel = hiltViewModel(parentEntry)
-
-                ProfileScreen(
-                    viewModel = viewModel,
-                    onEditProfile = {
-                        navController.navigate(ProfileRoutes.EditProfile.route)
-                    },
-                    onSettings = {
-                        navController.navigate(ProfileRoutes.Settings.route)
-                    }
-                )
-            }
-
-            composable(ProfileRoutes.EditProfile.route) { backStackEntry ->
-                val parentEntry = remember(backStackEntry) {
-                    navController.getBackStackEntry(BottomNavigationItem.Profile.route)
-                }
-                val viewModel: ProfileViewModel = hiltViewModel(parentEntry)
-                EditProfileScreen(
-                    viewModel = viewModel,
-                    onBackNavigation = {
-                        navController.popBackStack()
-                    }
-                )
-            }
-
-            composable(ProfileRoutes.Settings.route) {
-                SettingsScreen()
-            }
-        }
+        profileNavGraph(navController)
     }
 }
 

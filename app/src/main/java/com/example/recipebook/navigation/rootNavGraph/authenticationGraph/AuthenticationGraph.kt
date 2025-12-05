@@ -1,10 +1,9 @@
-package com.example.recipebook.navigation.authenticationGraph
+package com.example.recipebook.navigation.rootNavGraph.authenticationGraph
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.example.recipebook.navigation.Auth
 import com.example.recipebook.navigation.Graph
 import com.example.recipebook.presentation.ui.loginScreen.LoginScreen
 import com.example.recipebook.presentation.ui.onboardingScreen.OnboardingScreen
@@ -16,16 +15,16 @@ fun NavGraphBuilder.authenticationGraph(
 ) {
     navigation(
         route = Graph.AUTH,
-        startDestination = Auth.Onboarding.route
+        startDestination = AuthenticationRoutes.Onboarding.route
     ) {
-        composable(Auth.Onboarding.route) {
+        composable(AuthenticationRoutes.Onboarding.route) {
             OnboardingScreen(
-                onRegistrationScreen = { navController.navigate(Auth.Registration.route) },
-                onLoginScreen = { navController.navigate(Auth.Login.route) }
+                onRegistrationScreen = { navController.navigate(AuthenticationRoutes.Registration.route) },
+                onLoginScreen = { navController.navigate(AuthenticationRoutes.Login.route) }
             )
         }
 
-        composable(Auth.Login.route) {
+        composable(AuthenticationRoutes.Login.route) {
             LoginScreen(
                 onHomeScreen = {
                     navController.navigate(Graph.MAIN_HOME) {
@@ -33,15 +32,15 @@ fun NavGraphBuilder.authenticationGraph(
                     }
                 },
                 onRegistrationScreen = {
-                    navController.navigate(Auth.Registration.route) {
-                        popUpTo(Auth.Onboarding.route) { inclusive = false }
+                    navController.navigate(AuthenticationRoutes.Registration.route) {
+                        popUpTo(AuthenticationRoutes.Onboarding.route) { inclusive = false }
                         launchSingleTop = true
                     }
                 }
             )
         }
 
-        composable(Auth.Registration.route) {
+        composable(AuthenticationRoutes.Registration.route) {
             RegistrationScreen(
                 onHomeScreen = {
                     navController.navigate(Graph.MAIN_HOME) {
@@ -49,18 +48,18 @@ fun NavGraphBuilder.authenticationGraph(
                     }
                 },
                 onLoginScreen = {
-                    navController.navigate(Auth.Login.route) {
-                        popUpTo(Auth.Onboarding.route) { inclusive = false }
+                    navController.navigate(AuthenticationRoutes.Login.route) {
+                        popUpTo(AuthenticationRoutes.Onboarding.route) { inclusive = false }
                         launchSingleTop = true
                     }
                 },
                 onPrivacyScreen = {
-                    navController.navigate(Auth.PrivacyPolicy.route)
+                    navController.navigate(AuthenticationRoutes.PrivacyPolicy.route)
                 }
             )
         }
 
-        composable(Auth.PrivacyPolicy.route) {
+        composable(AuthenticationRoutes.PrivacyPolicy.route) {
             PrivacyPolicyScreen()
         }
     }
