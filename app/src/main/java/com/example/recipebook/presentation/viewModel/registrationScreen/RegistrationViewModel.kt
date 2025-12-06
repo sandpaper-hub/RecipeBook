@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.registration.RegistrationInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -14,35 +16,25 @@ import javax.inject.Inject
 class RegistrationViewModel @Inject constructor(
     private val registrationInteractor: RegistrationInteractor
 ) : ViewModel() {
-    var name by mutableStateOf("")
+    var uiState by mutableStateOf(RegistrationState())
         private set
-    var email by mutableStateOf("")
-        private set
-    var password by mutableStateOf("")
-        private set
-    var passwordVisibility by mutableStateOf(false)
-        private set
-
-    var isLoading by mutableStateOf(false)
-        private set
-
-    var errorMessage by mutableStateOf<String?>(null)
-        private set
+    private val _events = MutableSharedFlow<RegistrationUiEvent>()
+    val events: SharedFlow<RegistrationUiEvent> = _events
 
     fun onNameChanged(newName: String) {
-        name = newName
+        uiState = uiState.copy(name = newName)
     }
 
     fun onEmailChanged(newEmail: String) {
-        email = newEmail
+        uiState = uiState.copy(email = newEmail)
     }
 
     fun onPasswordChanged(newPassword: String) {
-        password = newPassword
+        uiState = uiState.copy(password = newPassword)
     }
 
     fun onPasswordVisibilityChange(newValue: Boolean) {
-        passwordVisibility = newValue
+        uiState = uiState.copy(passwordVisibility = newValue)
     }
 
     fun register(
@@ -53,10 +45,10 @@ class RegistrationViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             if (email.isBlank() || password.isBlank()) {
-                errorMessage = "Email & password shouldn't be blank"
+
                 return@launch
             }
-            isLoading = true
+            uiState = uiState.copy(isLoading = true)
             val result = registrationInteractor.register(
                 name = name,
                 email = email,
@@ -65,13 +57,18 @@ class RegistrationViewModel @Inject constructor(
 
             result
                 .onSuccess {
-                    isLoading = false
+                    uiState = uiState.copy(isLoading = false)
                     onSuccess()
                 }
                 .onFailure { exception ->
-                    isLoading = false
-                    errorMessage = exception.message
+                    uiState = uiState.copy(isLoading = false)
+                    showSnackBar(exception.message)
                 }
         }
+    }
+
+    private suspend fun showSnackBar(message: String?) {
+        _events.emit(
+            RegistrationUiEvent.ShowMessage(message))
     }
 }
