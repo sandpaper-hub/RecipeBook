@@ -23,7 +23,7 @@ import com.example.recipebook.presentation.ui.commonUi.MixedClickableText
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
 import com.example.recipebook.presentation.ui.commonUi.TextDivider
 import com.example.recipebook.presentation.ui.commonUi.TitleText
-import com.example.recipebook.presentation.viewModel.registrationScreen.RegistrationUiEvent
+import com.example.recipebook.presentation.viewModel.model.UiEvent
 import com.example.recipebook.presentation.viewModel.registrationScreen.RegistrationViewModel
 
 @Composable
@@ -40,7 +40,7 @@ fun RegistrationScreen(
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when(event) {
-                is RegistrationUiEvent.ShowMessage -> {
+                is UiEvent.ShowMessage -> {
                     snackBar.showMessage(event.message)
                 }
             }

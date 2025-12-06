@@ -6,8 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.login.LoginInteractor
+import com.example.recipebook.presentation.viewModel.model.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -17,6 +20,8 @@ class LoginViewModel @Inject constructor(
     var uiState by mutableStateOf(LoginUiState())
         private set
 
+    private val _events = MutableSharedFlow<UiEvent>()
+    val events: SharedFlow<UiEvent> = _events
     fun onEmailChanged(newEmail: String) {
         uiState = uiState.copy(email = newEmail)
     }
@@ -27,10 +32,6 @@ class LoginViewModel @Inject constructor(
 
     fun onPasswordVisibilityChange(isVisible: Boolean) {
         uiState = uiState.copy(passwordVisibility = isVisible)
-    }
-
-    fun onRememberMeChecked(isChecked: Boolean) {
-        uiState.copy(isRememberMeChecked = isChecked)
     }
 
     fun signIn() {
@@ -48,15 +49,16 @@ class LoginViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true, errorMessage =null)
+            uiState = uiState.copy(isLoading = true, errorMessage = null)
             val result = loginInteractor.signIn(email = email, password = password)
-            uiState = if (result.isSuccess) {
-                uiState.copy(isLoading = false, isSignedIn = true)
+            if (result.isSuccess) {
+                uiState = uiState.copy(isLoading = false, isSignedIn = true)
             } else {
-                uiState.copy(isSignedIn = false, errorMessage = result.exceptionOrNull()?.message ?: "Ошибка авторизации")
+                uiState = uiState.copy(isLoading = false, isSignedIn = false)
+                _events.emit(
+                    UiEvent.ShowMessage(result.exceptionOrNull()?.message ?: "Ошибка авторизации")
+                )
             }
         }
-
-
     }
 }

@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.registration.RegistrationInteractor
+import com.example.recipebook.presentation.viewModel.model.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -18,8 +19,8 @@ class RegistrationViewModel @Inject constructor(
 ) : ViewModel() {
     var uiState by mutableStateOf(RegistrationState())
         private set
-    private val _events = MutableSharedFlow<RegistrationUiEvent>()
-    val events: SharedFlow<RegistrationUiEvent> = _events
+    private val _events = MutableSharedFlow<UiEvent>()
+    val events: SharedFlow<UiEvent> = _events
 
     fun onNameChanged(newName: String) {
         uiState = uiState.copy(name = newName)
@@ -69,6 +70,6 @@ class RegistrationViewModel @Inject constructor(
 
     private suspend fun showSnackBar(message: String?) {
         _events.emit(
-            RegistrationUiEvent.ShowMessage(message))
+            UiEvent.ShowMessage(message))
     }
 }

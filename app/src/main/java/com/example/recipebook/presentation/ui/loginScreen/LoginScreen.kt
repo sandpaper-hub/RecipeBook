@@ -3,7 +3,6 @@ package com.example.recipebook.presentation.ui.loginScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -14,6 +13,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
+import com.example.recipebook.presentation.controller.LocalSnackBarController
 import com.example.recipebook.presentation.ui.commonUi.ClickableText
 import com.example.recipebook.presentation.ui.commonUi.CustomPasswordTextField
 import com.example.recipebook.presentation.ui.commonUi.CustomTextField
@@ -25,6 +25,7 @@ import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.ui.commonUi.OutlinedIconButton
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.viewModel.loginScreen.LoginViewModel
+import com.example.recipebook.presentation.viewModel.model.UiEvent
 
 @Composable
 @Suppress("FunctionName")
@@ -35,10 +36,18 @@ fun LoginScreen(
 ) {
 
     val uiState = viewModel.uiState
+    val snackBar = LocalSnackBarController.current
 
     LaunchedEffect(uiState.isSignedIn) {
         if (uiState.isSignedIn) {
             onHomeScreen()
+        }
+        viewModel.events.collect { event ->
+            when (event) {
+                is UiEvent.ShowMessage -> {
+                    snackBar.showMessage(event.message)
+                }
+            }
         }
     }
 
@@ -94,7 +103,7 @@ fun LoginScreen(
             modifier = Modifier
                 .constrainAs(passwordText) {
                     start.linkTo(startGuideline)
-                    top.linkTo(emailTextField.bottom, margin = 8.dp)
+                    top.linkTo(emailTextField.bottom, margin = 20.dp)
                 })
 
         CustomPasswordTextField(
@@ -179,13 +188,5 @@ fun LoginScreen(
                     width = Dimension.fillToConstraints
                 }
         )
-//TODO убрать заглушку, поставить snackbar
-        Text(
-            text = uiState.errorMessage ?: "ok",
-            modifier = Modifier.constrainAs(errorSampleText) {
-                start.linkTo(startGuideline)
-                end.linkTo(endGuideline)
-                bottom.linkTo(parent.bottom)
-            })
     }
 }
