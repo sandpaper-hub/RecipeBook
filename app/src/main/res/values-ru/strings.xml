@@ -45,4 +45,11 @@
     <string name="theme" translatable="true">Тема</string>
     <string name="help" translatable="true">Помощь</string>
     <string name="logout" translatable="true">Выход</string>
+    <string name="account_text" translatable="true">Аккаунт</string>
+    <string name="region" translatable="true">Регион</string>
+    <string name="region_hint" translatable="true">Ташкент</string>
+    <string name="date_of_birth" translatable="true">Дата Рождения</string>
+    <string name="date_of_birth_hint" translatable="true">26 Августа 1992</string>
+    <string name="gender" translatable="true">Пол</string>
+    <string name="save_change" translatable="true">Сохранить Изменения</string>
 </resources>
