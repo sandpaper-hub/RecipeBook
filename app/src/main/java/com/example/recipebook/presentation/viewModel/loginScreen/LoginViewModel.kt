@@ -39,14 +39,20 @@ class LoginViewModel @Inject constructor(
         val email = uiState.email.trim()
         val password = uiState.password
 
-        if (email.isBlank()) {
-            uiState = uiState.copy(emailErrorMessageCode = R.string.blank_email)
-        }
 
-        if (password.length < 6) {
-            uiState = uiState.copy(passwordErrorMessageCode = R.string.password_min_digit)
-            return
-        }
+        uiState = uiState.copy(
+            emailErrorMessageCode = when {
+                uiState.email.isBlank() -> R.string.blank_email
+                else -> null
+            },
+            passwordErrorMessageCode = when {
+                uiState.password.isBlank() || uiState.password.length < 6 ->
+                    R.string.password_min_digit
+
+                else -> null
+            }
+        )
+        if (uiState.emailErrorMessageCode != null || uiState.passwordErrorMessageCode != null) return
 
         viewModelScope.launch {
             uiState = uiState.copy(isLoading = true, snackBarMessage = null)

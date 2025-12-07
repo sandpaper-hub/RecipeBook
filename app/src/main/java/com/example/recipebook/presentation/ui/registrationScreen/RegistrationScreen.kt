@@ -21,6 +21,7 @@ import com.example.recipebook.presentation.ui.commonUi.OutlinedIconButton
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.MixedClickableText
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
+import com.example.recipebook.presentation.ui.commonUi.SubHeadingTextSmall
 import com.example.recipebook.presentation.ui.commonUi.TextDivider
 import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.viewModel.model.UiEvent
@@ -39,7 +40,7 @@ fun RegistrationScreen(
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
-            when(event) {
+            when (event) {
                 is UiEvent.ShowMessage -> {
                     snackBar.showMessage(event.message)
                 }
@@ -56,7 +57,7 @@ fun RegistrationScreen(
         val (headingText, subHeadingText, fullNameText, nameTextField,
             emailText, emailTextField, passwordText, passwordTextField,
             signUpButton, privacyText, textDivider, googleSignUpButton,
-            facebookSignUpButton, errorText) = createRefs()
+            facebookSignUpButton, emailErrorText, passwordErrorText) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -113,7 +114,7 @@ fun RegistrationScreen(
             value = uiState.email,
             onValueChange = viewModel::onEmailChanged,
             hint = stringResource(R.string.email_hint),
-            isError = false,
+            isError = uiState.emailErrorCode != null,
             modifier = Modifier
                 .constrainAs(emailTextField) {
                     start.linkTo(startGuideline)
@@ -123,12 +124,24 @@ fun RegistrationScreen(
                 }
                 .fillMaxWidth())
 
+        if (uiState.emailErrorCode != null) {
+            SubHeadingTextSmall(
+                text = stringResource(uiState.emailErrorCode),
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier
+                    .constrainAs(emailErrorText) {
+                        linkTo(start = startGuideline, end = endGuideline, bias = 0f)
+                        top.linkTo(emailTextField.bottom, margin = 4.dp)
+                    }
+            )
+        }
+
         TitleText(
             text = stringResource(R.string.password),
             modifier = Modifier
                 .constrainAs(passwordText) {
                     start.linkTo(startGuideline)
-                    top.linkTo(emailTextField.bottom, margin = 20.dp)
+                    top.linkTo(emailTextField.bottom, margin = 32.dp)
                 }
         )
 
@@ -136,7 +149,7 @@ fun RegistrationScreen(
             value = uiState.password,
             onValueChange = viewModel::onPasswordChanged,
             hint = stringResource(R.string.password_hint),
-            isError = false,
+            isError = uiState.passwordErrorCode != null,
             visible = uiState.passwordVisibility,
             changeVisibility = { viewModel.onPasswordVisibilityChange(!uiState.passwordVisibility) },
             modifier = Modifier
@@ -148,6 +161,18 @@ fun RegistrationScreen(
                 }
                 .fillMaxWidth()
         )
+
+        if (uiState.passwordErrorCode != null) {
+            SubHeadingTextSmall(
+                text = stringResource(uiState.passwordErrorCode),
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier
+                    .constrainAs(passwordErrorText) {
+                        linkTo(start = startGuideline, end = endGuideline, bias = 0f)
+                        top.linkTo(passwordTextField.bottom, margin = 4.dp)
+                    }
+            )
+        }
 
         SquareRoundedButton(
             onClick = {
