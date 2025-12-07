@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipebook.R
 import com.example.recipebook.domain.interactor.registration.RegistrationInteractor
 import com.example.recipebook.presentation.viewModel.model.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,11 +28,11 @@ class RegistrationViewModel @Inject constructor(
     }
 
     fun onEmailChanged(newEmail: String) {
-        uiState = uiState.copy(email = newEmail)
+        uiState = uiState.copy(email = newEmail, emailErrorCode = null)
     }
 
     fun onPasswordChanged(newPassword: String) {
-        uiState = uiState.copy(password = newPassword)
+        uiState = uiState.copy(password = newPassword, passwordErrorCode = null)
     }
 
     fun onPasswordVisibilityChange(newValue: Boolean) {
@@ -44,11 +45,21 @@ class RegistrationViewModel @Inject constructor(
         password: String,
         onSuccess: () -> Unit
     ) {
-        viewModelScope.launch {
-            if (email.isBlank() || password.isBlank()) {
+        uiState = uiState.copy(
+            emailErrorCode = when {
+                uiState.email.isBlank() -> R.string.blank_email
+                else -> null
+            },
+            passwordErrorCode = when {
+                uiState.password.isBlank() || uiState.password.length < 6 ->
+                    R.string.password_min_digit
 
-                return@launch
+                else -> null
             }
+        )
+        if (uiState.emailErrorCode != null || uiState.passwordErrorCode != null) return
+
+        viewModelScope.launch {
             uiState = uiState.copy(isLoading = true)
             val result = registrationInteractor.register(
                 name = name,
@@ -70,6 +81,7 @@ class RegistrationViewModel @Inject constructor(
 
     private suspend fun showSnackBar(message: String?) {
         _events.emit(
-            UiEvent.ShowMessage(message))
+            UiEvent.ShowMessage(message)
+        )
     }
 }

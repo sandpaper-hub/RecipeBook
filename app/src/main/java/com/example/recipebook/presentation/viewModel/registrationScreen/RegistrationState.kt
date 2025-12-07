@@ -6,5 +6,6 @@ data class RegistrationState(
     val password: String = "",
     val passwordVisibility: Boolean = false,
     val isLoading: Boolean = false,
-    val error: String = ""
+    val emailErrorCode: Int? = null,
+    val passwordErrorCode: Int? = null
 )
