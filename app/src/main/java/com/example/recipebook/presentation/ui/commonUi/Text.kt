@@ -129,12 +129,16 @@ fun HeadingTextMedium(text: String, modifier: Modifier) {
 
 @Composable
 @Suppress("FunctionName")
-fun SubHeadingTextSmall(text: String, modifier: Modifier) {
+fun SubHeadingTextSmall(
+    text: String,
+    color: Color,
+    modifier: Modifier
+) {
     Text(
         text = text,
         modifier = modifier,
         style = MaterialTheme.typography.titleMedium,
-        color = MaterialTheme.colorScheme.inversePrimary
+        color = color
     )
 }
 
@@ -189,11 +193,13 @@ fun SubheadingBackgroundText(
     text: String,
     modifier: Modifier
 ) {
-    Box(modifier = modifier
-        .fillMaxWidth()
-        .height(48.dp)
-        .background(color = Color(0x0D757575)),
-        contentAlignment = Alignment.CenterStart) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(48.dp)
+            .background(color = Color(0x0D757575)),
+        contentAlignment = Alignment.CenterStart
+    ) {
 
         Text(
             text = text,

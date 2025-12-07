@@ -53,4 +53,6 @@
     <string name="gender" translatable="true">Gender</string>
     <string name="save_change" translatable="true">Save Change</string>
     <string name="forgot_password" translatable="true">Forgot password?</string>
+    <string name="blank_email" translatable="true">Email shouldn\'t be blank</string>
+    <string name="password_min_digit" translatable="true">Password must be at least 6 characters long</string>
 </resources>

@@ -73,6 +73,7 @@ fun AccountScreen() {
             value = fullName,
             onValueChange = {},
             hint = stringResource(R.string.name_hint),
+            isError = false,
             modifier = Modifier
                 .constrainAs(nameTextField) {
                     linkTo(start = startGuideline, end = endGuideline)
@@ -94,6 +95,7 @@ fun AccountScreen() {
             value = email,
             onValueChange = {},
             hint = stringResource(R.string.email_hint),
+            isError = false,
             modifier = Modifier
                 .constrainAs(emailTextField) {
                     linkTo(start = startGuideline, end = endGuideline)
@@ -115,6 +117,7 @@ fun AccountScreen() {
             value = region,
             onValueChange = {},
             hint = stringResource(R.string.region_hint),
+            isError = false,
             modifier = Modifier
                 .constrainAs(regionTextField) {
                     linkTo(start = startGuideline, end = endGuideline)
@@ -136,6 +139,7 @@ fun AccountScreen() {
             value = dateOfBirth,
             onValueChange = {},
             hint = stringResource(R.string.date_of_birth_hint),
+            isError = false,
             modifier = Modifier
                 .constrainAs(dateBirthTextField) {
                     linkTo(start = startGuideline, end = endGuideline)

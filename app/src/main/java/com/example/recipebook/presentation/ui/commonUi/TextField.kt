@@ -6,9 +6,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -43,11 +45,20 @@ import com.example.recipebook.theme.TitleGray
 @Composable
 @Suppress("FunctionName")
 fun CustomTextField(
-    value: String, onValueChange: (String) -> Unit, hint: String, modifier: Modifier
+    value: String,
+    onValueChange: (String) -> Unit,
+    hint: String,
+    isError: Boolean,
+    modifier: Modifier
 ) {
     var isFocused by remember { mutableStateOf(false) }
     val borderColor by animateColorAsState(
-        if (isFocused) MaterialTheme.colorScheme.primary else Color.Transparent
+        if (isFocused) {
+            MaterialTheme.colorScheme.primary
+        } else if (isError) {
+            MaterialTheme.colorScheme.error
+        } else
+            Color.Transparent
     )
     val borderWidth by animateDpAsState(
         if (isFocused) 0.5.dp else 1.dp
@@ -65,6 +76,7 @@ fun CustomTextField(
                     color = borderColor,
                     shape = RoundedCornerShape(14.dp)
                 )
+                .height(48.dp)
                 .padding(16.dp)
         )
     ) {
@@ -81,7 +93,7 @@ fun CustomTextField(
             onValueChange = onValueChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .onFocusChanged{ state ->
+                .onFocusChanged { state ->
                     isFocused = state.isFocused
                 },
             textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.inversePrimary),
@@ -97,6 +109,7 @@ fun CustomPasswordTextField(
     value: String,
     onValueChange: (String) -> Unit,
     hint: String,
+    isError: Boolean,
     modifier: Modifier,
     visible: Boolean = false,
     changeVisibility: () -> Unit,
@@ -104,12 +117,29 @@ fun CustomPasswordTextField(
     onDone: (() -> Unit)? = null
 ) {
     val interaction = remember { MutableInteractionSource() }
+    val isFocused by interaction.collectIsFocusedAsState()
     val shape = RoundedCornerShape(14.dp)
+    val borderColor by animateColorAsState(
+        when{
+            isError -> MaterialTheme.colorScheme.error
+            isFocused -> MaterialTheme.colorScheme.primary
+            else -> Color.Transparent
+        }
+    )
+    val borderWidth by animateDpAsState(
+        if (isFocused) 0.5.dp else 1.dp
+    )
 
     Box(
         modifier = modifier.then(
             Modifier
                 .background(MaterialTheme.colorScheme.onSurfaceVariant, shape = shape)
+                .border(
+                    width = borderWidth,
+                    color = borderColor,
+                    shape = shape
+                )
+                .height(48.dp)
                 .padding(16.dp)
         )
     ) {
@@ -126,7 +156,8 @@ fun CustomPasswordTextField(
             ),
             keyboardActions = KeyboardActions(
                 onDone = { onDone?.invoke() }),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             interactionSource = interaction,
             decorationBox = { innerTextField ->
@@ -146,7 +177,6 @@ fun CustomPasswordTextField(
                     }
                     Box(
                         modifier = Modifier
-                            .size(20.dp)
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null,

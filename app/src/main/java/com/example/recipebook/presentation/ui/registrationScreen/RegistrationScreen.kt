@@ -91,6 +91,7 @@ fun RegistrationScreen(
             value = uiState.name,
             onValueChange = viewModel::onNameChanged,
             hint = stringResource(R.string.name_hint),
+            isError = false,
             modifier = Modifier
                 .constrainAs(nameTextField) {
                     start.linkTo(startGuideline)
@@ -112,6 +113,7 @@ fun RegistrationScreen(
             value = uiState.email,
             onValueChange = viewModel::onEmailChanged,
             hint = stringResource(R.string.email_hint),
+            isError = false,
             modifier = Modifier
                 .constrainAs(emailTextField) {
                     start.linkTo(startGuideline)
@@ -134,6 +136,7 @@ fun RegistrationScreen(
             value = uiState.password,
             onValueChange = viewModel::onPasswordChanged,
             hint = stringResource(R.string.password_hint),
+            isError = false,
             visible = uiState.passwordVisibility,
             changeVisibility = { viewModel.onPasswordVisibilityChange(!uiState.passwordVisibility) },
             modifier = Modifier

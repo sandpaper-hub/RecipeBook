@@ -93,6 +93,7 @@ fun SettingsScreen(
 
         SubHeadingTextSmall(
             text = stringResource(R.string.nick_name),
+            color = MaterialTheme.colorScheme.inversePrimary,
             modifier = Modifier
                 .constrainAs(nickNameText) {
                     start.linkTo(profileImage.end, margin = 16.dp)

@@ -128,6 +128,7 @@ fun EditProfileScreen(
             value = uiState.fullName,
             onValueChange = viewModel::onNameChanged,
             hint = stringResource(R.string.name_hint),
+            isError = false,
             modifier = Modifier
                 .constrainAs(nameTextField) {
                     linkTo(start = startGuideline, end = endGuideline)
@@ -149,6 +150,7 @@ fun EditProfileScreen(
             value = uiState.nickName,
             onValueChange = viewModel::onNickNameChanged,
             hint = stringResource(R.string.email_hint),
+            isError = false,
             modifier = Modifier
                 .constrainAs(usernameTextField) {
                     linkTo(start = startGuideline, end = endGuideline)

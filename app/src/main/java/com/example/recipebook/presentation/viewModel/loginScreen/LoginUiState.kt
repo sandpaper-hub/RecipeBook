@@ -6,6 +6,8 @@ data class LoginUiState(
     val passwordVisibility: Boolean = false,
     val isRememberMeChecked: Boolean = false,
     val isLoading: Boolean = false,
-    val errorMessage: String? = null,
+    val emailErrorMessageCode: Int? = null,
+    val passwordErrorMessageCode: Int? = null,
+    val snackBarMessage: String? = null,
     val isSignedIn: Boolean = false
 )
