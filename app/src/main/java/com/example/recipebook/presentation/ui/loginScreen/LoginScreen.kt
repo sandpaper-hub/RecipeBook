@@ -59,7 +59,7 @@ fun LoginScreen(
         val (headingText, subHeadingText, emailText, emailTextField,
             passwordText, passwordTextField, forgotPasswordText,
             loginButton, dontHaveAccountText, textDivider, googleSignInButton,
-            facebookSignInButton, errorSampleText) = createRefs()
+            facebookSignInButton, emailErrorText, passwordErrorText) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -72,6 +72,7 @@ fun LoginScreen(
 
         SubHeadingTextSmall(
             text = stringResource(R.string.welcome_subheading),
+            color = MaterialTheme.colorScheme.inversePrimary,
             modifier = Modifier
                 .constrainAs(subHeadingText) {
                     start.linkTo(startGuideline)
@@ -90,6 +91,7 @@ fun LoginScreen(
             value = uiState.email,
             onValueChange = viewModel::onEmailChanged,
             hint = stringResource(R.string.email_hint),
+            isError = uiState.emailErrorMessageCode != null,
             modifier = Modifier
                 .constrainAs(emailTextField) {
                     start.linkTo(startGuideline)
@@ -98,18 +100,31 @@ fun LoginScreen(
                     width = Dimension.fillToConstraints
                 })
 
+        if (uiState.emailErrorMessageCode != null) {
+            SubHeadingTextSmall(
+                text = stringResource(uiState.emailErrorMessageCode),
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier
+                    .constrainAs(emailErrorText) {
+                        linkTo(start = startGuideline, end = endGuideline, bias = 0f)
+                        top.linkTo(emailTextField.bottom, margin = 4.dp)
+                    }
+            )
+        }
+
         TitleText(
             text = stringResource(R.string.password),
             modifier = Modifier
                 .constrainAs(passwordText) {
                     start.linkTo(startGuideline)
-                    top.linkTo(emailTextField.bottom, margin = 20.dp)
+                    top.linkTo(emailTextField.bottom, margin = 32.dp)
                 })
 
         CustomPasswordTextField(
             value = uiState.password,
             onValueChange = viewModel::onPasswordChange,
             hint = stringResource(R.string.password_hint),
+            isError = uiState.passwordErrorMessageCode != null,
             modifier = Modifier
                 .constrainAs(passwordTextField) {
                     start.linkTo(startGuideline)
@@ -119,6 +134,18 @@ fun LoginScreen(
                 },
             visible = uiState.passwordVisibility,
             changeVisibility = { viewModel.onPasswordVisibilityChange(!uiState.passwordVisibility) })
+
+        if (uiState.passwordErrorMessageCode != null) {
+            SubHeadingTextSmall(
+                text = stringResource(uiState.passwordErrorMessageCode),
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier
+                    .constrainAs(passwordErrorText) {
+                        linkTo(start = startGuideline, end = endGuideline, bias = 0f)
+                        top.linkTo(passwordTextField.bottom, margin = 4.dp)
+                    }
+            )
+        }
 
         ClickableText(
             clickableText = stringResource(R.string.forgot_password),

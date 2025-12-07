@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipebook.R
 import com.example.recipebook.domain.interactor.login.LoginInteractor
 import com.example.recipebook.presentation.viewModel.model.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,11 +24,11 @@ class LoginViewModel @Inject constructor(
     private val _events = MutableSharedFlow<UiEvent>()
     val events: SharedFlow<UiEvent> = _events
     fun onEmailChanged(newEmail: String) {
-        uiState = uiState.copy(email = newEmail)
+        uiState = uiState.copy(email = newEmail, emailErrorMessageCode = null)
     }
 
     fun onPasswordChange(newPassword: String) {
-        uiState = uiState.copy(password = newPassword)
+        uiState = uiState.copy(password = newPassword, passwordErrorMessageCode = null)
     }
 
     fun onPasswordVisibilityChange(isVisible: Boolean) {
@@ -38,18 +39,17 @@ class LoginViewModel @Inject constructor(
         val email = uiState.email.trim()
         val password = uiState.password
 
-        if (email.isEmpty()) {
-            uiState = uiState.copy(errorMessage = "Email не должен быть пустым")
-            return
+        if (email.isBlank()) {
+            uiState = uiState.copy(emailErrorMessageCode = R.string.blank_email)
         }
 
         if (password.length < 6) {
-            uiState = uiState.copy(errorMessage = "Пароль должен содержать минимум 6 символов")
+            uiState = uiState.copy(passwordErrorMessageCode = R.string.password_min_digit)
             return
         }
 
         viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true, errorMessage = null)
+            uiState = uiState.copy(isLoading = true, snackBarMessage = null)
             val result = loginInteractor.signIn(email = email, password = password)
             if (result.isSuccess) {
                 uiState = uiState.copy(isLoading = false, isSignedIn = true)
