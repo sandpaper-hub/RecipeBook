@@ -112,7 +112,8 @@ fun HeadingTextLarge(text: String, modifier: Modifier) {
     Text(
         text = text,
         modifier = modifier.padding(top = 24.dp),
-        style = MaterialTheme.typography.headlineMedium
+        style = MaterialTheme.typography.headlineMedium,
+        color = MaterialTheme.colorScheme.onPrimary
     )
 }
 
@@ -143,7 +144,8 @@ fun TitleText(text: String, modifier: Modifier) {
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.bodyMedium
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onPrimary
     )
 }
 
@@ -158,7 +160,7 @@ fun ClickableText(clickableText: String, modifier: Modifier) {
                 color = MaterialTheme.colorScheme.inversePrimary
             )
         ) {
-            append("Forgot password?")
+            append(clickableText)
         }
         pop()
     }

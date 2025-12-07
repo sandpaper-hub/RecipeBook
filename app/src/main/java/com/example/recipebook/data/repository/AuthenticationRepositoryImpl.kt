@@ -2,7 +2,7 @@ package com.example.recipebook.data.repository
 
 import com.example.recipebook.domain.model.UserProfile
 import com.example.recipebook.domain.repository.AuthenticationRepository
-import com.example.recipebook.util.Constants
+import com.example.recipebook.util.StringConstants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
@@ -43,7 +43,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
                     }
 
                     val defaultAvatarRef =
-                        storage.reference.child(Constants.DEFAULT_PROFILE_IMAGE_PATH)
+                        storage.reference.child(StringConstants.DEFAULT_PROFILE_IMAGE_PATH)
 
                     defaultAvatarRef.downloadUrl
                         .addOnSuccessListener { uri ->

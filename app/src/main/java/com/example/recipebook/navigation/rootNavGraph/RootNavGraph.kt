@@ -8,36 +8,38 @@ import androidx.navigation.compose.rememberNavController
 import com.example.recipebook.navigation.Graph
 import com.example.recipebook.navigation.Root
 import com.example.recipebook.navigation.rootNavGraph.authenticationGraph.authenticationGraph
-
+import com.example.recipebook.presentation.ui.commonUi.RootScaffold
 import com.example.recipebook.presentation.ui.mainScreenContainer.MainScreenContainer
 import com.example.recipebook.presentation.ui.splashScreen.SplashScreen
 
 @Composable
 @Suppress("FunctionName")
 fun RootNavGraph(navController: NavHostController = rememberNavController()) {
-    NavHost(
-        navController = navController,
-        route = Graph.ROOT,
-        startDestination = Root.Splash.route
-    ) {
-        composable(Root.Splash.route) {
-            SplashScreen(
-                onOnboardingScreen = {
-                    navController.navigate(Graph.AUTH) {
-                        popUpTo(Root.Splash.route) { inclusive = true }
+    RootScaffold {
+        NavHost(
+            navController = navController,
+            route = Graph.ROOT,
+            startDestination = Root.Splash.route,
+        ) {
+            composable(Root.Splash.route) {
+                SplashScreen(
+                    onOnboardingScreen = {
+                        navController.navigate(Graph.AUTH) {
+                            popUpTo(Root.Splash.route) { inclusive = true }
+                        }
+                    }, onHomeScreen = {
+                        navController.navigate(Graph.MAIN_HOME) {
+                            popUpTo(Root.Splash.route) { inclusive = true }
+                        }
                     }
-                }, onHomeScreen = {
-                    navController.navigate(Graph.MAIN_HOME) {
-                        popUpTo(Root.Splash.route) { inclusive = true }
-                    }
-                }
-            )
-        }
+                )
+            }
 
-        authenticationGraph(navController = navController)
+            authenticationGraph(navController = navController)
 
-        composable(Graph.MAIN_HOME) {
-            MainScreenContainer()
+            composable(Graph.MAIN_HOME) {
+                MainScreenContainer()
+            }
         }
     }
 }
