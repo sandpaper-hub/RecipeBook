@@ -45,27 +45,6 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserProfile(): Result<UserProfile> {
-        val uid = getCurrentUserUidOrNull()
-            ?: return Result.failure(Exception("User isn't authenticated"))
-        return suspendCancellableCoroutine { continuation ->
-            usersCollection.document(uid)
-                .get()
-                .addOnSuccessListener { snapshot ->
-                    if (!continuation.isActive) return@addOnSuccessListener
-                    val user = snapshot.toObject(UserProfile::class.java)
-                    if (user != null) {
-                        continuation.resume(Result.success(user))
-                    } else {
-                        continuation.resume(Result.failure(Exception("User not found")))
-                    }
-                }
-                .addOnFailureListener { error ->
-                    if (continuation.isActive) continuation.resume(Result.failure(error))
-                }
-        }
-    }
-
     override suspend fun uploadUserAvatar(bytes: ByteArray): Result<String> {
         val uid = getCurrentUserUidOrNull()
             ?: return Result.failure(Exception("User isn't authenticated"))

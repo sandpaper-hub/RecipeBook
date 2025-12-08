@@ -113,7 +113,7 @@ fun ClickableProfileBox(
             )
 
             SubHeadingTextSmall(
-                text = nickName,
+                text = "@$nickName",
                 color = MaterialTheme.colorScheme.inversePrimary,
                 modifier = Modifier.padding(top = 4.dp)
             )

@@ -43,7 +43,7 @@ fun ProfileCard(
                 style = MaterialTheme.typography.displayLarge
             )
             Text(
-                text = profileNickName,
+                text = "@$profileNickName",
                 style = MaterialTheme.typography.titleSmall
             )
         }

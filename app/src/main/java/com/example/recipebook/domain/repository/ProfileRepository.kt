@@ -4,7 +4,6 @@ import com.example.recipebook.domain.model.UserProfile
 import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
-    suspend fun getUserProfile(): Result<UserProfile>
 
     fun observeUserProfile(): Flow<UserProfile>
 
