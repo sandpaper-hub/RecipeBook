@@ -8,12 +8,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.ClickableProfileBox
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.IconTextBox
 import com.example.recipebook.presentation.ui.commonUi.SubheadingBackgroundText
+import com.example.recipebook.presentation.viewModel.settingsScreen.SettingsViewModel
 
 @Composable
 @Suppress("FunctionName")
@@ -22,8 +24,11 @@ fun SettingsScreen(
     onAccountScreen: () -> Unit,
     onNotificationScreen: () -> Unit,
     onLanguageScreen: () -> Unit,
-    onThemeScreen: () -> Unit
+    onThemeScreen: () -> Unit,
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
+    val uiState = viewModel.uiState
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -65,7 +70,9 @@ fun SettingsScreen(
         )
 
         ClickableProfileBox(
-            imageUrl = "https://firebasestorage.googleapis.com/v0/b/recipebook-4b1fd.firebasestorage.app/o/users_avatar%2F3pYTN6tq6LdO5jKvTJA6iDdBPfg1%2Favatar.jpg?alt=media&token=9274d8df-ef63-4f12-b88d-ae87fcb5e050",
+            imageUrl = uiState.imageUrl,
+            fullName = uiState.fullName,
+            nickName = uiState.nickName,
             onClick = onAccountScreen,
             modifier = Modifier.constrainAs(profileBox) {
                 linkTo(start = startGuideline, end = endGuideline)

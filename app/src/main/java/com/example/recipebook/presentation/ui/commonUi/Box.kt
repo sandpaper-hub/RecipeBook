@@ -82,7 +82,9 @@ fun IconTextBox(
 @Composable
 @Suppress("FunctionName")
 fun ClickableProfileBox(
-    imageUrl: String,
+    imageUrl: String?,
+    fullName: String,
+    nickName: String,
     onClick: () -> Unit,
     modifier: Modifier
 ) {
@@ -106,12 +108,12 @@ fun ClickableProfileBox(
 
         Column {
             Text(
-                text = stringResource(R.string.full_name),//TODO
+                text = fullName,
                 style = MaterialTheme.typography.displayLarge
             )
 
             SubHeadingTextSmall(
-                text = stringResource(R.string.nick_name),
+                text = nickName,
                 color = MaterialTheme.colorScheme.inversePrimary,
                 modifier = Modifier.padding(top = 4.dp)
             )
