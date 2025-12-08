@@ -2,9 +2,11 @@ package com.example.recipebook.presentation.ui.commonUi
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -38,7 +40,8 @@ fun IconTextBox(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-                onClick = onClick),
+                onClick = onClick
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -73,5 +76,53 @@ fun IconTextBox(
                 tint = MaterialTheme.colorScheme.inversePrimary
             )
         }
+    }
+}
+
+@Composable
+@Suppress("FunctionName")
+fun ClickableProfileBox(
+    imageUrl: String,
+    onClick: () -> Unit,
+    modifier: Modifier
+) {
+    Row(
+        modifier = modifier
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick
+            ),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ProfileAvatar(
+            imageUrl = imageUrl,
+            contentDescription = stringResource(R.string.profile_image),
+            size = 82.dp,
+            modifier = Modifier.padding(vertical = 24.dp)
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Column {
+            Text(
+                text = stringResource(R.string.full_name),//TODO
+                style = MaterialTheme.typography.displayLarge
+            )
+
+            SubHeadingTextSmall(
+                text = stringResource(R.string.nick_name),
+                color = MaterialTheme.colorScheme.inversePrimary,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Icon(
+            painter = painterResource(R.drawable.details_icon),
+            contentDescription = stringResource(R.string.details),
+            tint = MaterialTheme.colorScheme.inversePrimary
+        )
     }
 }

@@ -1,10 +1,6 @@
 package com.example.recipebook.presentation.ui.settingsScreen
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -14,10 +10,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
+import com.example.recipebook.presentation.ui.commonUi.ClickableProfileBox
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.IconTextBox
-import com.example.recipebook.presentation.ui.commonUi.ProfileAvatar
-import com.example.recipebook.presentation.ui.commonUi.SubHeadingTextSmall
 import com.example.recipebook.presentation.ui.commonUi.SubheadingBackgroundText
 
 @Composable
@@ -34,8 +29,7 @@ fun SettingsScreen(
             .fillMaxSize()
     ) {
 
-        val (backButton, headingText, subheadingProfileText, profileImage, profileNameText,
-            nickNameText, detailsIcon, subheadingSettingsText, notificationBox,
+        val (backButton, headingText, subheadingProfileText, profileBox, subheadingSettingsText, notificationBox,
             languageBox, themeBox, helpBox, logoutBox) = createRefs()
 
         val startGuideline = createGuidelineFromStart(24.dp)
@@ -70,47 +64,14 @@ fun SettingsScreen(
                 }
         )
 
-        ProfileAvatar(
-            imageUrl =
-                "https://firebasestorage.googleapis.com/v0/b/recipebook-4b1fd.firebasestorage.app/o/users_avatar%2F3pYTN6tq6LdO5jKvTJA6iDdBPfg1%2Favatar.jpg?alt=media&token=9274d8df-ef63-4f12-b88d-ae87fcb5e050",
-            contentDescription = stringResource(R.string.profile_image),
-            size = 82.dp,
-            modifier = Modifier
-                .constrainAs(profileImage) {
-                    start.linkTo(startGuideline)
-                    top.linkTo(subheadingProfileText.bottom, margin = 24.dp)
-                })
-
-        Text(
-            text = stringResource(R.string.full_name),
-            modifier = Modifier
-                .constrainAs(profileNameText) {
-                    start.linkTo(profileImage.end, margin = 16.dp)
-                    top.linkTo(profileImage.top, margin = 16.5.dp)
-                },
-            style = MaterialTheme.typography.displayLarge
-        )
-
-        SubHeadingTextSmall(
-            text = stringResource(R.string.nick_name),
-            color = MaterialTheme.colorScheme.inversePrimary,
-            modifier = Modifier
-                .constrainAs(nickNameText) {
-                    start.linkTo(profileImage.end, margin = 16.dp)
-                    top.linkTo(profileNameText.bottom, margin = 4.dp)
-                }
-        )
-
-        Icon(
-            painter = painterResource(R.drawable.details_icon),
-            contentDescription = stringResource(R.string.details),
-            tint = MaterialTheme.colorScheme.inversePrimary,
-            modifier = Modifier
-                .clickable(onClick = onAccountScreen)
-                .constrainAs(detailsIcon) {
-                    end.linkTo(endGuideline)
-                    linkTo(top = profileNameText.top, bottom = nickNameText.bottom)
-                }
+        ClickableProfileBox(
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/recipebook-4b1fd.firebasestorage.app/o/users_avatar%2F3pYTN6tq6LdO5jKvTJA6iDdBPfg1%2Favatar.jpg?alt=media&token=9274d8df-ef63-4f12-b88d-ae87fcb5e050",
+            onClick = onAccountScreen,
+            modifier = Modifier.constrainAs(profileBox) {
+                linkTo(start = startGuideline, end = endGuideline)
+                top.linkTo(subheadingProfileText.bottom)
+                width = Dimension.fillToConstraints
+            }
         )
 
         SubheadingBackgroundText(
@@ -118,7 +79,7 @@ fun SettingsScreen(
             modifier = Modifier
                 .constrainAs(subheadingSettingsText) {
                     linkTo(start = parent.start, end = parent.end)
-                    top.linkTo(profileImage.bottom, margin = 24.dp)
+                    top.linkTo(profileBox.bottom)
                 }
         )
 
