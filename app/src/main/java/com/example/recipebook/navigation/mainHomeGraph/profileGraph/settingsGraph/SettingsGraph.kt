@@ -36,7 +36,9 @@ fun NavGraphBuilder.settingsGraph(navController: NavController) {
         }
 
         composable(SettingsRoutes.Account.route) {
-            AccountScreen()
+            AccountScreen(onBackNavigation = {
+                navController.popBackStack()
+            })
         }
 
         composable(SettingsRoutes.Notifications.route) {

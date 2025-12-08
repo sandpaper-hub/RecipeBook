@@ -5,16 +5,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.CustomTextField
@@ -22,19 +19,19 @@ import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.SelectableButton
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleText
+import com.example.recipebook.presentation.viewModel.accountScreen.AccountViewModel
 
 @Composable
 @Suppress("FunctionName")
-fun AccountScreen() {
-    val fullName by remember { mutableStateOf("") }
-    val email by remember { mutableStateOf("") }
-    val region by remember { mutableStateOf("") }
-    val dateOfBirth by remember { mutableStateOf("") }
+fun AccountScreen(
+    onBackNavigation: () -> Unit,
+    viewModel: AccountViewModel = hiltViewModel()
+) {
+    val uiState = viewModel.uiState
     val genderOptions = listOf("Male", "Female")
-    var selectedOptions by remember { mutableStateOf("Male") }
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (backButton, headingText, nameText, nameTextField, emailText, emailTextField,
+        val (backButton, headingText, nameText, nameTextField,
             regionText, regionTextField, dateBirthText, dateBirthTextField,
             genderText, genderButtons, saveButton) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
@@ -48,7 +45,7 @@ fun AccountScreen() {
                     start.linkTo(startGuideline)
                     top.linkTo(parent.top, margin = 16.dp)
                 },
-            onClick = {}
+            onClick = onBackNavigation
         )
 
         HeadingTextMedium(
@@ -70,8 +67,8 @@ fun AccountScreen() {
         )
 
         CustomTextField(
-            value = fullName,
-            onValueChange = {},
+            value = uiState.fullName,
+            onValueChange = viewModel::onNameChanged,
             hint = stringResource(R.string.name_hint),
             isError = false,
             modifier = Modifier
@@ -83,39 +80,17 @@ fun AccountScreen() {
         )
 
         TitleText(
-            text = stringResource(R.string.email),
+            text = stringResource(R.string.region),
             modifier = Modifier
-                .constrainAs(emailText) {
+                .constrainAs(regionText) {
                     start.linkTo(startGuideline)
                     top.linkTo(nameTextField.bottom, margin = 28.dp)
                 }
         )
 
         CustomTextField(
-            value = email,
-            onValueChange = {},
-            hint = stringResource(R.string.email_hint),
-            isError = false,
-            modifier = Modifier
-                .constrainAs(emailTextField) {
-                    linkTo(start = startGuideline, end = endGuideline)
-                    top.linkTo(emailText.bottom, margin = 8.dp)
-                    width = Dimension.fillToConstraints
-                }
-        )
-
-        TitleText(
-            text = stringResource(R.string.region),
-            modifier = Modifier
-                .constrainAs(regionText) {
-                    start.linkTo(startGuideline)
-                    top.linkTo(emailTextField.bottom, margin = 28.dp)
-                }
-        )
-
-        CustomTextField(
-            value = region,
-            onValueChange = {},
+            value = uiState.region,
+            onValueChange = viewModel::onRegionChanged,
             hint = stringResource(R.string.region_hint),
             isError = false,
             modifier = Modifier
@@ -136,8 +111,8 @@ fun AccountScreen() {
         )
 
         CustomTextField(
-            value = dateOfBirth,
-            onValueChange = {},
+            value = uiState.dateOfBirth,
+            onValueChange = viewModel::onDateOfBirthChanged,
             hint = stringResource(R.string.date_of_birth_hint),
             isError = false,
             modifier = Modifier
@@ -167,8 +142,8 @@ fun AccountScreen() {
         ) {
             SelectableButton(
                 text = genderOptions[0],
-                selected = selectedOptions == genderOptions[0],
-                onClick = {selectedOptions = genderOptions[0]},
+                selected = uiState.gender == genderOptions[0],
+                onClick = { viewModel.onGenderChanged(genderOptions[0]) },
                 modifier = Modifier.weight(1f)
             )
 
@@ -176,16 +151,16 @@ fun AccountScreen() {
 
             SelectableButton(
                 text = genderOptions[1],
-                selected = selectedOptions == genderOptions[1],
-                onClick = {selectedOptions = genderOptions[1]},
+                selected = uiState.gender == genderOptions[1],
+                onClick = { viewModel.onGenderChanged(genderOptions[1]) },
                 modifier = Modifier.weight(1f)
             )
         }
 
         SquareRoundedButton(
-            onClick = {},
+            onClick = { viewModel.onSaveClick(onBackNavigation) },
             text = stringResource(R.string.save_change),
-            isLoading = false,
+            isLoading = uiState.isSaving,
             containerColor = null,
             modifier = Modifier.constrainAs(saveButton) {
                 linkTo(start = startGuideline, end = endGuideline)

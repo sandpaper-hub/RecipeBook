@@ -9,4 +9,4 @@ fun Int.convertToFollowersFormat(): String {
 }
 
 fun String.convertToNickName(): String =
-    "@${trim().substringBefore("@")}"
+    trim().substringBefore("@")
