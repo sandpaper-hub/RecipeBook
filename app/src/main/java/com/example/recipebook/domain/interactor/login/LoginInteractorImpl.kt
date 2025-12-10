@@ -1,12 +1,12 @@
 package com.example.recipebook.domain.interactor.login
 
-import com.example.recipebook.domain.repository.AuthenticationRepository
+import com.example.recipebook.domain.useCase.LoginByEmailUseCase
 import javax.inject.Inject
 
 class LoginInteractorImpl @Inject constructor(
-    private val authenticationRepository: AuthenticationRepository
+    private val loginByEmailUseCase: LoginByEmailUseCase
 ) : LoginInteractor {
 
     override suspend fun signIn(email: String, password: String): Result<Unit> =
-        authenticationRepository.signIn(email = email, password = password)
+        loginByEmailUseCase.loginByEmail(email = email, password = password)
 }
