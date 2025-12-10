@@ -32,6 +32,11 @@ fun NavGraphBuilder.settingsGraph(navController: NavController) {
                 },
                 onThemeScreen = {
                     navController.navigate(SettingsRoutes.Theme.route)
+                },
+                onLogout = {
+                    navController.navigate(Graph.AUTH){
+                        popUpTo(0)
+                    }
                 })
         }
 

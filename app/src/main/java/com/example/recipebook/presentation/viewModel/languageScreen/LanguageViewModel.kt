@@ -5,20 +5,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.language.LanguageInteractor
+import com.example.recipebook.domain.interactor.language.SettingsInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LanguageViewModel @Inject constructor(
-    private val languageInteractor: LanguageInteractor
+    private val settingsInteractor: SettingsInteractor
 ) : ViewModel() {
     var uiState by mutableStateOf(LanguageUiState())
 
     init {
         viewModelScope.launch {
-            languageInteractor.observeSavedLanguage()
+            settingsInteractor.observeSavedLanguage()
                 .collect { savedCode ->
                     uiState = uiState.copy(language = savedCode)
 
@@ -28,7 +28,7 @@ class LanguageViewModel @Inject constructor(
 
     fun changeApplicationLanguage(value: String) {
         viewModelScope.launch {
-            languageInteractor.changeApplicationLanguage(value)
+            settingsInteractor.changeApplicationLanguage(value)
             uiState = uiState.copy(language = value)
         }
     }
