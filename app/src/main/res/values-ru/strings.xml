@@ -55,4 +55,5 @@
     <string name="forgot_password" translatable="true">Забыли пароль?</string>
     <string name="blank_email" translatable="true">Email не должен быть пустым</string>
     <string name="password_min_digit" translatable="true">Пароль должен содержать минимум 6 символов</string>
+    <string name="check_icon" translatable="true"> Чек иконка</string>
 </resources>

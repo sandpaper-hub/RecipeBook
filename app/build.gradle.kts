@@ -69,6 +69,9 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+    //AppCompat
+    implementation(libs.androidx.appcompat)
+    implementation(libs.android.material)
     //ConstraintLayout
     implementation(libs.androidx.constraintLayout)
     //Navigation

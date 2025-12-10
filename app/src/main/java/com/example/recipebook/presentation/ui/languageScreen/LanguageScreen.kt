@@ -1,19 +1,71 @@
 package com.example.recipebook.presentation.ui.languageScreen
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.example.recipebook.R
+import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
+import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
+import com.example.recipebook.presentation.ui.commonUi.SelectableTextBox
+import com.example.recipebook.presentation.viewModel.languageScreen.LanguageViewModel
+import com.example.recipebook.presentation.viewModel.languageScreen.model.LanguageItem
 
 @Composable
 @Suppress("FunctionName")
-fun LanguageScreen() {
-    Box(
-        Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text("Language Screen")
+fun LanguageScreen(
+    onBackNavigation: () -> Unit,
+    viewModel: LanguageViewModel = hiltViewModel()
+) {
+    LaunchedEffect(Unit) {
+        viewModel.getSystemLanguage()
+    }
+
+    val uiState = viewModel.uiState
+    val languages = listOf(
+        LanguageItem("ru", "Русский"),
+        LanguageItem("en", "English")
+    )
+
+    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+        val (backButton, headingText, languageBox) = createRefs()
+        val startGuideline = createGuidelineFromStart(24.dp)
+        val endGuideline = createGuidelineFromEnd(24.dp)
+
+        ClickableIcon(
+            painter = painterResource(R.drawable.back_arrow_icon),
+            contentDescription = stringResource(R.string.back_button),
+            modifier = Modifier
+                .constrainAs(backButton) {
+                    start.linkTo(startGuideline)
+                    top.linkTo(parent.top, margin = 16.dp)
+                },
+            onClick = onBackNavigation
+        )
+
+        HeadingTextMedium(
+            text = stringResource(R.string.language),
+            modifier = Modifier
+                .constrainAs(headingText) {
+                    linkTo(start = startGuideline, end = endGuideline)
+                    top.linkTo(parent.top, margin = 16.dp)
+                }
+        )
+
+        SelectableTextBox(
+            values = languages,
+            selectedValue = uiState.language,
+            onValueSelected = viewModel::changeApplicationLanguage,
+            modifier = Modifier
+                .constrainAs(languageBox) {
+                    linkTo(start = parent.start, end = parent.end)
+                    top.linkTo(backButton.bottom, margin = 32.dp)
+                }
+        )
     }
 }

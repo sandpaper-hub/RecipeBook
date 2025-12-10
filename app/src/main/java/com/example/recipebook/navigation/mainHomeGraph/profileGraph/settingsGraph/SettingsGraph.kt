@@ -46,7 +46,9 @@ fun NavGraphBuilder.settingsGraph(navController: NavController) {
         }
 
         composable(SettingsRoutes.Language.route) {
-            LanguageScreen()
+            LanguageScreen(onBackNavigation = {
+                navController.popBackStack()
+            })
         }
 
         composable(SettingsRoutes.Theme.route) {
