@@ -131,6 +131,8 @@ fun AccountScreen(
 
         SelectableButtonBox(
             values = genderOptions,
+            selectedValue = uiState.gender,
+            onValueSelected = viewModel::onGenderChanged,
             modifier = Modifier
                 .constrainAs(genderButtons) {
                     linkTo(start = startGuideline, end = endGuideline)

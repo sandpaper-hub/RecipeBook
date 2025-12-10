@@ -17,10 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,16 +25,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.example.recipebook.R
+import com.example.recipebook.presentation.viewModel.languageScreen.model.LanguageItem
 import com.example.recipebook.theme.TitleGray
 
 @Composable
 @Suppress("FunctionName")
 fun SelectableTextBox(
-    values: List<String>,
+    values: List<LanguageItem>,
+    selectedValue: String?,
+    onValueSelected: (String) -> Unit,
     modifier: Modifier
 ) {
-    var selectedOption by remember { mutableStateOf(values[0]) }
-
     Column(
         modifier = modifier
             .selectableGroup()
@@ -50,26 +47,26 @@ fun SelectableTextBox(
                     .height(48.dp)
                     .fillMaxWidth()
                     .selectable(
-                        selected = (language == selectedOption),
-                        onClick = { selectedOption = language },
+                        selected = language.code == selectedValue,
+                        onClick = { onValueSelected(language.code) },
                         role = Role.RadioButton
                     )
                     .background(
-                        color = if (language == selectedOption) {
+                        color = if (language.code == selectedValue) {
                             MaterialTheme.colorScheme.onTertiaryContainer
                         } else Color.Unspecified
                     )
             ) {
                 Text(
-                    text = language,
-                    color = if (selectedOption == language) MaterialTheme.colorScheme.onPrimary else TitleGray,
+                    text = language.label,
+                    color = if (selectedValue == language.code) MaterialTheme.colorScheme.onPrimary else TitleGray,
                     style = MaterialTheme.typography.displayLarge,
                     modifier = Modifier.padding(start = 24.dp)
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                if (language == selectedOption) {
+                if (language.code == selectedValue) {
                     Icon(
                         painterResource(R.drawable.check_icon),
                         contentDescription = stringResource(R.string.check_icon),
@@ -87,10 +84,10 @@ fun SelectableTextBox(
 @Suppress("FunctionName")
 fun SelectableButtonBox(
     values: List<String>,
+    selectedValue: String,
+    onValueSelected: (String) -> Unit,
     modifier: Modifier
 ) {
-    var selectedOption by remember { mutableStateOf(values[0]) }
-
     Row(
         modifier = modifier
             .height(48.dp)
@@ -102,13 +99,13 @@ fun SelectableButtonBox(
                 modifier = Modifier
                     .weight(1f)
                     .selectable(
-                        selected = (selectedOption == gender),
-                        onClick = { selectedOption = gender },
+                        selected = gender == selectedValue,
+                        onClick = { onValueSelected(gender) },
                         role = Role.RadioButton
                     )
                     .border(
                         width = 1.dp,
-                        color = if (gender == selectedOption) MaterialTheme.colorScheme.primary
+                        color = if (gender == selectedValue) MaterialTheme.colorScheme.primary
                         else Color.Unspecified,
                         shape = RoundedCornerShape(15.dp)
                     )
@@ -120,7 +117,7 @@ fun SelectableButtonBox(
             ) {
                 Text(
                     text = gender,
-                    color = if (gender == selectedOption) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.inversePrimary,
+                    color = if (gender == selectedValue) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.inversePrimary,
                     modifier = Modifier.padding(vertical = 15.dp)
                 )
             }

@@ -6,6 +6,8 @@ import com.example.recipebook.domain.interactor.profile.ProfileInteractor
 import com.example.recipebook.domain.interactor.profile.ProfileInteractorImpl
 import com.example.recipebook.domain.interactor.registration.RegistrationInteractor
 import com.example.recipebook.domain.interactor.registration.RegistrationInteractorImpl
+import com.example.recipebook.domain.interactor.settings.SettingsInteractor
+import com.example.recipebook.domain.interactor.settings.SettingsInteractorImpl
 import com.example.recipebook.domain.interactor.splash.SplashInteractor
 import com.example.recipebook.domain.interactor.splash.SplashInteractorImpl
 import dagger.Binds
@@ -37,4 +39,9 @@ abstract class InteractorBindings {
     abstract fun bindProfileInteractor(
         impl: ProfileInteractorImpl
     ): ProfileInteractor
+
+    @Binds
+    abstract fun bindSettingsInteractor(
+        impl: SettingsInteractorImpl
+    ): SettingsInteractor
 }

@@ -2,23 +2,36 @@ package com.example.recipebook.presentation.ui.languageScreen
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.SelectableTextBox
+import com.example.recipebook.presentation.viewModel.languageScreen.LanguageViewModel
+import com.example.recipebook.presentation.viewModel.languageScreen.model.LanguageItem
 
 @Composable
 @Suppress("FunctionName")
 fun LanguageScreen(
-    onBackNavigation: () -> Unit
- ) {
+    onBackNavigation: () -> Unit,
+    viewModel: LanguageViewModel = hiltViewModel()
+) {
+    LaunchedEffect(Unit) {
+        viewModel.getSystemLanguage()
+    }
 
-    val languages = listOf("Русский", "English")
+    val uiState = viewModel.uiState
+    val languages = listOf(
+        LanguageItem("ru", "Русский"),
+        LanguageItem("en", "English")
+    )
+
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (backButton, headingText, languageBox) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
@@ -46,6 +59,8 @@ fun LanguageScreen(
 
         SelectableTextBox(
             values = languages,
+            selectedValue = uiState.language,
+            onValueSelected = viewModel::changeApplicationLanguage,
             modifier = Modifier
                 .constrainAs(languageBox) {
                     linkTo(start = parent.start, end = parent.end)
