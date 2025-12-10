@@ -41,6 +41,7 @@ android {
     kotlin {
         compilerOptions{
             jvmTarget.set(JvmTarget.JVM_11)
+            freeCompilerArgs.add("-opt-in=kotlin.RequiresoptIn")
         }
     }
     buildFeatures {
@@ -89,4 +90,6 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation)
     ksp(libs.hilt.compiler)
+    //dataStore
+    implementation(libs.androidx.datastore)
 }

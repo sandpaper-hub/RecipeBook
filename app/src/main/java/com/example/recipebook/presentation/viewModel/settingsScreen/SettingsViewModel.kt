@@ -16,6 +16,7 @@ class SettingsViewModel @Inject constructor(
     private val profileInteractor: ProfileInteractor
 ) : ViewModel() {
     var uiState by mutableStateOf(SettingsUiState())
+        private set
 
     init {
         observeUserProfile()

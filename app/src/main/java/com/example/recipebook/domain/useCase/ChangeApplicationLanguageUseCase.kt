@@ -6,7 +6,8 @@ import javax.inject.Inject
 class ChangeApplicationLanguageUseCase @Inject constructor(
     private val settingsRepository: SettingsRepository
 ) {
-    fun execute(value: String) {
+    suspend fun execute(value: String?) {
+        settingsRepository.saveLanguageCode(value)
         settingsRepository.changeLanguage(value)
     }
 }
