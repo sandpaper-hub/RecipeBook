@@ -18,10 +18,10 @@ class ProfileInteractorImpl @Inject constructor(
 
     override suspend fun updateUserData(data: Map<String, String?>, uriString: String?): Result<Unit> {
         if (uriString == null) {
-            return updateUserProfileUseCase.updateUserProfile(data, null)
+            return updateUserProfileUseCase.execute(data, null)
         } else {
             val imageBytes = imageCompressor.compress(uriString)
-            return updateUserProfileUseCase.updateUserProfile(data, imageBytes)
+            return updateUserProfileUseCase.execute(data, imageBytes)
         }
     }
 }
