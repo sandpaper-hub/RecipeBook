@@ -3,14 +3,16 @@ package com.example.recipebook.domain.interactor.language
 import com.example.recipebook.domain.useCase.ChangeApplicationLanguageUseCase
 import com.example.recipebook.domain.useCase.GetSavedLanguageUseCase
 import com.example.recipebook.domain.useCase.GetSystemLanguageUseCase
+import com.example.recipebook.domain.useCase.LogOutUseCase
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class LanguageInteractorImpl @Inject constructor(
+class SettingsInteractorImpl @Inject constructor(
     private val getSystemLanguageUseCase: GetSystemLanguageUseCase,
     private val changeApplicationLanguageUseCase: ChangeApplicationLanguageUseCase,
-    private val getSavedLanguageUseCase: GetSavedLanguageUseCase
-): LanguageInteractor {
+    private val getSavedLanguageUseCase: GetSavedLanguageUseCase,
+    private val logOutUseCase: LogOutUseCase
+): SettingsInteractor {
     override suspend fun observeSavedLanguage(): Flow<String?> =
         getSavedLanguageUseCase.observeSavedLanguage()
 
@@ -21,5 +23,9 @@ class LanguageInteractorImpl @Inject constructor(
 
     override suspend fun changeApplicationLanguage(value: String) {
         changeApplicationLanguageUseCase.execute(value)
+    }
+
+    override suspend fun logOut() {
+        logOutUseCase.execute()
     }
 }

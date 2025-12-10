@@ -15,4 +15,6 @@ interface AuthenticationRepository {
     suspend fun createUserDocumentIfNeeded(userProfile: UserProfile): Result<Unit>
 
     fun isLoggedIn(): Boolean
+
+    suspend fun logOut()
 }

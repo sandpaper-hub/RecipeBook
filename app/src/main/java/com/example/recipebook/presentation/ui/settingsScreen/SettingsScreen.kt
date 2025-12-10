@@ -25,6 +25,7 @@ fun SettingsScreen(
     onNotificationScreen: () -> Unit,
     onLanguageScreen: () -> Unit,
     onThemeScreen: () -> Unit,
+    onLogout: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState
@@ -155,7 +156,10 @@ fun SettingsScreen(
             mainText = stringResource(R.string.logout),
             detailText = null,
             isLogout = true,
-            onClick = {},//TODO
+            onClick = {
+                viewModel.logOut()
+                onLogout()
+            },
             modifier = Modifier
                 .constrainAs(logoutBox) {
                     linkTo(start = startGuideline, end = endGuideline)

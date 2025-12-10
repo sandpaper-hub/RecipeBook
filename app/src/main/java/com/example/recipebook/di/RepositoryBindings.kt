@@ -2,11 +2,11 @@ package com.example.recipebook.di
 
 import com.example.recipebook.data.repository.AuthenticationRepositoryImpl
 import com.example.recipebook.data.repository.ProfileRepositoryImpl
-import com.example.recipebook.data.repository.SettingsRepositoryImpl
+import com.example.recipebook.data.repository.DataStoreRepositoryImpl
 import com.example.recipebook.data.util.ImageCompressorImpl
 import com.example.recipebook.domain.repository.ProfileRepository
 import com.example.recipebook.domain.repository.AuthenticationRepository
-import com.example.recipebook.domain.repository.SettingsRepository
+import com.example.recipebook.domain.repository.DataStoreRepository
 import com.example.recipebook.domain.util.ImageCompressor
 import dagger.Binds
 import dagger.Module
@@ -36,6 +36,6 @@ abstract class RepositoryBindings {
 
     @Binds
     abstract fun bindSettingRepository(
-        impl: SettingsRepositoryImpl
-    ): SettingsRepository
+        impl: DataStoreRepositoryImpl
+    ): DataStoreRepository
 }

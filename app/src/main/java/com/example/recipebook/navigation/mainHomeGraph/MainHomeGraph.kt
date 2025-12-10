@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.recipebook.R
 import com.example.recipebook.navigation.mainHomeGraph.profileGraph.profileNavGraph
+import com.example.recipebook.navigation.rootNavGraph.authenticationGraph.authenticationGraph
 import com.example.recipebook.presentation.ui.mainHomeScreen.MainHomeScreen
 import com.example.recipebook.presentation.ui.uploadScreen.UploadScreen
 import com.example.recipebook.presentation.ui.collaborationScreen.CollaborationScreen
@@ -39,6 +40,8 @@ fun MainHomeGraph(
         }
 
         profileNavGraph(navController)
+
+        authenticationGraph(navController)
     }
 }
 

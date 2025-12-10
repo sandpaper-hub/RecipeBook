@@ -8,14 +8,14 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.example.recipebook.domain.repository.SettingsRepository
+import com.example.recipebook.domain.repository.DataStoreRepository
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class SettingsRepositoryImpl @Inject constructor(
+class DataStoreRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>
-) : SettingsRepository {
+) : DataStoreRepository {
 
     private val languageKey = stringPreferencesKey("app_language_code")
 
@@ -41,6 +41,19 @@ class SettingsRepositoryImpl @Inject constructor(
         val locale = LocaleListCompat.forLanguageTags(value)
         Handler(Looper.getMainLooper()).post {
             AppCompatDelegate.setApplicationLocales(locale)
+        }
+    }
+
+    override suspend fun clearUserData() {
+        dataStore.edit { preferences ->
+            val localeValue = preferences[languageKey]
+            preferences.asMap().keys.forEach { key ->
+                preferences.remove(key)
+            }
+
+            if (localeValue != null) {
+                preferences[languageKey] = localeValue
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipebook.domain.interactor.language.SettingsInteractor
 import com.example.recipebook.domain.interactor.profile.ProfileInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val profileInteractor: ProfileInteractor
+    private val profileInteractor: ProfileInteractor,
+    private val settingsInteractor: SettingsInteractor
 ) : ViewModel() {
     var uiState by mutableStateOf(SettingsUiState())
         private set
@@ -36,6 +38,12 @@ class SettingsViewModel @Inject constructor(
                         imageUrl = userProfile.photoUrl
                     )
                 }
+        }
+    }
+
+    fun logOut() {
+        viewModelScope.launch {
+            settingsInteractor.logOut()
         }
     }
 }

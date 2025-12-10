@@ -1,13 +1,13 @@
 package com.example.recipebook.domain.useCase
 
-import com.example.recipebook.domain.repository.SettingsRepository
+import com.example.recipebook.domain.repository.DataStoreRepository
 import javax.inject.Inject
 
 class ChangeApplicationLanguageUseCase @Inject constructor(
-    private val settingsRepository: SettingsRepository
+    private val dataStoreRepository: DataStoreRepository
 ) {
     suspend fun execute(value: String?) {
-        settingsRepository.saveLanguageCode(value)
-        settingsRepository.changeLanguage(value)
+        dataStoreRepository.saveLanguageCode(value)
+        dataStoreRepository.changeLanguage(value)
     }
 }
