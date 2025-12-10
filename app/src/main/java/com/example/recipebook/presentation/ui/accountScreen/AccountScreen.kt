@@ -1,9 +1,6 @@
 package com.example.recipebook.presentation.ui.accountScreen
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -16,7 +13,7 @@ import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.CustomTextField
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
-import com.example.recipebook.presentation.ui.commonUi.SelectableButton
+import com.example.recipebook.presentation.ui.commonUi.SelectableButtonBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.viewModel.accountScreen.AccountViewModel
@@ -132,30 +129,15 @@ fun AccountScreen(
                 }
         )
 
-        Row(
+        SelectableButtonBox(
+            values = genderOptions,
             modifier = Modifier
                 .constrainAs(genderButtons) {
                     linkTo(start = startGuideline, end = endGuideline)
                     top.linkTo(genderText.bottom, margin = 16.dp)
                     width = Dimension.fillToConstraints
                 }
-        ) {
-            SelectableButton(
-                text = genderOptions[0],
-                selected = uiState.gender == genderOptions[0],
-                onClick = { viewModel.onGenderChanged(genderOptions[0]) },
-                modifier = Modifier.weight(1f)
-            )
-
-            Spacer(modifier = Modifier.width(28.dp))
-
-            SelectableButton(
-                text = genderOptions[1],
-                selected = uiState.gender == genderOptions[1],
-                onClick = { viewModel.onGenderChanged(genderOptions[1]) },
-                modifier = Modifier.weight(1f)
-            )
-        }
+        )
 
         SquareRoundedButton(
             onClick = { viewModel.onSaveClick(onBackNavigation) },
@@ -165,7 +147,6 @@ fun AccountScreen(
             modifier = Modifier.constrainAs(saveButton) {
                 linkTo(start = startGuideline, end = endGuideline)
                 top.linkTo(genderButtons.bottom, margin = 40.dp)
-            }
-        )
+            })
     }
 }

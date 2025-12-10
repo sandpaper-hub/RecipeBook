@@ -25,7 +25,8 @@ private val DarkColorScheme = darkColorScheme(
     onSurfaceVariant = DarkModeInputColor,
     background = DarkModeBackgroundColor,
     onBackground = Color.White,
-    error = DangerColor
+    error = DangerColor,
+    onTertiaryContainer = DarkModeInputColor
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -37,7 +38,8 @@ private val LightColorScheme = lightColorScheme(
     onSurfaceVariant = InputColor,
     background = Color.White,
     onBackground = MainTextColor,
-    error = DangerColor
+    error = DangerColor,
+    onTertiaryContainer = LightGreen
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
