@@ -56,7 +56,7 @@ class LoginViewModel @Inject constructor(
 
         viewModelScope.launch {
             uiState = uiState.copy(isLoading = true, snackBarMessage = null)
-            val result = loginInteractor.signIn(email = email, password = password)
+            val result = loginInteractor.loginByEmail(email = email, password = password)
             if (result.isSuccess) {
                 uiState = uiState.copy(isLoading = false, isSignedIn = true)
             } else {

@@ -7,6 +7,6 @@ class LoginInteractorImpl @Inject constructor(
     private val loginByEmailUseCase: LoginByEmailUseCase
 ) : LoginInteractor {
 
-    override suspend fun signIn(email: String, password: String): Result<Unit> =
-        loginByEmailUseCase.loginByEmail(email = email, password = password)
+    override suspend fun loginByEmail(email: String, password: String): Result<Unit> =
+        loginByEmailUseCase.execute(email = email, password = password)
 }

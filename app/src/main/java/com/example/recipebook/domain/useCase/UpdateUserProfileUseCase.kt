@@ -6,7 +6,7 @@ import javax.inject.Inject
 class UpdateUserProfileUseCase @Inject constructor(
     private val profileRepository: ProfileRepository
 ) {
-    suspend fun updateUserProfile(
+    suspend fun execute(
         data: Map<String, String?>,
         imageBytes: ByteArray?
     ): Result<Unit> {
