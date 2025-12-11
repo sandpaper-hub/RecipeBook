@@ -57,7 +57,11 @@ fun NavGraphBuilder.settingsGraph(navController: NavController) {
         }
 
         composable(SettingsRoutes.Theme.route) {
-            ThemeScreen()
+            ThemeScreen(
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }

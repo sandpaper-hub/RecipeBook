@@ -1,12 +1,12 @@
 package com.example.recipebook.domain.useCase
 
-import com.example.recipebook.domain.repository.DataStoreRepository
+import com.example.recipebook.domain.repository.SettingsRepository
 import javax.inject.Inject
 
 class GetSystemLanguageUseCase @Inject constructor(
-    private val dataStoreRepository: DataStoreRepository
+    private val settingsRepository: SettingsRepository
 ) {
     fun execute(): String? {
-        return dataStoreRepository.getSystemLanguage()
+        return settingsRepository.getSystemLanguage()
     }
 }

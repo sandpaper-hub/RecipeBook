@@ -1,6 +1,8 @@
 package com.example.recipebook.presentation.ui.languageScreen
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -11,7 +13,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
-import com.example.recipebook.presentation.ui.commonUi.SelectableTextBox
+import com.example.recipebook.presentation.ui.commonUi.SelectableText
 import com.example.recipebook.presentation.viewModel.languageScreen.LanguageViewModel
 import com.example.recipebook.presentation.viewModel.languageScreen.model.LanguageItem
 
@@ -53,15 +55,21 @@ fun LanguageScreen(
                 }
         )
 
-        SelectableTextBox(
-            values = languages,
-            selectedValue = uiState.language,
-            onValueSelected = viewModel::changeApplicationLanguage,
+        Column(
             modifier = Modifier
                 .constrainAs(languageBox) {
                     linkTo(start = parent.start, end = parent.end)
                     top.linkTo(backButton.bottom, margin = 32.dp)
                 }
-        )
+                .selectableGroup()
+        ) {
+            languages.forEach { language ->
+                SelectableText(
+                    text = language.label,
+                    selected = uiState.language == language.code,
+                    onClick = {viewModel.changeApplicationLanguage(language.code)}
+                )
+            }
+        }
     }
 }

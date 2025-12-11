@@ -1,13 +1,10 @@
 package com.example.recipebook.data.repository
 
-import android.os.Handler
-import android.os.Looper
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.recipebook.domain.model.ThemeMode
 import com.example.recipebook.domain.repository.DataStoreRepository
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +15,7 @@ class DataStoreRepositoryImpl @Inject constructor(
 ) : DataStoreRepository {
 
     private val languageKey = stringPreferencesKey("app_language_code")
+    private val themeKey = stringPreferencesKey("app_theme")
 
     override fun getSavedLanguageFlow(): Flow<String?> {
         return dataStore.data
@@ -32,18 +30,6 @@ class DataStoreRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getSystemLanguage(): String? {
-        val systemLocale = LocaleListCompat.getDefault()[0]
-        return systemLocale?.language
-    }
-
-    override fun changeLanguage(value: String?) {
-        val locale = LocaleListCompat.forLanguageTags(value)
-        Handler(Looper.getMainLooper()).post {
-            AppCompatDelegate.setApplicationLocales(locale)
-        }
-    }
-
     override suspend fun clearUserData() {
         dataStore.edit { preferences ->
             val localeValue = preferences[languageKey]
@@ -54,6 +40,18 @@ class DataStoreRepositoryImpl @Inject constructor(
             if (localeValue != null) {
                 preferences[languageKey] = localeValue
             }
+        }
+    }
+
+    override fun observeTheme(): Flow<ThemeMode> = dataStore.data
+        .map { preferences ->
+            val value = preferences[themeKey] ?: ThemeMode.SYSTEM.name
+            ThemeMode.valueOf(value)
+        }
+
+    override suspend fun setTheme(theme: ThemeMode) {
+        dataStore.edit { preferences ->
+            preferences[themeKey] = theme.name
         }
     }
 }
