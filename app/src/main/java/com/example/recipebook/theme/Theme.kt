@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.recipebook.R
+import com.example.recipebook.domain.model.ThemeMode
 
 
 private val DarkColorScheme = darkColorScheme(
@@ -54,10 +55,15 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun RecipeBookTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    mode: ThemeMode,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+    val isDarkTheme = when(mode) {
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK -> true
+        ThemeMode.SYSTEM -> isSystemInDarkTheme()
+    }
+    val colorScheme = if (isDarkTheme) DarkColorScheme else LightColorScheme
     val locale = LocalConfiguration.current.locales[0]
 
     val regular = FontFamily(
