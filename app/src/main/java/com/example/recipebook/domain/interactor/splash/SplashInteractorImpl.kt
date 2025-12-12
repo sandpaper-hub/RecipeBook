@@ -15,13 +15,17 @@ class SplashInteractorImpl @Inject constructor(
     override fun isLoggedIn(): Boolean =
         checkIsLoggedInUseCase.execute()
 
-    override suspend fun getOnce(): String? = getSavedLanguageUseCase.getOnce()
+    override suspend fun setSystemLanguage() {
+        val savedLanguage = getSavedLanguageUseCase.getOnce()
+        if (!savedLanguage.isNullOrBlank()) {
+            changeApplicationLanguageUseCase.execute(savedLanguage)
+        } else {
+            val systemLanguage = getSystemLanguageUseCase.execute()
+            changeApplicationLanguageUseCase.execute(systemLanguage)
+        }
+    }
+
     override suspend fun changeApplicationLanguage(value: String?) {
         changeApplicationLanguageUseCase.execute(value)
     }
-    override fun getSystemLanguage(): String? {
-        return getSystemLanguageUseCase.execute()
-    }
-
-
 }

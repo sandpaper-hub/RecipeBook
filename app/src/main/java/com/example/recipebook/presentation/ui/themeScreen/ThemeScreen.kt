@@ -18,7 +18,6 @@ import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.SelectableText
 import com.example.recipebook.presentation.viewModel.themeScreen.ThemeViewModel
-import com.example.recipebook.util.toTitleString
 
 @Composable
 @Suppress("FunctionName")
@@ -70,7 +69,11 @@ fun ThemeScreen(
                 .selectableGroup()) {
             themeModes.forEach { themeMode ->
                 SelectableText(
-                    text = themeMode.toTitleString(),
+                    text = when(themeMode) {
+                        ThemeMode.DARK -> stringResource(R.string.dark_theme)
+                        ThemeMode.LIGHT -> stringResource(R.string.light_theme)
+                        ThemeMode.SYSTEM -> stringResource(R.string.system_theme)
+                    },
                     selected = themeMode.toString().uppercase() == selectedValue.toString(),
                     onClick = { viewModel.changeTheme(themeMode) }
                 )

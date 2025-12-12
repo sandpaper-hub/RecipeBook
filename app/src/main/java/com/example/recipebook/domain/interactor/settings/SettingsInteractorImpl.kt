@@ -16,7 +16,7 @@ class SettingsInteractorImpl @Inject constructor(
     private val getSavedLanguageUseCase: GetSavedLanguageUseCase,
     private val logOutUseCase: LogOutUseCase,
     private val changeThemeUseCase: ChangeThemeUseCase,
-    private val getThemeUseCase: GetThemeUseCase,
+    private val getThemeUseCase: GetThemeUseCase
 ): SettingsInteractor {
     override suspend fun observeSavedLanguage(): Flow<String?> =
         getSavedLanguageUseCase.observeSavedLanguage()

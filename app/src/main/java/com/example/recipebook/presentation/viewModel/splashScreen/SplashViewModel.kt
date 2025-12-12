@@ -1,6 +1,5 @@
 package com.example.recipebook.presentation.viewModel.splashScreen
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,23 +18,13 @@ class SplashViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getLanguageOnce()
+            splashInteractor.setSystemLanguage()
             val isLoggedIn = splashInteractor.isLoggedIn()
             startDestination.value = if (isLoggedIn) {
                 Graph.MAIN_HOME
             } else {
                 AuthenticationRoutes.Onboarding.route
             }
-        }
-    }
-
-    suspend fun getLanguageOnce() {
-        val savedLang = splashInteractor.getOnce()
-        if (!savedLang.isNullOrBlank()) {
-            splashInteractor.changeApplicationLanguage(savedLang)
-        } else {
-            val systemLanguage = splashInteractor.getSystemLanguage()
-            splashInteractor.changeApplicationLanguage(systemLanguage)
         }
     }
 }
