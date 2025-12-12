@@ -38,10 +38,8 @@ class DataStoreRepositoryImpl @Inject constructor(
                 preferences.remove(key)
             }
 
-            when {
-                localeValue != null -> preferences[languageKey] = localeValue
-                themeValue != null -> preferences[themeKey] = themeValue
-            }
+            localeValue?.let { preferences[languageKey] = it }
+            themeValue?.let { preferences[themeKey] = it }
         }
     }
 
