@@ -13,7 +13,9 @@ import com.example.recipebook.presentation.ui.editProfileScreen.EditProfileScree
 import com.example.recipebook.presentation.ui.profileScreen.ProfileScreen
 import com.example.recipebook.presentation.viewModel.profileScreen.ProfileViewModel
 
-fun NavGraphBuilder.profileNavGraph(navController: NavController) {
+fun NavGraphBuilder.profileNavGraph(
+    navController: NavController
+) {
     navigation(
         startDestination = ProfileRoutes.ProfileMain.route,
         route = BottomNavigationItem.Profile.route
@@ -49,6 +51,6 @@ fun NavGraphBuilder.profileNavGraph(navController: NavController) {
             )
         }
 
-        settingsGraph(navController)
+        settingsGraph(navController = navController)
     }
 }
