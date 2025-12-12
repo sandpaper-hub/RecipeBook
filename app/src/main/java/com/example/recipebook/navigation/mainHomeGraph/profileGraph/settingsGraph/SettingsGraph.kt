@@ -1,22 +1,27 @@
 package com.example.recipebook.navigation.mainHomeGraph.profileGraph.settingsGraph
 
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.recipebook.navigation.Graph
+import com.example.recipebook.navigation.LocalRootNavController
 import com.example.recipebook.presentation.ui.accountScreen.AccountScreen
 import com.example.recipebook.presentation.ui.languageScreen.LanguageScreen
 import com.example.recipebook.presentation.ui.notificationScreen.NotificationScreen
 import com.example.recipebook.presentation.ui.settingsScreen.SettingsScreen
 import com.example.recipebook.presentation.ui.themeScreen.ThemeScreen
 
-fun NavGraphBuilder.settingsGraph(navController: NavController) {
+fun NavGraphBuilder.settingsGraph(
+    navController: NavController
+) {
     navigation(
         route = Graph.SETTINGS,
         startDestination = SettingsRoutes.Settings.route
     ) {
         composable(SettingsRoutes.Settings.route) {
+            val rootNavController = LocalRootNavController.current
             SettingsScreen(
                 onBackNavigation = {
                     navController.popBackStack()
@@ -34,8 +39,11 @@ fun NavGraphBuilder.settingsGraph(navController: NavController) {
                     navController.navigate(SettingsRoutes.Theme.route)
                 },
                 onLogout = {
-                    navController.navigate(Graph.AUTH){
-                        popUpTo(0)
+                    rootNavController?.let { root ->
+                        root.navigate(Graph.AUTH) {
+                            popUpTo(root.graph.findStartDestination().id) { inclusive = true }
+                            launchSingleTop = true
+                        }
                     }
                 })
         }
