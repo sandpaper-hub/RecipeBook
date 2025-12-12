@@ -152,7 +152,7 @@ fun ProfileHeader(
                 .padding(top = 24.dp),
             onClick = onEditScreen,
             icon = null,
-            text = "Edit Profile",
+            text = stringResource(R.string.edit_profile),
             textColor = MaterialTheme.colorScheme.inversePrimary)
 
         ProfileAvatar(

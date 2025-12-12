@@ -33,12 +33,14 @@ class DataStoreRepositoryImpl @Inject constructor(
     override suspend fun clearUserData() {
         dataStore.edit { preferences ->
             val localeValue = preferences[languageKey]
+            val themeValue = preferences[themeKey]
             preferences.asMap().keys.forEach { key ->
                 preferences.remove(key)
             }
 
-            if (localeValue != null) {
-                preferences[languageKey] = localeValue
+            when {
+                localeValue != null -> preferences[languageKey] = localeValue
+                themeValue != null -> preferences[themeKey] = themeValue
             }
         }
     }

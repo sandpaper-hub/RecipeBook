@@ -22,6 +22,8 @@ class SettingsViewModel @Inject constructor(
 
     init {
         observeUserProfile()
+        observeTheme()
+        observeLanguage()
     }
 
     private fun observeUserProfile() {
@@ -41,6 +43,23 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    private fun observeTheme() {
+        viewModelScope.launch {
+            settingsInteractor.getTheme()
+                .collect { themeMode ->
+                    uiState = uiState.copy(themeMode = themeMode)
+                }
+        }
+    }
+
+    private fun observeLanguage() {
+        viewModelScope.launch {
+            settingsInteractor.observeSavedLanguage()
+                .collect { language ->
+                    uiState = uiState.copy(language = language)
+                }
+        }
+    }
     fun logOut() {
         viewModelScope.launch {
             settingsInteractor.logOut()

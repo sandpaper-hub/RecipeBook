@@ -56,4 +56,7 @@
     <string name="blank_email" translatable="true">Email shouldn\'t be blank</string>
     <string name="password_min_digit" translatable="true">Password must be at least 6 characters long</string>
     <string name="check_icon" translatable="true"> Check icon</string>
+    <string name="dark_theme" translatable="true">Dark</string>
+    <string name="light_theme" translatable="true">Light</string>
+    <string name="system_theme" translatable="true">System</string>
 </resources>

@@ -27,33 +27,36 @@
     <string name="welcome_subheading">Введите свой номер телефона или Email\nадресс для входа</string>
     <string name="remember">Запомнить меня</string>
     <string name="dont_have_account">У Вас нет аккаунта?\ </string>
-    <string name="banner_description" translatable="true">Баннер профиля</string>
-    <string name="profile_image" translatable="true">Фото профиля</string>
-    <string name="followers" translatable="true">Подписчиков</string>
-    <string name="following" translatable="true">Подписки</string>
-    <string name="recipes" translatable="true">Рецептов</string>
-    <string name="settings_button" translatable="true">Настройки</string>
-    <string name="back_button" translatable="true">Кнопка назад</string>
-    <string name="edit_profile" translatable="true">Редактировать</string>
-    <string name="save_button" translatable="true">Сохранить</string>
-    <string name="nick_name" translatable="true">Никнейм</string>
-    <string name="settings_text" translatable="true">Настройки</string>
-    <string name="profile_text" translatable="true">Профиль</string>
-    <string name="details" translatable="true">Подробнее</string>
-    <string name="notification" translatable="true">Уведомления</string>
-    <string name="language" translatable="true">Язык</string>
-    <string name="theme" translatable="true">Тема</string>
-    <string name="help" translatable="true">Помощь</string>
-    <string name="logout" translatable="true">Выход</string>
-    <string name="account_text" translatable="true">Аккаунт</string>
-    <string name="region" translatable="true">Регион</string>
-    <string name="region_hint" translatable="true">Ташкент</string>
-    <string name="date_of_birth" translatable="true">Дата Рождения</string>
-    <string name="date_of_birth_hint" translatable="true">26 Августа 1992</string>
-    <string name="gender" translatable="true">Пол</string>
-    <string name="save_change" translatable="true">Сохранить Изменения</string>
-    <string name="forgot_password" translatable="true">Забыли пароль?</string>
-    <string name="blank_email" translatable="true">Email не должен быть пустым</string>
-    <string name="password_min_digit" translatable="true">Пароль должен содержать минимум 6 символов</string>
-    <string name="check_icon" translatable="true"> Чек иконка</string>
+    <string name="banner_description">Баннер профиля</string>
+    <string name="profile_image">Фото профиля</string>
+    <string name="followers">Подписчиков</string>
+    <string name="following">Подписки</string>
+    <string name="recipes">Рецептов</string>
+    <string name="settings_button">Настройки</string>
+    <string name="back_button">Кнопка назад</string>
+    <string name="edit_profile">Редактировать</string>
+    <string name="save_button">Сохранить</string>
+    <string name="nick_name">Никнейм</string>
+    <string name="settings_text">Настройки</string>
+    <string name="profile_text">Профиль</string>
+    <string name="details">Подробнее</string>
+    <string name="notification">Уведомления</string>
+    <string name="language">Язык</string>
+    <string name="theme">Тема</string>
+    <string name="help">Помощь</string>
+    <string name="logout">Выход</string>
+    <string name="account_text">Аккаунт</string>
+    <string name="region">Регион</string>
+    <string name="region_hint">Ташкент</string>
+    <string name="date_of_birth">Дата Рождения</string>
+    <string name="date_of_birth_hint">26 Августа 1992</string>
+    <string name="gender">Пол</string>
+    <string name="save_change">Сохранить Изменения</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="blank_email">Email не должен быть пустым</string>
+    <string name="password_min_digit">Пароль должен содержать минимум 6 символов</string>
+    <string name="check_icon"> Чек иконка</string>
+    <string name="dark_theme">Тёмная</string>
+    <string name="light_theme">Светлая</string>
+    <string name="system_theme" translatable="true">Системная</string>
 </resources>

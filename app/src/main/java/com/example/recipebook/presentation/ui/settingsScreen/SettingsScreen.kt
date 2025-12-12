@@ -10,12 +10,14 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
+import com.example.recipebook.domain.model.ThemeMode
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.ClickableProfileBox
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.IconTextBox
 import com.example.recipebook.presentation.ui.commonUi.SubheadingBackgroundText
 import com.example.recipebook.presentation.viewModel.settingsScreen.SettingsViewModel
+import com.example.recipebook.util.fromLocaleCode
 
 @Composable
 @Suppress("FunctionName")
@@ -109,7 +111,7 @@ fun SettingsScreen(
             icon = painterResource(R.drawable.language_icon),
             contentDescription = stringResource(R.string.language),
             mainText = stringResource(R.string.language),
-            detailText = stringResource(R.string.language),
+            detailText = uiState.language?.fromLocaleCode(),
             isLogout = false,
             onClick = onLanguageScreen,
             modifier = Modifier
@@ -124,7 +126,11 @@ fun SettingsScreen(
             icon = painterResource(R.drawable.theme_icon),
             contentDescription = stringResource(R.string.theme),
             mainText = stringResource(R.string.theme),
-            detailText = stringResource(R.string.details),
+            detailText = when (uiState.themeMode) {
+                ThemeMode.DARK -> stringResource(R.string.dark_theme)
+                ThemeMode.LIGHT -> stringResource(R.string.light_theme)
+                ThemeMode.SYSTEM -> stringResource(R.string.system_theme)
+            },
             isLogout = false,
             onClick = { onThemeScreen() },
             modifier = Modifier
