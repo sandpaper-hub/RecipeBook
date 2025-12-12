@@ -1,5 +1,10 @@
 package com.example.recipebook.navigation.rootNavGraph.authenticationGraph
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -17,14 +22,32 @@ fun NavGraphBuilder.authenticationGraph(
         route = Graph.AUTH,
         startDestination = AuthenticationRoutes.Onboarding.route
     ) {
-        composable(AuthenticationRoutes.Onboarding.route) {
+        composable(
+            AuthenticationRoutes.Onboarding.route,
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(300)
+                ) + fadeIn()
+            }) {
             OnboardingScreen(
                 onRegistrationScreen = { navController.navigate(AuthenticationRoutes.Registration.route) },
                 onLoginScreen = { navController.navigate(AuthenticationRoutes.Login.route) }
             )
         }
 
-        composable(AuthenticationRoutes.Login.route) {
+        composable(
+            AuthenticationRoutes.Login.route,
+            enterTransition = {
+                scaleIn(initialScale = 0f, animationSpec = tween(300)) + fadeIn()
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(300)
+                ) + fadeOut()
+            }
+        ) {
             LoginScreen(
                 onHomeScreen = {
                     navController.navigate(Graph.MAIN_HOME) {
@@ -40,7 +63,17 @@ fun NavGraphBuilder.authenticationGraph(
             )
         }
 
-        composable(AuthenticationRoutes.Registration.route) {
+        composable(
+            AuthenticationRoutes.Registration.route,
+            enterTransition = {
+                scaleIn(initialScale = 0f, animationSpec = tween(200)) + fadeIn()
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(300)
+                ) + fadeOut()
+            }) {
             RegistrationScreen(
                 onHomeScreen = {
                     navController.navigate(Graph.MAIN_HOME) {
