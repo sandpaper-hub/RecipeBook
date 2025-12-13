@@ -17,6 +17,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.theme.DarkModeBodyColor
+import com.example.recipebook.util.debounce
 
 @Composable
 @Suppress("FunctionName")
@@ -67,7 +68,7 @@ fun OnboardingScreen(
             textAlign = TextAlign.Center, color = DarkModeBodyColor)
 
         SquareRoundedButton(
-            onClick = { onRegistrationScreen() },
+            onClick = debounce { onRegistrationScreen() },
             stringResource(R.string.sign_up_button),
             containerColor = null,
             isLoading = false,
@@ -79,7 +80,7 @@ fun OnboardingScreen(
                 .padding(bottom = 8.dp))
 
         SquareRoundedButton(
-            onClick = { onLoginScreen() },
+            onClick = debounce { onLoginScreen() },
             text = stringResource(R.string.sign_in_button),
             containerColor = Color.Transparent,
             isLoading = false,

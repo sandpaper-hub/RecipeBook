@@ -26,6 +26,7 @@ import com.example.recipebook.presentation.ui.commonUi.OutlinedIconButton
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.viewModel.loginScreen.LoginViewModel
 import com.example.recipebook.presentation.viewModel.model.UiEvent
+import com.example.recipebook.util.debounce
 
 @Composable
 @Suppress("FunctionName")
@@ -149,6 +150,7 @@ fun LoginScreen(
 
         ClickableText(
             clickableText = stringResource(R.string.forgot_password),
+            onClick = debounce { }, //TODO to forgot password
             modifier = Modifier
                 .constrainAs(forgotPasswordText) {
                     end.linkTo(endGuideline)
@@ -156,7 +158,7 @@ fun LoginScreen(
                 })
 
         SquareRoundedButton(
-            onClick = { viewModel.signIn() },
+            onClick = { viewModel.signIn() }, //TODO block button
             text = stringResource(R.string.sign_in_button),
             containerColor = null,
             isLoading = uiState.isLoading,
@@ -171,7 +173,7 @@ fun LoginScreen(
         MixedClickableText(
             simpleText = stringResource(R.string.dont_have_account),
             clickableText = stringResource(R.string.create_account),
-            onTextClicked = onRegistrationScreen,
+            onTextClicked = debounce { onRegistrationScreen() },
             modifier = Modifier
                 .constrainAs(dontHaveAccountText) {
                     start.linkTo(startGuideline)
@@ -189,7 +191,7 @@ fun LoginScreen(
                 })
 
         OutlinedIconButton(
-            onClick = {},
+            onClick = debounce { }, //TODO signIn with google
             text = stringResource(R.string.google_sign_in),
             textColor = MaterialTheme.colorScheme.onPrimary,
             icon = painterResource(R.drawable.google_icon),
@@ -203,7 +205,7 @@ fun LoginScreen(
         )
 
         OutlinedIconButton(
-            onClick = {},
+            onClick = debounce { }, //TODO signIn with facebook
             text = stringResource(R.string.facebook_sign_in),
             textColor = MaterialTheme.colorScheme.onPrimary,
             icon = painterResource(R.drawable.facebook_icon),

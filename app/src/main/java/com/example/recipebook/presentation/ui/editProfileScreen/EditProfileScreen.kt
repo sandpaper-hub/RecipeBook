@@ -20,6 +20,7 @@ import com.example.recipebook.presentation.ui.commonUi.ProfileAvatar
 import com.example.recipebook.presentation.ui.commonUi.RoundedPrimaryButton
 import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.viewModel.profileScreen.ProfileViewModel
+import com.example.recipebook.util.debounce
 
 @Composable
 @Suppress("FunctionName")
@@ -57,10 +58,12 @@ fun EditProfileScreen(
                     start.linkTo(startGuideline)
                     top.linkTo(parent.top, margin = 21.dp)
                 },
-            onClick = {
-                viewModel.refreshImageUri()
-                onBackNavigation()
-            })
+            onClick =
+                debounce {
+                    viewModel.refreshImageUri()
+                    onBackNavigation()
+                }
+        )
 
         HeadingTextMedium(
             text = stringResource(R.string.edit_profile),
@@ -73,7 +76,7 @@ fun EditProfileScreen(
 
         RoundedPrimaryButton(
             onClick = {
-                viewModel.updateUserData(onBackNavigation)
+                viewModel.updateUserData(onBackNavigation)//TODO сразу сохранять + debounce
             },
             text = stringResource(R.string.save_button),
             isLoading = uiState.isSaving,
@@ -108,7 +111,7 @@ fun EditProfileScreen(
             size = 35.dp,
             painter = painterResource(R.drawable.edit_icon),
             contentDescription = stringResource(R.string.edit_profile),
-            onClick = { imagePickerLauncher.launch("image/*") },
+            onClick = debounce { imagePickerLauncher.launch("image/*") },
             modifier = Modifier.constrainAs(editProfileImageButton) {
                 bottom.linkTo(profileImage.bottom)
                 end.linkTo(profileImage.end)
