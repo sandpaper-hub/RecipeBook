@@ -1,6 +1,5 @@
 package com.example.recipebook.presentation.ui.commonUi
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -161,7 +160,11 @@ fun TitleText(text: String, modifier: Modifier) {
 
 @Composable
 @Suppress("FunctionName")
-fun ClickableText(clickableText: String, modifier: Modifier) {
+fun ClickableText(
+    clickableText: String,
+    onClick: () -> Unit,
+    modifier: Modifier
+) {
     var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
     val clickableText = buildAnnotatedString {
         pushStringAnnotation(tag = "CLICK", annotation = clickableText)
@@ -184,9 +187,8 @@ fun ClickableText(clickableText: String, modifier: Modifier) {
                 val position = layoutResult.getOffsetForPosition(offset)
 
                 clickableText.getStringAnnotations("CLICK", position, position).firstOrNull()
-                    ?.let { annotation ->
-                        //TODO
-                        Log.d("CLICKABLE TEXT", "CLICKED $annotation")
+                    ?.let {
+                        onClick()
                     }
             }
         }),

@@ -17,6 +17,7 @@ import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.IconTextBox
 import com.example.recipebook.presentation.ui.commonUi.SubheadingBackgroundText
 import com.example.recipebook.presentation.viewModel.settingsScreen.SettingsViewModel
+import com.example.recipebook.util.debounce
 import com.example.recipebook.util.fromLocaleCode
 
 @Composable
@@ -51,7 +52,7 @@ fun SettingsScreen(
                     start.linkTo(startGuideline)
                     top.linkTo(parent.top, margin = 16.dp)
                 },
-            onClick = onBackNavigation
+            onClick = debounce { onBackNavigation() }
         )
 
         HeadingTextMedium(
@@ -76,7 +77,7 @@ fun SettingsScreen(
             imageUrl = uiState.imageUrl,
             fullName = uiState.fullName,
             nickName = uiState.nickName,
-            onClick = onAccountScreen,
+            onClick = debounce { onAccountScreen() },
             modifier = Modifier.constrainAs(profileBox) {
                 linkTo(start = startGuideline, end = endGuideline)
                 top.linkTo(subheadingProfileText.bottom)
@@ -99,7 +100,7 @@ fun SettingsScreen(
             mainText = stringResource(R.string.notification),
             detailText = null,
             isLogout = false,
-            onClick = onNotificationScreen,
+            onClick = debounce { onNotificationScreen() },
             modifier = Modifier
                 .constrainAs(notificationBox) {
                     linkTo(start = startGuideline, end = endGuideline)
@@ -113,7 +114,7 @@ fun SettingsScreen(
             mainText = stringResource(R.string.language),
             detailText = uiState.language?.fromLocaleCode(),
             isLogout = false,
-            onClick = onLanguageScreen,
+            onClick = debounce { onLanguageScreen() },
             modifier = Modifier
                 .constrainAs(languageBox) {
                     linkTo(start = startGuideline, end = endGuideline)
@@ -132,7 +133,7 @@ fun SettingsScreen(
                 ThemeMode.SYSTEM -> stringResource(R.string.system_theme)
             },
             isLogout = false,
-            onClick = { onThemeScreen() },
+            onClick = debounce { onThemeScreen() },
             modifier = Modifier
                 .constrainAs(themeBox) {
                     linkTo(start = startGuideline, end = endGuideline)
@@ -147,7 +148,7 @@ fun SettingsScreen(
             mainText = stringResource(R.string.help),
             detailText = null,
             isLogout = false,
-            onClick = {},//TODO
+            onClick = debounce {},//TODO
             modifier = Modifier
                 .constrainAs(helpBox) {
                     linkTo(start = startGuideline, end = endGuideline)
@@ -162,7 +163,7 @@ fun SettingsScreen(
             mainText = stringResource(R.string.logout),
             detailText = null,
             isLogout = true,
-            onClick = {
+            onClick = debounce {
                 viewModel.logOut()
                 onLogout()
             },
