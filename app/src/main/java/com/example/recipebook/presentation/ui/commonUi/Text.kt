@@ -1,6 +1,7 @@
 package com.example.recipebook.presentation.ui.commonUi
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -8,7 +9,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -80,6 +83,44 @@ fun MixedClickableText(
         maxLines = 2,
         overflow = TextOverflow.Ellipsis
     )
+}
+
+@Composable
+@Suppress("FunctionName")
+fun DatePickerText(
+    value: String,
+    hint: String,
+    onClick: () -> Unit,
+    modifier: Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .background(
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                shape = RoundedCornerShape(14.dp)
+            )
+            .height(48.dp)
+            .clickable(
+                onClick = onClick
+            )
+    ) {
+        Icon(
+            painterResource(R.drawable.date_icon),
+            contentDescription = stringResource(R.string.date_icon),
+            modifier = Modifier.padding(start = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        Text(
+            text = value.ifEmpty { hint },
+            color = if (value.isEmpty()) TitleGray else MaterialTheme.colorScheme.inversePrimary,
+            style = if (value.isEmpty()) MaterialTheme.typography.titleSmall else MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+    }
 }
 
 @Composable

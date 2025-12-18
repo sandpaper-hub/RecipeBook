@@ -9,6 +9,6 @@ data class UserProfile(
     val createdAt: Long = 0L,
     val lastLoginAt: Long = 0L,
     val region: String = "",
-    val dateOfBirth: String = "",
+    val dateOfBirth: Long = 0L,
     val gender: String = ""
 )

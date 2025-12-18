@@ -12,11 +12,14 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.CustomTextField
+import com.example.recipebook.presentation.ui.commonUi.DatePickerDialog
+import com.example.recipebook.presentation.ui.commonUi.DatePickerText
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.SelectableButtonBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.viewModel.accountScreen.AccountViewModel
+import com.example.recipebook.util.toFormatedDate
 
 @Composable
 @Suppress("FunctionName")
@@ -27,10 +30,11 @@ fun AccountScreen(
     val uiState = viewModel.uiState
     val genderOptions = listOf("Male", "Female")
 
-    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+    ConstraintLayout(modifier = Modifier
+        .fillMaxSize()) {
         val (backButton, headingText, nameText, nameTextField,
             regionText, regionTextField, dateBirthText, dateBirthTextField,
-            genderText, genderButtons, saveButton) = createRefs()
+            genderText, genderButtons, saveButton, datePicker) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -107,17 +111,25 @@ fun AccountScreen(
                 }
         )
 
-        CustomTextField(
-            value = uiState.dateOfBirth,
-            onValueChange = viewModel::onDateOfBirthChanged,
-            hint = stringResource(R.string.date_of_birth_hint),
-            isError = false,
+        DatePickerText(
+            uiState.dateOfBirth?.toFormatedDate() ?: "",
+            "123asdasdqw",
+            onClick = { viewModel.showDatePicker(true) },
             modifier = Modifier
                 .constrainAs(dateBirthTextField) {
                     linkTo(start = startGuideline, end = endGuideline)
                     top.linkTo(dateBirthText.bottom, margin = 8.dp)
                     width = Dimension.fillToConstraints
                 }
+        )
+        DatePickerDialog(
+            isOpen = uiState.showDatePicker,
+            onConfirm = viewModel::selectConfirmedDate,
+            onCancel = {viewModel.showDatePicker(false)},
+            modifier = Modifier.constrainAs(datePicker) {
+                centerHorizontallyTo(parent)
+                centerVerticallyTo(parent)
+            }
         )
 
         TitleText(

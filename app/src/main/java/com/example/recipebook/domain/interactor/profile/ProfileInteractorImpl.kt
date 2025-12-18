@@ -16,7 +16,7 @@ class ProfileInteractorImpl @Inject constructor(
         uploadUserProfileUseCase.observeUserProfile()
 
 
-    override suspend fun updateUserData(data: Map<String, String?>, uriString: String?): Result<Unit> {
+    override suspend fun updateUserData(data: Map<String, Any?>, uriString: String?): Result<Unit> {
         if (uriString == null) {
             return updateUserProfileUseCase.execute(data, null)
         } else {
