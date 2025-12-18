@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface ProfileInteractor {
     fun observerUserProfile(): Flow<UserProfile>
     suspend fun updateUserData(data: Map<String, Any?>, uriString: String?): Result<Unit>
+    fun getLocales(): List<String>
 }

@@ -11,9 +11,10 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
+import com.example.recipebook.presentation.ui.commonUi.CustomDropDownMenu
 import com.example.recipebook.presentation.ui.commonUi.CustomTextField
 import com.example.recipebook.presentation.ui.commonUi.DatePickerDialog
-import com.example.recipebook.presentation.ui.commonUi.DatePickerText
+import com.example.recipebook.presentation.ui.commonUi.CustomTextBox
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.SelectableButtonBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
@@ -30,11 +31,13 @@ fun AccountScreen(
     val uiState = viewModel.uiState
     val genderOptions = listOf("Male", "Female")
 
-    ConstraintLayout(modifier = Modifier
-        .fillMaxSize()) {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         val (backButton, headingText, nameText, nameTextField,
             regionText, regionTextField, dateBirthText, dateBirthTextField,
-            genderText, genderButtons, saveButton, datePicker) = createRefs()
+            genderText, genderButtons, saveButton, datePicker, countryMenu) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -89,15 +92,28 @@ fun AccountScreen(
                 }
         )
 
-        CustomTextField(
+        CustomTextBox(
             value = uiState.region,
-            onValueChange = viewModel::onRegionChanged,
             hint = stringResource(R.string.region_hint),
-            isError = false,
+            contentDestination = stringResource(R.string.region),
+            onClick = { viewModel.showCountryMenu(true) },
             modifier = Modifier
                 .constrainAs(regionTextField) {
                     linkTo(start = startGuideline, end = endGuideline)
                     top.linkTo(regionText.bottom, margin = 8.dp)
+                    width = Dimension.fillToConstraints
+                }
+        )
+
+        CustomDropDownMenu(
+            uiState.regionLocales,
+            isExpanded = uiState.showRegionMenu,
+            onDismissRequest = { viewModel.showCountryMenu(false) },
+            onItemClick = viewModel::onCountryChange,
+            modifier = Modifier
+                .constrainAs(countryMenu) {
+                    linkTo(start = startGuideline, end = endGuideline)
+                    top.linkTo(regionTextField.bottom)
                     width = Dimension.fillToConstraints
                 }
         )
@@ -111,9 +127,10 @@ fun AccountScreen(
                 }
         )
 
-        DatePickerText(
-            uiState.dateOfBirth?.toFormatedDate() ?: "",
-            "123asdasdqw",
+        CustomTextBox(
+            value = uiState.dateOfBirth?.toFormatedDate() ?: "",
+            hint = stringResource(R.string.date_of_birth_hint),
+            contentDestination = stringResource(R.string.date_of_birth),
             onClick = { viewModel.showDatePicker(true) },
             modifier = Modifier
                 .constrainAs(dateBirthTextField) {
@@ -125,7 +142,7 @@ fun AccountScreen(
         DatePickerDialog(
             isOpen = uiState.showDatePicker,
             onConfirm = viewModel::selectConfirmedDate,
-            onCancel = {viewModel.showDatePicker(false)},
+            onCancel = { viewModel.showDatePicker(false) },
             modifier = Modifier.constrainAs(datePicker) {
                 centerHorizontallyTo(parent)
                 centerVerticallyTo(parent)

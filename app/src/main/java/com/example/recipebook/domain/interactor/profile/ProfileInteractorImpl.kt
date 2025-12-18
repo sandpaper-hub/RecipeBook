@@ -1,6 +1,7 @@
 package com.example.recipebook.domain.interactor.profile
 
 import com.example.recipebook.domain.model.UserProfile
+import com.example.recipebook.domain.useCase.GetLocalesUseCase
 import com.example.recipebook.domain.useCase.UpdateUserProfileUseCase
 import com.example.recipebook.domain.useCase.UploadUserProfileUseCase
 import com.example.recipebook.domain.util.ImageCompressor
@@ -10,7 +11,8 @@ import javax.inject.Inject
 class ProfileInteractorImpl @Inject constructor(
     private val imageCompressor: ImageCompressor,
     private val uploadUserProfileUseCase: UploadUserProfileUseCase,
-    private val updateUserProfileUseCase: UpdateUserProfileUseCase
+    private val updateUserProfileUseCase: UpdateUserProfileUseCase,
+    private val getLocalesUseCase: GetLocalesUseCase
 ) : ProfileInteractor {
     override fun observerUserProfile(): Flow<UserProfile> =
         uploadUserProfileUseCase.observeUserProfile()
@@ -24,4 +26,7 @@ class ProfileInteractorImpl @Inject constructor(
             return updateUserProfileUseCase.execute(data, imageBytes)
         }
     }
+
+    override fun getLocales(): List<String> =
+        getLocalesUseCase.execute()
 }

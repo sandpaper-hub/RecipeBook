@@ -87,9 +87,10 @@ fun MixedClickableText(
 
 @Composable
 @Suppress("FunctionName")
-fun DatePickerText(
+fun CustomTextBox(
     value: String,
     hint: String,
+    contentDestination: String,
     onClick: () -> Unit,
     modifier: Modifier
 ) {
@@ -107,7 +108,7 @@ fun DatePickerText(
     ) {
         Icon(
             painterResource(R.drawable.date_icon),
-            contentDescription = stringResource(R.string.date_icon),
+            contentDescription = contentDestination,
             modifier = Modifier.padding(start = 16.dp)
         )
 

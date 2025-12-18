@@ -21,6 +21,7 @@ class AccountViewModel @Inject constructor(
 
     init {
         observeUserProfile()
+        uiState = uiState.copy(regionLocales = profileInteractor.getLocales())
     }
 
     private fun observeUserProfile() {
@@ -44,8 +45,15 @@ class AccountViewModel @Inject constructor(
         uiState = uiState.copy(fullName = newName)
     }
 
-    fun onRegionChanged(newRegion: String) {
-        uiState = uiState.copy(region = newRegion)
+    fun showCountryMenu(isOpen: Boolean) {
+        uiState = uiState.copy(showRegionMenu = isOpen)
+    }
+
+    fun onCountryChange(country: String) {
+        uiState = uiState.copy(
+            region = country,
+            showRegionMenu = false
+        )
     }
 
     fun showDatePicker(isOpen: Boolean) {
