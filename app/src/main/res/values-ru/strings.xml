@@ -58,5 +58,7 @@
     <string name="check_icon"> Чек иконка</string>
     <string name="dark_theme">Тёмная</string>
     <string name="light_theme">Светлая</string>
-    <string name="system_theme" translatable="true">Системная</string>
+    <string name="system_theme">Системная</string>
+    <string name="date_icon">Дата</string>
+
 </resources>

@@ -48,8 +48,15 @@ class AccountViewModel @Inject constructor(
         uiState = uiState.copy(region = newRegion)
     }
 
-    fun onDateOfBirthChanged(newDate: String) {
-        uiState = uiState.copy(dateOfBirth = newDate)
+    fun showDatePicker(isOpen: Boolean) {
+        uiState = uiState.copy(showDatePicker = isOpen)
+    }
+
+    fun selectConfirmedDate(value: Long?) {
+        uiState = uiState.copy(
+            dateOfBirth = value,
+            showDatePicker = false
+        )
     }
 
     fun onGenderChanged(newValue: String) {

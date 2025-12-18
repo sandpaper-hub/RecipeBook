@@ -7,7 +7,7 @@ class UpdateUserProfileUseCase @Inject constructor(
     private val profileRepository: ProfileRepository
 ) {
     suspend fun execute(
-        data: Map<String, String?>,
+        data: Map<String, Any?>,
         imageBytes: ByteArray?
     ): Result<Unit> {
         val mutableData: MutableMap<String, Any?> = data.toMutableMap()

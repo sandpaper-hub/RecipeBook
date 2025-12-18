@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface ProfileInteractor {
     fun observerUserProfile(): Flow<UserProfile>
-    suspend fun updateUserData(data: Map<String, String?>, uriString: String?): Result<Unit>
+    suspend fun updateUserData(data: Map<String, Any?>, uriString: String?): Result<Unit>
 }
