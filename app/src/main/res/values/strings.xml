@@ -60,4 +60,6 @@
     <string name="light_theme" translatable="true">Light</string>
     <string name="system_theme" translatable="true">System</string>
     <string name="date_icon" translatable="true">Date</string>
+    <string name="draft" translatable="true">Draft</string>
+    <string name="my_recipes" translatable="true">My Recipes</string>
 </resources>

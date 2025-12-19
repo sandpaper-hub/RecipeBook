@@ -158,7 +158,7 @@ fun TextDivider(modifier: Modifier) {
 fun HeadingTextLarge(text: String, modifier: Modifier) {
     Text(
         text = text,
-        modifier = modifier.padding(top = 24.dp),
+        modifier = modifier,
         style = MaterialTheme.typography.headlineMedium,
         color = MaterialTheme.colorScheme.onPrimary
     )
