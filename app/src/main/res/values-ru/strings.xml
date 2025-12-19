@@ -1,0 +1,65 @@
+<resources>
+    <!--app name non translatable-->
+    <string name="onboarding_image">Фоновое изображение главной страницы</string>
+    <string name="main_title">Готовим\n и наслаждаемся\n процессом</string>
+    <string name="main_subtitle">Лучшие рецепты — из того,\nчто есть у вас дома</string>
+    <string name="sign_up_button">Зарегестрироваться</string>
+    <string name="sign_in_button">Войти</string>
+    <string name="create_account">Создать Аккаунт</string>
+    <string name="fill_form">Введите своё имя, email и пароль, чтобы\nзарегестрироваться. </string>
+    <string name="already_have_account">Уже есть аакаунт?</string>
+    <string name="full_name">Полное Имя</string>
+    <!--name hint non translatable-->
+    <string name="email">Электронная Почта</string>
+    <!-- email hint non tranlatable-->
+    <string name="password">Пароль</string>
+    <string name="password_hint">Введите пароль</string>
+    <string name="sign_up_agree">Регистрируясь, вы соглашаетесь с нашими\n</string>
+    <string name="conditions_privacy_policy">Условиями и Политикой Конфиденциальности</string>
+    <string name="or_continue">или продолжить с</string>
+    <string name="hide_password">Скрыть пароль</string>
+    <string name="show_password">Показать пароль</string>
+    <string name="google_sign_up">Зарегестрироваться с Google</string>
+    <string name="google_sign_in">Войти с Google</string>
+    <string name="facebook_sign_up">Зарегистрироваться с Facebook</string>
+    <string name="facebook_sign_in">Войти в Facebook</string>
+    <string name="welcome">Добро пожаловать</string>
+    <string name="welcome_subheading">Введите свой номер телефона или Email\nадресс для входа</string>
+    <string name="remember">Запомнить меня</string>
+    <string name="dont_have_account">У Вас нет аккаунта?\ </string>
+    <string name="banner_description">Баннер профиля</string>
+    <string name="profile_image">Фото профиля</string>
+    <string name="followers">Подписчиков</string>
+    <string name="following">Подписки</string>
+    <string name="recipes">Рецептов</string>
+    <string name="settings_button">Настройки</string>
+    <string name="back_button">Кнопка назад</string>
+    <string name="edit_profile">Редактировать</string>
+    <string name="save_button">Сохранить</string>
+    <string name="nick_name">Никнейм</string>
+    <string name="settings_text">Настройки</string>
+    <string name="profile_text">Профиль</string>
+    <string name="details">Подробнее</string>
+    <string name="notification">Уведомления</string>
+    <string name="language">Язык</string>
+    <string name="theme">Тема</string>
+    <string name="help">Помощь</string>
+    <string name="logout">Выход</string>
+    <string name="account_text">Аккаунт</string>
+    <string name="region">Регион</string>
+    <string name="region_hint">Ташкент</string>
+    <string name="date_of_birth">Дата Рождения</string>
+    <string name="date_of_birth_hint">26 Августа 1992</string>
+    <string name="gender">Пол</string>
+    <string name="save_change">Сохранить Изменения</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="blank_email">Email не должен быть пустым</string>
+    <string name="password_min_digit">Пароль должен содержать минимум 6 символов</string>
+    <string name="check_icon"> Чек иконка</string>
+    <string name="dark_theme">Тёмная</string>
+    <string name="light_theme">Светлая</string>
+    <string name="system_theme">Системная</string>
+    <string name="date_icon">Дата</string>
+    <string name="draft">Черновики</string>
+    <string name="my_recipes">Мои Рецепты</string>
+</resources>

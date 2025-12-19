@@ -4,3 +4,23 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
 }
+
+subprojects{
+    configurations.configureEach {
+        resolutionStrategy{
+            force("com.squareup:javapoet:1.13.0")
+        }
+    }
+}
+
+buildscript {
+    configurations.classpath{
+        resolutionStrategy{
+            force("com.squareup:javapoet:1.13.0")
+        }
+    }
+
+    dependencies{
+        classpath("com.squareup:javapoet:1.13.0")
+    }
+}
