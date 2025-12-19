@@ -60,5 +60,6 @@
     <string name="light_theme">Светлая</string>
     <string name="system_theme">Системная</string>
     <string name="date_icon">Дата</string>
-
+    <string name="draft">Черновики</string>
+    <string name="my_recipes">Мои Рецепты</string>
 </resources>
