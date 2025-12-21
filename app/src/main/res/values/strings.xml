@@ -62,4 +62,20 @@
     <string name="date_icon" translatable="true">Date</string>
     <string name="draft" translatable="true">Draft</string>
     <string name="my_recipes" translatable="true">My Recipes</string>
+    <string name="new_recipe" translatable="true">New Recipe</string>
+    <string name="upload" translatable="true">Upload</string>
+    <string name="photo_icon" translatable="true">Photo icon</string>
+    <string name="upload_photo" translatable="true">Upload photo</string>
+    <string name="recipe_name" translatable="true">Recipe Name</string>
+    <string name="recipe_description" translatable="true">Description</string>
+    <string name="time_estimation" translatable="true">Time Estimation</string>
+    <string name="add_ingredients" translatable="true">Add more ingredients</string>
+    <string name="delete_icon" translatable="true">Delete</string>
+    <string name="recipe_name_hint" translatable="true">Plov</string>
+    <string name="recipe_description_hint" translatable="true">National uzbek dish</string>
+    <string name="recipe_time_estimation_hint" translatable="true">1 hour 40 minute</string>
+    <string name="add_ingredient" translatable="true">Add ingredient</string>
+    <string name="ingredients" translatable="true">Ingredients</string>
+    <string name="category" translatable="true">Category</string>
+    <string name="category_hint" translatable="true">Choose category</string>
 </resources>

@@ -13,7 +13,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
-import com.example.recipebook.presentation.ui.commonUi.CustomIconButton
+import com.example.recipebook.presentation.ui.commonUi.CustomCircleIconButton
 import com.example.recipebook.presentation.ui.commonUi.CustomTextField
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.ProfileAvatar
@@ -107,7 +107,7 @@ fun EditProfileScreen(
                 }
         )
 
-        CustomIconButton(
+        CustomCircleIconButton(
             size = 35.dp,
             painter = painterResource(R.drawable.edit_icon),
             contentDescription = stringResource(R.string.edit_profile),

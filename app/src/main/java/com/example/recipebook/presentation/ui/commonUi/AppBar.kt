@@ -11,7 +11,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.recipebook.navigation.mainHomeGraph.BottomNavigationItem
-import com.example.recipebook.theme.DarkModeBodyColor
 import com.example.recipebook.theme.GreenAccent
 
 @Composable
@@ -20,7 +19,7 @@ fun MainBottomNavigationBar(navController: NavController) {
     val items = listOf(
         BottomNavigationItem.Home,
         BottomNavigationItem.Collaboration,
-        BottomNavigationItem.Upload,
+        BottomNavigationItem.Recipes,
         BottomNavigationItem.Saved,
         BottomNavigationItem.Profile
     )

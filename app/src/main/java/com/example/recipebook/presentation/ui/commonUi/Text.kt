@@ -3,6 +3,7 @@ package com.example.recipebook.presentation.ui.commonUi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -87,11 +89,12 @@ fun MixedClickableText(
 
 @Composable
 @Suppress("FunctionName")
-fun CustomTextBox(
+fun SingleActionTextBox(
     value: String,
     hint: String,
     contentDestination: String,
     onClick: () -> Unit,
+    painter: Painter?,
     modifier: Modifier
 ) {
     Row(
@@ -106,13 +109,17 @@ fun CustomTextBox(
                 onClick = onClick
             )
     ) {
-        Icon(
-            painterResource(R.drawable.date_icon),
-            contentDescription = contentDestination,
-            modifier = Modifier.padding(start = 16.dp)
-        )
+        Spacer(modifier = Modifier.width(16.dp))
 
-        Spacer(modifier = Modifier.width(12.dp))
+        if (painter != null) {
+            Icon(
+                painter,
+                contentDescription = contentDestination,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+        }
 
         Text(
             text = value.ifEmpty { hint },
@@ -121,6 +128,51 @@ fun CustomTextBox(
         )
 
         Spacer(modifier = Modifier.weight(1f))
+    }
+}
+
+@Composable
+@Suppress("FunctionName")
+fun DoubleActionTextBox(
+    value: String,
+    hint: String,
+    onBoxClick: () -> Unit,
+    onIconClick: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(bottom = 12.dp)
+            .background(
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                shape = RoundedCornerShape(14.dp)
+            )
+            .height(48.dp)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onBoxClick
+            )
+    ) {
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(
+            text = value.ifEmpty { hint },
+            color = if (value.isEmpty()) TitleGray else MaterialTheme.colorScheme.inversePrimary,
+            style = if (value.isEmpty()) MaterialTheme.typography.titleSmall else MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Icon(
+            painter = painterResource(R.drawable.delete_icon),
+            contentDescription = stringResource(R.string.delete_icon),
+            modifier = Modifier.clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onIconClick
+            )
+        )
+        Spacer(modifier = Modifier.width(16.dp))
     }
 }
 
