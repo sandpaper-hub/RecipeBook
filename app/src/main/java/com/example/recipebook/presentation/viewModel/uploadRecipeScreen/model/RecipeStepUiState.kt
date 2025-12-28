@@ -1,7 +1,9 @@
 package com.example.recipebook.presentation.viewModel.uploadRecipeScreen.model
 
+import android.net.Uri
+
 data class RecipeStepUiState(
     val id: String,
-    val imageUrl: String,
+    val imageUrl: Uri?,
     val stepDescription: String
 )

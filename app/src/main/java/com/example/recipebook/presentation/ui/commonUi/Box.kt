@@ -1,5 +1,6 @@
 package com.example.recipebook.presentation.ui.commonUi
 
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -201,34 +202,56 @@ fun TitleTextFieldBox(
 
 @Composable
 @Suppress
-fun RecipeStepBox() {
-    Column {
+fun RecipeStepBox(
+    imageUri: Uri?,
+    descriptionValue: String,
+    onImageChange: () -> Unit,
+    onDescriptionChange: (String) -> Unit,
+    onDeleteClick: () -> Unit,
+    onCancelImageClick: () -> Unit
+) {
+    Column(modifier = Modifier.padding(bottom = 12.dp)) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.width(17.dp))
-            UploadImageBox(
-                text = null,
-                modifier = Modifier.size(62.dp),
-                onClick = {},
-                cornerShapeDp = 10.dp
-            )
+
+            if (imageUri == null) {
+                UploadImageBox(
+                    text = null,
+                    modifier = Modifier.size(70.dp),
+                    onClick = onImageChange,
+                    cornerShapeDp = 10.dp
+                )
+            } else {
+                RecipeStepImage(
+                    imageUri = imageUri,
+                    contentDescription = stringResource(R.string.recipe_step_image),
+                    onCancelClick = onCancelImageClick
+                )
+            }
 
             Spacer(modifier = Modifier.weight(1f))
 
             Icon(
                 painter = painterResource(R.drawable.delete_icon),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.inversePrimary
+                tint = MaterialTheme.colorScheme.inversePrimary,
+                modifier = Modifier
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = onDeleteClick
+                    )
             )
         }
 
         CustomTextField(
-            value = "",
-            onValueChange = {},
+            value = descriptionValue,
+            onValueChange = onDescriptionChange,
             hint = "Description",
             isError = false,
-            modifier = Modifier.padding(top = 12.dp)
+            modifier = Modifier.padding(top = 12.dp, start = 12.dp)
         )
     }
 }

@@ -1,5 +1,9 @@
 package com.example.recipebook.presentation.ui.uploadRecipeScreen
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,24 +23,36 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
+import com.example.recipebook.presentation.ui.commonUi.CustomDropDownMenu
+import com.example.recipebook.presentation.ui.commonUi.IngredientDialog
 import com.example.recipebook.presentation.ui.commonUi.DoubleActionTextBox
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.IconTextButton
 import com.example.recipebook.presentation.ui.commonUi.RecipeStepBox
+import com.example.recipebook.presentation.ui.commonUi.RecipeImage
 import com.example.recipebook.presentation.ui.commonUi.RoundedPrimaryButton
 import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
 import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.viewModel.uploadRecipeScreen.UploadRecipeViewModel
+import com.example.recipebook.util.debounce
 
 @Composable
 @Suppress("FunctionName")
 fun UploadRecipeScreen(
+    onBackClicked: () -> Unit,
     viewModel: UploadRecipeViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState
     val listState = rememberLazyListState()
+    val recipeImagePickerLaunch = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            viewModel.onRecipeImagePicked(uri)
+        }
+    }
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (backButton, headingText, uploadButton, recipeColumn) = createRefs()
@@ -51,7 +67,7 @@ fun UploadRecipeScreen(
                     start.linkTo(startGuideline)
                     top.linkTo(parent.top, margin = 21.dp)
                 },
-            onClick = {}
+            onClick = onBackClicked
         )
 
         HeadingTextMedium(
@@ -85,15 +101,27 @@ fun UploadRecipeScreen(
                     height = Dimension.fillToConstraints
                 }) {
             item {
-                UploadImageBox(
-                    text = stringResource(R.string.upload_photo),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 32.dp)
-                        .height(150.dp),
-                    onClick = {},
-                    cornerShapeDp = 20.dp
-                )
+                if (uiState.recipeImageUrl != null) {
+                    RecipeImage(
+                        imageUri = uiState.recipeImageUrl,
+                        contentDescription = stringResource(R.string.recipe_image),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 32.dp)
+                            .height(150.dp),
+                        onCancelClick = { viewModel.onRecipeImagePicked(null) }
+                    )
+                } else {
+                    UploadImageBox(
+                        text = stringResource(R.string.upload_photo),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 32.dp)
+                            .height(150.dp),
+                        onClick = debounce { recipeImagePickerLaunch.launch("image/*") },
+                        cornerShapeDp = 20.dp
+                    )
+                }
             }
 
             item {
@@ -140,7 +168,7 @@ fun UploadRecipeScreen(
                 DoubleActionTextBox(
                     value = ingredient.ingredientValue,
                     hint = stringResource(R.string.add_ingredient),
-                    onBoxClick = { viewModel.onIngredientChange(ingredient.id, "") },
+                    onBoxClick = { viewModel.showIngredientDialog(ingredient.id) },
                     onIconClick = { viewModel.removeIngredient(ingredient.id) }
                 )
             }
@@ -163,12 +191,24 @@ fun UploadRecipeScreen(
 
             item {
                 SingleActionTextBox(
-                    value = "",
+                    value = uiState.recipeCategory,
                     hint = stringResource(R.string.category_hint),
-                    contentDestination = "",
-                    onClick = {},
+                    isError = null,
+                    contentDescription = "",
+                    onClick = { viewModel.showCategoryMenu(true) },
                     painter = null,
                     modifier = Modifier.padding(bottom = 32.dp)
+                )
+
+                val categoryList = listOf(
+                    "Main", "Desert", "Drink"
+                )
+                CustomDropDownMenu(
+                    menuItems = categoryList,
+                    isExpanded = uiState.isCategoryMenuExpand,
+                    onDismissRequest = { viewModel.showCategoryMenu(false) },
+                    onItemClick = viewModel::onCategoryChange,
+                    modifier = Modifier.background(MaterialTheme.colorScheme.background)
                 )
             }
 
@@ -184,11 +224,47 @@ fun UploadRecipeScreen(
             items(
                 items = uiState.recipeSteps,
                 key = { it.id }
-            ) {
-                RecipeStepBox(
+            ) { recipeStep ->
+                val imagePicker = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.GetContent()
+                ) { uri: Uri? ->
+                    viewModel.onStepImageChange(recipeStep.id, uri)
+                }
 
+                RecipeStepBox(
+                    imageUri = recipeStep.imageUrl,
+                    descriptionValue = recipeStep.stepDescription,
+                    onImageChange = debounce { imagePicker.launch("image/*") },
+                    onDescriptionChange = { newValue ->
+                        viewModel.onStepDescriptionChange(recipeStep.id, newValue)
+                    },
+                    onDeleteClick = debounce { viewModel.removeStep(recipeStep.id) },
+                    onCancelImageClick = debounce {
+                        viewModel.onStepImageChange(
+                            recipeStep.id,
+                            null
+                        )
+                    }
                 )
             }
+
+            item {
+                IconTextButton(
+                    painter = painterResource(R.drawable.upload_recipe_icon),
+                    text = stringResource(R.string.add_steps),
+                    onClick = { viewModel.addStep() },
+                    modifier = Modifier.padding(bottom = 32.dp)
+                )
+            }
+        }
+
+        uiState.editingIngredientId?.let { ingredientId ->
+            IngredientDialog(
+                onDialogDismiss = { viewModel.showIngredientDialog(null) },
+                onConfirm = { ingredientValue ->
+                    viewModel.onIngredientChange(ingredientId, ingredientValue)
+                }
+            )
         }
     }
 }

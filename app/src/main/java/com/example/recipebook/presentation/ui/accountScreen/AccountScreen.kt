@@ -95,7 +95,8 @@ fun AccountScreen(
         SingleActionTextBox(
             value = uiState.region,
             hint = stringResource(R.string.region_hint),
-            contentDestination = stringResource(R.string.region),
+            isError = null,
+            contentDescription = stringResource(R.string.region),
             onClick = { viewModel.showCountryMenu(true) },
             painter = null,
             modifier = Modifier
@@ -131,7 +132,8 @@ fun AccountScreen(
         SingleActionTextBox(
             value = uiState.dateOfBirth?.toFormatedDate() ?: "",
             hint = stringResource(R.string.date_of_birth_hint),
-            contentDestination = stringResource(R.string.date_of_birth),
+            isError = null,
+            contentDescription = stringResource(R.string.date_of_birth),
             onClick = { viewModel.showDatePicker(true) },
             painter = painterResource(R.drawable.date_icon),
             modifier = Modifier

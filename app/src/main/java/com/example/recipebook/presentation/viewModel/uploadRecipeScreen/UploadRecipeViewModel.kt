@@ -1,5 +1,6 @@
 package com.example.recipebook.presentation.viewModel.uploadRecipeScreen
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,18 +20,23 @@ class UploadRecipeViewModel @Inject constructor() : ViewModel() {
             ingredients = listOf(
                 IngredientUiState(
                     id = UUID.randomUUID().toString(),
-                    ingredientValue = ""
+                    ingredientValue = "",
                 )
             ),
             recipeSteps = listOf(
                 RecipeStepUiState(
                     id = UUID.randomUUID().toString(),
-                    imageUrl = "",
+                    imageUrl = null,
                     stepDescription = ""
                 )
             )
         )
     }
+
+    fun onRecipeImagePicked(uri: Uri?) {
+        uiState = uiState.copy(recipeImageUrl = uri)
+    }
+
     fun onRecipeNameChanged(value: String) {
         uiState = uiState.copy(recipeName = value)
     }
@@ -47,7 +53,19 @@ class UploadRecipeViewModel @Inject constructor() : ViewModel() {
         uiState = uiState.copy(
             ingredients = uiState.ingredients.map {
                 if (it.id == id) it.copy(ingredientValue = value) else it
-            }
+            },
+            editingIngredientId = null
+        )
+    }
+
+    fun showCategoryMenu(isShow: Boolean) {
+        uiState = uiState.copy(isCategoryMenuExpand = isShow)
+    }
+
+    fun onCategoryChange(value: String) {
+        uiState = uiState.copy(
+            recipeCategory = value,
+            isCategoryMenuExpand = false
         )
     }
 
@@ -64,5 +82,42 @@ class UploadRecipeViewModel @Inject constructor() : ViewModel() {
                 ingredientValue = ""
             )
         )
+    }
+
+    fun showIngredientDialog(id: String?) {
+        uiState = uiState.copy(
+            editingIngredientId = id
+        )
+    }
+
+    fun addStep() {
+        uiState = uiState.copy(
+            recipeSteps = uiState.recipeSteps + RecipeStepUiState(
+                id = UUID.randomUUID().toString(),
+                imageUrl = null,
+                stepDescription = ""
+            )
+        )
+    }
+
+    fun removeStep(id: String) {
+        uiState = uiState.copy(
+            recipeSteps = uiState.recipeSteps.filterNot { it.id == id }
+        )
+    }
+
+    fun onStepDescriptionChange(id: String, value: String) {
+        uiState = uiState.copy(
+            recipeSteps = uiState.recipeSteps.map {
+                if (it.id == id) it.copy(stepDescription = value) else it
+            }
+        )
+    }
+
+    fun onStepImageChange(id: String, uri: Uri?) {
+        uiState = uiState.copy(
+            recipeSteps = uiState.recipeSteps.map {
+                if (it.id == id) it.copy(imageUrl = uri) else it
+            })
     }
 }

@@ -78,4 +78,19 @@
     <string name="ingredients" translatable="true">Ingredients</string>
     <string name="category" translatable="true">Category</string>
     <string name="category_hint" translatable="true">Choose category</string>
+    <string name="add_steps" translatable="true">Add more steps</string>
+    <string name="recipe_image" translatable="true">Recipe image</string>
+    <string name="cancel_icon" translatable="true">Cancel Icon</string>
+    <string name="ingredient_measure" translatable="true">Enter ingredient and measure</string>
+    <string name="enter_ingredient" translatable="true">Enter ingredient</string>
+    <string name="empty_hint" translatable="false">---</string>
+    <string name="measure" translatable="true">Measure</string>
+    <string name="measure_teaspoon" translatable="true">tea spoon</string>
+    <string name="measure_tablespoon" translatable="true">table spoon</string>
+    <string name="measure_ml" translatable="true">ml</string>
+    <string name="measure_l" translatable="true">l</string>
+    <string name="measure_g" translatable="true">g</string>
+    <string name="measure_kg" translatable="true">kg</string>
+    <string name="measure_pcs" translatable="true">pcs</string>
+    <string name="recipe_step_image" translatable="true">Recipe step image</string>
 </resources>

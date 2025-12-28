@@ -22,7 +22,11 @@ fun NavGraphBuilder.recipesNavGraph(navController: NavController) {
         }
 
         composable(RecipesRoutes.UploadRecipe.route) {
-            UploadRecipeScreen()
+            UploadRecipeScreen(
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }

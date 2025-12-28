@@ -1,6 +1,8 @@
 package com.example.recipebook.presentation.ui.commonUi
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -92,11 +94,21 @@ fun MixedClickableText(
 fun SingleActionTextBox(
     value: String,
     hint: String,
-    contentDestination: String,
+    isError: Boolean?,
+    contentDescription: String,
     onClick: () -> Unit,
     painter: Painter?,
     modifier: Modifier
 ) {
+
+    val borderColor by animateColorAsState(
+        if (isError == true) {
+            MaterialTheme.colorScheme.error
+        } else {
+            Color.Unspecified
+        }
+    )
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -104,6 +116,7 @@ fun SingleActionTextBox(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 shape = RoundedCornerShape(14.dp)
             )
+            .border(width = 0.5.dp, color = borderColor, shape = RoundedCornerShape(14.dp))
             .height(48.dp)
             .clickable(
                 onClick = onClick
@@ -114,7 +127,7 @@ fun SingleActionTextBox(
         if (painter != null) {
             Icon(
                 painter,
-                contentDescription = contentDestination,
+                contentDescription = contentDescription,
                 modifier = Modifier.padding(start = 16.dp)
             )
 
@@ -156,7 +169,9 @@ fun DoubleActionTextBox(
     ) {
         Spacer(modifier = Modifier.width(16.dp))
         Text(
-            text = value.ifEmpty { hint },
+            text = value.ifBlank {
+                hint
+            },
             color = if (value.isEmpty()) TitleGray else MaterialTheme.colorScheme.inversePrimary,
             style = if (value.isEmpty()) MaterialTheme.typography.titleSmall else MaterialTheme.typography.titleMedium
         )

@@ -78,4 +78,20 @@
     <string name="ingredients">Ингредиенты</string>
     <string name="category">Категория</string>
     <string name="category_hint">Выберите категорию</string>
+    <string name="add_steps">Add more steps</string>
+    <string name="recipe_image">Изображение рецепта</string>
+    <string name="cancel_icon">Отмена</string>
+    <string name="ingredient_measure">Введите ингредиент и величину</string>
+    <string name="enter_ingredient">Enter ingredient</string>
+    <!-- empty hint not translatable -->
+    <string name="measure">Величина</string>
+    <string name="measure_teaspoon">ч.л.</string>
+    <string name="measure_tablespoon" translatable="true">ст.л.</string>
+    <string name="measure_ml" translatable="true">мл</string>
+    <string name="measure_l" translatable="true">л</string>
+    <string name="measure_g" translatable="true">г</string>
+    <string name="measure_kg" translatable="true">кг</string>
+    <string name="measure_pcs" translatable="true">шт</string>
+    <string name="recipe_step_image">Изображение для шага готовки</string>
+
 </resources>
