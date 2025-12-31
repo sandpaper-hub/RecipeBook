@@ -94,4 +94,6 @@ dependencies {
     ksp(libs.hilt.compiler)
     //dataStore
     implementation(libs.androidx.datastore)
+    //coroutines
+    implementation(libs.jetbrains.kotlinx.coroutines)
 }

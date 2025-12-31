@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -122,7 +124,7 @@ fun RoundedPrimaryButton(
 
 @Composable
 @Suppress("FunctionName")
-fun CustomIconButton(
+fun CustomCircleIconButton(
     size: Dp,
     painter: Painter,
     contentDescription: String,
@@ -196,5 +198,42 @@ fun SelectableButton(
             color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.inversePrimary,
             modifier = Modifier.padding(vertical = 15.dp)
         )
+    }
+}
+
+@Composable
+@Suppress("FunctionName")
+fun IconTextButton(
+    painter: Painter,
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = modifier.then(
+            Modifier.clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick
+            )
+        )
+    ) {
+        Spacer(modifier = Modifier.weight(1f))
+        Icon(
+            painter = painter,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.inversePrimary
+        )
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        Text(
+            text = text,
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.inversePrimary
+        )
+        Spacer(modifier = Modifier.weight(1f))
     }
 }

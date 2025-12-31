@@ -1,4 +1,4 @@
-package com.example.recipebook.presentation.ui.uploadScreen
+package com.example.recipebook.presentation.ui.recipesScreen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
@@ -34,12 +34,12 @@ import androidx.constraintlayout.compose.Dimension
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
 import com.example.recipebook.presentation.ui.commonUi.Tabs
-import com.example.recipebook.presentation.ui.uploadScreen.tabs.DraftTab
-import com.example.recipebook.presentation.ui.uploadScreen.tabs.RecipesTab
+import com.example.recipebook.presentation.ui.recipesScreen.tabs.DraftTab
+import com.example.recipebook.presentation.ui.recipesScreen.tabs.RecipesTab
 
 @Composable
 @Suppress("FunctionName")
-fun UploadScreen() {
+fun RecipesScreen(onUploadRecipeScreen: () -> Unit) {
 
     val draftListState = rememberLazyListState()
     val recipeListState = rememberLazyListState()
@@ -132,10 +132,10 @@ fun UploadScreen() {
                     end.linkTo(parent.end, margin = 24.dp)
                     bottom.linkTo(parent.bottom, margin = 52.dp)
                 }
-            ) {
+        ) {
 
             IconButton(
-                onClick = {},
+                onClick = onUploadRecipeScreen,
                 shape = CircleShape,
                 colors = IconButtonColors(
                     containerColor = MaterialTheme.colorScheme.primary,

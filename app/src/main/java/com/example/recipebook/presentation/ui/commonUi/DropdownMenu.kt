@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 @Suppress("FunctionName")
 fun CustomDropDownMenu(
-    countryList: List<String>,
+    menuItems: List<String>,
     isExpanded: Boolean,
     onDismissRequest: () -> Unit,
     onItemClick: (String) -> Unit,
@@ -30,10 +30,10 @@ fun CustomDropDownMenu(
             containerColor = MaterialTheme.colorScheme.background,
             modifier = Modifier.heightIn(max = 300.dp)
         ) {
-            countryList.forEach { country ->
+            menuItems.forEach { menuItem ->
                 DropdownMenuItem(
-                    text = { Text(text = country) },
-                    onClick = { onItemClick(country) },
+                    text = { Text(text = menuItem) },
+                    onClick = { onItemClick(menuItem) },
                 )
             }
         }

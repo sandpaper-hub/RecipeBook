@@ -62,4 +62,36 @@
     <string name="date_icon">Дата</string>
     <string name="draft">Черновики</string>
     <string name="my_recipes">Мои Рецепты</string>
+    <string name="new_recipe">Новый рецепт</string>
+    <string name="upload">Загрузить</string>
+    <string name="photo_icon">Иконка фото</string>
+    <string name="upload_photo">Загрузить фото</string>
+    <string name="recipe_name">Название Рецепта</string>
+    <string name="recipe_description">Описание</string>
+    <string name="time_estimation">Время Приготовления</string>
+    <string name="add_ingredients">Добавть ингредиенты</string>
+    <string name="delete_icon">Удалить</string>
+    <string name="recipe_name_hint">Плов</string>
+    <string name="recipe_description_hint">Национальное узбекское блюдо</string>
+    <string name="recipe_time_estimation_hint">1 час 40 минут</string>
+    <string name="add_ingredient" translatable="true">Добавьте ингредиент</string>
+    <string name="ingredients">Ингредиенты</string>
+    <string name="category">Категория</string>
+    <string name="category_hint">Выберите категорию</string>
+    <string name="add_steps">Add more steps</string>
+    <string name="recipe_image">Изображение рецепта</string>
+    <string name="cancel_icon">Отмена</string>
+    <string name="ingredient_measure">Введите ингредиент и величину</string>
+    <string name="enter_ingredient">Enter ingredient</string>
+    <!-- empty hint not translatable -->
+    <string name="measure">Величина</string>
+    <string name="measure_teaspoon">ч.л.</string>
+    <string name="measure_tablespoon" translatable="true">ст.л.</string>
+    <string name="measure_ml" translatable="true">мл</string>
+    <string name="measure_l" translatable="true">л</string>
+    <string name="measure_g" translatable="true">г</string>
+    <string name="measure_kg" translatable="true">кг</string>
+    <string name="measure_pcs" translatable="true">шт</string>
+    <string name="recipe_step_image">Изображение для шага готовки</string>
+
 </resources>

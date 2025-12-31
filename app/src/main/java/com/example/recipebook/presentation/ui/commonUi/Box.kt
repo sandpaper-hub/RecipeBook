@@ -1,13 +1,17 @@
 package com.example.recipebook.presentation.ui.commonUi
 
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,9 +23,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.recipebook.R
 import com.example.recipebook.theme.DarkModeBodyColor
+import com.example.recipebook.util.dashBorder
 
 @Composable
 @Suppress("FunctionName")
@@ -125,6 +131,127 @@ fun ClickableProfileBox(
             painter = painterResource(R.drawable.details_icon),
             contentDescription = stringResource(R.string.details),
             tint = MaterialTheme.colorScheme.inversePrimary
+        )
+    }
+}
+
+@Composable
+@Suppress("FunctionName")
+fun UploadImageBox(
+    text: String?,
+    modifier: Modifier,
+    cornerShapeDp: Dp,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = modifier
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick
+            )
+            .dashBorder(
+                color = MaterialTheme.colorScheme.inversePrimary,
+                strokeWidth = 1.dp,
+                dashWidth = 8.dp,
+                gapWidth = 4.dp,
+                shape = RoundedCornerShape(cornerShapeDp)
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            painterResource(R.drawable.photo_icon),
+            contentDescription = stringResource(R.string.photo_icon),
+            tint = MaterialTheme.colorScheme.inversePrimary
+        )
+        if (text != null) {
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = text,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.inversePrimary
+            )
+        }
+    }
+}
+
+@Composable
+@Suppress("FunctionName")
+fun TitleTextFieldBox(
+    title: String,
+    textFieldValue: String,
+    onValueChange: (String) -> Unit,
+    textHint: String,
+    isError: Boolean
+) {
+    Column {
+        TitleText(
+            text = title,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        CustomTextField(
+            value = textFieldValue,
+            onValueChange = onValueChange,
+            hint = textHint,
+            isError = isError,
+            modifier = Modifier.padding(bottom = 32.dp)
+        )
+    }
+}
+
+@Composable
+@Suppress
+fun RecipeStepBox(
+    imageUri: Uri?,
+    descriptionValue: String,
+    onImageChange: () -> Unit,
+    onDescriptionChange: (String) -> Unit,
+    onDeleteClick: () -> Unit,
+    onCancelImageClick: () -> Unit
+) {
+    Column(modifier = Modifier.padding(bottom = 12.dp)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(modifier = Modifier.width(17.dp))
+
+            if (imageUri == null) {
+                UploadImageBox(
+                    text = null,
+                    modifier = Modifier.size(70.dp),
+                    onClick = onImageChange,
+                    cornerShapeDp = 10.dp
+                )
+            } else {
+                RecipeStepImage(
+                    imageUri = imageUri,
+                    contentDescription = stringResource(R.string.recipe_step_image),
+                    onCancelClick = onCancelImageClick
+                )
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Icon(
+                painter = painterResource(R.drawable.delete_icon),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.inversePrimary,
+                modifier = Modifier
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = onDeleteClick
+                    )
+            )
+        }
+
+        CustomTextField(
+            value = descriptionValue,
+            onValueChange = onDescriptionChange,
+            hint = "Description",
+            isError = false,
+            modifier = Modifier.padding(top = 12.dp, start = 12.dp)
         )
     }
 }

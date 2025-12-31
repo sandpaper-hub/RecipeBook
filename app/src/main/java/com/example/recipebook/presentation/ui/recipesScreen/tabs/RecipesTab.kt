@@ -1,4 +1,4 @@
-package com.example.recipebook.presentation.ui.uploadScreen.tabs
+package com.example.recipebook.presentation.ui.recipesScreen.tabs
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -7,12 +7,14 @@ import androidx.compose.runtime.Composable
 
 @Composable
 @Suppress("FunctionName")
-fun DraftTab(
+fun RecipesTab(
     listState: LazyListState
 ) {
-    LazyColumn(state = listState) {
+    LazyColumn(
+        state = listState
+    ) {
         items(50) { item ->
-            Text("$item draft")
+            Text("$item recipe")
         }
     }
 }
