@@ -4,6 +4,6 @@ import android.net.Uri
 
 data class RecipeStepUiState(
     val id: String,
-    val imageUrl: Uri?,
+    val imageUri: Uri?,
     val stepDescription: String
 )

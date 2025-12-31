@@ -3,7 +3,7 @@ package com.example.recipebook.presentation.viewModel.uploadRecipeScreen.model
 import android.net.Uri
 
 data class NewRecipeUiState(
-    val recipeImageUrl: Uri? = null,
+    val recipeImageUri: Uri? = null,
     val recipeName: String = "",
     val recipeDescription: String = "",
     val timeEstimation: String = "",

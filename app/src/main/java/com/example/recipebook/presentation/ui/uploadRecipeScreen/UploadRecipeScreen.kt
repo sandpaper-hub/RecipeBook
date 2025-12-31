@@ -80,7 +80,7 @@ fun UploadRecipeScreen(
         )
 
         RoundedPrimaryButton(
-            onClick = {},
+            onClick = { viewModel.uploadNewRecipe(onBackClicked) },
             text = stringResource(R.string.upload),
             isLoading = false,
             modifier = Modifier
@@ -101,9 +101,9 @@ fun UploadRecipeScreen(
                     height = Dimension.fillToConstraints
                 }) {
             item {
-                if (uiState.recipeImageUrl != null) {
+                if (uiState.recipeImageUri != null) {
                     RecipeImage(
-                        imageUri = uiState.recipeImageUrl,
+                        imageUri = uiState.recipeImageUri,
                         contentDescription = stringResource(R.string.recipe_image),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -232,7 +232,7 @@ fun UploadRecipeScreen(
                 }
 
                 RecipeStepBox(
-                    imageUri = recipeStep.imageUrl,
+                    imageUri = recipeStep.imageUri,
                     descriptionValue = recipeStep.stepDescription,
                     onImageChange = debounce { imagePicker.launch("image/*") },
                     onDescriptionChange = { newValue ->

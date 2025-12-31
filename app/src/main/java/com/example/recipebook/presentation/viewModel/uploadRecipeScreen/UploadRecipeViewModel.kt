@@ -5,13 +5,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.recipebook.domain.interactor.uploadRecipe.UploadRecipeInteractor
+import com.example.recipebook.domain.model.RecipeIngredient
+import com.example.recipebook.domain.model.RecipeStepDraft
 import com.example.recipebook.presentation.viewModel.uploadRecipeScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.uploadRecipeScreen.model.NewRecipeUiState
 import com.example.recipebook.presentation.viewModel.uploadRecipeScreen.model.RecipeStepUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
-class UploadRecipeViewModel @Inject constructor() : ViewModel() {
+@HiltViewModel
+class UploadRecipeViewModel @Inject constructor(
+    private val uploadRecipeInteractor: UploadRecipeInteractor
+) : ViewModel() {
     var uiState by mutableStateOf(NewRecipeUiState())
         private set
 
@@ -26,7 +35,7 @@ class UploadRecipeViewModel @Inject constructor() : ViewModel() {
             recipeSteps = listOf(
                 RecipeStepUiState(
                     id = UUID.randomUUID().toString(),
-                    imageUrl = null,
+                    imageUri = null,
                     stepDescription = ""
                 )
             )
@@ -34,7 +43,7 @@ class UploadRecipeViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onRecipeImagePicked(uri: Uri?) {
-        uiState = uiState.copy(recipeImageUrl = uri)
+        uiState = uiState.copy(recipeImageUri = uri)
     }
 
     fun onRecipeNameChanged(value: String) {
@@ -94,7 +103,7 @@ class UploadRecipeViewModel @Inject constructor() : ViewModel() {
         uiState = uiState.copy(
             recipeSteps = uiState.recipeSteps + RecipeStepUiState(
                 id = UUID.randomUUID().toString(),
-                imageUrl = null,
+                imageUri = null,
                 stepDescription = ""
             )
         )
@@ -117,7 +126,35 @@ class UploadRecipeViewModel @Inject constructor() : ViewModel() {
     fun onStepImageChange(id: String, uri: Uri?) {
         uiState = uiState.copy(
             recipeSteps = uiState.recipeSteps.map {
-                if (it.id == id) it.copy(imageUrl = uri) else it
+                if (it.id == id) it.copy(imageUri = uri) else it
             })
+    }
+
+    fun uploadNewRecipe(onBackClick: () -> Unit) {
+        viewModelScope.launch {
+            uploadRecipeInteractor.uploadNewRecipe(
+                recipeId = UUID.randomUUID().toString(),
+                recipeName = uiState.recipeName,
+                recipeDescription = uiState.recipeDescription,
+                recipeTimeEstimation = uiState.timeEstimation,
+                recipeImageSource = uiState.recipeImageUri?.toString(),
+                category = uiState.recipeCategory,
+                ingredients = uiState.ingredients.map { ingredient ->
+                    RecipeIngredient(
+                        id = ingredient.id,
+                        value = ingredient.ingredientValue
+                    )
+                },
+                steps = uiState.recipeSteps.map { recipeStepUiState ->
+                    RecipeStepDraft(
+                        id = recipeStepUiState.id,
+                        imageSource = recipeStepUiState.imageUri?.toString(),
+                        description = recipeStepUiState.stepDescription
+                    )
+                }
+            )
+
+            onBackClick()
+        }
     }
 }
