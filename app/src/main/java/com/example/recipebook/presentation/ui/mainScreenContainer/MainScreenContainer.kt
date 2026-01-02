@@ -15,7 +15,7 @@ import com.example.recipebook.presentation.ui.commonUi.RootScaffold
 
 @Composable
 @Suppress("FunctionName")
-fun MainScreenContainer() {
+fun MainScreenContainer(onLogout: () -> Unit) {
     val bottomNavController = rememberNavController()
     val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -35,11 +35,13 @@ fun MainScreenContainer() {
             if (bottomBarVisibility) {
                 MainBottomNavigationBar(navController = bottomNavController)
             }
-        }
+        },
+        applySystemInsets = false
     ) { innerPadding ->
         MainHomeGraph(
             navController = bottomNavController,
-            Modifier.padding(innerPadding)
+            onLogout = onLogout,
+            modifier = Modifier.padding(innerPadding)
         )
     }
 }

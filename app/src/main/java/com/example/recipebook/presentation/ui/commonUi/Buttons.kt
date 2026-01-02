@@ -61,7 +61,10 @@ fun SquareRoundedButton(
                 color = Color.White
             )
         } else {
-            Text(text = text)
+            Text(
+                text = text,
+                color = Color.White
+            )
         }
     }
 }
