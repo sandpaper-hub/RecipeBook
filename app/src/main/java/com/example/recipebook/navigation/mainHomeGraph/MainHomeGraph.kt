@@ -15,6 +15,7 @@ import com.example.recipebook.presentation.ui.savedScreen.SavedScreen
 @Composable
 fun MainHomeGraph(
     navController: NavHostController,
+    onLogout: () -> Unit,
     modifier: Modifier
 ) {
     NavHost(
@@ -36,7 +37,10 @@ fun MainHomeGraph(
             SavedScreen()
         }
 
-        profileNavGraph(navController = navController)
+        profileNavGraph(
+            navController = navController,
+            onLogout = onLogout
+        )
     }
 }
 
