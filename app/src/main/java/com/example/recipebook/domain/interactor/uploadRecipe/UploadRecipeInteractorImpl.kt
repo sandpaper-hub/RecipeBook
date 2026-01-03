@@ -1,10 +1,10 @@
 package com.example.recipebook.domain.interactor.uploadRecipe
 
-import com.example.recipebook.domain.model.NewRecipe
-import com.example.recipebook.domain.model.RecipeIngredient
-import com.example.recipebook.domain.model.RecipeStep
-import com.example.recipebook.domain.model.RecipeStepDraft
-import com.example.recipebook.domain.useCase.GetCurrentUserId
+import com.example.recipebook.domain.model.recipe.Recipe
+import com.example.recipebook.domain.model.recipe.RecipeIngredient
+import com.example.recipebook.domain.model.recipe.RecipeStep
+import com.example.recipebook.domain.model.recipe.RecipeStepDraft
+import com.example.recipebook.domain.useCase.GetCurrentUserIdUseCase
 import com.example.recipebook.domain.useCase.GetRecipeCoverUrlUseCase
 import com.example.recipebook.domain.useCase.GetStepImagesUrlUseCase
 import com.example.recipebook.domain.useCase.UploadNewRecipeUseCase
@@ -13,7 +13,7 @@ import javax.inject.Inject
 class UploadRecipeInteractorImpl @Inject constructor(
     private val getStepImagesUrlUseCase: GetStepImagesUrlUseCase,
     private val uploadNewRecipeUseCase: UploadNewRecipeUseCase,
-    private val getCurrentUserId: GetCurrentUserId,
+    private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
     private val getRecipeCoverUrlUseCase: GetRecipeCoverUrlUseCase
 ) : UploadRecipeInteractor {
 
@@ -28,9 +28,9 @@ class UploadRecipeInteractorImpl @Inject constructor(
         steps: List<RecipeStepDraft>
     ) {
         uploadNewRecipeUseCase.execute(
-            NewRecipe(
+            Recipe(
                 id = recipeId,
-                authorId = getCurrentUserId.execute(),
+                authorId = getCurrentUserIdUseCase.execute(),
                 recipeName = recipeName,
                 recipeDescription = recipeDescription,
                 recipeTimeEstimation = recipeTimeEstimation,

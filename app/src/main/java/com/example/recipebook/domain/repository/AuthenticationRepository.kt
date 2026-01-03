@@ -1,6 +1,6 @@
 package com.example.recipebook.domain.repository
 
-import com.example.recipebook.domain.model.UserProfile
+import com.example.recipebook.domain.model.profile.UserProfile
 
 interface AuthenticationRepository {
     suspend fun register(

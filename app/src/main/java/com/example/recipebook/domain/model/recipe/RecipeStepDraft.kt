@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.model
+package com.example.recipebook.domain.model.recipe
 
 data class RecipeStepDraft(
     val id: String = "",

@@ -3,7 +3,7 @@ package com.example.recipebook.domain.useCase
 import com.example.recipebook.domain.repository.AuthenticationRepository
 import javax.inject.Inject
 
-class GetCurrentUserId @Inject constructor(
+class GetCurrentUserIdUseCase @Inject constructor(
     private val authenticationRepository: AuthenticationRepository
 ) {
     fun execute(): String {

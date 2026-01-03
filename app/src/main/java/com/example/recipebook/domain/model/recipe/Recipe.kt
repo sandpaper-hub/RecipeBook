@@ -1,6 +1,6 @@
-package com.example.recipebook.domain.model
+package com.example.recipebook.domain.model.recipe
 
-data class NewRecipeDraft(
+data class Recipe(
     val id: String = "",
     val authorId: String = "",
     val recipeName: String = "",
@@ -9,6 +9,6 @@ data class NewRecipeDraft(
     val imageUrl: String? = null,
     val category: String = "",
     val ingredients: List<RecipeIngredient> = emptyList(),
-    val steps: List<RecipeStepDraft> = emptyList(),
+    val steps: List<RecipeStep> = emptyList(),
     val createdAt: Long = 0L
 )

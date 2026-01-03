@@ -7,8 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.uploadRecipe.UploadRecipeInteractor
-import com.example.recipebook.domain.model.RecipeIngredient
-import com.example.recipebook.domain.model.RecipeStepDraft
+import com.example.recipebook.domain.model.recipe.RecipeIngredient
+import com.example.recipebook.domain.model.recipe.RecipeStepDraft
 import com.example.recipebook.presentation.viewModel.uploadRecipeScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.uploadRecipeScreen.model.NewRecipeUiState
 import com.example.recipebook.presentation.viewModel.uploadRecipeScreen.model.RecipeStepUiState
