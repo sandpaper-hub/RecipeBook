@@ -1,6 +1,6 @@
 package com.example.recipebook.domain.useCase
 
-import com.example.recipebook.domain.model.RecipeStepDraft
+import com.example.recipebook.domain.model.recipe.RecipeStepDraft
 import com.example.recipebook.domain.repository.UploadRecipeRepository
 import javax.inject.Inject
 

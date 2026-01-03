@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.model
+package com.example.recipebook.domain.model.profile
 
 data class UserProfile(
     val uid: String = "",

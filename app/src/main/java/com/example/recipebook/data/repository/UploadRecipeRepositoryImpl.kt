@@ -1,8 +1,8 @@
 package com.example.recipebook.data.repository
 
 import com.example.recipebook.data.util.ImageCompressorImpl
-import com.example.recipebook.domain.model.NewRecipe
-import com.example.recipebook.domain.model.RecipeStepDraft
+import com.example.recipebook.domain.model.recipe.Recipe
+import com.example.recipebook.domain.model.recipe.RecipeStepDraft
 import com.example.recipebook.domain.repository.UploadRecipeRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -53,7 +53,7 @@ class UploadRecipeRepositoryImpl @Inject constructor(
         return ref.downloadUrl.await().toString()
     }
 
-    override suspend fun saveRecipe(recipe: NewRecipe) {
+    override suspend fun saveRecipe(recipe: Recipe) {
         firestore
             .collection("recipes")
             .document(recipe.id)

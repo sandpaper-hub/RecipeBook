@@ -11,6 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.CustomCircleIconButton
@@ -19,13 +20,13 @@ import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.ProfileAvatar
 import com.example.recipebook.presentation.ui.commonUi.RoundedPrimaryButton
 import com.example.recipebook.presentation.ui.commonUi.TitleText
-import com.example.recipebook.presentation.viewModel.profileScreen.ProfileViewModel
+import com.example.recipebook.presentation.viewModel.editProfileScreen.EditProfileViewModel
 import com.example.recipebook.util.debounce
 
 @Composable
 @Suppress("FunctionName")
 fun EditProfileScreen(
-    viewModel: ProfileViewModel,
+    viewModel: EditProfileViewModel = hiltViewModel(),
     onBackNavigation: () -> Unit
 ) {
 
@@ -90,12 +91,12 @@ fun EditProfileScreen(
 
         ProfileAvatar(
             imageUrl = when {
-                uiState.localImageUri != null -> {
-                    uiState.localImageUri
+                uiState.localImageSource != null -> {
+                    uiState.localImageSource
                 }
 
                 else -> {
-                    uiState.remoteImageUrl
+                    uiState.profileImageSource
                 }
             },
             contentDescription = stringResource(R.string.profile_image),

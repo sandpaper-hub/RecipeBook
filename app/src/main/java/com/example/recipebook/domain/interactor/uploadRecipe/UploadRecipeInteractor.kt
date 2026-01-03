@@ -1,8 +1,8 @@
 package com.example.recipebook.domain.interactor.uploadRecipe
 
-import com.example.recipebook.domain.model.RecipeIngredient
-import com.example.recipebook.domain.model.RecipeStep
-import com.example.recipebook.domain.model.RecipeStepDraft
+import com.example.recipebook.domain.model.recipe.RecipeIngredient
+import com.example.recipebook.domain.model.recipe.RecipeStep
+import com.example.recipebook.domain.model.recipe.RecipeStepDraft
 
 interface UploadRecipeInteractor {
     suspend fun uploadNewRecipe(
