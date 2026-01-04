@@ -27,17 +27,20 @@ class UploadRecipeInteractorImpl @Inject constructor(
         ingredients: List<RecipeIngredient>,
         steps: List<RecipeStepDraft>
     ) {
+        val recipeImageUrl: String? = getRecipeCoverUrlUseCase.execute(recipeId, recipeImageSource)
+        val currentUserId = getCurrentUserIdUseCase.execute()
+        val recipeSteps = buildRecipeSteps(recipeId, steps)
         uploadNewRecipeUseCase.execute(
             Recipe(
                 id = recipeId,
-                authorId = getCurrentUserIdUseCase.execute(),
+                authorId = currentUserId,
                 recipeName = recipeName,
                 recipeDescription = recipeDescription,
                 recipeTimeEstimation = recipeTimeEstimation,
-                imageUrl = getRecipeCoverUrlUseCase.execute(recipeId, recipeImageSource),
+                imageUrl = recipeImageUrl,
                 category = category,
                 ingredients = ingredients,
-                steps = buildRecipeSteps(recipeId, steps),
+                steps = recipeSteps,
                 createdAt = System.currentTimeMillis()
             )
         )

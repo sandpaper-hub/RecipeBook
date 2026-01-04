@@ -61,7 +61,7 @@ class UploadRecipeRepositoryImpl @Inject constructor(
             .await()
     }
 
-    override suspend fun uploadRecipeImage(recipeId: String, imageSource: String?): String {
+    override suspend fun uploadRecipeImage(recipeId: String, imageSource: String): String {
         val ref = firebaseStorage.reference
             .child("recipes")
             .child(recipeId)
