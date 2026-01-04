@@ -132,29 +132,34 @@ class UploadRecipeViewModel @Inject constructor(
 
     fun uploadNewRecipe(onBackClick: () -> Unit) {
         viewModelScope.launch {
-            uploadRecipeInteractor.uploadNewRecipe(
-                recipeId = UUID.randomUUID().toString(),
-                recipeName = uiState.recipeName,
-                recipeDescription = uiState.recipeDescription,
-                recipeTimeEstimation = uiState.timeEstimation,
-                recipeImageSource = uiState.recipeImageUri?.toString(),
-                category = uiState.recipeCategory,
-                ingredients = uiState.ingredients.map { ingredient ->
-                    RecipeIngredient(
-                        id = ingredient.id,
-                        value = ingredient.ingredientValue
-                    )
-                },
-                steps = uiState.recipeSteps.map { recipeStepUiState ->
-                    RecipeStepDraft(
-                        id = recipeStepUiState.id,
-                        imageSource = recipeStepUiState.imageUri?.toString(),
-                        description = recipeStepUiState.stepDescription
-                    )
-                }
-            )
+            runCatching {
+                uploadRecipeInteractor.uploadNewRecipe(
+                    recipeId = UUID.randomUUID().toString(),
+                    recipeName = uiState.recipeName,
+                    recipeDescription = uiState.recipeDescription,
+                    recipeTimeEstimation = uiState.timeEstimation,
+                    recipeImageSource = uiState.recipeImageUri?.toString(),
+                    category = uiState.recipeCategory,
+                    ingredients = uiState.ingredients.map { ingredient ->
+                        RecipeIngredient(
+                            id = ingredient.id,
+                            value = ingredient.ingredientValue
+                        )
+                    },
+                    steps = uiState.recipeSteps.map { recipeStepUiState ->
+                        RecipeStepDraft(
+                            id = recipeStepUiState.id,
+                            imageSource = recipeStepUiState.imageUri?.toString(),
+                            description = recipeStepUiState.stepDescription
+                        )
+                    }
+                )
+            }.onSuccess {
+                onBackClick()
+            }.onFailure { error ->
+                uiState = uiState.copy(errorMessage = error.message)
+            }
 
-            onBackClick()
         }
     }
 }

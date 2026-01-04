@@ -48,6 +48,7 @@ class ProfileViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         recipes = recipes,
+                        recipesCount = recipes.size,
                         isRecipesLoading = false
                     )
                 }

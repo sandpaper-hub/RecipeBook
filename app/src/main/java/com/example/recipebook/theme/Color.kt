@@ -10,6 +10,7 @@ val Pink40 = Color(0xFF7D5260)
 
 
 val TitleGray = Color(0xFF757575)
+val TitleGrayTransparent = Color(0x0D757575)
 val InputColor = Color(0xFFF6F8FC)
 val DarkModeBodyColor = Color(0xFFADADAD)
 val DarkModeInputColor = Color(0xFF2F3233)

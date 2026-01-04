@@ -11,5 +11,6 @@ data class NewRecipeUiState(
     val ingredients: List<IngredientUiState> = emptyList(),
     val recipeSteps: List<RecipeStepUiState> = emptyList(),
     val recipeCategory: String = "",
-    val isCategoryMenuExpand: Boolean = false
+    val isCategoryMenuExpand: Boolean = false,
+    val errorMessage: String? = null
 )

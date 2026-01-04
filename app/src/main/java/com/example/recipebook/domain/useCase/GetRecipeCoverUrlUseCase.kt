@@ -6,6 +6,7 @@ import javax.inject.Inject
 class GetRecipeCoverUrlUseCase @Inject constructor(
     private val uploadRecipeRepository: UploadRecipeRepository
 ) {
-    suspend fun execute(recipeId: String, imageSource: String?): String =
-        uploadRecipeRepository.uploadRecipeImage(recipeId, imageSource)
+    suspend fun execute(recipeId: String, imageSource: String?): String? =
+        if (imageSource == null) null
+        else uploadRecipeRepository.uploadRecipeImage(recipeId, imageSource)
 }

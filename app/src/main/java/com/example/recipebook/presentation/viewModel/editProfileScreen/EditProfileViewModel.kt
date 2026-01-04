@@ -57,7 +57,7 @@ class EditProfileViewModel @Inject constructor(
                     "fullName" to uiState.fullName,
                     "nickName" to uiState.nickName
                 ),
-                uriString = uiState.localImageSource.toString()
+                uriString = uiState.localImageSource?.toString()
             )
             delay(2000)
             uiState = if (result.isSuccess) {

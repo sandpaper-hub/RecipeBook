@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.recipebook.theme.GreenAccent
@@ -63,7 +64,10 @@ fun SquareRoundedButton(
         } else {
             Text(
                 text = text,
-                color = Color.White
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.White
+                )
             )
         }
     }
@@ -94,7 +98,11 @@ fun OutlinedIconButton(
             )
             Spacer(modifier = Modifier.width(12.dp))
         }
-        Text(text = text, color = textColor)
+        Text(text = text,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                color = textColor
+            ))
     }
 }
 
@@ -119,7 +127,9 @@ fun RoundedPrimaryButton(
         } else {
             Text(
                 text = text,
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = Color.White
+                )
             )
         }
     }
