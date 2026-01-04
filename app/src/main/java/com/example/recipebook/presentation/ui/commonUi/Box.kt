@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.recipebook.R
@@ -60,8 +61,9 @@ fun IconTextBox(
 
         Text(
             text = mainText,
-            style = MaterialTheme.typography.displayLarge,
-            color = if (!isLogout) MaterialTheme.colorScheme.onPrimary else Color.Red
+            style = MaterialTheme.typography.bodyLarge.copy(
+                color = if (!isLogout) MaterialTheme.colorScheme.onPrimary else Color.Red
+            )
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -69,7 +71,9 @@ fun IconTextBox(
         if (detailText != null) {
             Text(
                 text = detailText,
-                color = MaterialTheme.colorScheme.inversePrimary
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.inversePrimary
+                )
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -115,7 +119,9 @@ fun ClickableProfileBox(
         Column {
             Text(
                 text = fullName,
-                style = MaterialTheme.typography.displayLarge
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Medium
+                )
             )
 
             SubHeadingTextSmall(

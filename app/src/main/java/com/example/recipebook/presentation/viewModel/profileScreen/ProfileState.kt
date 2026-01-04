@@ -11,5 +11,6 @@ data class ProfileState(
     val isSaving: Boolean = false,
     val errorMessage: String? = null,
     val recipes: List<Recipe> = emptyList(),
-    val isRecipesLoading: Boolean = false
+    val isRecipesLoading: Boolean = false,
+    val recipesCount: Int = 0
 )

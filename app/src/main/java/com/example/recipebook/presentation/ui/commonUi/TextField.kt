@@ -81,8 +81,9 @@ fun CustomTextField(
         if (value.isEmpty()) {
             Text(
                 text = hint,
-                color = TitleGray,
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = TitleGray
+                )
             )
         }
 
@@ -94,7 +95,7 @@ fun CustomTextField(
                 .onFocusChanged { state ->
                     isFocused = state.isFocused
                 },
-            textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.inversePrimary),
+            textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.inversePrimary),
             singleLine = true,
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
         )
@@ -209,8 +210,14 @@ fun CustomPasswordTextField(
             onValueChange = onValueChange,
             singleLine = true,
             enabled = enabled,
-            textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.inversePrimary),
-            visualTransformation = if (visible) VisualTransformation.None else PasswordVisualTransformation(),
+            textStyle = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.inversePrimary
+            ),
+            visualTransformation = if (visible) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
@@ -228,7 +235,7 @@ fun CustomPasswordTextField(
                         if (value.isEmpty()) {
                             Text(
                                 text = hint,
-                                style = MaterialTheme.typography.titleMedium,
+                                style = MaterialTheme.typography.labelMedium,
                                 color = TitleGray
                             )
                         }

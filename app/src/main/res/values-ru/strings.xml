@@ -6,7 +6,7 @@
     <string name="sign_up_button">Зарегестрироваться</string>
     <string name="sign_in_button">Войти</string>
     <string name="create_account">Создать Аккаунт</string>
-    <string name="fill_form">Введите своё имя, email и пароль, чтобы\nзарегестрироваться. </string>
+    <string name="fill_form">Введите своё имя, email и пароль, чтобы\nзарегестрироваться.\ </string>
     <string name="already_have_account">Уже есть аакаунт?</string>
     <string name="full_name">Полное Имя</string>
     <!--name hint non translatable-->

@@ -6,7 +6,7 @@
     <string name="sign_up_button" translatable="true">Sign Up</string>
     <string name="sign_in_button" translatable="true">Sign In</string>
     <string name="create_account" translatable="true">Create Account</string>
-    <string name="fill_form" translatable="true">Enter your name, email and password\nfor sign up. </string>
+    <string name="fill_form" translatable="true">Enter your name, email and password\nfor sign up.\ </string>
     <string name="already_have_account" translatable="true">Already have account?</string>
     <string name="full_name" translatable="true">Full Name</string>
     <string name="name_hint" translatable="false">Constantine Kim</string>
