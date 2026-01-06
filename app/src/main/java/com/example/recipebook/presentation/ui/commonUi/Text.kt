@@ -1,8 +1,11 @@
 package com.example.recipebook.presentation.ui.commonUi
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,13 +36,16 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.recipebook.R
+import com.example.recipebook.theme.DarkModeBodyColor
 import com.example.recipebook.theme.GreenAccent
 import com.example.recipebook.theme.TitleGray
+import com.example.recipebook.theme.TitleGrayTransparent
 
 @Composable
 @Suppress
@@ -67,7 +74,7 @@ fun MixedClickableText(
 
     Text(
         annotatedText,
-        style = MaterialTheme.typography.titleMedium,
+        style = MaterialTheme.typography.bodyMedium,
         modifier = modifier.then(Modifier.pointerInput(Unit) {
             detectTapGestures { offset: Offset ->
                 val layoutResult = textLayoutResult ?: return@detectTapGestures
@@ -87,13 +94,24 @@ fun MixedClickableText(
 
 @Composable
 @Suppress("FunctionName")
-fun CustomTextBox(
+fun SingleActionTextBox(
     value: String,
     hint: String,
-    contentDestination: String,
+    isError: Boolean?,
+    contentDescription: String,
     onClick: () -> Unit,
+    painter: Painter?,
     modifier: Modifier
 ) {
+
+    val borderColor by animateColorAsState(
+        if (isError == true) {
+            MaterialTheme.colorScheme.error
+        } else {
+            Color.Unspecified
+        }
+    )
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -101,26 +119,78 @@ fun CustomTextBox(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 shape = RoundedCornerShape(14.dp)
             )
+            .border(width = 0.5.dp, color = borderColor, shape = RoundedCornerShape(14.dp))
             .height(48.dp)
             .clickable(
                 onClick = onClick
             )
     ) {
-        Icon(
-            painterResource(R.drawable.date_icon),
-            contentDescription = contentDestination,
-            modifier = Modifier.padding(start = 16.dp)
-        )
+        Spacer(modifier = Modifier.width(16.dp))
 
-        Spacer(modifier = Modifier.width(12.dp))
+        if (painter != null) {
+            Icon(
+                painter,
+                contentDescription = contentDescription,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+        }
 
         Text(
             text = value.ifEmpty { hint },
+            color = if (value.isEmpty()) TitleGray else MaterialTheme.colorScheme.inversePrimary,
+            style = if (value.isEmpty()) MaterialTheme.typography.labelMedium else MaterialTheme.typography.bodyMedium
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+    }
+}
+
+@Composable
+@Suppress("FunctionName")
+fun DoubleActionTextBox(
+    value: String,
+    hint: String,
+    onBoxClick: () -> Unit,
+    onIconClick: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(bottom = 12.dp)
+            .background(
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                shape = RoundedCornerShape(14.dp)
+            )
+            .height(48.dp)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onBoxClick
+            )
+    ) {
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(
+            text = value.ifBlank {
+                hint
+            },
             color = if (value.isEmpty()) TitleGray else MaterialTheme.colorScheme.inversePrimary,
             style = if (value.isEmpty()) MaterialTheme.typography.titleSmall else MaterialTheme.typography.titleMedium
         )
 
         Spacer(modifier = Modifier.weight(1f))
+
+        Icon(
+            painter = painterResource(R.drawable.delete_icon),
+            contentDescription = stringResource(R.string.delete_icon),
+            modifier = Modifier.clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onIconClick
+            )
+        )
+        Spacer(modifier = Modifier.width(16.dp))
     }
 }
 
@@ -135,20 +205,23 @@ fun TextDivider(modifier: Modifier) {
         HorizontalDivider(
             modifier = Modifier
                 .weight(1f)
-                .height(0.5.dp), color = MaterialTheme.colorScheme.inversePrimary
+                .height(0.5.dp),
+            color = MaterialTheme.colorScheme.inversePrimary
         )
 
         Text(
             text = stringResource(R.string.or_continue),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(horizontal = 8.dp),
-            color = MaterialTheme.colorScheme.inversePrimary
+            style = MaterialTheme.typography.labelMedium.copy(
+                color = MaterialTheme.colorScheme.inversePrimary
+            ),
+            modifier = Modifier.padding(horizontal = 8.dp)
         )
 
         HorizontalDivider(
             modifier = Modifier
                 .weight(1f)
-                .height(0.5.dp), color = MaterialTheme.colorScheme.inversePrimary
+                .height(0.5.dp),
+            color = MaterialTheme.colorScheme.inversePrimary
         )
     }
 }
@@ -159,8 +232,10 @@ fun HeadingTextLarge(text: String, modifier: Modifier) {
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.headlineMedium,
-        color = MaterialTheme.colorScheme.onPrimary
+        style = MaterialTheme.typography.headlineMedium.copy(
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onPrimary
+        )
     )
 }
 
@@ -169,7 +244,7 @@ fun HeadingTextLarge(text: String, modifier: Modifier) {
 fun HeadingTextMedium(text: String, modifier: Modifier) {
     Text(
         text = text,
-        style = MaterialTheme.typography.bodySmall,
+        style = MaterialTheme.typography.bodyLarge,
         modifier = modifier
     )
 }
@@ -184,8 +259,7 @@ fun SubHeadingTextSmall(
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.titleMedium,
-        color = color
+        style = MaterialTheme.typography.bodyMedium.copy(color = color)
     )
 }
 
@@ -195,8 +269,10 @@ fun TitleText(text: String, modifier: Modifier) {
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onPrimary
+        style = MaterialTheme.typography.bodyMedium.copy(
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onPrimary
+        )
     )
 }
 
@@ -222,7 +298,7 @@ fun ClickableText(
 
     Text(
         text = clickableText,
-        style = MaterialTheme.typography.titleSmall,
+        style = MaterialTheme.typography.labelMedium,
         modifier = modifier.then(Modifier.pointerInput(Unit) {
             detectTapGestures { offset: Offset ->
                 val layoutResult = textLayoutResult ?: return@detectTapGestures
@@ -247,12 +323,15 @@ fun SubheadingBackgroundText(
         modifier = modifier
             .fillMaxWidth()
             .height(48.dp)
-            .background(color = Color(0x0D757575)),
+            .background(color = TitleGrayTransparent),
         contentAlignment = Alignment.CenterStart
     ) {
 
         Text(
             text = text,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                color = DarkModeBodyColor
+            ),
             modifier = Modifier
                 .padding(start = 24.dp)
         )
@@ -285,7 +364,9 @@ fun SelectableText(
         Text(
             text = text,
             color = if (selected) MaterialTheme.colorScheme.onPrimary else TitleGray,
-            style = MaterialTheme.typography.displayLarge,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.Medium
+            ),
             modifier = Modifier.padding(start = 24.dp)
         )
 

@@ -9,12 +9,13 @@ import androidx.navigation.compose.rememberNavController
 import com.example.recipebook.navigation.mainHomeGraph.BottomNavigationItem
 import com.example.recipebook.navigation.mainHomeGraph.MainHomeGraph
 import com.example.recipebook.navigation.mainHomeGraph.profileGraph.ProfileRoutes
+import com.example.recipebook.navigation.mainHomeGraph.recipesGraph.RecipesRoutes
 import com.example.recipebook.presentation.ui.commonUi.MainBottomNavigationBar
 import com.example.recipebook.presentation.ui.commonUi.RootScaffold
 
 @Composable
 @Suppress("FunctionName")
-fun MainScreenContainer() {
+fun MainScreenContainer(onLogout: () -> Unit) {
     val bottomNavController = rememberNavController()
     val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -22,7 +23,7 @@ fun MainScreenContainer() {
     val bottomBarDestinations = setOf(
         BottomNavigationItem.Home.route,
         BottomNavigationItem.Collaboration.route,
-        BottomNavigationItem.Upload.route,
+        RecipesRoutes.RecipesMain.route,
         BottomNavigationItem.Saved.route,
         ProfileRoutes.ProfileMain.route
     )
@@ -34,11 +35,13 @@ fun MainScreenContainer() {
             if (bottomBarVisibility) {
                 MainBottomNavigationBar(navController = bottomNavController)
             }
-        }
+        },
+        applySystemInsets = false
     ) { innerPadding ->
         MainHomeGraph(
             navController = bottomNavController,
-            Modifier.padding(innerPadding)
+            onLogout = onLogout,
+            modifier = Modifier.padding(innerPadding)
         )
     }
 }

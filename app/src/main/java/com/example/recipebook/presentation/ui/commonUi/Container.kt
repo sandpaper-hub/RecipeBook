@@ -1,6 +1,7 @@
 package com.example.recipebook.presentation.ui.commonUi
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -15,6 +16,7 @@ import com.example.recipebook.presentation.controller.SnackBarController
 @Suppress("FunctionName")
 fun RootScaffold(
     bottomBar: @Composable (() -> Unit)? = null,
+    applySystemInsets: Boolean = true,
     content: @Composable (PaddingValues) -> Unit
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
@@ -26,7 +28,12 @@ fun RootScaffold(
     CompositionLocalProvider(LocalSnackBarController provides snackBarController) {
         Scaffold(
             snackbarHost = { SnackbarHost(snackBarHostState) },
-            bottomBar = {bottomBar?.invoke()}
+            bottomBar = {bottomBar?.invoke()},
+            contentWindowInsets = if (applySystemInsets) {
+                androidx.compose.foundation.layout.WindowInsets.systemBars
+            } else {
+                androidx.compose.foundation.layout.WindowInsets(0)
+            }
         ) { innerPadding ->
             content(innerPadding)
         }

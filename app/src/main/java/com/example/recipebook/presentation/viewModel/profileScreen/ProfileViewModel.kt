@@ -1,105 +1,89 @@
 package com.example.recipebook.presentation.viewModel.profileScreen
 
-import android.net.Uri
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.profile.ProfileInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val profileInteractor: ProfileInteractor
 ) : ViewModel() {
-    var uiState by mutableStateOf(ProfileState())
-        private set
+    private val _uiState = MutableStateFlow(ProfileState())
+    val uiState: StateFlow<ProfileState> = _uiState
 
-    val allowedRegex = Regex("^[A-Za-z0-9._]*$")
 
     init {
         observeUserProfile()
+        observeUserRecipes()
     }
 
-    private fun observeUserProfile() {
-        viewModelScope.launch {
-            profileInteractor.observerUserProfile()
-                .catch { error ->
-                    uiState = uiState.copy(errorMessage = error.message)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun observeUserRecipes() {
+        profileInteractor.getUserIdFlow()
+            .flatMapLatest { uid ->
+                if (uid == null) {
+                    flowOf(emptyList())
+                } else {
+                    profileInteractor.observeUserRecipes(uid)
                 }
-                .collect { userProfile ->
-                    uiState = uiState.copy(
-                        uid = userProfile.uid,
-                        fullName = userProfile.fullName,
-                        nickName = userProfile.nickName,
-                        remoteImageUrl = userProfile.photoUrl
+            }
+            .onStart {
+                _uiState.update {
+                    it.copy(isRecipesLoading = true)
+                }
+            }
+            .onEach { recipes ->
+                _uiState.update {
+                    it.copy(
+                        recipes = recipes,
+                        recipesCount = recipes.size,
+                        isRecipesLoading = false
                     )
                 }
-        }
-    }
-
-    fun onNameChanged(newValue: String) {
-        uiState = uiState.copy(fullName = newValue)
-    }
-
-    fun onNickNameChanged(newValue: String) {
-        uiState = if (allowedRegex.matches(newValue)) {
-            uiState.copy(nickName = newValue)
-        } else {
-            uiState.copy(errorMessage = "No specific symbols")
-        }
-    }
-
-    fun updateUserData(onBackNavigation: () -> Unit) {
-        viewModelScope.launch {
-            uiState = uiState.copy(isSaving = true)
-
-            if (uiState.fullName.isBlank() || uiState.nickName.isBlank()) {
-                uiState = uiState.copy(
-                    errorMessage = "Full Name or NickName shouldn't be blank",
-                    isSaving = false
-                )
-                return@launch
             }
-
-            val result = profileInteractor.updateUserData(
-                data = mapOf(
-                    "fullName" to uiState.fullName,
-                    "nickName" to uiState.nickName
-                ),
-                uriString = if (uiState.localImageUri == null) null else uiState.localImageUri.toString()
-            )
-            delay(2000)
-            uiState = if (result.isSuccess) {
-                uiState.copy(
-                    isSaving = false,
-                    localImageUri = null
-                )
-            } else {
-                uiState.copy(
-                    isSaving = false,
-                    errorMessage = result.exceptionOrNull()?.message
-                )
+            .catch { throwable ->
+                _uiState.update {
+                    it.copy(
+                        isRecipesLoading = false,
+                        errorMessage = throwable.message
+                    )
+                }
             }
-            if (result.isSuccess) {
-                onBackNavigation()
-            }
-        }
+            .launchIn(viewModelScope)
     }
 
-    fun onImagePicked(uri: Uri?) {
-        uiState = uiState.copy(localImageUri = uri)
-    }
-
-    fun refreshImageUri() {
-        viewModelScope.launch {
-            delay(2000L)
-            uiState = uiState.copy(localImageUri = null)
-        }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun observeUserProfile() {
+        profileInteractor.observerUserProfile()
+            .onEach { userProfile ->
+                _uiState.update {
+                    it.copy(
+                        fullName = userProfile.fullName,
+                        nickName = userProfile.nickName,
+                        profileImageUrl = userProfile.photoUrl,
+                        errorMessage = null
+                    )
+                }
+            }
+            .catch { error ->
+                _uiState.update {
+                    it.copy(
+                        errorMessage = error.message
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
     }
 }

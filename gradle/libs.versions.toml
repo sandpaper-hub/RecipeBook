@@ -34,6 +34,8 @@ coilCompose = "2.7.0"
 dataStore = "1.2.0"
 #Desugaring
 desugaring = "2.1.5"
+#coroutines
+kotlinxCoroutines = "1.10.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -76,6 +78,8 @@ hilt-navigation = {module = "androidx.hilt:hilt-navigation-compose", version.ref
 androidx-datastore = {group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore"}
 #dusugaring
 tools-desugaring = {group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugaring"}
+#coroutines
+jetbrains-kotlinx-coroutines = {group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

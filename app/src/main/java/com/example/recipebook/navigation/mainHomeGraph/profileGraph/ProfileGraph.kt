@@ -1,7 +1,5 @@
 package com.example.recipebook.navigation.mainHomeGraph.profileGraph
 
-import androidx.compose.runtime.remember
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -11,24 +9,17 @@ import com.example.recipebook.navigation.mainHomeGraph.BottomNavigationItem
 import com.example.recipebook.navigation.mainHomeGraph.profileGraph.settingsGraph.settingsGraph
 import com.example.recipebook.presentation.ui.editProfileScreen.EditProfileScreen
 import com.example.recipebook.presentation.ui.profileScreen.ProfileScreen
-import com.example.recipebook.presentation.viewModel.profileScreen.ProfileViewModel
 
 fun NavGraphBuilder.profileNavGraph(
-    navController: NavController
+    navController: NavController,
+    onLogout: () -> Unit
 ) {
     navigation(
         startDestination = ProfileRoutes.ProfileMain.route,
         route = BottomNavigationItem.Profile.route
     ) {
-        composable(ProfileRoutes.ProfileMain.route) { backStackEntry ->
-
-            val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry(BottomNavigationItem.Profile.route)
-            }
-            val viewModel: ProfileViewModel = hiltViewModel(parentEntry)
-
+        composable(ProfileRoutes.ProfileMain.route) {
             ProfileScreen(
-                viewModel = viewModel,
                 onEditProfile = {
                     navController.navigate(ProfileRoutes.EditProfile.route)
                 },
@@ -38,19 +29,17 @@ fun NavGraphBuilder.profileNavGraph(
             )
         }
 
-        composable(ProfileRoutes.EditProfile.route) { backStackEntry ->
-            val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry(BottomNavigationItem.Profile.route)
-            }
-            val viewModel: ProfileViewModel = hiltViewModel(parentEntry)
+        composable(ProfileRoutes.EditProfile.route) {
             EditProfileScreen(
-                viewModel = viewModel,
                 onBackNavigation = {
                     navController.popBackStack()
                 }
             )
         }
 
-        settingsGraph(navController = navController)
+        settingsGraph(
+            navController = navController,
+            onLogout = onLogout
+        )
     }
 }

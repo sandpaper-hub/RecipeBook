@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -52,7 +53,9 @@ fun OnboardingScreen(
                     bottom.linkTo(titleText.top)
                 }
                 .padding(start = 40.dp, end = 40.dp, bottom = 16.dp),
-            style = MaterialTheme.typography.headlineLarge,
+            style = MaterialTheme.typography.headlineLarge.copy(
+                fontWeight = FontWeight.SemiBold
+            ),
             textAlign = TextAlign.Center, color = Color.White
         )
 
@@ -64,8 +67,10 @@ fun OnboardingScreen(
                     bottom.linkTo(registerButton.top)
                 }
                 .padding(bottom = 16.dp, start = 63.dp, end = 63.dp),
-            style = MaterialTheme.typography.bodySmall,
-            textAlign = TextAlign.Center, color = DarkModeBodyColor)
+            style = MaterialTheme.typography.bodyLarge.copy(
+                textAlign = TextAlign.Center,
+                color = DarkModeBodyColor
+            ))
 
         SquareRoundedButton(
             onClick = debounce { onRegistrationScreen() },

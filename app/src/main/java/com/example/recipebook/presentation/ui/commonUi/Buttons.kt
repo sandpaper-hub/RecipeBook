@@ -1,17 +1,17 @@
 package com.example.recipebook.presentation.ui.commonUi
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -28,7 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.recipebook.theme.GreenAccent
@@ -59,7 +59,13 @@ fun SquareRoundedButton(
                 color = Color.White
             )
         } else {
-            Text(text = text)
+            Text(
+                text = text,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.White
+                )
+            )
         }
     }
 }
@@ -89,7 +95,11 @@ fun OutlinedIconButton(
             )
             Spacer(modifier = Modifier.width(12.dp))
         }
-        Text(text = text, color = textColor)
+        Text(text = text,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                color = textColor
+            ))
     }
 }
 
@@ -114,7 +124,9 @@ fun RoundedPrimaryButton(
         } else {
             Text(
                 text = text,
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = Color.White
+                )
             )
         }
     }
@@ -122,7 +134,7 @@ fun RoundedPrimaryButton(
 
 @Composable
 @Suppress("FunctionName")
-fun CustomIconButton(
+fun CustomCircleIconButton(
     size: Dp,
     painter: Painter,
     contentDescription: String,
@@ -167,34 +179,38 @@ fun ClickableIcon(
 
 @Composable
 @Suppress("FunctionName")
-fun SelectableButton(
+fun IconTextButton(
+    painter: Painter,
     text: String,
-    selected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier
 ) {
-    Box(
-        modifier = modifier
-            .selectable(
-                selected = selected,
-                onClick = onClick,
-                role = Role.RadioButton
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = modifier.then(
+            Modifier.clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick
             )
-            .border(
-                width = 1.dp,
-                color = if (selected) MaterialTheme.colorScheme.primary else Color.Unspecified,
-                shape = RoundedCornerShape(15.dp)
-            )
-            .background(
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                shape = RoundedCornerShape(15.dp)
-            ),
-        contentAlignment = Alignment.Center
+        )
     ) {
+        Spacer(modifier = Modifier.weight(1f))
+        Icon(
+            painter = painter,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.inversePrimary
+        )
+
+        Spacer(modifier = Modifier.width(12.dp))
+
         Text(
             text = text,
-            color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.inversePrimary,
-            modifier = Modifier.padding(vertical = 15.dp)
+            style = MaterialTheme.typography.titleSmall.copy(
+                color = MaterialTheme.colorScheme.inversePrimary
+            )
         )
+        Spacer(modifier = Modifier.weight(1f))
     }
 }

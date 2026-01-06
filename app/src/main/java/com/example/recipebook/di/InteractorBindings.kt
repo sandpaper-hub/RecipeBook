@@ -10,6 +10,8 @@ import com.example.recipebook.domain.interactor.settings.SettingsInteractor
 import com.example.recipebook.domain.interactor.settings.SettingsInteractorImpl
 import com.example.recipebook.domain.interactor.splash.SplashInteractor
 import com.example.recipebook.domain.interactor.splash.SplashInteractorImpl
+import com.example.recipebook.domain.interactor.uploadRecipe.UploadRecipeInteractor
+import com.example.recipebook.domain.interactor.uploadRecipe.UploadRecipeInteractorImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -44,4 +46,9 @@ abstract class InteractorBindings {
     abstract fun bindSettingsInteractor(
         impl: SettingsInteractorImpl
     ): SettingsInteractor
+
+    @Binds
+    abstract fun bindUploadRecipeInteractor(
+        impl: UploadRecipeInteractorImpl
+    ): UploadRecipeInteractor
 }

@@ -14,7 +14,7 @@ import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.CustomDropDownMenu
 import com.example.recipebook.presentation.ui.commonUi.CustomTextField
 import com.example.recipebook.presentation.ui.commonUi.DatePickerDialog
-import com.example.recipebook.presentation.ui.commonUi.CustomTextBox
+import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.SelectableButtonBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
@@ -92,11 +92,13 @@ fun AccountScreen(
                 }
         )
 
-        CustomTextBox(
+        SingleActionTextBox(
             value = uiState.region,
             hint = stringResource(R.string.region_hint),
-            contentDestination = stringResource(R.string.region),
+            isError = null,
+            contentDescription = stringResource(R.string.region),
             onClick = { viewModel.showCountryMenu(true) },
+            painter = null,
             modifier = Modifier
                 .constrainAs(regionTextField) {
                     linkTo(start = startGuideline, end = endGuideline)
@@ -127,11 +129,13 @@ fun AccountScreen(
                 }
         )
 
-        CustomTextBox(
+        SingleActionTextBox(
             value = uiState.dateOfBirth?.toFormatedDate() ?: "",
             hint = stringResource(R.string.date_of_birth_hint),
-            contentDestination = stringResource(R.string.date_of_birth),
+            isError = null,
+            contentDescription = stringResource(R.string.date_of_birth),
             onClick = { viewModel.showDatePicker(true) },
+            painter = painterResource(R.drawable.date_icon),
             modifier = Modifier
                 .constrainAs(dateBirthTextField) {
                     linkTo(start = startGuideline, end = endGuideline)

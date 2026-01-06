@@ -13,6 +13,7 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.recipebook.util.convertToFollowersFormat
 
@@ -40,11 +41,13 @@ fun ProfileCard(
         ) {
             Text(
                 text = profileName,
-                style = MaterialTheme.typography.displayLarge
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.SemiBold
+                )
             )
             Text(
                 text = "@$profileNickName",
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.labelMedium
             )
         }
     }
@@ -63,11 +66,13 @@ fun ProfileStatisticItem(
     ) {
         Text(
             text = count.convertToFollowersFormat(),
-            style = MaterialTheme.typography.displayLarge
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.SemiBold
+            )
         )
         Text(
             text = statisticType,
-            style = MaterialTheme.typography.titleSmall
+            style = MaterialTheme.typography.labelMedium
         )
     }
 }

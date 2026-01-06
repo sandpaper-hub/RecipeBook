@@ -57,7 +57,13 @@ fun SelectableButtonBox(
             ) {
                 Text(
                     text = gender,
-                    color = if (gender == selectedValue) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.inversePrimary,
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        color = if (gender == selectedValue) {
+                            MaterialTheme.colorScheme.onPrimary
+                        } else {
+                            MaterialTheme.colorScheme.inversePrimary
+                        }
+                    ),
                     modifier = Modifier.padding(vertical = 15.dp)
                 )
             }

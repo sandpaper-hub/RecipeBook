@@ -7,14 +7,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.recipebook.R
 import com.example.recipebook.navigation.mainHomeGraph.profileGraph.profileNavGraph
+import com.example.recipebook.navigation.mainHomeGraph.recipesGraph.recipesNavGraph
 import com.example.recipebook.presentation.ui.mainHomeScreen.MainHomeScreen
-import com.example.recipebook.presentation.ui.uploadScreen.UploadScreen
 import com.example.recipebook.presentation.ui.collaborationScreen.CollaborationScreen
 import com.example.recipebook.presentation.ui.savedScreen.SavedScreen
 
 @Composable
 fun MainHomeGraph(
     navController: NavHostController,
+    onLogout: () -> Unit,
     modifier: Modifier
 ) {
     NavHost(
@@ -30,15 +31,16 @@ fun MainHomeGraph(
             CollaborationScreen()
         }
 
-        composable(BottomNavigationItem.Upload.route) {
-            UploadScreen()
-        }
+        recipesNavGraph(navController = navController)
 
         composable(BottomNavigationItem.Saved.route) {
             SavedScreen()
         }
 
-        profileNavGraph(navController = navController)
+        profileNavGraph(
+            navController = navController,
+            onLogout = onLogout
+        )
     }
 }
 
@@ -59,7 +61,7 @@ sealed class BottomNavigationItem(
         label = "Collaboration"
     )
 
-    data object Upload : BottomNavigationItem(
+    data object Recipes : BottomNavigationItem(
         route = "upload",
         icon = R.drawable.upload_recipe_icon,
         label = "Upload"
