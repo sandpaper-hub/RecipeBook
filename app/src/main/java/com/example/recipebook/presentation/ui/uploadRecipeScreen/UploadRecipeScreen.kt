@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -213,10 +212,8 @@ fun UploadRecipeScreen(
             }
 
             item {
-                Text(
-                    text = "Step by step",
-                    style = MaterialTheme.typography.displayMedium,
-                    color = MaterialTheme.colorScheme.onPrimary,
+                TitleText(
+                    text = stringResource(R.string.step_by_step),
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
             }

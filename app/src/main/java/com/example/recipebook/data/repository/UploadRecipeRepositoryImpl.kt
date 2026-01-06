@@ -24,13 +24,14 @@ class UploadRecipeRepositoryImpl @Inject constructor(
         steps: List<RecipeStepDraft>
     ): Map<String, String> = coroutineScope {
         steps
-            .filter { it.imageSource != null }
-            .map { step ->
+            .mapNotNull { step ->
+                val source = step.imageSource ?: return@mapNotNull null
+
                 async(Dispatchers.IO) {
                     step.id to uploadStepImage(
                         recipeId = recipeId,
                         stepId = step.id,
-                        imageBytes = imageCompressorImpl.compress(step.imageSource)
+                        imageBytes = imageCompressorImpl.compress(source)
                     )
                 }
             }
