@@ -52,44 +52,60 @@ fun Modifier.dashBorder(
 ) = this.then(Modifier
     .padding(1.dp)
     .drawBehind {
-    val stroke = Stroke(
-        width = strokeWidth.toPx(),
-        pathEffect = PathEffect.dashPathEffect(
-            floatArrayOf(
-                dashWidth.toPx(),
-                gapWidth.toPx()
+        val stroke = Stroke(
+            width = strokeWidth.toPx(),
+            pathEffect = PathEffect.dashPathEffect(
+                floatArrayOf(
+                    dashWidth.toPx(),
+                    gapWidth.toPx()
+                )
             )
         )
-    )
 
-    val outline = shape.createOutline(
-        size = size,
-        layoutDirection = layoutDirection,
-        density = this
-    )
+        val outline = shape.createOutline(
+            size = size,
+            layoutDirection = layoutDirection,
+            density = this
+        )
 
-    when (outline) {
-        is Outline.Rectangle -> {
-            drawRect(
-                color = color,
-                style = stroke
-            )
+        when (outline) {
+            is Outline.Rectangle -> {
+                drawRect(
+                    color = color,
+                    style = stroke
+                )
+            }
+
+            is Outline.Rounded -> {
+                drawRoundRect(
+                    color = color,
+                    cornerRadius = outline.roundRect.bottomLeftCornerRadius,
+                    style = stroke
+                )
+            }
+
+            is Outline.Generic -> {
+                drawPath(
+                    path = outline.path,
+                    color = color,
+                    style = stroke
+                )
+            }
         }
+    })
 
-        is Outline.Rounded -> {
-            drawRoundRect(
-                color = color,
-                cornerRadius = outline.roundRect.bottomLeftCornerRadius,
-                style = stroke
-            )
-        }
+fun Int.plural(
+    one: String,
+    few: String,
+    many: String
+): String {
+    val lastTwoDigits = this % 100
+    val lastDigit = this % 10
 
-        is Outline.Generic -> {
-            drawPath(
-                path = outline.path,
-                color = color,
-                style = stroke
-            )
-        }
+    return when {
+        lastTwoDigits in 11..14 -> many
+        lastDigit == 1 -> one
+        lastDigit in 2..4 -> few
+        else -> many
     }
-})
+}

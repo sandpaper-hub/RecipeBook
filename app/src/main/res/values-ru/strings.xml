@@ -74,7 +74,7 @@
     <string name="recipe_name_hint">Плов</string>
     <string name="recipe_description_hint">Национальное узбекское блюдо</string>
     <string name="recipe_time_estimation_hint">1 час 40 минут</string>
-    <string name="add_ingredient" translatable="true">Добавьте ингредиент</string>
+    <string name="add_ingredient">Добавьте ингредиент</string>
     <string name="ingredients">Ингредиенты</string>
     <string name="category">Категория</string>
     <string name="category_hint">Выберите категорию</string>
@@ -86,12 +86,15 @@
     <!-- empty hint not translatable -->
     <string name="measure">Величина</string>
     <string name="measure_teaspoon">ч.л.</string>
-    <string name="measure_tablespoon" translatable="true">ст.л.</string>
-    <string name="measure_ml" translatable="true">мл</string>
-    <string name="measure_l" translatable="true">л</string>
-    <string name="measure_g" translatable="true">г</string>
-    <string name="measure_kg" translatable="true">кг</string>
-    <string name="measure_pcs" translatable="true">шт</string>
+    <string name="measure_tablespoon">ст.л.</string>
+    <string name="measure_ml">мл</string>
+    <string name="measure_l">л</string>
+    <string name="measure_g">г</string>
+    <string name="measure_kg">кг</string>
+    <string name="measure_pcs">шт</string>
     <string name="recipe_step_image">Изображение для шага готовки</string>
-
+    <string name="step_by_step">Step by step</string>
+    <string name="one_recipe">Рецепт</string>
+    <string name="two_recipe">рецепта</string>
+    <string name="many_recipes">Рецептов</string>
 </resources>
