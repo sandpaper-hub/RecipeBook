@@ -5,11 +5,11 @@
 ## 📱 Screenshots
 
 <p align="center">
-    <img src="screenshots/onboarding_screen.png" width="180">
-    <img src="screenshots/registration_screen.png" width="180">
-    <img src="screenshots/login_screen.png" width="180">
-    <img src="screenshots/profile_screen.png" width="180">
-    <img src="screenshots/editProfile_screen.png" width="180">
+    <img src="screenshots/onboarding_screen.png" width="200">
+    <img src="screenshots/registration_screen.png" width="200">
+    <img src="screenshots/login_screen.png" width="200">
+    <img src="screenshots/profile_screen.png" width="200">
+    <img src="screenshots/editProfile_screen.png" width="200">
 </p>
 
 Проект разработан как **пет-проект для портфолио Android-разработчика** с фокусом на **современный
