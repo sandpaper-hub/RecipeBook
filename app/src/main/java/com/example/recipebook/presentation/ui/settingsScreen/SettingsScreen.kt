@@ -17,8 +17,8 @@ import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.IconTextBox
 import com.example.recipebook.presentation.ui.commonUi.SubheadingBackgroundText
 import com.example.recipebook.presentation.viewModel.settingsScreen.SettingsViewModel
-import com.example.recipebook.util.debounce
-import com.example.recipebook.util.fromLocaleCode
+import com.example.recipebook.presentation.util.debounce
+import com.example.recipebook.presentation.util.fromLocaleCode
 
 @Composable
 @Suppress("FunctionName")

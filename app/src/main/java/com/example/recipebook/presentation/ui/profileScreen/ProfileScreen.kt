@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -30,7 +32,7 @@ import com.example.recipebook.presentation.ui.commonUi.ProfileAvatar
 import com.example.recipebook.presentation.ui.commonUi.ProfileBanner
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeCardList
 import com.example.recipebook.presentation.viewModel.profileScreen.ProfileViewModel
-import com.example.recipebook.util.plural
+import com.example.recipebook.presentation.util.toUpdatedAgoText
 
 @Composable
 @Suppress("FunctionName")
@@ -41,7 +43,7 @@ fun ProfileScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
+    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (profileBanner, profilePhoto, profileCard, followersCountItem,
             followingCountItem, recipesCountItem, divider1, divider2,
             editProfileButton, settingsButton, myRecipesTitle, recipeList) = createRefs()
@@ -57,7 +59,7 @@ fun ProfileScreen(
             imageUrl = uiState.profileImageUrl,
             contentDescription = stringResource(R.string.banner_description),
             modifier = Modifier.constrainAs(profileBanner) {
-                top.linkTo(profileBanner.top)
+                top.linkTo(parent.top)
             }
         )
 
@@ -192,13 +194,10 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = "${uiState.recipesCount} ${
-                    uiState.recipesCount.plural(
-                        stringResource(R.string.one_recipe),
-                        stringResource(R.string.two_recipe),
-                        stringResource(R.string.many_recipes)
-                    )
-                }"
+                text = pluralStringResource(
+                    R.plurals.recipes,
+                    uiState.recipesCount, uiState.recipesCount
+                )
             )
         }
 
@@ -206,8 +205,9 @@ fun ProfileScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(recipeList) {
+                    linkTo(top = myRecipesTitle.bottom, bottom = parent.bottom, topMargin = 24.dp)
                     linkTo(start = parent.start, end = parent.end)
-                    top.linkTo(myRecipesTitle.bottom, margin = 24.dp)
+                    height = Dimension.fillToConstraints
                 },
             verticalArrangement = Arrangement.spacedBy(32.dp),
             contentPadding = PaddingValues(horizontal = 24.dp)
@@ -218,7 +218,7 @@ fun ProfileScreen(
                     category = recipe.category,
                     name = recipe.recipeName,
                     timeEstimation = recipe.recipeTimeEstimation,
-                    uploadedTime = recipe.createdAt,
+                    uploadedTime = recipe.createdAt.toUpdatedAgoText(),
                 )
             }
         }

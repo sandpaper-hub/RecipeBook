@@ -1,4 +1,4 @@
-package com.example.recipebook.util
+package com.example.recipebook.presentation.util
 
 import android.os.SystemClock
 import java.util.concurrent.atomic.AtomicLong

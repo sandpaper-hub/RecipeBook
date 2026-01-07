@@ -94,7 +94,5 @@
     <string name="measure_pcs" translatable="true">pcs</string>
     <string name="recipe_step_image" translatable="true">Recipe step image</string>
     <string name="step_by_step" translatable="true">Step by step</string>
-    <string name="one_recipe" translatable="true">recipe</string>
-    <string name="two_recipe" translatable="true">recipe</string>
-    <string name="many_recipes" translatable="true">recipes</string>
+    <string name="uploaded_now" translatable="true">Uploaded just now</string>
 </resources>
