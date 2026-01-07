@@ -20,7 +20,7 @@ import com.example.recipebook.presentation.ui.commonUi.SelectableButtonBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.viewModel.accountScreen.AccountViewModel
-import com.example.recipebook.util.toFormatedDate
+import com.example.recipebook.presentation.util.toFormatedDate
 
 @Composable
 @Suppress("FunctionName")

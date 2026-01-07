@@ -26,7 +26,7 @@ fun RecipeCardList(
     category: String,
     name: String,
     timeEstimation: String,
-    uploadedTime: Long,
+    uploadedTime: String,
 ) {
     Row {
         Box(
@@ -66,7 +66,7 @@ fun RecipeCardList(
             )
 
             Text(
-                text = uploadedTime.toString(),
+                text = uploadedTime,
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = MaterialTheme.colorScheme.inversePrimary
                 ),

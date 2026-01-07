@@ -21,7 +21,7 @@ import com.example.recipebook.presentation.ui.commonUi.ProfileAvatar
 import com.example.recipebook.presentation.ui.commonUi.RoundedPrimaryButton
 import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.viewModel.editProfileScreen.EditProfileViewModel
-import com.example.recipebook.util.debounce
+import com.example.recipebook.presentation.util.debounce
 
 @Composable
 @Suppress("FunctionName")

@@ -26,7 +26,7 @@ import com.example.recipebook.presentation.ui.commonUi.OutlinedIconButton
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.viewModel.loginScreen.LoginViewModel
 import com.example.recipebook.presentation.viewModel.model.UiEvent
-import com.example.recipebook.util.debounce
+import com.example.recipebook.presentation.util.debounce
 
 @Composable
 @Suppress("FunctionName")

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="uploaded_minutes_ago">
+        <item quantity="one">Загружено %d минуту назад</item>
+        <item quantity="few">Загружено %d минуты назад</item>
+        <item quantity="many">Загружено %d минут назад</item>
+        <item quantity="other">Загружено %d минут назад</item>
+    </plurals>
+
+    <plurals name="uploaded_hours_ago">
+        <item quantity="one">Загружено %d час назад</item>
+        <item quantity="few">Загружено %d часа назад</item>
+        <item quantity="many">Загружено %d часов назад</item>
+        <item quantity="other">Загружено %d часов назад</item>
+    </plurals>
+
+    <plurals name="uploaded_days_ago">
+        <item quantity="one">Загружено %d день назад</item>
+        <item quantity="few">Загружено %d дня назад</item>
+        <item quantity="many">Загружено %d дней назад</item>
+        <item quantity="other">Загружено %d дней назад</item>
+    </plurals>
+
+    <plurals name="uploaded_months_ago">
+        <item quantity="one">Загружено %d месяц назад</item>
+        <item quantity="few">Загружено %d месяца назад</item>
+        <item quantity="many">Загружено %d месяцев назад</item>
+        <item quantity="other">Загружено %d месяцев назад</item>
+    </plurals>
+
+    <plurals name="uploaded_years_ago">
+        <item quantity="one">Загружено %d год назад</item>
+        <item quantity="few">Загружено %d года назад</item>
+        <item quantity="many">Загружено %d лет назад</item>
+        <item quantity="other">Загружено %d лет назад</item>
+    </plurals>
+
+    <plurals name="recipes">
+        <item quantity="one">%d рецепт</item>
+        <item quantity="few">%d рецепта</item>
+        <item quantity="many">%d рецептов</item>
+        <item quantity="other">%d рецептов</item>
+    </plurals>
+
+</resources>

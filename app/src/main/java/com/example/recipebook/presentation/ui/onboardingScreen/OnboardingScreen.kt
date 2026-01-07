@@ -18,7 +18,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.theme.DarkModeBodyColor
-import com.example.recipebook.util.debounce
+import com.example.recipebook.presentation.util.debounce
 
 @Composable
 @Suppress("FunctionName")

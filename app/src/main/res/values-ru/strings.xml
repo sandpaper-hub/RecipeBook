@@ -94,7 +94,5 @@
     <string name="measure_pcs">шт</string>
     <string name="recipe_step_image">Изображение для шага готовки</string>
     <string name="step_by_step">Step by step</string>
-    <string name="one_recipe">Рецепт</string>
-    <string name="two_recipe">рецепта</string>
-    <string name="many_recipes">Рецептов</string>
+    <string name="uploaded_now">Загружено сейчас</string>
 </resources>

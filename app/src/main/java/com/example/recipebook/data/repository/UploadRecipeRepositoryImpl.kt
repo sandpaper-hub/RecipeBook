@@ -1,5 +1,6 @@
 package com.example.recipebook.data.repository
 
+import com.example.recipebook.data.mapper.toDto
 import com.example.recipebook.data.util.ImageCompressorImpl
 import com.example.recipebook.domain.model.recipe.Recipe
 import com.example.recipebook.domain.model.recipe.RecipeStepDraft
@@ -58,7 +59,7 @@ class UploadRecipeRepositoryImpl @Inject constructor(
         firestore
             .collection("recipes")
             .document(recipe.id)
-            .set(recipe)
+            .set(recipe.toDto())
             .await()
     }
 

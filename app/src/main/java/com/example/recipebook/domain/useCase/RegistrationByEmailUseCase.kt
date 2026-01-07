@@ -1,7 +1,7 @@
 package com.example.recipebook.domain.useCase
 
 import com.example.recipebook.domain.repository.AuthenticationRepository
-import com.example.recipebook.util.convertToNickName
+import com.example.recipebook.presentation.util.convertToNickName
 import javax.inject.Inject
 
 class RegistrationByEmailUseCase @Inject constructor(
