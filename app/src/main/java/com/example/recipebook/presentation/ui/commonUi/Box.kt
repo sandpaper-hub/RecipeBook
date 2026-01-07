@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.recipebook.R
 import com.example.recipebook.theme.DarkModeBodyColor
-import com.example.recipebook.util.dashBorder
+import com.example.recipebook.presentation.util.dashBorder
 
 @Composable
 @Suppress("FunctionName")

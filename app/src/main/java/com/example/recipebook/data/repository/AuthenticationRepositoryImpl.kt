@@ -2,7 +2,7 @@ package com.example.recipebook.data.repository
 
 import com.example.recipebook.domain.model.profile.UserProfile
 import com.example.recipebook.domain.repository.AuthenticationRepository
-import com.example.recipebook.util.StringConstants
+import com.example.recipebook.data.util.StringConstants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore

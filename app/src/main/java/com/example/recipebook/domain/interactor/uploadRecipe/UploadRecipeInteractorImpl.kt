@@ -40,8 +40,7 @@ class UploadRecipeInteractorImpl @Inject constructor(
                 imageUrl = recipeImageUrl,
                 category = category,
                 ingredients = ingredients,
-                steps = recipeSteps,
-                createdAt = System.currentTimeMillis()
+                steps = recipeSteps
             )
         )
     }

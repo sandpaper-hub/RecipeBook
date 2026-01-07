@@ -35,7 +35,7 @@ import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.viewModel.uploadRecipeScreen.UploadRecipeViewModel
-import com.example.recipebook.util.debounce
+import com.example.recipebook.presentation.util.debounce
 
 @Composable
 @Suppress("FunctionName")

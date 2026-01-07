@@ -26,7 +26,7 @@ import com.example.recipebook.presentation.ui.commonUi.TextDivider
 import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.viewModel.model.UiEvent
 import com.example.recipebook.presentation.viewModel.registrationScreen.RegistrationViewModel
-import com.example.recipebook.util.debounce
+import com.example.recipebook.presentation.util.debounce
 
 @Composable
 @Suppress

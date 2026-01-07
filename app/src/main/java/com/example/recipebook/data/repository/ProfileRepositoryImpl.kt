@@ -1,5 +1,7 @@
 package com.example.recipebook.data.repository
 
+import com.example.recipebook.data.dto.RecipeDto
+import com.example.recipebook.data.mapper.toDomain
 import com.example.recipebook.domain.repository.ProfileRepository
 import com.example.recipebook.domain.model.profile.UserProfile
 import com.example.recipebook.domain.model.recipe.Recipe
@@ -59,7 +61,8 @@ class ProfileRepositoryImpl @Inject constructor(
             }
 
             val recipes = snapshot
-                ?.toObjects(Recipe::class.java)
+                ?.toObjects(RecipeDto::class.java)
+                ?.map { it.toDomain() }
                 ?: emptyList()
             trySend(recipes)
         }
