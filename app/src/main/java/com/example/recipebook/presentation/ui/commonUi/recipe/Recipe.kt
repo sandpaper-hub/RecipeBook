@@ -1,5 +1,6 @@
 package com.example.recipebook.presentation.ui.commonUi.recipe
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,13 +23,20 @@ import com.example.recipebook.R
 @Composable
 @Suppress("FunctionName")
 fun RecipeCardList(
+    recipeId: String,
     imageUrl: Any?,
     category: String,
     name: String,
     timeEstimation: String,
     uploadedTime: String,
+    onRecipeClick: (String) -> Unit
 ) {
-    Row {
+    Row(
+        modifier = Modifier
+            .clickable(
+                onClick = { onRecipeClick(recipeId) }
+            )
+    ) {
         Box(
             modifier = Modifier
                 .size(120.dp)

@@ -7,6 +7,7 @@ import androidx.navigation.navigation
 import com.example.recipebook.navigation.Graph
 import com.example.recipebook.navigation.mainHomeGraph.BottomNavigationItem
 import com.example.recipebook.navigation.mainHomeGraph.profileGraph.settingsGraph.settingsGraph
+import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.recipeDetailGraph
 import com.example.recipebook.presentation.ui.editProfileScreen.EditProfileScreen
 import com.example.recipebook.presentation.ui.profileScreen.ProfileScreen
 
@@ -25,6 +26,9 @@ fun NavGraphBuilder.profileNavGraph(
                 },
                 onSettings = {
                     navController.navigate(Graph.SETTINGS)
+                },
+                onRecipeClick = { recipeId ->
+                    navController.navigate("${Graph.RECIPE_DETAIL}/${recipeId}")
                 }
             )
         }
@@ -40,6 +44,10 @@ fun NavGraphBuilder.profileNavGraph(
         settingsGraph(
             navController = navController,
             onLogout = onLogout
+        )
+
+        recipeDetailGraph(
+            navController = navController
         )
     }
 }

@@ -39,7 +39,8 @@ import com.example.recipebook.presentation.util.toUpdatedAgoText
 fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel(),
     onSettings: () -> Unit,
-    onEditProfile: () -> Unit
+    onEditProfile: () -> Unit,
+    onRecipeClick: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -214,11 +215,13 @@ fun ProfileScreen(
         ) {
             items(uiState.recipes) { recipe ->
                 RecipeCardList(
+                    recipeId = recipe.id,
                     imageUrl = recipe.imageUrl,
                     category = recipe.category,
                     name = recipe.recipeName,
                     timeEstimation = recipe.recipeTimeEstimation,
                     uploadedTime = recipe.createdAt.toUpdatedAgoText(),
+                    onRecipeClick = { onRecipeClick(recipe.id) }
                 )
             }
         }
