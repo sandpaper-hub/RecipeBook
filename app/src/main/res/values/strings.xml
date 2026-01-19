@@ -95,4 +95,9 @@
     <string name="recipe_step_image" translatable="true">Recipe step image</string>
     <string name="step_by_step" translatable="true">Step by step</string>
     <string name="uploaded_now" translatable="true">Uploaded just now</string>
+    <string name="more_action_button" translatable="true">More action</string>
+    <string name="follow_button" translatable="true">Follow</string>
+    <string name="show_more_text" translatable="true">Show more</string>
+    <string name="hide_text" translatable="true">Hide</string>
+    <string name="lets_cook" translatable="true">Let\'s Cook</string>
 </resources>

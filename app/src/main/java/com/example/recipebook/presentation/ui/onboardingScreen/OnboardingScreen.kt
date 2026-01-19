@@ -75,7 +75,6 @@ fun OnboardingScreen(
         SquareRoundedButton(
             onClick = debounce { onRegistrationScreen() },
             stringResource(R.string.sign_up_button),
-            containerColor = null,
             isLoading = false,
             modifier = Modifier
                 .constrainAs(registerButton) {

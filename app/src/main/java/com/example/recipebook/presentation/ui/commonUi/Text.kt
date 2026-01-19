@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,6 +47,7 @@ import com.example.recipebook.theme.DarkModeBodyColor
 import com.example.recipebook.theme.GreenAccent
 import com.example.recipebook.theme.TitleGray
 import com.example.recipebook.theme.TitleGrayTransparent
+
 
 @Composable
 @Suppress
@@ -251,6 +253,18 @@ fun HeadingTextMedium(text: String, modifier: Modifier) {
 
 @Composable
 @Suppress("FunctionName")
+fun TitleTextLarge(text: String, modifier: Modifier) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.titleLarge.copy(
+            fontWeight = FontWeight.Medium
+        ),
+        modifier = modifier
+    )
+}
+
+@Composable
+@Suppress("FunctionName")
 fun SubHeadingTextSmall(
     text: String,
     color: Color,
@@ -381,4 +395,45 @@ fun SelectableText(
             )
         }
     }
+}
+
+@Composable
+@Suppress("FunctionName")
+fun ExpandableText(
+    text: String,
+    minimizedMaxLines: Int = 3
+) {
+    var isExpanded by remember { mutableStateOf(false) }
+    var isOverflowing by remember { mutableStateOf(false) }
+
+    Column {
+        Text(
+            text = text,
+            maxLines = if (isExpanded) Int.MAX_VALUE else minimizedMaxLines,
+            overflow = TextOverflow.Ellipsis,
+            onTextLayout = { textLayoutResult ->
+                if (!isExpanded) {
+                    isOverflowing = textLayoutResult.hasVisualOverflow
+                }
+            }
+        )
+
+        if (isOverflowing) {
+            Text(
+                text = if (isExpanded) {
+                    stringResource(R.string.hide_text)
+                } else {
+                    stringResource(R.string.show_more_text)
+                },
+                modifier = Modifier
+                    .clickable { isExpanded = !isExpanded }
+                    .padding(top = 4.dp),
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = MaterialTheme.colorScheme.primary
+                )
+            )
+
+        }
+    }
+
 }

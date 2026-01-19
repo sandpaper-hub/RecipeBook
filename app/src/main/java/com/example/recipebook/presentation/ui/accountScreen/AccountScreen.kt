@@ -178,7 +178,6 @@ fun AccountScreen(
             onClick = { viewModel.onSaveClick(onBackNavigation) },
             text = stringResource(R.string.save_change),
             isLoading = uiState.isSaving,
-            containerColor = null,
             modifier = Modifier.constrainAs(saveButton) {
                 linkTo(start = startGuideline, end = endGuideline)
                 top.linkTo(genderButtons.bottom, margin = 40.dp)

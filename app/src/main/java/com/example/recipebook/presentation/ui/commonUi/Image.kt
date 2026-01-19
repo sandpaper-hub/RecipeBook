@@ -15,7 +15,6 @@ import androidx.compose.material3.IconButtonColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -54,7 +53,7 @@ fun ProfileAvatar(
 
 @Composable
 @Suppress("FunctionName")
-fun ProfileBanner(
+fun ImageBanner(
     imageUrl: String?,
     contentDescription: String,
     modifier: Modifier
@@ -64,9 +63,7 @@ fun ProfileBanner(
         contentDescription = contentDescription,
         placeholder = painterResource(R.drawable.profile_image),
         modifier = modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .blur(10.dp),
+            .fillMaxWidth(),
         contentScale = ContentScale.Crop
     )
 }
