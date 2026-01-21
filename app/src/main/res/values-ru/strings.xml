@@ -95,4 +95,9 @@
     <string name="recipe_step_image">Изображение для шага готовки</string>
     <string name="step_by_step">Step by step</string>
     <string name="uploaded_now">Загружено сейчас</string>
+    <string name="more_action_button">Больше действий</string>
+    <string name="follow_button">Подписаться</string>
+    <string name="show_more_text">Показать еще</string>
+    <string name="hide_text">Скрыть</string>
+    <string name="lets_cook">Начать готовить</string>
 </resources>

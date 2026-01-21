@@ -1,12 +1,15 @@
 package com.example.recipebook.presentation.ui.commonUi
 
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -259,5 +262,39 @@ fun RecipeStepBox(
             isError = false,
             modifier = Modifier.padding(top = 12.dp, start = 12.dp)
         )
+    }
+}
+
+@Composable
+@Suppress("FunctionName")
+fun IngredientTextBox(
+    value: String,
+    amount: String
+) {
+
+    Box(
+        modifier = Modifier
+            .background(
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                shape = RoundedCornerShape(14.dp)
+            )
+            .height(48.dp)
+            .padding(16.dp)
+    ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyMedium
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Text(
+                text = amount,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = MaterialTheme.colorScheme.inversePrimary
+                )
+            )
+        }
     }
 }

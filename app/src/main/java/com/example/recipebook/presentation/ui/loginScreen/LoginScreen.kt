@@ -160,7 +160,6 @@ fun LoginScreen(
         SquareRoundedButton(
             onClick = { viewModel.signIn() }, //TODO block button
             text = stringResource(R.string.sign_in_button),
-            containerColor = null,
             isLoading = uiState.isLoading,
             modifier = Modifier
                 .constrainAs(loginButton) {

@@ -31,14 +31,13 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.recipebook.theme.GreenAccent
 
 @Composable
 @Suppress("FunctionName")
 fun SquareRoundedButton(
     onClick: () -> Unit,
     text: String,
-    containerColor: Color?,
+    containerColor: Color = MaterialTheme.colorScheme.primary,
     isLoading: Boolean,
     modifier: Modifier
 ) {
@@ -49,7 +48,7 @@ fun SquareRoundedButton(
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp)
         ), shape = RoundedCornerShape(14.dp), colors = ButtonDefaults.buttonColors(
-            containerColor = containerColor ?: GreenAccent
+            containerColor = containerColor
         )
     ) {
         if (isLoading) {

@@ -139,3 +139,15 @@ fun Long.toUpdatedAgoText(): String {
         )
     }
 }
+
+fun String.parseIngredient(): Pair<String, String> {
+    val regex = Regex("""\d+([.,]\d+)?""")
+    val match = regex.find(this) ?: return this to ""
+
+    val index = match.range.first
+
+    val name = this.substring(0, index).trim()
+    val amount = this.substring(index).trim()
+
+    return name to amount
+}

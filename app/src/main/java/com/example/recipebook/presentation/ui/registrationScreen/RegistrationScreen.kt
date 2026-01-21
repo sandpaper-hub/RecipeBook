@@ -185,7 +185,6 @@ fun RegistrationScreen(
                 )
             },
             text = stringResource(R.string.sign_up_button),
-            containerColor = null,
             isLoading = uiState.isLoading,
             modifier = Modifier
                 .constrainAs(signUpButton) {

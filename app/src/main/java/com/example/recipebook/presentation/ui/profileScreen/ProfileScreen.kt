@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -29,7 +31,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.OutlinedIconButton
 import com.example.recipebook.presentation.ui.commonUi.ProfileAvatar
-import com.example.recipebook.presentation.ui.commonUi.ProfileBanner
+import com.example.recipebook.presentation.ui.commonUi.ImageBanner
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeCardList
 import com.example.recipebook.presentation.viewModel.profileScreen.ProfileViewModel
 import com.example.recipebook.presentation.util.toUpdatedAgoText
@@ -39,7 +41,8 @@ import com.example.recipebook.presentation.util.toUpdatedAgoText
 fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel(),
     onSettings: () -> Unit,
-    onEditProfile: () -> Unit
+    onEditProfile: () -> Unit,
+    onRecipeClick: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -55,10 +58,13 @@ fun ProfileScreen(
             divider2, recipesCountItem, chainStyle = ChainStyle.Spread
         )
 
-        ProfileBanner(
+        ImageBanner(
             imageUrl = uiState.profileImageUrl,
             contentDescription = stringResource(R.string.banner_description),
-            modifier = Modifier.constrainAs(profileBanner) {
+            modifier = Modifier
+                .height(200.dp)
+                .blur(10.dp)
+                .constrainAs(profileBanner) {
                 top.linkTo(parent.top)
             }
         )
@@ -214,11 +220,13 @@ fun ProfileScreen(
         ) {
             items(uiState.recipes) { recipe ->
                 RecipeCardList(
+                    recipeId = recipe.id,
                     imageUrl = recipe.imageUrl,
                     category = recipe.category,
                     name = recipe.recipeName,
                     timeEstimation = recipe.recipeTimeEstimation,
                     uploadedTime = recipe.createdAt.toUpdatedAgoText(),
+                    onRecipeClick = { onRecipeClick(recipe.id) }
                 )
             }
         }
