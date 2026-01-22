@@ -254,6 +254,7 @@ fun AccountScreen(
             modifier = Modifier.constrainAs(saveButton) {
                 linkTo(start = startGuideline, end = endGuideline)
                 top.linkTo(genderButtons.bottom, margin = 40.dp)
+                width = Dimension.fillToConstraints
             })
     }
 }

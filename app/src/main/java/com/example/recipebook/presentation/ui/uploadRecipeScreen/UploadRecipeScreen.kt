@@ -21,16 +21,14 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
-import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.CustomDropDownMenu
 import com.example.recipebook.presentation.ui.commonUi.IngredientDialog
 import com.example.recipebook.presentation.ui.commonUi.DoubleActionTextBox
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.IconTextButton
 import com.example.recipebook.presentation.ui.commonUi.RecipeStepBox
 import com.example.recipebook.presentation.ui.commonUi.RecipeImage
-import com.example.recipebook.presentation.ui.commonUi.RoundedPrimaryButton
 import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
+import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
@@ -40,7 +38,6 @@ import com.example.recipebook.presentation.util.debounce
 @Composable
 @Suppress("FunctionName")
 fun UploadRecipeScreen(
-    onBackClicked: () -> Unit,
     viewModel: UploadRecipeViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState
@@ -54,47 +51,16 @@ fun UploadRecipeScreen(
     }
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (backButton, headingText, uploadButton, recipeColumn) = createRefs()
+        val (recipeColumn) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
-
-        ClickableIcon(
-            painter = painterResource(R.drawable.back_arrow_icon),
-            contentDescription = stringResource(R.string.back_button),
-            modifier = Modifier
-                .constrainAs(backButton) {
-                    start.linkTo(startGuideline)
-                    top.linkTo(parent.top, margin = 21.dp)
-                },
-            onClick = onBackClicked
-        )
-
-        HeadingTextMedium(
-            text = stringResource(R.string.new_recipe),
-            modifier = Modifier
-                .constrainAs(headingText) {
-                    linkTo(start = backButton.end, end = uploadButton.start)
-                    centerVerticallyTo(backButton)
-                }
-        )
-
-        RoundedPrimaryButton(
-            onClick = { viewModel.uploadNewRecipe(onBackClicked) },
-            text = stringResource(R.string.upload),
-            isLoading = false,
-            modifier = Modifier
-                .constrainAs(uploadButton) {
-                    end.linkTo(endGuideline)
-                    centerVerticallyTo(backButton)
-                }
-        )
 
         LazyColumn(
             state = listState,
             modifier = Modifier
                 .constrainAs(recipeColumn) {
                     linkTo(start = startGuideline, end = endGuideline)
-                    top.linkTo(backButton.bottom, margin = 21.dp)
+                    top.linkTo(parent.top, margin = 21.dp)
                     bottom.linkTo(parent.bottom)
                     width = Dimension.fillToConstraints
                     height = Dimension.fillToConstraints
@@ -251,6 +217,15 @@ fun UploadRecipeScreen(
                     text = stringResource(R.string.add_steps),
                     onClick = { viewModel.addStep() },
                     modifier = Modifier.padding(bottom = 32.dp)
+                )
+            }
+
+            item {
+                SquareRoundedButton(
+                    onClick = { viewModel.uploadNewRecipe() },
+                    text = stringResource(R.string.upload),
+                    isLoading = false,
+                    modifier = Modifier.padding(bottom = 24.dp)
                 )
             }
         }

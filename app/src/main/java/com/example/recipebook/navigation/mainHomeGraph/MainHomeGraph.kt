@@ -10,7 +10,7 @@ import com.example.recipebook.navigation.mainHomeGraph.settingsGraph.settingsGra
 import com.example.recipebook.navigation.mainHomeGraph.recipesGraph.recipesNavGraph
 import com.example.recipebook.presentation.ui.mainHomeScreen.MainHomeScreen
 import com.example.recipebook.presentation.ui.collaborationScreen.CollaborationScreen
-import com.example.recipebook.presentation.ui.savedScreen.SavedScreen
+import com.example.recipebook.presentation.ui.uploadRecipeScreen.UploadRecipeScreen
 
 @Composable
 fun MainHomeGraph(
@@ -31,11 +31,11 @@ fun MainHomeGraph(
             CollaborationScreen()
         }
 
-        recipesNavGraph(navController = navController)
-
-        composable(BottomNavigationItem.Saved.route) {
-            SavedScreen()
+        composable(BottomNavigationItem.UploadRecipe.route) {
+            UploadRecipeScreen()
         }
+
+        recipesNavGraph(navController = navController)
 
         settingsGraph(
             navController = navController,
@@ -61,16 +61,16 @@ sealed class BottomNavigationItem(
         label = "Collaboration"
     )
 
-    data object Recipes : BottomNavigationItem(
+    data object UploadRecipe : BottomNavigationItem(
         route = "upload",
         icon = R.drawable.upload_recipe_icon,
         label = "Upload"
     )
 
-    data object Saved : BottomNavigationItem(
-        route = "saved",
+    data object Collection : BottomNavigationItem(
+        route = "recipes",
         icon = R.drawable.save_icon_filled,
-        label = "Saved"
+        label = "Recipes"
     )
 
     data object Settings : BottomNavigationItem(

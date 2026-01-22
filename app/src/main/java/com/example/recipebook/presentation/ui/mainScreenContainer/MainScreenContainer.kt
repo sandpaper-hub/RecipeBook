@@ -8,7 +8,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.recipebook.navigation.mainHomeGraph.BottomNavigationItem
 import com.example.recipebook.navigation.mainHomeGraph.MainHomeGraph
-import com.example.recipebook.navigation.mainHomeGraph.recipesGraph.RecipesRoutes
 import com.example.recipebook.presentation.ui.commonUi.MainBottomNavigationBar
 import com.example.recipebook.presentation.ui.commonUi.RootScaffold
 
@@ -22,8 +21,8 @@ fun MainScreenContainer(onLogout: () -> Unit) {
     val bottomBarDestinations = setOf(
         BottomNavigationItem.Home.route,
         BottomNavigationItem.Collaboration.route,
-        RecipesRoutes.RecipesMain.route,
-        BottomNavigationItem.Saved.route,
+        BottomNavigationItem.UploadRecipe.route,
+        BottomNavigationItem.Collection.route,
         BottomNavigationItem.Settings.route
     )
 

@@ -130,7 +130,7 @@ class UploadRecipeViewModel @Inject constructor(
             })
     }
 
-    fun uploadNewRecipe(onBackClick: () -> Unit) {
+    fun uploadNewRecipe() {
         viewModelScope.launch {
             runCatching {
                 uploadRecipeInteractor.uploadNewRecipe(
@@ -155,7 +155,7 @@ class UploadRecipeViewModel @Inject constructor(
                     }
                 )
             }.onSuccess {
-                onBackClick()
+                //TODO
             }.onFailure { error ->
                 uiState = uiState.copy(errorMessage = error.message)
             }
