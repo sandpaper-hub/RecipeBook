@@ -161,7 +161,7 @@ fun CustomCircleIconButton(
 fun ClickableIcon(
     painter: Painter,
     contentDescription: String,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Icon(
