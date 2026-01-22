@@ -11,7 +11,6 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.domain.model.ThemeMode
-import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.ClickableProfileBox
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.IconTextBox
@@ -23,9 +22,7 @@ import com.example.recipebook.presentation.util.fromLocaleCode
 @Composable
 @Suppress("FunctionName")
 fun SettingsScreen(
-    onBackNavigation: () -> Unit,
     onAccountScreen: () -> Unit,
-    onNotificationScreen: () -> Unit,
     onLanguageScreen: () -> Unit,
     onThemeScreen: () -> Unit,
     onLogout: () -> Unit,
@@ -38,38 +35,18 @@ fun SettingsScreen(
             .fillMaxSize()
     ) {
 
-        val (backButton, headingText, subheadingProfileText, profileBox, subheadingSettingsText, notificationBox,
+        val (headingText, profileBox, subheadingSettingsText,
             languageBox, themeBox, helpBox, logoutBox) = createRefs()
 
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
-
-        ClickableIcon(
-            painter = painterResource(R.drawable.back_arrow_icon),
-            contentDescription = stringResource(R.string.back_button),
-            modifier = Modifier
-                .constrainAs(backButton) {
-                    start.linkTo(startGuideline)
-                    top.linkTo(parent.top, margin = 16.dp)
-                },
-            onClick = debounce { onBackNavigation() }
-        )
 
         HeadingTextMedium(
             text = stringResource(R.string.settings_text),
             modifier = Modifier
                 .constrainAs(headingText) {
                     centerHorizontallyTo(parent)
-                    top.linkTo(parent.top, margin = 16.dp)
-                }
-        )
-
-        SubheadingBackgroundText(
-            text = stringResource(R.string.profile_text),
-            modifier = Modifier
-                .constrainAs(subheadingProfileText) {
-                    linkTo(start = parent.start, end = parent.end)
-                    top.linkTo(backButton.bottom, margin = 16.dp)
+                    top.linkTo(parent.top, margin = 24.dp)
                 }
         )
 
@@ -80,7 +57,7 @@ fun SettingsScreen(
             onClick = debounce { onAccountScreen() },
             modifier = Modifier.constrainAs(profileBox) {
                 linkTo(start = startGuideline, end = endGuideline)
-                top.linkTo(subheadingProfileText.bottom)
+                top.linkTo(headingText.bottom, margin = 16.dp)
                 width = Dimension.fillToConstraints
             }
         )
@@ -95,20 +72,6 @@ fun SettingsScreen(
         )
 
         IconTextBox(
-            icon = painterResource(R.drawable.notification_icon),
-            contentDescription = stringResource(R.string.notification),
-            mainText = stringResource(R.string.notification),
-            detailText = null,
-            isLogout = false,
-            onClick = debounce { onNotificationScreen() },
-            modifier = Modifier
-                .constrainAs(notificationBox) {
-                    linkTo(start = startGuideline, end = endGuideline)
-                    top.linkTo(subheadingSettingsText.bottom)
-                    width = Dimension.fillToConstraints
-                })
-
-        IconTextBox(
             icon = painterResource(R.drawable.language_icon),
             contentDescription = stringResource(R.string.language),
             mainText = stringResource(R.string.language),
@@ -118,7 +81,7 @@ fun SettingsScreen(
             modifier = Modifier
                 .constrainAs(languageBox) {
                     linkTo(start = startGuideline, end = endGuideline)
-                    top.linkTo(notificationBox.bottom)
+                    top.linkTo(subheadingSettingsText.bottom)
                     width = Dimension.fillToConstraints
                 }
         )
@@ -174,6 +137,5 @@ fun SettingsScreen(
                     width = Dimension.fillToConstraints
                 }
         )
-
     }
 }

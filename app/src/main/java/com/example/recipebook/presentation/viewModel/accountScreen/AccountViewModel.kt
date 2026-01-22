@@ -1,5 +1,6 @@
 package com.example.recipebook.presentation.viewModel.accountScreen
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -24,6 +25,8 @@ class AccountViewModel @Inject constructor(
         uiState = uiState.copy(regionLocales = profileInteractor.getLocales())
     }
 
+    val allowedRegex = Regex("^[A-Za-z0-9._]*$")
+
     private fun observeUserProfile() {
         viewModelScope.launch {
             profileInteractor.observerUserProfile()
@@ -33,7 +36,9 @@ class AccountViewModel @Inject constructor(
                 .collect { userProfile ->
                     uiState = uiState.copy(
                         fullName = userProfile.fullName,
+                        nickName = userProfile.nickName,
                         region = userProfile.region,
+                        profileImageSource = userProfile.photoUrl,
                         dateOfBirth = userProfile.dateOfBirth,
                         gender = userProfile.gender
                     )
@@ -41,8 +46,22 @@ class AccountViewModel @Inject constructor(
         }
     }
 
+    fun onImagePicked(uri: Uri?) {
+        uiState = uiState.copy(
+            localImageSource = uri
+        )
+    }
+
     fun onNameChanged(newName: String) {
         uiState = uiState.copy(fullName = newName)
+    }
+
+    fun onNickNameChanged(newValue: String) {
+        uiState = if (allowedRegex.matches(newValue)) {
+            uiState.copy(nickName = newValue)
+        } else {
+            uiState.copy(errorMessage = "No specific symbols")
+        }
     }
 
     fun showCountryMenu(isOpen: Boolean) {
@@ -78,11 +97,12 @@ class AccountViewModel @Inject constructor(
             val result = profileInteractor.updateUserData(
                 data = mapOf(
                     "fullName" to uiState.fullName,
+                    "nickName" to uiState.nickName,
                     "region" to uiState.region,
                     "dateOfBirth" to uiState.dateOfBirth,
                     "gender" to uiState.gender
                 ),
-                uriString = null
+                uriString = uiState.localImageSource?.toString()
             )
             delay(2000)
             uiState = if (result.isSuccess) {

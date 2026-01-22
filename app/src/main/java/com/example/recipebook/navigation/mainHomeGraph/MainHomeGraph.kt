@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.recipebook.R
-import com.example.recipebook.navigation.mainHomeGraph.profileGraph.profileNavGraph
+import com.example.recipebook.navigation.mainHomeGraph.settingsGraph.settingsGraph
 import com.example.recipebook.navigation.mainHomeGraph.recipesGraph.recipesNavGraph
 import com.example.recipebook.presentation.ui.mainHomeScreen.MainHomeScreen
 import com.example.recipebook.presentation.ui.collaborationScreen.CollaborationScreen
@@ -37,7 +37,7 @@ fun MainHomeGraph(
             SavedScreen()
         }
 
-        profileNavGraph(
+        settingsGraph(
             navController = navController,
             onLogout = onLogout
         )
@@ -73,9 +73,9 @@ sealed class BottomNavigationItem(
         label = "Saved"
     )
 
-    data object Profile : BottomNavigationItem(
-        route = "profile",
-        icon = R.drawable.profile_icon,
-        label = "Profile"
+    data object Settings : BottomNavigationItem(
+        route = "settings",
+        icon = R.drawable.settings_icon,
+        label = "Settings"
     )
 }

@@ -100,4 +100,5 @@
     <string name="show_more_text" translatable="true">Show more</string>
     <string name="hide_text" translatable="true">Hide</string>
     <string name="lets_cook" translatable="true">Let\'s Cook</string>
+    <string name="nick_name_hint" translatable="false">user_name</string>
 </resources>

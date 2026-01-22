@@ -243,7 +243,7 @@ fun HeadingTextLarge(text: String, modifier: Modifier) {
 
 @Composable
 @Suppress
-fun HeadingTextMedium(text: String, modifier: Modifier) {
+fun HeadingTextMedium(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
         style = MaterialTheme.typography.bodyLarge,

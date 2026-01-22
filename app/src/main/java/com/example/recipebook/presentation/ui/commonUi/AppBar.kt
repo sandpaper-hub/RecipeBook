@@ -27,7 +27,7 @@ fun MainBottomNavigationBar(navController: NavController) {
         BottomNavigationItem.Collaboration,
         BottomNavigationItem.Recipes,
         BottomNavigationItem.Saved,
-        BottomNavigationItem.Profile
+        BottomNavigationItem.Settings
     )
     val navigationBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navigationBackStackEntry?.destination
