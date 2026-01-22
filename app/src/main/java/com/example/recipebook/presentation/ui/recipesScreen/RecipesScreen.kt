@@ -20,20 +20,25 @@ import com.example.recipebook.presentation.ui.recipesScreen.tabs.RecipesTab
 
 @Composable
 @Suppress("FunctionName")
-fun RecipesScreen() {
+fun RecipesScreen(onRecipeDetail: (recipeId: String) -> Unit) {
 
     val draftListState = rememberLazyListState()
     val recipeListState = rememberLazyListState()
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
 
     val tabsTitle = listOf(
-        stringResource(R.string.draft),
-        stringResource(R.string.my_recipes)
+        stringResource(R.string.my_recipes),
+        stringResource(R.string.draft)
     )
 
     val tabContents: List<@Composable () -> Unit> = listOf(
-        { DraftTab(draftListState) },
-        { RecipesTab(recipeListState) }
+        {
+            RecipesTab(
+                listState = recipeListState,
+                onRecipeDetail = onRecipeDetail
+            )
+        },
+        { DraftTab(draftListState) }
     )
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {

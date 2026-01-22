@@ -162,6 +162,7 @@ fun RecipeDetailScreen(recipeId: String) {
                     .constrainAs(letsCookButton) {
                         linkTo(start = startGuideline, end = endGuideline)
                         bottom.linkTo(parent.bottom, margin = 55.dp)
+                        width = Dimension.fillToConstraints
                     }
             )
         }

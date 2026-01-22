@@ -41,13 +41,15 @@ fun RecipeCardList(
 ) {
     Row(
         modifier = Modifier
+            .fillMaxWidth()
             .clickable(
                 onClick = { onRecipeClick(recipeId) }
-            )
+            ),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
-                .size(120.dp)
+                .size(84.dp)
                 .clip(RoundedCornerShape(20.dp))
         ) {
             AsyncImage(
@@ -60,7 +62,7 @@ fun RecipeCardList(
 
         Spacer(modifier = Modifier.width(20.dp))
 
-        Column(modifier = Modifier.padding(vertical = 13.dp)) {
+        Column {
             Text(
                 text = category,
                 style = MaterialTheme.typography.labelMedium.copy(

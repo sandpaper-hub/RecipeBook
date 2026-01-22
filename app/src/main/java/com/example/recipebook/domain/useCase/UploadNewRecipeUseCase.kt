@@ -1,13 +1,13 @@
 package com.example.recipebook.domain.useCase
 
 import com.example.recipebook.domain.model.recipe.Recipe
-import com.example.recipebook.domain.repository.UploadRecipeRepository
+import com.example.recipebook.domain.repository.RecipesRepository
 import javax.inject.Inject
 
 class UploadNewRecipeUseCase @Inject constructor(
-    private val uploadRecipeRepository: UploadRecipeRepository
+    private val recipesRepository: RecipesRepository
 ) {
     suspend fun execute(recipe: Recipe) {
-        uploadRecipeRepository.saveRecipe(recipe)
+        recipesRepository.saveRecipe(recipe)
     }
 }
