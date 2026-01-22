@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.interactor.uploadRecipe
+package com.example.recipebook.domain.interactor.recipes
 
 import com.example.recipebook.domain.model.recipe.Recipe
 import com.example.recipebook.domain.model.recipe.RecipeIngredient
@@ -7,15 +7,20 @@ import com.example.recipebook.domain.model.recipe.RecipeStepDraft
 import com.example.recipebook.domain.useCase.GetCurrentUserIdUseCase
 import com.example.recipebook.domain.useCase.GetRecipeCoverUrlUseCase
 import com.example.recipebook.domain.useCase.GetStepImagesUrlUseCase
+import com.example.recipebook.domain.useCase.GetUserIdFlowUseCase
+import com.example.recipebook.domain.useCase.GetUserRecipesUseCase
 import com.example.recipebook.domain.useCase.UploadNewRecipeUseCase
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class UploadRecipeInteractorImpl @Inject constructor(
+class RecipesInteractorImpl @Inject constructor(
     private val getStepImagesUrlUseCase: GetStepImagesUrlUseCase,
     private val uploadNewRecipeUseCase: UploadNewRecipeUseCase,
     private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
-    private val getRecipeCoverUrlUseCase: GetRecipeCoverUrlUseCase
-) : UploadRecipeInteractor {
+    private val getRecipeCoverUrlUseCase: GetRecipeCoverUrlUseCase,
+    private val getUserRecipesUseCase: GetUserRecipesUseCase,
+    private val getUserIdFlowUseCase: GetUserIdFlowUseCase
+) : RecipesInteractor {
 
     override suspend fun uploadNewRecipe(
         recipeId: String,
@@ -61,4 +66,9 @@ class UploadRecipeInteractorImpl @Inject constructor(
             )
         }
     }
+
+    override fun observeUserRecipes(userId: String): Flow<List<Recipe>> =
+        getUserRecipesUseCase.execute(userId)
+
+    override fun getUserIdFlow(): Flow<String?> = getUserIdFlowUseCase.execute()
 }

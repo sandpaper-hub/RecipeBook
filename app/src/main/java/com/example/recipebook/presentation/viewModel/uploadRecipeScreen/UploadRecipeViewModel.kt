@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.uploadRecipe.UploadRecipeInteractor
+import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
 import com.example.recipebook.domain.model.recipe.RecipeIngredient
 import com.example.recipebook.domain.model.recipe.RecipeStepDraft
 import com.example.recipebook.presentation.viewModel.uploadRecipeScreen.model.IngredientUiState
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UploadRecipeViewModel @Inject constructor(
-    private val uploadRecipeInteractor: UploadRecipeInteractor
+    private val recipesInteractor: RecipesInteractor
 ) : ViewModel() {
     var uiState by mutableStateOf(NewRecipeUiState())
         private set
@@ -133,7 +133,7 @@ class UploadRecipeViewModel @Inject constructor(
     fun uploadNewRecipe() {
         viewModelScope.launch {
             runCatching {
-                uploadRecipeInteractor.uploadNewRecipe(
+                recipesInteractor.uploadNewRecipe(
                     recipeId = UUID.randomUUID().toString(),
                     recipeName = uiState.recipeName,
                     recipeDescription = uiState.recipeDescription,
