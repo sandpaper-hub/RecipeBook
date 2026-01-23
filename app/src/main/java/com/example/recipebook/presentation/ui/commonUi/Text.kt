@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -184,7 +185,7 @@ fun DoubleActionTextBox(
         Spacer(modifier = Modifier.weight(1f))
 
         Icon(
-            painter = painterResource(R.drawable.delete_icon),
+            painter = painterResource(R.drawable.trash_icon),
             contentDescription = stringResource(R.string.delete_icon),
             modifier = Modifier.clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -243,10 +244,14 @@ fun HeadingTextLarge(text: String, modifier: Modifier) {
 
 @Composable
 @Suppress
-fun HeadingTextMedium(text: String, modifier: Modifier = Modifier) {
+fun HeadingTextMedium(
+    text: String,
+    modifier: Modifier = Modifier,
+    style: TextStyle = MaterialTheme.typography.bodyLarge,
+) {
     Text(
         text = text,
-        style = MaterialTheme.typography.bodyLarge,
+        style = style,
         modifier = modifier
     )
 }
@@ -287,6 +292,18 @@ fun TitleText(text: String, modifier: Modifier) {
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onPrimary
         )
+    )
+}
+
+@Composable
+@Suppress
+fun SecondaryText(
+    text: String,
+    style: TextStyle = MaterialTheme.typography.labelMedium
+) {
+    Text(
+        text,
+        style = style
     )
 }
 

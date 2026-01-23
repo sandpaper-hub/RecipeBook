@@ -69,7 +69,7 @@ sealed class BottomNavigationItem(
 
     data object Collection : BottomNavigationItem(
         route = "recipes",
-        icon = R.drawable.save_icon_filled,
+        icon = R.drawable.recipes_icon,
         label = "Recipes"
     )
 

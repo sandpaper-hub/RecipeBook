@@ -243,7 +243,7 @@ fun RecipeStepBox(
             Spacer(modifier = Modifier.weight(1f))
 
             Icon(
-                painter = painterResource(R.drawable.delete_icon),
+                painter = painterResource(R.drawable.trash_icon),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.inversePrimary,
                 modifier = Modifier
