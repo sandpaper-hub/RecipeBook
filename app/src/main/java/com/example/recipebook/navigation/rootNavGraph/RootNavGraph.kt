@@ -17,9 +17,7 @@ import com.example.recipebook.presentation.ui.splashScreen.SplashScreen
 @Composable
 @Suppress("FunctionName")
 fun RootNavGraph(navController: NavHostController = rememberNavController()) {
-    RootScaffold(
-        applySystemInsets = true
-    ) { innerPadding ->
+    RootScaffold { innerPadding ->
         NavHost(
             navController = navController,
             route = Graph.ROOT,

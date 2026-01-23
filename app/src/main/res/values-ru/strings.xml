@@ -101,4 +101,5 @@
     <string name="hide_text">Скрыть</string>
     <string name="lets_cook">Начать готовить</string>
     <!-- user_name_hint not translatable -->
+    <string name="new_collection">Новая коллекция</string>
 </resources>
