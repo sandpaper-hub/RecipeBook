@@ -1,4 +1,4 @@
-package com.example.recipebook.presentation.ui.uploadRecipeScreen
+package com.example.recipebook.presentation.ui.createRecipeScreen
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -37,7 +37,7 @@ import com.example.recipebook.presentation.util.debounce
 
 @Composable
 @Suppress("FunctionName")
-fun UploadRecipeScreen(
+fun CreateRecipeScreen(
     viewModel: UploadRecipeViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState
@@ -66,23 +66,22 @@ fun UploadRecipeScreen(
                     height = Dimension.fillToConstraints
                 }) {
             item {
+                val imageModifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 32.dp)
+                    .height(150.dp)
+
                 if (uiState.recipeImageUri != null) {
                     RecipeImage(
                         imageUri = uiState.recipeImageUri,
                         contentDescription = stringResource(R.string.recipe_image),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 32.dp)
-                            .height(150.dp),
+                        modifier = imageModifier,
                         onCancelClick = { viewModel.onRecipeImagePicked(null) }
                     )
                 } else {
                     UploadImageBox(
                         text = stringResource(R.string.upload_photo),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 32.dp)
-                            .height(150.dp),
+                        modifier = imageModifier,
                         onClick = debounce { recipeImagePickerLaunch.launch("image/*") },
                         cornerShapeDp = 20.dp
                     )

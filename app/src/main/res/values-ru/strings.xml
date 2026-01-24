@@ -102,4 +102,7 @@
     <string name="lets_cook">Начать готовить</string>
     <!-- user_name_hint not translatable -->
     <string name="new_collection">Новая коллекция</string>
+    <string name="create_collection">Создать коллекцию</string>
+    <string name="collection_name">Название Коллекции</string>
+    <string name="collection_hint">Блюда из курицы</string>
 </resources>
