@@ -12,7 +12,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.domain.model.ThemeMode
 import com.example.recipebook.presentation.ui.commonUi.ClickableProfileBox
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
+import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
 import com.example.recipebook.presentation.ui.commonUi.IconTextBox
 import com.example.recipebook.presentation.ui.commonUi.SubheadingBackgroundText
 import com.example.recipebook.presentation.viewModel.settingsScreen.SettingsViewModel
@@ -41,11 +41,11 @@ fun SettingsScreen(
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
-        HeadingTextMedium(
+        HeadingTextLarge(
             text = stringResource(R.string.settings_text),
             modifier = Modifier
                 .constrainAs(headingText) {
-                    centerHorizontallyTo(parent)
+                    start.linkTo(startGuideline)
                     top.linkTo(parent.top, margin = 24.dp)
                 }
         )

@@ -102,4 +102,9 @@
     <string name="lets_cook" translatable="true">Let\'s Cook</string>
     <string name="nick_name_hint" translatable="false">user_name</string>
     <string name="new_collection" translatable="true">New collection</string>
+    <string name="create_collection" translatable="true">Create Collection</string>
+    <string name="collection_name" translatable="true">Collection Name</string>
+    <string name="collection_hint" translatable="true">Chicken dishes</string>
+    <string name="collection_description_hint" translatable="true">A selection of chicken recipes</string>
+    <string name="create_recipe" translatable="true">Create recipe</string>
 </resources>

@@ -192,9 +192,10 @@ fun TitleTextFieldBox(
     textFieldValue: String,
     onValueChange: (String) -> Unit,
     textHint: String,
-    isError: Boolean
+    isError: Boolean,
+    modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(modifier = modifier) {
         TitleText(
             text = title,
             modifier = Modifier.padding(bottom = 8.dp)

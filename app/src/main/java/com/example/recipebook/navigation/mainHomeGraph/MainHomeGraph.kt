@@ -10,7 +10,8 @@ import com.example.recipebook.navigation.mainHomeGraph.settingsGraph.settingsGra
 import com.example.recipebook.navigation.mainHomeGraph.recipesGraph.recipesNavGraph
 import com.example.recipebook.presentation.ui.mainHomeScreen.MainHomeScreen
 import com.example.recipebook.presentation.ui.collaborationScreen.CollaborationScreen
-import com.example.recipebook.presentation.ui.uploadRecipeScreen.UploadRecipeScreen
+import com.example.recipebook.presentation.ui.createCollectionScreen.CreateCollectionScreen
+import com.example.recipebook.presentation.ui.createRecipeScreen.CreateRecipeScreen
 
 @Composable
 fun MainHomeGraph(
@@ -27,12 +28,16 @@ fun MainHomeGraph(
             MainHomeScreen()
         }
 
-        composable(BottomNavigationItem.Collaboration.route) {
+        composable(BottomNavigationItem.Collection.route) {
             CollaborationScreen()
         }
 
-        composable(BottomNavigationItem.UploadRecipe.route) {
-            UploadRecipeScreen()
+        composable(BottomNavigationItem.CreateRecipe.route) {
+            CreateRecipeScreen()
+        }
+
+        composable(BottomNavigationItem.CreateCollection.route){
+            CreateCollectionScreen()
         }
 
         recipesNavGraph(navController = navController)
@@ -55,22 +60,28 @@ sealed class BottomNavigationItem(
         label = "Home"
     )
 
-    data object Collaboration : BottomNavigationItem(
-        route = "collaboration",
-        icon = R.drawable.collaboration_icon,
-        label = "Collaboration"
+    data object Recipes : BottomNavigationItem(
+        route = "recipes",
+        icon = R.drawable.cook_hat_icon,
+        label = "Recipes"
     )
 
-    data object UploadRecipe : BottomNavigationItem(
-        route = "upload",
+    data object CreateRecipe : BottomNavigationItem(
+        route = "create_recipe",
         icon = R.drawable.upload_recipe_icon,
-        label = "Upload"
+        label = "Create recipe"
+    )
+
+    data object CreateCollection: BottomNavigationItem(
+        route = "create_collection",
+        icon = R.drawable.collection_icon,
+        label = "Create collection"
     )
 
     data object Collection : BottomNavigationItem(
-        route = "recipes",
-        icon = R.drawable.recipes_icon,
-        label = "Recipes"
+        route = "collection",
+        icon = R.drawable.collection_icon,
+        label = "Collection"
     )
 
     data object Settings : BottomNavigationItem(

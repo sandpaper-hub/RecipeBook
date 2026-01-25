@@ -24,7 +24,9 @@ import com.example.recipebook.R
 @Suppress("FunctionName")
 fun CreateBottomSheet(
     showSheet: Boolean,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onCreateRecipeScreen: () -> Unit,
+    onCreateCollectionScreen: () -> Unit
 ) {
     if (showSheet) {
         ModalBottomSheet(
@@ -76,7 +78,7 @@ fun CreateBottomSheet(
                     TitleIconButton(
                         painterResource(R.drawable.cook_hat_icon),
                         title = stringResource(R.string.new_recipe),
-                        onClick = {},
+                        onClick = onCreateRecipeScreen,
                         contentDescription = ""
                     )
 
@@ -85,7 +87,7 @@ fun CreateBottomSheet(
                     TitleIconButton(
                         painterResource(R.drawable.collection_icon),
                         title = stringResource(R.string.new_collection),
-                        onClick = {},
+                        onClick = onCreateCollectionScreen,
                         contentDescription = ""
                     )
 

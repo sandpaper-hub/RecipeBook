@@ -27,8 +27,8 @@ import com.example.recipebook.theme.GreenAccent
 fun MainBottomNavigationBar(navController: NavController) {
     val items = listOf(
         BottomNavigationItem.Home,
-        BottomNavigationItem.Collaboration,
-        BottomNavigationItem.UploadRecipe,
+        BottomNavigationItem.Recipes,
+        BottomNavigationItem.CreateRecipe,
         BottomNavigationItem.Collection,
         BottomNavigationItem.Settings
     )
@@ -48,7 +48,7 @@ fun MainBottomNavigationBar(navController: NavController) {
             NavigationBarItem(
                 selected = selected,
                 onClick = {
-                    if (item == BottomNavigationItem.UploadRecipe) {
+                    if (item == BottomNavigationItem.CreateRecipe) {
                         showSheet = true
                     } else {
                         navController.navigate(item.route) {
@@ -81,5 +81,13 @@ fun MainBottomNavigationBar(navController: NavController) {
 
     CreateBottomSheet(
         showSheet,
-        onDismiss = { showSheet = false })
+        onDismiss = { showSheet = false },
+        onCreateRecipeScreen = {
+            navController.navigate(BottomNavigationItem.CreateRecipe.route)
+            showSheet = false
+        },
+        onCreateCollectionScreen = {
+            navController.navigate(BottomNavigationItem.CreateCollection.route)
+            showSheet = false
+        })
 }
