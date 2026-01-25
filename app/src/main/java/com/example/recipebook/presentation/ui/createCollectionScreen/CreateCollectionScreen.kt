@@ -25,7 +25,9 @@ import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 
 @Composable
 @Suppress("FunctionName")
-fun CreateCollectionScreen() {
+fun CreateCollectionScreen(
+    onBack: () -> Unit
+) {
 
     val collectionImagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -54,7 +56,7 @@ fun CreateCollectionScreen() {
                 centerVerticallyTo(headingText)
                 end.linkTo(endGuideline)
             },
-            onClick = {}
+            onClick = onBack
         ) {
             Icon(
                 painter = painterResource(R.drawable.delete_icon),

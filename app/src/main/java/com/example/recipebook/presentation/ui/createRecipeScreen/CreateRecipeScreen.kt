@@ -41,6 +41,7 @@ import com.example.recipebook.presentation.util.debounce
 @Composable
 @Suppress("FunctionName")
 fun CreateRecipeScreen(
+    onBack: () -> Unit,
     viewModel: UploadRecipeViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState
@@ -68,7 +69,7 @@ fun CreateRecipeScreen(
         )
 
         IconButton(
-            onClick = {},
+            onClick = onBack,
             modifier = Modifier
                 .constrainAs(closeButton) {
                     centerVerticallyTo(headingText)
