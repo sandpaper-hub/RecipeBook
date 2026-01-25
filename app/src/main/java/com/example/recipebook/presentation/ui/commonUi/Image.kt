@@ -71,7 +71,7 @@ fun ImageBanner(
 
 @Composable
 @Suppress("FunctionName")
-fun RecipeImage(
+fun ImageCover(
     imageUri: Uri?,
     contentDescription: String,
     onCancelClick: () -> Unit,

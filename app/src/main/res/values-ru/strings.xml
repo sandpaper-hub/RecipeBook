@@ -107,4 +107,5 @@
     <string name="collection_hint">Блюда из курицы</string>
     <string name="collection_description_hint">Подборка рецептов блюд из курицы</string>
     <string name="create_recipe">Создать рецепт</string>
+    <string name="collection_image">Обложка коллекции</string>
 </resources>

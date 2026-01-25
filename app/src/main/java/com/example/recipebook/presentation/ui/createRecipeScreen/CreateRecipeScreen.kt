@@ -29,20 +29,20 @@ import com.example.recipebook.presentation.ui.commonUi.DoubleActionTextBox
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.IconTextButton
 import com.example.recipebook.presentation.ui.commonUi.RecipeStepBox
-import com.example.recipebook.presentation.ui.commonUi.RecipeImage
+import com.example.recipebook.presentation.ui.commonUi.ImageCover
 import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
-import com.example.recipebook.presentation.viewModel.uploadRecipeScreen.UploadRecipeViewModel
+import com.example.recipebook.presentation.viewModel.createRecipeScreen.CreateRecipeViewModel
 import com.example.recipebook.presentation.util.debounce
 
 @Composable
 @Suppress("FunctionName")
 fun CreateRecipeScreen(
     onBack: () -> Unit,
-    viewModel: UploadRecipeViewModel = hiltViewModel()
+    viewModel: CreateRecipeViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState
     val listState = rememberLazyListState()
@@ -98,7 +98,7 @@ fun CreateRecipeScreen(
                     .height(150.dp)
 
                 if (uiState.recipeImageUri != null) {
-                    RecipeImage(
+                    ImageCover(
                         imageUri = uiState.recipeImageUri,
                         contentDescription = stringResource(R.string.recipe_image),
                         modifier = imageModifier,
