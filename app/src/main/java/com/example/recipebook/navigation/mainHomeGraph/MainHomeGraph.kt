@@ -33,11 +33,19 @@ fun MainHomeGraph(
         }
 
         composable(BottomNavigationItem.CreateRecipe.route) {
-            CreateRecipeScreen()
+            CreateRecipeScreen(
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         composable(BottomNavigationItem.CreateCollection.route){
-            CreateCollectionScreen()
+            CreateCollectionScreen(
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         recipesNavGraph(navController = navController)
