@@ -19,6 +19,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
+import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 
@@ -35,7 +36,8 @@ fun CreateCollectionScreen() {
     }
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (closeButton, headingText, imagePickerBox, collectionNameText) = createRefs()
+        val (closeButton, headingText, imagePickerBox, collectionNameBox,
+            collectionDescriptionBox, saveButton) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -64,7 +66,7 @@ fun CreateCollectionScreen() {
             modifier = Modifier
                 .constrainAs(imagePickerBox) {
                     centerHorizontallyTo(parent)
-                    top.linkTo(headingText.bottom, margin = 32.dp)
+                    top.linkTo(headingText.bottom, margin = 24.dp)
                 }
                 .padding(horizontal = 24.dp)
         ) {
@@ -84,11 +86,37 @@ fun CreateCollectionScreen() {
             onValueChange = {},
             textHint = stringResource(R.string.collection_hint),
             isError = false,
-            modifier = Modifier.constrainAs(collectionNameText) {
+            modifier = Modifier.constrainAs(collectionNameBox) {
                 linkTo(start = startGuideline, end = endGuideline)
                 top.linkTo(imagePickerBox.bottom, margin = 32.dp)
                 width = Dimension.fillToConstraints
             }
+        )
+
+        TitleTextFieldBox(
+            title = stringResource(R.string.recipe_description),
+            textFieldValue = "",
+            onValueChange = {},
+            textHint = stringResource(R.string.collection_description_hint),
+            isError = false,
+            modifier = Modifier
+                .constrainAs(collectionDescriptionBox) {
+                    linkTo(start = startGuideline, end = endGuideline)
+                    top.linkTo(collectionNameBox.bottom)
+                    width = Dimension.fillToConstraints
+                }
+        )
+
+        SquareRoundedButton(
+            onClick = {},
+            text = stringResource(R.string.save_button),
+            isLoading = false,
+            modifier = Modifier
+                .constrainAs(saveButton) {
+                    linkTo(start = startGuideline, end = endGuideline)
+                    bottom.linkTo(parent.bottom, margin = 24.dp)
+                    width = Dimension.fillToConstraints
+                }
         )
     }
 }

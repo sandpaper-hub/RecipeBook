@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,6 +26,7 @@ import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.CustomDropDownMenu
 import com.example.recipebook.presentation.ui.commonUi.IngredientDialog
 import com.example.recipebook.presentation.ui.commonUi.DoubleActionTextBox
+import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.IconTextButton
 import com.example.recipebook.presentation.ui.commonUi.RecipeStepBox
 import com.example.recipebook.presentation.ui.commonUi.RecipeImage
@@ -51,16 +54,39 @@ fun CreateRecipeScreen(
     }
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (recipeColumn) = createRefs()
+        val (recipeColumn, headingText, closeButton) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
+
+        HeadingTextMedium(
+            text = stringResource(R.string.create_recipe),
+            modifier = Modifier
+                .constrainAs(headingText) {
+                    linkTo(start = startGuideline, end = endGuideline)
+                    top.linkTo(parent.top, margin = 24.dp)
+                }
+        )
+
+        IconButton(
+            onClick = {},
+            modifier = Modifier
+                .constrainAs(closeButton) {
+                    centerVerticallyTo(headingText)
+                    end.linkTo(parent.end, margin = 24.dp)
+                }
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.delete_icon),
+                contentDescription = stringResource(R.string.cancel_icon)
+            )
+        }
 
         LazyColumn(
             state = listState,
             modifier = Modifier
                 .constrainAs(recipeColumn) {
                     linkTo(start = startGuideline, end = endGuideline)
-                    top.linkTo(parent.top, margin = 21.dp)
+                    top.linkTo(headingText.bottom, margin = 24.dp)
                     bottom.linkTo(parent.bottom)
                     width = Dimension.fillToConstraints
                     height = Dimension.fillToConstraints
@@ -68,7 +94,6 @@ fun CreateRecipeScreen(
             item {
                 val imageModifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 32.dp)
                     .height(150.dp)
 
                 if (uiState.recipeImageUri != null) {
@@ -94,7 +119,8 @@ fun CreateRecipeScreen(
                     textFieldValue = uiState.recipeName,
                     onValueChange = viewModel::onRecipeNameChanged,
                     textHint = stringResource(R.string.recipe_name_hint),
-                    isError = false
+                    isError = false,
+                    modifier = Modifier.padding(top = 32.dp)
                 )
             }
 
