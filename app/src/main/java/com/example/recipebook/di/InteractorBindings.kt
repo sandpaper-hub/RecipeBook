@@ -1,5 +1,7 @@
 package com.example.recipebook.di
 
+import com.example.recipebook.domain.interactor.collection.CollectionInteractor
+import com.example.recipebook.domain.interactor.collection.CollectionInteractorImpl
 import com.example.recipebook.domain.interactor.login.LoginInteractor
 import com.example.recipebook.domain.interactor.login.LoginInteractorImpl
 import com.example.recipebook.domain.interactor.profile.ProfileInteractor
@@ -51,4 +53,9 @@ abstract class InteractorBindings {
     abstract fun bindUploadRecipeInteractor(
         impl: RecipesInteractorImpl
     ): RecipesInteractor
+
+    @Binds
+    abstract fun bindCollectionInteractor(
+        impl: CollectionInteractorImpl
+    ): CollectionInteractor
 }

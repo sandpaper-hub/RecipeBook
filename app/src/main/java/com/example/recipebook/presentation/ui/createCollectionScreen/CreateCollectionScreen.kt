@@ -127,7 +127,7 @@ fun CreateCollectionScreen(
         )
 
         SquareRoundedButton(
-            onClick = {},
+            onClick = { viewModel.createCollection(onBack) },
             text = stringResource(R.string.save_button),
             isLoading = false,
             modifier = Modifier
