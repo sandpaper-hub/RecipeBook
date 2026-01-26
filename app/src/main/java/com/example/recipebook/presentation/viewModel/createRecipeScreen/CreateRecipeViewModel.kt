@@ -1,4 +1,4 @@
-package com.example.recipebook.presentation.viewModel.uploadRecipeScreen
+package com.example.recipebook.presentation.viewModel.createRecipeScreen
 
 import android.net.Uri
 import androidx.compose.runtime.getValue
@@ -9,16 +9,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
 import com.example.recipebook.domain.model.recipe.RecipeIngredient
 import com.example.recipebook.domain.model.recipe.RecipeStepDraft
-import com.example.recipebook.presentation.viewModel.uploadRecipeScreen.model.IngredientUiState
-import com.example.recipebook.presentation.viewModel.uploadRecipeScreen.model.NewRecipeUiState
-import com.example.recipebook.presentation.viewModel.uploadRecipeScreen.model.RecipeStepUiState
+import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
+import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.NewRecipeUiState
+import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeStepUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
-class UploadRecipeViewModel @Inject constructor(
+class CreateRecipeViewModel @Inject constructor(
     private val recipesInteractor: RecipesInteractor
 ) : ViewModel() {
     var uiState by mutableStateOf(NewRecipeUiState())

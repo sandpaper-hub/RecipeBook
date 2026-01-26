@@ -1,6 +1,7 @@
 package com.example.recipebook.di
 
 import com.example.recipebook.data.repository.AuthenticationRepositoryImpl
+import com.example.recipebook.data.repository.CollectionRepositoryImpl
 import com.example.recipebook.data.repository.ProfileRepositoryImpl
 import com.example.recipebook.data.repository.DataStoreRepositoryImpl
 import com.example.recipebook.data.repository.LocaleRepositoryImpl
@@ -9,6 +10,7 @@ import com.example.recipebook.data.repository.RecipesRepositoryImpl
 import com.example.recipebook.data.util.ImageCompressorImpl
 import com.example.recipebook.domain.repository.ProfileRepository
 import com.example.recipebook.domain.repository.AuthenticationRepository
+import com.example.recipebook.domain.repository.CollectionsRepository
 import com.example.recipebook.domain.repository.DataStoreRepository
 import com.example.recipebook.domain.repository.LocaleRepository
 import com.example.recipebook.domain.repository.SettingsRepository
@@ -59,4 +61,9 @@ abstract class RepositoryBindings {
     abstract fun bindUploadRecipeRepository(
         impl: RecipesRepositoryImpl
     ): RecipesRepository
+
+    @Binds
+    abstract fun bindCollectionRepository(
+        impl: CollectionRepositoryImpl
+    ): CollectionsRepository
 }

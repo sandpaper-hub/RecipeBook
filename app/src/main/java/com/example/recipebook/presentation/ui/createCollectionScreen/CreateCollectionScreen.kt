@@ -17,23 +17,29 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
+import com.example.recipebook.presentation.ui.commonUi.ImageCover
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
+import com.example.recipebook.presentation.util.debounce
+import com.example.recipebook.presentation.viewModel.createCollectionScreen.CreateCollectionViewModel
 
 @Composable
 @Suppress("FunctionName")
 fun CreateCollectionScreen(
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    viewModel: CreateCollectionViewModel = hiltViewModel()
 ) {
 
+    val uiState = viewModel.uiState
     val collectionImagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         if (uri != null) {
-
+            viewModel.onImageChange(uri)
         }
     }
 
@@ -72,20 +78,31 @@ fun CreateCollectionScreen(
                 }
                 .padding(horizontal = 24.dp)
         ) {
-            UploadImageBox(
-                text = stringResource(R.string.upload_photo),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp),
-                onClick = {},
-                cornerShapeDp = 20.dp
-            )
+            val imageModifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+
+            if (uiState.imageUri != null) {
+                ImageCover(
+                    imageUri = uiState.imageUri,
+                    contentDescription = stringResource(R.string.collection_image),
+                    onCancelClick = { viewModel.onImageChange(null) },
+                    modifier = imageModifier
+                )
+            } else {
+                UploadImageBox(
+                    text = stringResource(R.string.upload_photo),
+                    modifier = imageModifier,
+                    onClick = debounce { collectionImagePickerLauncher.launch("image/*") },
+                    cornerShapeDp = 20.dp
+                )
+            }
         }
 
         TitleTextFieldBox(
             title = stringResource(R.string.collection_name),
-            textFieldValue = "",
-            onValueChange = {},
+            textFieldValue = uiState.name,
+            onValueChange = viewModel::onNameChange,
             textHint = stringResource(R.string.collection_hint),
             isError = false,
             modifier = Modifier.constrainAs(collectionNameBox) {
@@ -97,8 +114,8 @@ fun CreateCollectionScreen(
 
         TitleTextFieldBox(
             title = stringResource(R.string.recipe_description),
-            textFieldValue = "",
-            onValueChange = {},
+            textFieldValue = uiState.description,
+            onValueChange = viewModel::onDescriptionChange,
             textHint = stringResource(R.string.collection_description_hint),
             isError = false,
             modifier = Modifier
@@ -110,7 +127,7 @@ fun CreateCollectionScreen(
         )
 
         SquareRoundedButton(
-            onClick = {},
+            onClick = { viewModel.createCollection(onBack) },
             text = stringResource(R.string.save_button),
             isLoading = false,
             modifier = Modifier

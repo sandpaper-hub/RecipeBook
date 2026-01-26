@@ -1,4 +1,4 @@
-package com.example.recipebook.presentation.viewModel.uploadRecipeScreen.model
+package com.example.recipebook.presentation.viewModel.createRecipeScreen.model
 
 import android.net.Uri
 
