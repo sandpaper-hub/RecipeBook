@@ -7,6 +7,7 @@ import com.example.recipebook.data.util.ImageCompressorImpl
 import com.example.recipebook.domain.model.recipe.Recipe
 import com.example.recipebook.domain.model.recipe.RecipeStepDraft
 import com.example.recipebook.domain.repository.RecipesRepository
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
@@ -23,8 +24,18 @@ import javax.inject.Inject
 class RecipesRepositoryImpl @Inject constructor(
     private val firebaseStorage: FirebaseStorage,
     private val firestore: FirebaseFirestore,
+    private val auth: FirebaseAuth,
     private val imageCompressorImpl: ImageCompressorImpl
 ) : RecipesRepository {
+
+    private val userId get() = auth.currentUser!!.uid
+
+    override suspend fun createRandomId(): String {
+        val document = firestore
+            .collection("random")
+            .document()
+        return document.id
+    }
 
     override suspend fun uploadStepImages(
         recipeId: String,
@@ -63,6 +74,8 @@ class RecipesRepositoryImpl @Inject constructor(
 
     override suspend fun saveRecipe(recipe: Recipe) {
         firestore
+            .collection("users")
+            .document(userId)
             .collection("recipes")
             .document(recipe.id)
             .set(recipe.toDto())

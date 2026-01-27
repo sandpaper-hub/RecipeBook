@@ -14,7 +14,6 @@ import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.Ne
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeStepUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,21 +24,25 @@ class CreateRecipeViewModel @Inject constructor(
         private set
 
     init {
-        uiState = uiState.copy(
-            ingredients = listOf(
-                IngredientUiState(
-                    id = UUID.randomUUID().toString(),
-                    ingredientValue = "",
-                )
-            ),
-            recipeSteps = listOf(
-                RecipeStepUiState(
-                    id = UUID.randomUUID().toString(),
-                    imageUri = null,
-                    stepDescription = ""
+        viewModelScope.launch {
+            uiState = uiState.copy(
+                ingredients = listOf(
+                    IngredientUiState(
+                        id = recipesInteractor.createRandomId(),
+                        value = "",
+                        amount = "",
+                        dimension = ""
+                    )
+                ),
+                recipeSteps = listOf(
+                    RecipeStepUiState(
+                        id = recipesInteractor.createRandomId(),
+                        imageUri = null,
+                        stepDescription = ""
+                    )
                 )
             )
-        )
+        }
     }
 
     fun onRecipeImagePicked(uri: Uri?) {
@@ -61,7 +64,7 @@ class CreateRecipeViewModel @Inject constructor(
     fun onIngredientChange(id: String, value: String) {
         uiState = uiState.copy(
             ingredients = uiState.ingredients.map {
-                if (it.id == id) it.copy(ingredientValue = value) else it
+                if (it.id == id) it.copy(value = value) else it
             },
             editingIngredientId = null
         )
@@ -85,12 +88,16 @@ class CreateRecipeViewModel @Inject constructor(
     }
 
     fun addIngredient() {
-        uiState = uiState.copy(
-            ingredients = uiState.ingredients + IngredientUiState(
-                id = UUID.randomUUID().toString(),
-                ingredientValue = ""
+        viewModelScope.launch {
+            uiState = uiState.copy(
+                ingredients = uiState.ingredients + IngredientUiState(
+                    id = recipesInteractor.createRandomId(),
+                    value = "",
+                    amount = "",
+                    dimension = ""
+                )
             )
-        )
+        }
     }
 
     fun showIngredientDialog(id: String?) {
@@ -100,13 +107,15 @@ class CreateRecipeViewModel @Inject constructor(
     }
 
     fun addStep() {
-        uiState = uiState.copy(
-            recipeSteps = uiState.recipeSteps + RecipeStepUiState(
-                id = UUID.randomUUID().toString(),
-                imageUri = null,
-                stepDescription = ""
+        viewModelScope.launch {
+            uiState = uiState.copy(
+                recipeSteps = uiState.recipeSteps + RecipeStepUiState(
+                    id = recipesInteractor.createRandomId(),
+                    imageUri = null,
+                    stepDescription = ""
+                )
             )
-        )
+        }
     }
 
     fun removeStep(id: String) {
@@ -130,11 +139,10 @@ class CreateRecipeViewModel @Inject constructor(
             })
     }
 
-    fun uploadNewRecipe() {
+    fun uploadNewRecipe(onBack: () -> Unit) {
         viewModelScope.launch {
             runCatching {
                 recipesInteractor.uploadNewRecipe(
-                    recipeId = UUID.randomUUID().toString(),
                     recipeName = uiState.recipeName,
                     recipeDescription = uiState.recipeDescription,
                     recipeTimeEstimation = uiState.timeEstimation,
@@ -143,7 +151,7 @@ class CreateRecipeViewModel @Inject constructor(
                     ingredients = uiState.ingredients.map { ingredient ->
                         RecipeIngredient(
                             id = ingredient.id,
-                            value = ingredient.ingredientValue
+                            value = ingredient.value
                         )
                     },
                     steps = uiState.recipeSteps.map { recipeStepUiState ->
@@ -155,7 +163,7 @@ class CreateRecipeViewModel @Inject constructor(
                     }
                 )
             }.onSuccess {
-                //TODO
+                onBack()
             }.onFailure { error ->
                 uiState = uiState.copy(errorMessage = error.message)
             }
