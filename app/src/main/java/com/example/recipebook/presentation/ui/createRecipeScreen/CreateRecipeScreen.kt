@@ -157,7 +157,7 @@ fun CreateRecipeScreen(
                 key = { it.id }
             ) { ingredient ->
                 DoubleActionTextBox(
-                    value = ingredient.ingredientValue,
+                    value = ingredient.value,
                     hint = stringResource(R.string.add_ingredient),
                     onBoxClick = { viewModel.showIngredientDialog(ingredient.id) },
                     onIconClick = { viewModel.removeIngredient(ingredient.id) }
@@ -248,7 +248,7 @@ fun CreateRecipeScreen(
 
             item {
                 SquareRoundedButton(
-                    onClick = { viewModel.uploadNewRecipe() },
+                    onClick = { viewModel.uploadNewRecipe(onBack) },
                     text = stringResource(R.string.upload),
                     isLoading = false,
                     modifier = Modifier.padding(bottom = 24.dp)

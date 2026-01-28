@@ -4,6 +4,7 @@ import com.example.recipebook.domain.model.recipe.Recipe
 import com.example.recipebook.domain.model.recipe.RecipeIngredient
 import com.example.recipebook.domain.model.recipe.RecipeStep
 import com.example.recipebook.domain.model.recipe.RecipeStepDraft
+import com.example.recipebook.domain.useCase.CreateRandomIdUseCase
 import com.example.recipebook.domain.useCase.GetCurrentUserIdUseCase
 import com.example.recipebook.domain.useCase.GetRecipeCoverUrlUseCase
 import com.example.recipebook.domain.useCase.GetStepImagesUrlUseCase
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RecipesInteractorImpl @Inject constructor(
+    private val createRandomIdUseCase: CreateRandomIdUseCase,
     private val getStepImagesUrlUseCase: GetStepImagesUrlUseCase,
     private val uploadNewRecipeUseCase: UploadNewRecipeUseCase,
     private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
@@ -22,8 +24,11 @@ class RecipesInteractorImpl @Inject constructor(
     private val getUserIdFlowUseCase: GetUserIdFlowUseCase
 ) : RecipesInteractor {
 
+    override suspend fun createRandomId(): String {
+        return createRandomIdUseCase.execute()
+    }
+
     override suspend fun uploadNewRecipe(
-        recipeId: String,
         recipeName: String,
         recipeDescription: String,
         recipeTimeEstimation: String,
@@ -32,6 +37,7 @@ class RecipesInteractorImpl @Inject constructor(
         ingredients: List<RecipeIngredient>,
         steps: List<RecipeStepDraft>
     ) {
+        val recipeId = createRandomIdUseCase.execute()
         val recipeImageUrl: String? = getRecipeCoverUrlUseCase.execute(recipeId, recipeImageSource)
         val currentUserId = getCurrentUserIdUseCase.execute()
         val recipeSteps = buildRecipeSteps(recipeId, steps)
