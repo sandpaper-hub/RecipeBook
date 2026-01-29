@@ -20,7 +20,7 @@ fun MainScreenContainer(onLogout: () -> Unit) {
 
     val bottomBarDestinations = setOf(
         BottomNavigationItem.Home.route,
-        BottomNavigationItem.Collection.route,
+        BottomNavigationItem.Collections.route,
         BottomNavigationItem.Recipes.route,
         BottomNavigationItem.Settings.route
     )

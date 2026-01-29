@@ -2,12 +2,12 @@ package com.example.recipebook.domain.useCase
 
 import com.example.recipebook.domain.model.collection.UserCollection
 import com.example.recipebook.domain.repository.CollectionsRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class CreateCollectionUseCase @Inject constructor(
+class GetUserCollectionsUseCase @Inject constructor(
     private val collectionsRepository: CollectionsRepository
 ) {
-    suspend fun execute(userCollection: UserCollection): Result<Unit>{
-       return collectionsRepository.createCollection(userCollection)
-    }
+    fun execute(userId: String): Flow<List<UserCollection>> =
+        collectionsRepository.observeUserCollections(userId)
 }

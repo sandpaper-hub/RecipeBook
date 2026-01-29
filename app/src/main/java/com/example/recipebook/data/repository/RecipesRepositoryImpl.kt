@@ -9,7 +9,6 @@ import com.example.recipebook.domain.model.recipe.RecipeStepDraft
 import com.example.recipebook.domain.repository.RecipesRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -92,23 +91,23 @@ class RecipesRepositoryImpl @Inject constructor(
         return ref.downloadUrl.await().toString()
     }
 
-    override fun observeUserRecipes(userId: String): Flow<List<Recipe>> = callbackFlow{
-        val query = firestore.collection("recipes")
-            .whereEqualTo("authorId", userId)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
+    override fun observeUserRecipes(userId: String): Flow<List<Recipe>> = callbackFlow {
+        val listener = firestore
+            .collection("users")
+            .document(userId)
+            .collection("recipes")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
 
-        val listener = query.addSnapshotListener { snapshot, error ->
-            if (error != null) {
-                close(error)
-                return@addSnapshotListener
+                val recipes = snapshot
+                    ?.toObjects(RecipeDto::class.java)
+                    ?.map { it.toDomain() }
+                    ?: emptyList()
+                trySend(recipes)
             }
-
-            val recipes = snapshot
-                ?.toObjects(RecipeDto::class.java)
-                ?.map { it.toDomain() }
-                ?: emptyList()
-            trySend(recipes)
-        }
 
         awaitClose {
             listener.remove()
