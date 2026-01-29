@@ -29,7 +29,7 @@ fun MainBottomNavigationBar(navController: NavController) {
         BottomNavigationItem.Home,
         BottomNavigationItem.Recipes,
         BottomNavigationItem.CreateRecipe,
-        BottomNavigationItem.Collection,
+        BottomNavigationItem.Collections,
         BottomNavigationItem.Settings
     )
     val navigationBackStackEntry by navController.currentBackStackEntryAsState()

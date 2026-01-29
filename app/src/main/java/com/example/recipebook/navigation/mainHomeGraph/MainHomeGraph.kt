@@ -9,7 +9,7 @@ import com.example.recipebook.R
 import com.example.recipebook.navigation.mainHomeGraph.settingsGraph.settingsGraph
 import com.example.recipebook.navigation.mainHomeGraph.recipesGraph.recipesNavGraph
 import com.example.recipebook.presentation.ui.mainHomeScreen.MainHomeScreen
-import com.example.recipebook.presentation.ui.collaborationScreen.CollaborationScreen
+import com.example.recipebook.presentation.ui.collectionScreen.CollectionScreen
 import com.example.recipebook.presentation.ui.createCollectionScreen.CreateCollectionScreen
 import com.example.recipebook.presentation.ui.createRecipeScreen.CreateRecipeScreen
 
@@ -28,8 +28,8 @@ fun MainHomeGraph(
             MainHomeScreen()
         }
 
-        composable(BottomNavigationItem.Collection.route) {
-            CollaborationScreen()
+        composable(BottomNavigationItem.Collections.route) {
+            CollectionScreen()
         }
 
         composable(BottomNavigationItem.CreateRecipe.route) {
@@ -86,10 +86,10 @@ sealed class BottomNavigationItem(
         label = "Create collection"
     )
 
-    data object Collection : BottomNavigationItem(
-        route = "collection",
+    data object Collections : BottomNavigationItem(
+        route = "collections",
         icon = R.drawable.collection_icon,
-        label = "Collection"
+        label = "Collections"
     )
 
     data object Settings : BottomNavigationItem(
