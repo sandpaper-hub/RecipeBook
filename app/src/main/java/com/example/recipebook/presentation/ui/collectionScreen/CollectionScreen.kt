@@ -5,19 +5,28 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
 import com.example.recipebook.presentation.ui.commonUi.collection.CollectionCard
+import com.example.recipebook.presentation.viewModel.collectionsScreen.CollectionsViewModel
 
 @Composable
 @Suppress("FunctionName")
-fun CollectionScreen() {
+fun CollectionScreen(
+    viewModel: CollectionsViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -45,9 +54,11 @@ fun CollectionScreen() {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(20) {
+          items(items = uiState.collections, key = {it.id})  { collection ->
                 CollectionCard(
-                    "https://firebasestorage.googleapis.com/v0/b/recipebook-4b1fd.firebasestorage.app/o/collections%2Ft5hUCPBLlWr73y1ByweP%2Fcover%2Fcollection_cover.jpg?alt=media&token=2aa45870-3987-43c5-911f-2a234f5ad792",
+                    name = collection.name,
+                    count = collection.recipesCount,
+                    imageUrl = collection.imageUrl,
                     modifier = Modifier.fillMaxWidth()
                 )
             }

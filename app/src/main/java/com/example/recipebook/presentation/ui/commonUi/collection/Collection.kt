@@ -21,13 +21,14 @@ import com.example.recipebook.presentation.ui.commonUi.SecondaryText
 @Composable
 @Suppress("FunctionName")
 fun CollectionCard(
+    name: String,
+    count: Int,
     imageUrl: String?,
     modifier: Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
     ) {
         AsyncImage(
             model = imageUrl ?: R.drawable.collection_background,
@@ -36,10 +37,11 @@ fun CollectionCard(
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .height(180.dp)
+                .clip(RoundedCornerShape(12.dp))
         )
 
         HeadingTextMedium(
-            text = "CollectionName",
+            text = name,
             modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontWeight = FontWeight.Medium
@@ -47,7 +49,7 @@ fun CollectionCard(
         )
 
         SecondaryText(
-            text = "2 recipes",
+            text = "$count recipes",
             style = MaterialTheme.typography.labelMedium.copy(
                 color = MaterialTheme.colorScheme.inversePrimary
             )
