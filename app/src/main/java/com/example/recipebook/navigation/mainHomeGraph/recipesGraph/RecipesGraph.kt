@@ -16,17 +16,18 @@ fun NavGraphBuilder.recipesNavGraph(navController: NavController) {
         startDestination = RecipesRoutes.RecipesMain.route
     ) {
         composable(RecipesRoutes.RecipesMain.route) {
-            RecipesScreen(onRecipeDetail = {
-                navController.navigate("${RecipesRoutes.RecipeDetail.route}/{recipeId}")
+            RecipesScreen(onRecipeDetail = { recipeId ->
+                navController.navigate(RecipesRoutes.RecipeDetail.createRoute(recipeId))
             })
         }
 
         composable(
-            route = "${RecipesRoutes.RecipeDetail.route}/{recipeId}",
-            listOf(navArgument("recipeId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val recipeId = backStackEntry.arguments?.getString("recipeId")!!
-            RecipeDetailScreen(recipeId = recipeId)
+            route = "${RecipesRoutes.RecipeDetail.route}/{${RecipesRoutes.RecipeDetail.RECIPE_ID_ARG}}",
+            arguments = listOf(navArgument(RecipesRoutes.RecipeDetail.RECIPE_ID_ARG) {
+                type = NavType.StringType
+            })
+        ) {
+            RecipeDetailScreen()
         }
     }
 }
