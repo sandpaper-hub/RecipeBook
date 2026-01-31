@@ -1,10 +1,14 @@
 package com.example.recipebook.data.repository
 
+import com.example.recipebook.data.dto.CollectionDto
+import com.example.recipebook.data.mapper.toDomain
+import com.example.recipebook.data.mapper.toDto
 import com.example.recipebook.data.util.ImageCompressorImpl
 import com.example.recipebook.domain.model.collection.UserCollection
 import com.example.recipebook.domain.repository.CollectionsRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -29,6 +33,7 @@ class CollectionRepositoryImpl @Inject constructor(
                 .collection("users")
                 .document(userId)
                 .collection("collections")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
                 .addSnapshotListener { snapshot, error ->
                     if (error != null) {
                         close(error)
@@ -38,7 +43,7 @@ class CollectionRepositoryImpl @Inject constructor(
                     val collections = snapshot
                         ?.documents
                         ?.map { doc ->
-                            val collection = doc.toObject(UserCollection::class.java)
+                            val collection = doc.toObject(CollectionDto::class.java)?.toDomain()
                             collection!!.copy(id = doc.id)
                         }
                         ?: emptyList()
@@ -62,12 +67,13 @@ class CollectionRepositoryImpl @Inject constructor(
         userCollection: UserCollection
     ): Result<Unit> {
         return suspendCancellableCoroutine { continuation ->
+            val collectionDto = userCollection.toDto()
             firestore
                 .collection("users")
                 .document(userId)
                 .collection("collections")
-                .document(userCollection.id)
-                .set(userCollection)
+                .document(collectionDto.id)
+                .set(collectionDto)
                 .addOnSuccessListener {
                     if (continuation.isActive) {
                         continuation.resume(Result.success(Unit))
@@ -77,7 +83,6 @@ class CollectionRepositoryImpl @Inject constructor(
                     if (continuation.isActive) {
                         continuation.resume(Result.failure(exception))
                     }
-
                 }
         }
     }

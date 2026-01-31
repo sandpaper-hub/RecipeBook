@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.collection.CollectionInteractor
-import com.example.recipebook.presentation.ui.createCollectionScreen.model.NewCollectionUiState
+import com.example.recipebook.presentation.viewModel.createCollectionScreen.model.NewCollectionUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
