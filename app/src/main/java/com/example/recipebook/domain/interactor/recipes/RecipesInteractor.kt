@@ -7,6 +7,7 @@ import com.example.recipebook.domain.model.recipe.RecipeStepDraft
 import kotlinx.coroutines.flow.Flow
 
 interface RecipesInteractor {
+    suspend fun getRecipeById(recipeId: String): Recipe
 
     suspend fun createRandomId(): String
     suspend fun uploadNewRecipe(

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.ImageBanner
@@ -27,15 +29,20 @@ import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleTextLarge
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeDescription
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeIngredients
+import com.example.recipebook.presentation.viewModel.recipeDetailScreen.RecipeDetailViewModel
 
 @Composable
 @Suppress("FunctionName")
-fun RecipeDetailScreen(recipeId: String) {
+fun RecipeDetailScreen(
+    onBack: () -> Unit,
+    viewModel: RecipeDetailViewModel = hiltViewModel()
+) {
+    val uiState = viewModel.uiState
     val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -48,7 +55,7 @@ fun RecipeDetailScreen(recipeId: String) {
                 painter = painterResource(R.drawable.back_arrow_icon),
                 contentDescription = stringResource(R.string.back_button),
                 modifier = Modifier,
-                onClick = {}
+                onClick = onBack
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -65,7 +72,8 @@ fun RecipeDetailScreen(recipeId: String) {
 
         ConstraintLayout(
             modifier = Modifier
-                .fillMaxSize()
+                .weight(1f)
+                .fillMaxWidth()
                 .verticalScroll(scrollState)
         ) {
             val (recipeImage, recipeNameText, ingredientBox, descriptionText, ingredientsText,
@@ -74,7 +82,7 @@ fun RecipeDetailScreen(recipeId: String) {
             val endGuideline = createGuidelineFromEnd(24.dp)
 
             ImageBanner(
-                imageUrl = "https://firebasestorage.googleapis.com/v0/b/recipebook-4b1fd.firebasestorage.app/o/recipes%2F4cf22693-f289-4852-b90b-1195c8ede6d6%2Fcover%2Frecipe_cover.jpg?alt=media&token=17e685f4-a6e8-4b38-9202-5115df0bc551",
+                imageUrl = uiState.imageUrl,
                 contentDescription = stringResource(R.string.recipe_image),
                 modifier = Modifier
                     .height(250.dp)
@@ -87,7 +95,7 @@ fun RecipeDetailScreen(recipeId: String) {
 
 
             TitleTextLarge(
-                text = "Vegetable pasta",
+                text = uiState.name,
                 modifier = Modifier.constrainAs(recipeNameText) {
                     start.linkTo(startGuideline)
                     top.linkTo(recipeImage.bottom, margin = 24.dp)
@@ -95,16 +103,16 @@ fun RecipeDetailScreen(recipeId: String) {
             )
 
             RecipeDescription(
-                timeEstimation = "1 hour",
-                descriptionText = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc",
+                timeEstimation = uiState.timeEstimation,
+                descriptionText = uiState.description,
                 modifier = Modifier.constrainAs(descriptionText) {
                     linkTo(start = startGuideline, end = endGuideline)
-                    top.linkTo(recipeNameText.bottom, margin = 16.dp)
+                    top.linkTo(recipeNameText.bottom, margin = 8.dp)
                     width = Dimension.fillToConstraints
                 })
 
             Text(
-                text = "${stringResource(R.string.ingredients)} (10)",
+                text = "${stringResource(R.string.ingredients)} (${uiState.ingredients.size})",
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Medium
                 ),
@@ -116,55 +124,28 @@ fun RecipeDetailScreen(recipeId: String) {
             )
 
             RecipeIngredients(
-                ingredients = listOf(
-                    "Лук 2 кг",
-                    "Картошка 500 гр",
-                    "Баклажан 1.5 кг",
-                    "Лук 2 кг",
-                    "Картошка 500 гр",
-                    "Баклажан 1.5 кг",
-                    "Лук 2 кг",
-                    "Картошка 500 гр",
-                    "Баклажан 1.5 кг",
-                    "Лук 2 кг",
-                    "Картошка 500 гр",
-                    "Баклажан 1.5 кг",
-                    "Лук 2 кг",
-                    "Картошка 500 гр",
-                    "Баклажан 1.5 кг",
-                    "Лук 2 кг",
-                    "Картошка 500 гр",
-                    "Баклажан 1.5 кг",
-                    "Лук 2 кг",
-                    "Картошка 500 гр",
-                    "Баклажан 1.5 кг",
-                    "Лук 2 кг",
-                    "Картошка 500 гр",
-                    "Баклажан 1.5 кг"
-                ),
+                ingredients = uiState.ingredients,
                 modifier = Modifier.constrainAs(ingredientBox) {
                     linkTo(start = startGuideline, end = endGuideline)
                     linkTo(
                         top = ingredientsText.bottom,
-                        bottom = letsCookButton.top,
+                        bottom = parent.bottom,
                         topMargin = 24.dp,
-                        bottomMargin = 24.dp
+                        bottomMargin = 24.dp,
+                        bias = 0F
                     )
                     width = Dimension.fillToConstraints
                 }
             )
-
-            SquareRoundedButton(
-                onClick = {},
-                text = stringResource(R.string.lets_cook),
-                isLoading = false,
-                modifier = Modifier
-                    .constrainAs(letsCookButton) {
-                        linkTo(start = startGuideline, end = endGuideline)
-                        bottom.linkTo(parent.bottom, margin = 55.dp)
-                        width = Dimension.fillToConstraints
-                    }
-            )
         }
+
+        SquareRoundedButton(
+            onClick = {},
+            text = stringResource(R.string.lets_cook),
+            isLoading = false,
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 24.dp)
+        )
     }
 }
