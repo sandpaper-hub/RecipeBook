@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -33,13 +34,15 @@ import com.example.recipebook.presentation.viewModel.recipeDetailScreen.RecipeDe
 @Composable
 @Suppress("FunctionName")
 fun RecipeDetailScreen(
+    onBack: () -> Unit,
     viewModel: RecipeDetailViewModel = hiltViewModel()
 ) {
+    val uiState = viewModel.uiState
     val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -52,7 +55,7 @@ fun RecipeDetailScreen(
                 painter = painterResource(R.drawable.back_arrow_icon),
                 contentDescription = stringResource(R.string.back_button),
                 modifier = Modifier,
-                onClick = {}
+                onClick = onBack
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -69,7 +72,8 @@ fun RecipeDetailScreen(
 
         ConstraintLayout(
             modifier = Modifier
-                .fillMaxSize()
+                .weight(1f)
+                .fillMaxWidth()
                 .verticalScroll(scrollState)
         ) {
             val (recipeImage, recipeNameText, ingredientBox, descriptionText, ingredientsText,
@@ -78,7 +82,7 @@ fun RecipeDetailScreen(
             val endGuideline = createGuidelineFromEnd(24.dp)
 
             ImageBanner(
-                imageUrl = "https://firebasestorage.googleapis.com/v0/b/recipebook-4b1fd.firebasestorage.app/o/recipes%2F4cf22693-f289-4852-b90b-1195c8ede6d6%2Fcover%2Frecipe_cover.jpg?alt=media&token=17e685f4-a6e8-4b38-9202-5115df0bc551",
+                imageUrl = uiState.imageUrl,
                 contentDescription = stringResource(R.string.recipe_image),
                 modifier = Modifier
                     .height(250.dp)
@@ -91,7 +95,7 @@ fun RecipeDetailScreen(
 
 
             TitleTextLarge(
-                text = "Vegetable pasta",
+                text = uiState.name,
                 modifier = Modifier.constrainAs(recipeNameText) {
                     start.linkTo(startGuideline)
                     top.linkTo(recipeImage.bottom, margin = 24.dp)
@@ -99,16 +103,16 @@ fun RecipeDetailScreen(
             )
 
             RecipeDescription(
-                timeEstimation = "1 hour",
-                descriptionText = "",
+                timeEstimation = uiState.timeEstimation,
+                descriptionText = uiState.description,
                 modifier = Modifier.constrainAs(descriptionText) {
                     linkTo(start = startGuideline, end = endGuideline)
-                    top.linkTo(recipeNameText.bottom, margin = 16.dp)
+                    top.linkTo(recipeNameText.bottom, margin = 8.dp)
                     width = Dimension.fillToConstraints
                 })
 
             Text(
-                text = "${stringResource(R.string.ingredients)} (10)",
+                text = "${stringResource(R.string.ingredients)} (${uiState.ingredients.size})",
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Medium
                 ),
@@ -120,32 +124,28 @@ fun RecipeDetailScreen(
             )
 
             RecipeIngredients(
-                ingredients = listOf(
-
-                ),
+                ingredients = uiState.ingredients,
                 modifier = Modifier.constrainAs(ingredientBox) {
                     linkTo(start = startGuideline, end = endGuideline)
                     linkTo(
                         top = ingredientsText.bottom,
-                        bottom = letsCookButton.top,
+                        bottom = parent.bottom,
                         topMargin = 24.dp,
-                        bottomMargin = 24.dp
+                        bottomMargin = 24.dp,
+                        bias = 0F
                     )
                     width = Dimension.fillToConstraints
                 }
             )
-
-            SquareRoundedButton(
-                onClick = {},
-                text = stringResource(R.string.lets_cook),
-                isLoading = false,
-                modifier = Modifier
-                    .constrainAs(letsCookButton) {
-                        linkTo(start = startGuideline, end = endGuideline)
-                        bottom.linkTo(parent.bottom, margin = 55.dp)
-                        width = Dimension.fillToConstraints
-                    }
-            )
         }
+
+        SquareRoundedButton(
+            onClick = {},
+            text = stringResource(R.string.lets_cook),
+            isLoading = false,
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 24.dp)
+        )
     }
 }

@@ -432,7 +432,13 @@ fun ExpandableText(
                 if (!isExpanded) {
                     isOverflowing = textLayoutResult.hasVisualOverflow
                 }
-            }
+            },
+            modifier = Modifier
+                .clickable(
+                    onClick = { isExpanded = !isExpanded },
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                )
         )
 
         if (isOverflowing) {

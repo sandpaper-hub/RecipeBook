@@ -113,4 +113,16 @@ class RecipesRepositoryImpl @Inject constructor(
             listener.remove()
         }
     }
+
+    override suspend fun getRecipeById(recipeId: String): Recipe {
+        return firestore
+            .collection("users")
+            .document(userId)
+            .collection("recipes")
+            .document(recipeId)
+            .get()
+            .await()
+            .toObject(RecipeDto::class.java)?.toDomain()
+            ?: throw IllegalStateException("Recipe not found")
+    }
 }

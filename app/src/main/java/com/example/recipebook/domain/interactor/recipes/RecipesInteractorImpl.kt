@@ -6,6 +6,7 @@ import com.example.recipebook.domain.model.recipe.RecipeStep
 import com.example.recipebook.domain.model.recipe.RecipeStepDraft
 import com.example.recipebook.domain.useCase.CreateRandomIdUseCase
 import com.example.recipebook.domain.useCase.GetCurrentUserIdUseCase
+import com.example.recipebook.domain.useCase.GetRecipeByIdUseCase
 import com.example.recipebook.domain.useCase.GetRecipeCoverUrlUseCase
 import com.example.recipebook.domain.useCase.GetStepImagesUrlUseCase
 import com.example.recipebook.domain.useCase.GetUserIdFlowUseCase
@@ -21,8 +22,12 @@ class RecipesInteractorImpl @Inject constructor(
     private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
     private val getRecipeCoverUrlUseCase: GetRecipeCoverUrlUseCase,
     private val getUserRecipesUseCase: GetUserRecipesUseCase,
-    private val getUserIdFlowUseCase: GetUserIdFlowUseCase
+    private val getUserIdFlowUseCase: GetUserIdFlowUseCase,
+    private val getRecipeByIdUseCase: GetRecipeByIdUseCase
 ) : RecipesInteractor {
+    override suspend fun getRecipeById(recipeId: String): Recipe {
+        return getRecipeByIdUseCase.execute(recipeId)
+    }
 
     override suspend fun createRandomId(): String {
         return createRandomIdUseCase.execute()

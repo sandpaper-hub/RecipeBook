@@ -27,7 +27,11 @@ fun NavGraphBuilder.recipesNavGraph(navController: NavController) {
                 type = NavType.StringType
             })
         ) {
-            RecipeDetailScreen()
+            RecipeDetailScreen(
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }
