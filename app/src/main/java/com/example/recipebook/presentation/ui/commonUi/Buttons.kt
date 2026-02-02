@@ -105,35 +105,6 @@ fun OutlinedIconButton(
 
 @Composable
 @Suppress("FunctionName")
-fun RoundedPrimaryButton(
-    onClick: () -> Unit,
-    text: String,
-    isLoading: Boolean,
-    modifier: Modifier
-) {
-    Button(
-        onClick = onClick,
-        modifier = modifier
-    ) {
-        if (isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(18.dp),
-                strokeWidth = 2.dp,
-                color = Color.White
-            )
-        } else {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.labelMedium.copy(
-                    color = Color.White
-                )
-            )
-        }
-    }
-}
-
-@Composable
-@Suppress("FunctionName")
 fun CustomCircleIconButton(
     size: Dp,
     painter: Painter,

@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.profile.ProfileInteractor
+import com.example.recipebook.presentation.ui.model.DropdownMenuItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
@@ -22,7 +23,7 @@ class AccountViewModel @Inject constructor(
 
     init {
         observeUserProfile()
-        uiState = uiState.copy(regionLocales = profileInteractor.getLocales())
+        initRegionLocales()
     }
 
     val allowedRegex = Regex("^[A-Za-z0-9._]*$")
@@ -44,6 +45,17 @@ class AccountViewModel @Inject constructor(
                     )
                 }
         }
+    }
+
+    private fun initRegionLocales() {
+        val regionLocales = profileInteractor.getLocales()
+        val menuItems = regionLocales.map { regionLocale ->
+            DropdownMenuItem(
+                action = regionLocale,
+                title = regionLocale
+            )
+        }
+        uiState = uiState.copy(regionLocales = menuItems)
     }
 
     fun onImagePicked(uri: Uri?) {

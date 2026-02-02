@@ -9,7 +9,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.recipebook.presentation.ui.model.DropdownMenuItem
 
 @Composable
 @Suppress("FunctionName")
@@ -36,6 +38,46 @@ fun CustomDropDownMenu(
                     onClick = { onItemClick(menuItem) },
                 )
             }
+        }
+    }
+}
+
+@Composable
+@Suppress("FunctionName")
+fun <T> CustomDropDownMenuNew(
+    expanded: Boolean,
+    items: List<DropdownMenuItem<T>>,
+    onDismiss: () -> Unit,
+    onItemClick: (T) -> Unit
+) {
+
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.background
+    ) {
+        items.forEach { item ->
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        text = when {
+                            item.titleResource != null -> {
+                                stringResource(item.titleResource)
+                            }
+
+                            item.title != null -> {
+                                item.title
+                            }
+
+                            else -> error("No title resource")
+                        }
+                    )
+                },
+                onClick = {
+                    onItemClick(item.action)
+                    onDismiss()
+                }
+            )
         }
     }
 }
