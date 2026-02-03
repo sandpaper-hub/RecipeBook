@@ -1,7 +1,7 @@
 package com.example.recipebook.presentation.viewModel.accountScreen
 
 import android.net.Uri
-import com.example.recipebook.presentation.ui.model.DropdownMenuItem
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
 
 data class AccountUiState(
     val fullName: String = "",

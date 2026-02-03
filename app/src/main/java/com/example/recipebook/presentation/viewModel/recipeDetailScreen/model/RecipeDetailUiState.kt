@@ -1,7 +1,7 @@
 package com.example.recipebook.presentation.viewModel.recipeDetailScreen.model
 
 import com.example.recipebook.domain.model.recipe.RecipeStep
-import com.example.recipebook.presentation.ui.model.DropdownMenuItem
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
 
 data class RecipeDetailUiState(
     val imageUrl: String? = null,

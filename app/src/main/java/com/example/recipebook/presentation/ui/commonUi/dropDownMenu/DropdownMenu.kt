@@ -1,4 +1,4 @@
-package com.example.recipebook.presentation.ui.commonUi
+package com.example.recipebook.presentation.ui.commonUi.dropDownMenu
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.heightIn
@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.recipebook.presentation.ui.model.DropdownMenuItem
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
 
 @Composable
 @Suppress("FunctionName")

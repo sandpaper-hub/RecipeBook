@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipebook.R
 import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
 import com.example.recipebook.navigation.mainHomeGraph.recipesGraph.RecipesRoutes
-import com.example.recipebook.presentation.ui.model.DropdownMenuItem
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.DropdownMenuAction
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.RecipeDetailUiState
 import dagger.hilt.android.lifecycle.HiltViewModel

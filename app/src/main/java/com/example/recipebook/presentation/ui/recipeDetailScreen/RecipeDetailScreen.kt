@@ -27,7 +27,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
-import com.example.recipebook.presentation.ui.commonUi.CustomDropDownMenuNew
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.CustomDropDownMenuNew
 import com.example.recipebook.presentation.ui.commonUi.ImageBanner
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleTextLarge

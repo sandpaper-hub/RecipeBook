@@ -23,7 +23,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
-import com.example.recipebook.presentation.ui.commonUi.CustomDropDownMenu
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.CustomDropDownMenu
 import com.example.recipebook.presentation.ui.commonUi.IngredientDialog
 import com.example.recipebook.presentation.ui.commonUi.DoubleActionTextBox
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
@@ -37,6 +37,7 @@ import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.CreateRecipeViewModel
 import com.example.recipebook.presentation.util.debounce
+import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.MeasureMenuAction
 
 @Composable
 @Suppress("FunctionName")
@@ -157,7 +158,21 @@ fun CreateRecipeScreen(
                 key = { it.id }
             ) { ingredient ->
                 DoubleActionTextBox(
-                    value = ingredient.value,
+                    ingredient = ingredient.value,
+                    amount = ingredient.amount,
+                    measure = ingredient.measure?.let {
+                        stringResource(
+                            when (ingredient.measure) {
+                                MeasureMenuAction.TEASPOON -> R.string.measure_teaspoon
+                                MeasureMenuAction.TABLESPOON -> R.string.measure_tablespoon
+                                MeasureMenuAction.GRAM -> R.string.measure_g
+                                MeasureMenuAction.KILOGRAM -> R.string.measure_kg
+                                MeasureMenuAction.MILLILITER -> R.string.measure_ml
+                                MeasureMenuAction.LITER -> R.string.measure_l
+                                MeasureMenuAction.PCS -> R.string.measure_pcs
+                            }
+                        )
+                    } ?: "",
                     hint = stringResource(R.string.add_ingredient),
                     onBoxClick = { viewModel.showIngredientDialog(ingredient.id) },
                     onIconClick = { viewModel.removeIngredient(ingredient.id) }
@@ -258,9 +273,15 @@ fun CreateRecipeScreen(
 
         uiState.editingIngredientId?.let { ingredientId ->
             IngredientDialog(
+                items = uiState.dropdownMenuItems,
                 onDialogDismiss = { viewModel.showIngredientDialog(null) },
-                onConfirm = { ingredientValue ->
-                    viewModel.onIngredientChange(ingredientId, ingredientValue)
+                onConfirm = { ingredientValue, amount, measure ->
+                    viewModel.onIngredientChange(
+                        id = ingredientId,
+                        value = ingredientValue,
+                        amount = amount,
+                        measure = measure
+                    )
                 }
             )
         }

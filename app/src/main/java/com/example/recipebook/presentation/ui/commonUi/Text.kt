@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
@@ -153,7 +154,9 @@ fun SingleActionTextBox(
 @Composable
 @Suppress("FunctionName")
 fun DoubleActionTextBox(
-    value: String,
+    ingredient: String,
+    amount: String,
+    measure: String,
     hint: String,
     onBoxClick: () -> Unit,
     onIconClick: () -> Unit
@@ -166,6 +169,7 @@ fun DoubleActionTextBox(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 shape = RoundedCornerShape(14.dp)
             )
+            .fillMaxWidth()
             .height(48.dp)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -173,16 +177,43 @@ fun DoubleActionTextBox(
                 onClick = onBoxClick
             )
     ) {
+
         Spacer(modifier = Modifier.width(16.dp))
         Text(
-            text = value.ifBlank {
+            text = ingredient.ifBlank {
                 hint
             },
-            color = if (value.isEmpty()) TitleGray else MaterialTheme.colorScheme.inversePrimary,
-            style = if (value.isEmpty()) MaterialTheme.typography.titleSmall else MaterialTheme.typography.titleMedium
+            modifier = Modifier
+                .weight(1f),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = if (ingredient.isEmpty()) TitleGray else MaterialTheme.colorScheme.inversePrimary
+            )
         )
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.width(8.dp))
+
+        Text(
+            text = amount,
+            modifier = Modifier.widthIn(max = 54.dp),
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.inversePrimary
+            )
+        )
+
+        Spacer(modifier = Modifier.width(4.dp))
+
+        Text(
+            text = measure,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.inversePrimary
+            )
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
 
         Icon(
             painter = painterResource(R.drawable.trash_icon),

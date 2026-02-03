@@ -1,4 +1,4 @@
-package com.example.recipebook.presentation.ui.model
+package com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model
 
 import androidx.annotation.StringRes
 
