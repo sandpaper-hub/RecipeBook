@@ -194,7 +194,9 @@ class CreateRecipeViewModel @Inject constructor(
                     ingredients = uiState.ingredients.map { ingredient ->
                         NewRecipeIngredient(
                             id = ingredient.id,
-                            value = ingredient.value
+                            value = ingredient.value,
+                            amount = ingredient.amount,
+                            measure = ingredient.measure.toString()
                         )
                     },
                     steps = uiState.recipeSteps.map { recipeStepUiState ->

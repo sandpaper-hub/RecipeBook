@@ -1,5 +1,6 @@
 package com.example.recipebook.presentation.ui.recipeDetailScreen
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,10 +30,10 @@ import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.CustomDropDownMenuNew
 import com.example.recipebook.presentation.ui.commonUi.ImageBanner
+import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleTextLarge
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeDescription
-import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeIngredients
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.RecipeDetailViewModel
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.DropdownMenuAction
 
@@ -155,8 +156,8 @@ fun RecipeDetailScreen(
                     }
             )
 
-            RecipeIngredients(
-                ingredients = uiState.ingredients,
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.constrainAs(ingredientBox) {
                     linkTo(start = startGuideline, end = endGuideline)
                     linkTo(
@@ -168,7 +169,15 @@ fun RecipeDetailScreen(
                     )
                     width = Dimension.fillToConstraints
                 }
-            )
+            ) {
+                uiState.ingredients.forEach { ingredient ->
+                    IngredientTextBox(
+                        value = ingredient.value,
+                        measure = ingredient.measure,
+                        amount = ingredient.amount
+                    )
+                }
+            }
         }
 
         SquareRoundedButton(

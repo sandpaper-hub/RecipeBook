@@ -111,4 +111,5 @@
     <string name="collections_text">Коллекции</string>
     <string name="edit_text">Редактировать</string>
     <string name="delete_text">Удалить</string>
+    <!-- unknown measure not translatable -->
 </resources>

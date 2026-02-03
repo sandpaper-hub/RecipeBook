@@ -111,4 +111,5 @@
     <string name="collections_text" translatable="true">Collections</string>
     <string name="edit_text" translatable="true">Edit</string>
     <string name="delete_text" translatable="true">Delete</string>
+    <string name="unknown_measure" translatable="false">\?</string>
 </resources>
