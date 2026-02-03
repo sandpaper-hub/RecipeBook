@@ -1,7 +1,5 @@
-package com.example.recipebook.data.dto
+package com.example.recipebook.data.dto.getRecipe
 
-import com.example.recipebook.domain.model.recipe.RecipeIngredient
-import com.example.recipebook.domain.model.recipe.RecipeStep
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ServerTimestamp
 
@@ -13,8 +11,8 @@ data class RecipeDto(
     val recipeTimeEstimation: String = "",
     val imageUrl: String? = null,
     val category: String = "",
-    val ingredients: List<RecipeIngredient> = emptyList(),
-    val steps: List<RecipeStep> = emptyList(),
-    @ServerTimestamp
+    val ingredients: List<IngredientDto> = emptyList(),
+    val steps: List<StepDto> = emptyList(),
+    @field:ServerTimestamp
     val createdAt: Timestamp? = null
 )

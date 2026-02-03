@@ -218,7 +218,7 @@ fun ProfileScreen(
             verticalArrangement = Arrangement.spacedBy(32.dp),
             contentPadding = PaddingValues(horizontal = 24.dp)
         ) {
-            items(uiState.recipes) { recipe ->
+            items(uiState.newRecipes) { recipe ->
                 RecipeCardList(
                     recipeId = recipe.id,
                     imageUrl = recipe.imageUrl,

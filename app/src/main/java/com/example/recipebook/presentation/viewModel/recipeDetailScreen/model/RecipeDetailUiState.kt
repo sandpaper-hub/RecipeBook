@@ -1,6 +1,6 @@
 package com.example.recipebook.presentation.viewModel.recipeDetailScreen.model
 
-import com.example.recipebook.domain.model.recipe.RecipeStep
+import com.example.recipebook.domain.model.recipe.getRecipe.Step
 import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
 
 data class RecipeDetailUiState(
@@ -12,6 +12,6 @@ data class RecipeDetailUiState(
     val isOpenDropdownMenu: Boolean = false,
     val timeEstimation: String = "",
     val ingredients: List<String> = listOf(),
-    val steps: List<RecipeStep> = listOf(),
+    val steps: List<Step> = listOf(),
     val createdAt: Long = 0L
 )

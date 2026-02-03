@@ -1,13 +1,9 @@
 package com.example.recipebook.data.repository
 
-import com.example.recipebook.data.dto.RecipeDto
-import com.example.recipebook.data.mapper.toDomain
 import com.example.recipebook.domain.repository.ProfileRepository
 import com.example.recipebook.domain.model.profile.UserProfile
-import com.example.recipebook.domain.model.recipe.Recipe
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +14,7 @@ import kotlin.coroutines.resume
 
 class ProfileRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    private val firestore: FirebaseFirestore,
+    firestore: FirebaseFirestore,
     private val firebaseStorage: FirebaseStorage
 ) : ProfileRepository {
 
@@ -46,29 +42,6 @@ class ProfileRepositoryImpl @Inject constructor(
             }
         awaitClose {
             registration.remove()
-        }
-    }
-
-    override fun observeUserRecipes(userId: String): Flow<List<Recipe>> = callbackFlow {
-        val query = firestore.collection("recipes")
-            .whereEqualTo("authorId", userId)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-
-        val listener = query.addSnapshotListener { snapshot, error ->
-            if (error != null) {
-                close(error)
-                return@addSnapshotListener
-            }
-
-            val recipes = snapshot
-                ?.toObjects(RecipeDto::class.java)
-                ?.map { it.toDomain() }
-                ?: emptyList()
-            trySend(recipes)
-        }
-
-        awaitClose {
-            listener.remove()
         }
     }
 

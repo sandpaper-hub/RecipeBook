@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.R
 import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
-import com.example.recipebook.domain.model.recipe.RecipeIngredient
-import com.example.recipebook.domain.model.recipe.RecipeStepDraft
+import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredient
+import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStepDraft
 import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.MeasureMenuAction
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
@@ -192,13 +192,13 @@ class CreateRecipeViewModel @Inject constructor(
                     recipeImageSource = uiState.recipeImageUri?.toString(),
                     category = uiState.recipeCategory,
                     ingredients = uiState.ingredients.map { ingredient ->
-                        RecipeIngredient(
+                        NewRecipeIngredient(
                             id = ingredient.id,
                             value = ingredient.value
                         )
                     },
                     steps = uiState.recipeSteps.map { recipeStepUiState ->
-                        RecipeStepDraft(
+                        NewRecipeStepDraft(
                             id = recipeStepUiState.id,
                             imageSource = recipeStepUiState.imageUri?.toString(),
                             description = recipeStepUiState.stepDescription

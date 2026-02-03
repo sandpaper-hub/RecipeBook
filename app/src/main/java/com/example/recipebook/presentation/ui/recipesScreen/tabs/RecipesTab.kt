@@ -38,7 +38,7 @@ fun RecipesTab(
         }
 
         items(
-            items = uiState.recipes,
+            items = uiState.newRecipes,
             key = { it.id }) { recipe ->
             RecipeCardList(
                 recipeId = recipe.id,
