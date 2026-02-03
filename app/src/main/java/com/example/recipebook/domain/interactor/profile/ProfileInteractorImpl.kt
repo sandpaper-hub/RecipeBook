@@ -1,7 +1,6 @@
 package com.example.recipebook.domain.interactor.profile
 
 import com.example.recipebook.domain.model.profile.UserProfile
-import com.example.recipebook.domain.model.recipe.Recipe
 import com.example.recipebook.domain.useCase.GetLocalesUseCase
 import com.example.recipebook.domain.useCase.GetUserIdFlowUseCase
 import com.example.recipebook.domain.useCase.GetUserRecipesUseCase
@@ -35,9 +34,6 @@ class ProfileInteractorImpl @Inject constructor(
 
     override fun getLocales(): List<String> =
         getLocalesUseCase.execute()
-
-    override fun observeUserRecipes(userId: String): Flow<List<Recipe>> =
-        getUserRecipesUseCase.execute(userId)
 
     override fun getUserIdFlow(): Flow<String?> = getUserIdFlowUseCase.execute()
 }

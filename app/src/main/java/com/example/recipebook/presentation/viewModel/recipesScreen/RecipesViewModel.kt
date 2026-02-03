@@ -47,7 +47,7 @@ class RecipesViewModel @Inject constructor(
             .onEach { recipes ->
                 _uiState.update {
                     it.copy(
-                        recipes = recipes,
+                        newRecipes = recipes,
                         isRecipesLoading = false
                     )
                 }

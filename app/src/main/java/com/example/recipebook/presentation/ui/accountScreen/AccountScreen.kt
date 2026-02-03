@@ -19,7 +19,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.CustomCircleIconButton
-import com.example.recipebook.presentation.ui.commonUi.CustomDropDownMenu
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.CustomDropDownMenuNew
 import com.example.recipebook.presentation.ui.commonUi.CustomTextField
 import com.example.recipebook.presentation.ui.commonUi.DatePickerDialog
 import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
@@ -55,7 +55,7 @@ fun AccountScreen(
     ) {
         val (topPanel, profileImage, editProfileImageButton, nameText, nameTextField,
             userNameText, userNameTextField, regionText, regionTextField, dateBirthText, dateBirthTextField,
-            genderText, genderButtons, saveButton, datePicker, countryMenu) = createRefs()
+            genderText, genderButtons, saveButton, datePicker) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -67,7 +67,8 @@ fun AccountScreen(
                     top.linkTo(parent.top)
                     width = Dimension.fillToConstraints
                 },
-            verticalAlignment = Alignment.CenterVertically) {
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             ClickableIcon(
                 painter = painterResource(R.drawable.back_arrow_icon),
                 contentDescription = stringResource(R.string.back_button),
@@ -180,17 +181,13 @@ fun AccountScreen(
                 }
         )
 
-        CustomDropDownMenu(
-            uiState.regionLocales,
-            isExpanded = uiState.showRegionMenu,
-            onDismissRequest = { viewModel.showCountryMenu(false) },
-            onItemClick = viewModel::onCountryChange,
-            modifier = Modifier
-                .constrainAs(countryMenu) {
-                    linkTo(start = startGuideline, end = endGuideline)
-                    top.linkTo(regionTextField.bottom)
-                    width = Dimension.fillToConstraints
-                }
+        CustomDropDownMenuNew(
+            expanded = uiState.showRegionMenu,
+            items = uiState.regionLocales,
+            onDismiss = { viewModel.showCountryMenu(false) },
+            onItemClick = { regionLocale ->
+                viewModel.onCountryChange(regionLocale)
+            }
         )
 
         TitleText(

@@ -27,8 +27,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ExpandableText
-import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
-import com.example.recipebook.presentation.util.parseIngredient
 
 @Composable
 @Suppress("FunctionName")
@@ -130,23 +128,5 @@ fun RecipeDescription(
         ExpandableText(
             text = descriptionText
         )
-    }
-}
-
-@Composable
-@Suppress("FunctionName")
-fun RecipeIngredients(
-    ingredients: List<String>,
-    modifier: Modifier
-) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-    ) {
-        ingredients.forEach { ingredient ->
-            val name = ingredient.parseIngredient().first
-            val amount = ingredient.parseIngredient().second
-            IngredientTextBox(name, amount)
-        }
     }
 }

@@ -6,9 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipebook.R
 import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
-import com.example.recipebook.domain.model.recipe.RecipeIngredient
-import com.example.recipebook.domain.model.recipe.RecipeStepDraft
+import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredient
+import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStepDraft
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
+import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.MeasureMenuAction
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.NewRecipeUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeStepUiState
@@ -24,26 +27,60 @@ class CreateRecipeViewModel @Inject constructor(
         private set
 
     init {
+        initDropdownMenuItems()
         viewModelScope.launch {
             uiState = uiState.copy(
                 ingredients = listOf(
                     IngredientUiState(
                         id = recipesInteractor.createRandomId(),
-                        value = "",
-                        amount = "",
-                        dimension = ""
                     )
                 ),
                 recipeSteps = listOf(
                     RecipeStepUiState(
                         id = recipesInteractor.createRandomId(),
-                        imageUri = null,
-                        stepDescription = ""
                     )
                 )
             )
         }
     }
+
+    private fun initDropdownMenuItems() {
+        val dropdownMenuItems = listOf(
+            DropdownMenuItem(
+                action = MeasureMenuAction.TEASPOON,
+                titleResource = R.string.measure_teaspoon
+            ),
+            DropdownMenuItem(
+                action = MeasureMenuAction.TABLESPOON,
+                titleResource = R.string.measure_tablespoon
+            ),
+            DropdownMenuItem(
+                action = MeasureMenuAction.GRAM,
+                titleResource = R.string.measure_g,
+            ),
+            DropdownMenuItem(
+                action = MeasureMenuAction.KILOGRAM,
+                titleResource = R.string.measure_kg
+            ),
+            DropdownMenuItem(
+                action = MeasureMenuAction.MILLILITER,
+                titleResource = R.string.measure_ml
+            ),
+            DropdownMenuItem(
+                action = MeasureMenuAction.LITER,
+                titleResource = R.string.measure_l
+            ),
+            DropdownMenuItem(
+                action = MeasureMenuAction.PCS,
+                titleResource = R.string.measure_pcs
+            )
+        )
+
+        uiState = uiState.copy(
+            dropdownMenuItems = dropdownMenuItems
+        )
+    }
+
 
     fun onRecipeImagePicked(uri: Uri?) {
         uiState = uiState.copy(recipeImageUri = uri)
@@ -61,10 +98,19 @@ class CreateRecipeViewModel @Inject constructor(
         uiState = uiState.copy(timeEstimation = value)
     }
 
-    fun onIngredientChange(id: String, value: String) {
+    fun onIngredientChange(
+        id: String,
+        value: String,
+        amount: String,
+        measure: MeasureMenuAction
+    ) {
         uiState = uiState.copy(
             ingredients = uiState.ingredients.map {
-                if (it.id == id) it.copy(value = value) else it
+                if (it.id == id) it.copy(
+                    value = value,
+                    amount = amount,
+                    measure = measure
+                ) else it
             },
             editingIngredientId = null
         )
@@ -92,9 +138,6 @@ class CreateRecipeViewModel @Inject constructor(
             uiState = uiState.copy(
                 ingredients = uiState.ingredients + IngredientUiState(
                     id = recipesInteractor.createRandomId(),
-                    value = "",
-                    amount = "",
-                    dimension = ""
                 )
             )
         }
@@ -149,13 +192,15 @@ class CreateRecipeViewModel @Inject constructor(
                     recipeImageSource = uiState.recipeImageUri?.toString(),
                     category = uiState.recipeCategory,
                     ingredients = uiState.ingredients.map { ingredient ->
-                        RecipeIngredient(
+                        NewRecipeIngredient(
                             id = ingredient.id,
-                            value = ingredient.value
+                            value = ingredient.value,
+                            amount = ingredient.amount,
+                            measure = ingredient.measure.toString()
                         )
                     },
                     steps = uiState.recipeSteps.map { recipeStepUiState ->
-                        RecipeStepDraft(
+                        NewRecipeStepDraft(
                             id = recipeStepUiState.id,
                             imageSource = recipeStepUiState.imageUri?.toString(),
                             description = recipeStepUiState.stepDescription

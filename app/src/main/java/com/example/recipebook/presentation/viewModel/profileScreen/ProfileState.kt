@@ -1,7 +1,7 @@
 package com.example.recipebook.presentation.viewModel.profileScreen
 
 import android.net.Uri
-import com.example.recipebook.domain.model.recipe.Recipe
+import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipe
 
 data class ProfileState(
     val fullName: String = "",
@@ -10,7 +10,7 @@ data class ProfileState(
     val profileImageUrl: String? = null,
     val isSaving: Boolean = false,
     val errorMessage: String? = null,
-    val recipes: List<Recipe> = emptyList(),
+    val newRecipes: List<NewRecipe> = emptyList(),
     val isRecipesLoading: Boolean = false,
     val recipesCount: Int = 0
 )

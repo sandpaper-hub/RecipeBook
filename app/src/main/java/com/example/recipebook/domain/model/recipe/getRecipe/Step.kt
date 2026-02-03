@@ -1,6 +1,6 @@
-package com.example.recipebook.domain.model.recipe
+package com.example.recipebook.domain.model.recipe.getRecipe
 
-data class RecipeStepDraft(
+data class Step(
     val id: String = "",
     val description: String = "",
     val imageSource: String? = null

@@ -8,11 +8,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -26,42 +23,6 @@ class ProfileViewModel @Inject constructor(
 
     init {
         observeUserProfile()
-        observeUserRecipes()
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private fun observeUserRecipes() {
-        profileInteractor.getUserIdFlow()
-            .flatMapLatest { uid ->
-                if (uid == null) {
-                    flowOf(emptyList())
-                } else {
-                    profileInteractor.observeUserRecipes(uid)
-                }
-            }
-            .onStart {
-                _uiState.update {
-                    it.copy(isRecipesLoading = true)
-                }
-            }
-            .onEach { recipes ->
-                _uiState.update {
-                    it.copy(
-                        recipes = recipes,
-                        recipesCount = recipes.size,
-                        isRecipesLoading = false
-                    )
-                }
-            }
-            .catch { throwable ->
-                _uiState.update {
-                    it.copy(
-                        isRecipesLoading = false,
-                        errorMessage = throwable.message
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

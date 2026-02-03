@@ -25,20 +25,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.recipebook.R
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.CustomDropDownMenuNew
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
+import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.MeasureMenuAction
 
 
 @Composable
 @Suppress("FunctionName")
 fun IngredientDialog(
+    items: List<DropdownMenuItem<MeasureMenuAction>>,
     onDialogDismiss: () -> Unit,
-    onConfirm: (String) -> Unit
+    onConfirm: (value:String, amount:String, measure:MeasureMenuAction) -> Unit
 ) {
 
     var ingredientValue by rememberSaveable { mutableStateOf("") }
     var isValueError by rememberSaveable { mutableStateOf(false) }
     var ingredientAmount by rememberSaveable { mutableStateOf("") }
     var isAmountError by rememberSaveable { mutableStateOf(false) }
-    var ingredientMeasure by rememberSaveable { mutableStateOf("") }
+    var ingredientMeasure by rememberSaveable { mutableStateOf<MeasureMenuAction?>(null) }
     var isMeasureError by rememberSaveable { mutableStateOf(false) }
     var isMenuExpanded by rememberSaveable { mutableStateOf(false) }
 
@@ -92,17 +96,20 @@ fun IngredientDialog(
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Column {
-                        val measureType = listOf(
-                            stringResource(R.string.measure_teaspoon),
-                            stringResource(R.string.measure_tablespoon),
-                            stringResource(R.string.measure_ml),
-                            stringResource(R.string.measure_l),
-                            stringResource(R.string.measure_g),
-                            stringResource(R.string.measure_kg),
-                            stringResource(R.string.measure_pcs)
-                        )
                         SingleActionTextBox(
-                            value = ingredientMeasure,
+                            value = ingredientMeasure?.let {
+                                stringResource(
+                                    when (it) {
+                                        MeasureMenuAction.TEASPOON -> R.string.measure_teaspoon
+                                        MeasureMenuAction.TABLESPOON -> R.string.measure_tablespoon
+                                        MeasureMenuAction.GRAM -> R.string.measure_g
+                                        MeasureMenuAction.KILOGRAM -> R.string.measure_kg
+                                        MeasureMenuAction.MILLILITER -> R.string.measure_ml
+                                        MeasureMenuAction.LITER -> R.string.measure_l
+                                        MeasureMenuAction.PCS -> R.string.measure_pcs
+                                    }
+                                )
+                            } ?: "",
                             hint = stringResource(R.string.empty_hint),
                             isError = isMeasureError,
                             contentDescription = stringResource(R.string.measure),
@@ -111,16 +118,14 @@ fun IngredientDialog(
                             modifier = Modifier.width(60.dp)
                         )
 
-                        CustomDropDownMenu(
-                            menuItems = measureType,
-                            isExpanded = isMenuExpanded,
-                            onDismissRequest = { isMenuExpanded = false },
-                            onItemClick = {
-                                ingredientMeasure = it
-                                isMenuExpanded = false
+                        CustomDropDownMenuNew(
+                            expanded = isMenuExpanded,
+                            items = items,
+                            onDismiss = { isMenuExpanded = false },
+                            onItemClick = { selectedMeasure ->
+                                ingredientMeasure = selectedMeasure
                                 isMeasureError = false
-                            },
-                            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+                            }
                         )
                     }
                 }
@@ -139,11 +144,11 @@ fun IngredientDialog(
                         when {
                             ingredientValue.isBlank() -> isValueError = true
                             ingredientAmount.isBlank() -> isAmountError = true
-                            ingredientMeasure.isBlank() -> isMeasureError = true
+                            ingredientMeasure == null -> isMeasureError = true
                         }
 
                         if (!isValueError && !isAmountError && !isMeasureError) {
-                            onConfirm("$ingredientValue $ingredientAmount $ingredientMeasure")
+                            onConfirm(ingredientValue, ingredientAmount, ingredientMeasure!!)
                         }
                     }) {
                         Text("OK")

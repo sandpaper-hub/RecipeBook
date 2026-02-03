@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.recipebook.R
@@ -270,32 +271,42 @@ fun RecipeStepBox(
 @Suppress("FunctionName")
 fun IngredientTextBox(
     value: String,
-    amount: String
+    amount: String,
+    measure: Int
 ) {
+    Row( modifier = Modifier
+        .background(
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            shape = RoundedCornerShape(14.dp)
+        )
+        .fillMaxWidth()
+        .height(48.dp)
+        .padding(horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            overflow = TextOverflow.Ellipsis,
+            text = value,
+            maxLines = 1,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(1f)
+        )
 
-    Box(
-        modifier = Modifier
-            .background(
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                shape = RoundedCornerShape(14.dp)
-            )
-            .height(48.dp)
-            .padding(16.dp)
-    ) {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                text = value,
-                style = MaterialTheme.typography.bodyMedium
-            )
+        Spacer(modifier = Modifier.width(8.dp))
 
-            Spacer(modifier = Modifier.weight(1f))
-
-            Text(
-                text = amount,
-                style = MaterialTheme.typography.labelMedium.copy(
-                    color = MaterialTheme.colorScheme.inversePrimary
-                )
+        Text(
+            text = amount,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.Medium
             )
-        }
+        )
+
+        Spacer(modifier = Modifier.width(4.dp))
+
+        Text(
+            text = stringResource(measure),
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.Medium
+            )
+        )
     }
 }

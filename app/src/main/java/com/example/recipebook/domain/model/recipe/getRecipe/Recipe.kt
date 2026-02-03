@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.model.recipe
+package com.example.recipebook.domain.model.recipe.getRecipe
 
 data class Recipe(
     val id: String = "",
@@ -8,7 +8,7 @@ data class Recipe(
     val recipeTimeEstimation: String = "",
     val imageUrl: String? = null,
     val category: String = "",
-    val ingredients: List<RecipeIngredient> = emptyList(),
-    val steps: List<RecipeStep> = emptyList(),
+    val ingredients: List<Ingredient> = emptyList(),
+    val steps: List<Step> = emptyList(),
     val createdAt: Long = 0L
 )

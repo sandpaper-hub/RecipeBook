@@ -1,5 +1,7 @@
 package com.example.recipebook.presentation.ui.recipeDetailScreen
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,12 +28,14 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.CustomDropDownMenuNew
 import com.example.recipebook.presentation.ui.commonUi.ImageBanner
+import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleTextLarge
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeDescription
-import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeIngredients
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.RecipeDetailViewModel
+import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.DropdownMenuAction
 
 @Composable
 @Suppress("FunctionName")
@@ -60,12 +66,26 @@ fun RecipeDetailScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            ClickableIcon(
-                painter = painterResource(R.drawable.more_vert_icon),
-                contentDescription = stringResource(R.string.more_action_button),
-                modifier = Modifier,
-                onClick = {}
-            )
+            Box(contentAlignment = Alignment.BottomCenter) {
+                ClickableIcon(
+                    painter = painterResource(R.drawable.more_vert_icon),
+                    contentDescription = stringResource(R.string.more_action_button),
+                    modifier = Modifier,
+                    onClick = { viewModel.isOpenDropdownMenu(true) }
+                )
+
+                CustomDropDownMenuNew(
+                    expanded = uiState.isOpenDropdownMenu,
+                    items = uiState.dropdownMenuItems,
+                    onDismiss = { viewModel.isOpenDropdownMenu(false) },
+                    onItemClick = { action ->
+                        when (action) {
+                            DropdownMenuAction.EDIT -> {}
+                            DropdownMenuAction.DELETE -> {}
+                        }
+                    }
+                )
+            }
 
             Spacer(modifier = Modifier.width(24.dp))
         }
@@ -77,7 +97,7 @@ fun RecipeDetailScreen(
                 .verticalScroll(scrollState)
         ) {
             val (recipeImage, recipeNameText, ingredientBox, descriptionText, ingredientsText,
-                letsCookButton) = createRefs()
+                addToCollectionButton) = createRefs()
             val startGuideline = createGuidelineFromStart(24.dp)
             val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -92,15 +112,28 @@ fun RecipeDetailScreen(
                     }
             )
 
-
-
             TitleTextLarge(
                 text = uiState.name,
-                modifier = Modifier.constrainAs(recipeNameText) {
-                    start.linkTo(startGuideline)
-                    top.linkTo(recipeImage.bottom, margin = 24.dp)
-                }
+                modifier = Modifier
+                    .constrainAs(recipeNameText) {
+                        linkTo(start = startGuideline, end = addToCollectionButton.start)
+                        top.linkTo(recipeImage.bottom, margin = 24.dp)
+                        width = Dimension.fillToConstraints
+                    }
             )
+
+            IconButton(
+                onClick = {},
+                modifier = Modifier
+                    .constrainAs(addToCollectionButton) {
+                        linkTo(start = recipeNameText.end, end = endGuideline)
+                        centerVerticallyTo(recipeNameText)
+                    }) {
+                Icon(
+                    painter = painterResource(R.drawable.add_circle_icon),
+                    contentDescription = ""
+                )
+            }
 
             RecipeDescription(
                 timeEstimation = uiState.timeEstimation,
@@ -119,12 +152,12 @@ fun RecipeDetailScreen(
                 modifier = Modifier
                     .constrainAs(ingredientsText) {
                         start.linkTo(startGuideline)
-                        top.linkTo(descriptionText.bottom, margin = 29.dp)
+                        top.linkTo(descriptionText.bottom, margin = 16.dp)
                     }
             )
 
-            RecipeIngredients(
-                ingredients = uiState.ingredients,
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.constrainAs(ingredientBox) {
                     linkTo(start = startGuideline, end = endGuideline)
                     linkTo(
@@ -136,7 +169,15 @@ fun RecipeDetailScreen(
                     )
                     width = Dimension.fillToConstraints
                 }
-            )
+            ) {
+                uiState.ingredients.forEach { ingredient ->
+                    IngredientTextBox(
+                        value = ingredient.value,
+                        measure = ingredient.measure,
+                        amount = ingredient.amount
+                    )
+                }
+            }
         }
 
         SquareRoundedButton(

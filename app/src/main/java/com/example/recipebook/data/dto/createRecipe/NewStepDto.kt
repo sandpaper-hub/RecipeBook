@@ -1,6 +1,6 @@
-package com.example.recipebook.domain.model.recipe
+package com.example.recipebook.data.dto.createRecipe
 
-data class RecipeStep(
+data class NewStepDto(
     val id: String = "",
     val description: String = "",
     val imageUrl: String? = null

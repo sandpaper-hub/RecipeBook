@@ -1,11 +1,12 @@
 package com.example.recipebook.data.repository
 
-import com.example.recipebook.data.dto.RecipeDto
+import com.example.recipebook.data.dto.getRecipe.RecipeDto
 import com.example.recipebook.data.mapper.toDomain
 import com.example.recipebook.data.mapper.toDto
 import com.example.recipebook.data.util.ImageCompressorImpl
-import com.example.recipebook.domain.model.recipe.Recipe
-import com.example.recipebook.domain.model.recipe.RecipeStepDraft
+import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipe
+import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStepDraft
+import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
 import com.example.recipebook.domain.repository.RecipesRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -38,7 +39,7 @@ class RecipesRepositoryImpl @Inject constructor(
 
     override suspend fun uploadStepImages(
         recipeId: String,
-        steps: List<RecipeStepDraft>
+        steps: List<NewRecipeStepDraft>
     ): Map<String, String> = coroutineScope {
         steps
             .mapNotNull { step ->
@@ -71,13 +72,13 @@ class RecipesRepositoryImpl @Inject constructor(
         return ref.downloadUrl.await().toString()
     }
 
-    override suspend fun saveRecipe(recipe: Recipe) {
+    override suspend fun saveRecipe(newRecipe: NewRecipe) {
         firestore
             .collection("users")
             .document(userId)
             .collection("recipes")
-            .document(recipe.id)
-            .set(recipe.toDto())
+            .document(newRecipe.id)
+            .set(newRecipe.toDto())
             .await()
     }
 

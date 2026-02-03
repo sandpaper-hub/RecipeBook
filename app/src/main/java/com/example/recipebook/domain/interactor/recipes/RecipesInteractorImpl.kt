@@ -1,9 +1,10 @@
 package com.example.recipebook.domain.interactor.recipes
 
-import com.example.recipebook.domain.model.recipe.Recipe
-import com.example.recipebook.domain.model.recipe.RecipeIngredient
-import com.example.recipebook.domain.model.recipe.RecipeStep
-import com.example.recipebook.domain.model.recipe.RecipeStepDraft
+import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipe
+import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredient
+import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStep
+import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStepDraft
+import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
 import com.example.recipebook.domain.useCase.CreateRandomIdUseCase
 import com.example.recipebook.domain.useCase.GetCurrentUserIdUseCase
 import com.example.recipebook.domain.useCase.GetRecipeByIdUseCase
@@ -39,15 +40,15 @@ class RecipesInteractorImpl @Inject constructor(
         recipeTimeEstimation: String,
         recipeImageSource: String?,
         category: String,
-        ingredients: List<RecipeIngredient>,
-        steps: List<RecipeStepDraft>
+        ingredients: List<NewRecipeIngredient>,
+        steps: List<NewRecipeStepDraft>
     ) {
         val recipeId = createRandomIdUseCase.execute()
         val recipeImageUrl: String? = getRecipeCoverUrlUseCase.execute(recipeId, recipeImageSource)
         val currentUserId = getCurrentUserIdUseCase.execute()
         val recipeSteps = buildRecipeSteps(recipeId, steps)
         uploadNewRecipeUseCase.execute(
-            Recipe(
+            NewRecipe(
                 id = recipeId,
                 authorId = currentUserId,
                 recipeName = recipeName,
@@ -63,14 +64,14 @@ class RecipesInteractorImpl @Inject constructor(
 
     override suspend fun buildRecipeSteps(
         recipeId: String,
-        recipeStepDrafts: List<RecipeStepDraft>
-    ): List<RecipeStep> {
+        newRecipeStepDrafts: List<NewRecipeStepDraft>
+    ): List<NewRecipeStep> {
         val stepImageUrls = getStepImagesUrlUseCase.execute(
             recipeId = recipeId,
-            recipeSteps = recipeStepDrafts
+            recipeSteps = newRecipeStepDrafts
         )
-        return recipeStepDrafts.map { draft ->
-            RecipeStep(
+        return newRecipeStepDrafts.map { draft ->
+            NewRecipeStep(
                 id = draft.id,
                 description = draft.description,
                 imageUrl = stepImageUrls[draft.id]
