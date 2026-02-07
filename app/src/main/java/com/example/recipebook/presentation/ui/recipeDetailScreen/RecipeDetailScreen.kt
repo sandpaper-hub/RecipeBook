@@ -41,6 +41,7 @@ import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.Dr
 @Suppress("FunctionName")
 fun RecipeDetailScreen(
     onBack: () -> Unit,
+    onCookingScreen: (String) -> Unit,
     viewModel: RecipeDetailViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState
@@ -181,7 +182,9 @@ fun RecipeDetailScreen(
         }
 
         SquareRoundedButton(
-            onClick = {},
+            onClick = {
+                onCookingScreen(uiState.id)
+            },
             text = stringResource(R.string.lets_cook),
             isLoading = false,
             modifier = Modifier

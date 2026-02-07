@@ -9,6 +9,5 @@ data class NewRecipe(
     val imageUrl: String? = null,
     val category: String = "",
     val ingredients: List<NewRecipeIngredient> = emptyList(),
-    val steps: List<NewRecipeStep> = emptyList(),
     val createdAt: Long = 0L
 )

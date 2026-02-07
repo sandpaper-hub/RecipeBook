@@ -466,6 +466,7 @@ fun ExpandableText(
                     isOverflowing = textLayoutResult.hasVisualOverflow
                 }
             },
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .clickable(
                     onClick = { isExpanded = !isExpanded },

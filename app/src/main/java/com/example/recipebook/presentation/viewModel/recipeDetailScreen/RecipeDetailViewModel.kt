@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipebook.R
 import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
 import com.example.recipebook.domain.model.recipe.getRecipe.IngredientMeasure
-import com.example.recipebook.navigation.mainHomeGraph.recipesGraph.RecipesRoutes
+import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailRoutes
 import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.DropdownMenuAction
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.IngredientUiState
@@ -28,8 +28,9 @@ class RecipeDetailViewModel @Inject constructor(
 
     init {
         initDropdownMenuItems()
-        val recipeId = checkNotNull(savedStateHandle[RecipesRoutes.RecipeDetail.RECIPE_ID_ARG])
-        getRecipeById(recipeId.toString())
+        val recipeId = checkNotNull(savedStateHandle[RecipeDetailRoutes.RecipeDetail.RECIPE_ID_ARG]).toString()
+        uiState = uiState.copy(id = recipeId)
+        getRecipeById(recipeId)
     }
 
     private fun getRecipeById(recipeId: String) {
@@ -58,7 +59,6 @@ class RecipeDetailViewModel @Inject constructor(
                         }
                     )
                 },
-                steps = recipe.steps,
                 createdAt = recipe.createdAt
             )
         }

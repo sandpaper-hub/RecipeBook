@@ -1,10 +1,12 @@
 package com.example.recipebook.data.repository
 
+import com.example.recipebook.data.dto.createRecipe.NewStepDto
 import com.example.recipebook.data.dto.getRecipe.RecipeDto
 import com.example.recipebook.data.mapper.toDomain
 import com.example.recipebook.data.mapper.toDto
 import com.example.recipebook.data.util.ImageCompressorImpl
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipe
+import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStep
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStepDraft
 import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
 import com.example.recipebook.domain.repository.RecipesRepository
@@ -72,14 +74,35 @@ class RecipesRepositoryImpl @Inject constructor(
         return ref.downloadUrl.await().toString()
     }
 
-    override suspend fun saveRecipe(newRecipe: NewRecipe) {
-        firestore
+    override suspend fun saveRecipe(newRecipe: NewRecipe, recipeSteps: List<NewRecipeStep>) {
+        val recipeReference = firestore
             .collection("users")
             .document(userId)
             .collection("recipes")
             .document(newRecipe.id)
-            .set(newRecipe.toDto())
-            .await()
+
+        firestore.runBatch { batch ->
+            batch.set(
+                recipeReference,
+                newRecipe.toDto()
+            )
+
+            recipeSteps.forEachIndexed { index, step ->
+                val stepReference = recipeReference
+                    .collection("steps")
+                    .document(step.id)
+
+                batch.set(
+                    stepReference,
+                    NewStepDto(
+                        order = index,
+                        title = step.title,
+                        imageUrl = step.imageUrl,
+                        description = step.description
+                    )
+                )
+            }
+        }
     }
 
     override suspend fun uploadRecipeImage(recipeId: String, imageSource: String): String {

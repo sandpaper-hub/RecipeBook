@@ -12,7 +12,6 @@ data class NewRecipeDto(
     val imageUrl: String? = null,
     val category: String = "",
     val ingredients: List<NewIngredientDto> = emptyList(),
-    val steps: List<NewStepDto> = emptyList(),
     @ServerTimestamp
     val createdAt: Timestamp? = null
 )

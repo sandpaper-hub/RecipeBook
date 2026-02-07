@@ -237,8 +237,12 @@ fun CreateRecipeScreen(
 
                 RecipeStepBox(
                     imageUri = recipeStep.imageUri,
+                    titleValue = recipeStep.title,
                     descriptionValue = recipeStep.stepDescription,
                     onImageChange = debounce { imagePicker.launch("image/*") },
+                    onTitleChange = { newValue ->
+                        viewModel.onStepTitleChange(recipeStep.id, newValue)
+                    },
                     onDescriptionChange = { newValue ->
                         viewModel.onStepDescriptionChange(recipeStep.id, newValue)
                     },

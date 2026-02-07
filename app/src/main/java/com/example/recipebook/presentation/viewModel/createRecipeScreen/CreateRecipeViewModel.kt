@@ -175,6 +175,14 @@ class CreateRecipeViewModel @Inject constructor(
         )
     }
 
+    fun onStepTitleChange(id: String, value: String) {
+        uiState = uiState.copy(
+            recipeSteps = uiState.recipeSteps.map {
+                if (it.id == id) it.copy(title = value) else it
+            }
+        )
+    }
+
     fun onStepImageChange(id: String, uri: Uri?) {
         uiState = uiState.copy(
             recipeSteps = uiState.recipeSteps.map {
@@ -202,6 +210,7 @@ class CreateRecipeViewModel @Inject constructor(
                     steps = uiState.recipeSteps.map { recipeStepUiState ->
                         NewRecipeStepDraft(
                             id = recipeStepUiState.id,
+                            title = recipeStepUiState.title,
                             imageSource = recipeStepUiState.imageUri?.toString(),
                             description = recipeStepUiState.stepDescription
                         )

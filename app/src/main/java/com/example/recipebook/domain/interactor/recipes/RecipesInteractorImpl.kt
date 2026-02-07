@@ -56,9 +56,9 @@ class RecipesInteractorImpl @Inject constructor(
                 recipeTimeEstimation = recipeTimeEstimation,
                 imageUrl = recipeImageUrl,
                 category = category,
-                ingredients = ingredients,
-                steps = recipeSteps
-            )
+                ingredients = ingredients
+            ),
+            recipeSteps
         )
     }
 
@@ -73,6 +73,7 @@ class RecipesInteractorImpl @Inject constructor(
         return newRecipeStepDrafts.map { draft ->
             NewRecipeStep(
                 id = draft.id,
+                title = draft.title,
                 description = draft.description,
                 imageUrl = stepImageUrls[draft.id]
             )
