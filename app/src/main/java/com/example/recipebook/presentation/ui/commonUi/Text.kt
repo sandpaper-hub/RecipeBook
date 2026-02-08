@@ -331,12 +331,14 @@ fun TitleText(text: String, modifier: Modifier) {
 @Composable
 @Suppress
 fun SecondaryText(
+    modifier: Modifier = Modifier,
     text: String,
     style: TextStyle = MaterialTheme.typography.labelMedium
 ) {
     Text(
         text,
-        style = style
+        style = style,
+        modifier = modifier
     )
 }
 

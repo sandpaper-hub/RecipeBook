@@ -17,6 +17,6 @@ class CookingViewModel @Inject constructor(
 
     init {
         val recipeId = checkNotNull(savedStateHandle[RecipeDetailRoutes.Cooking.RECIPE_ID_ARG]).toString()
-        uiState = uiState.copy(id = recipeId)
+        uiState = uiState.copy(recipeId = recipeId)
     }
 }

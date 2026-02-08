@@ -61,7 +61,6 @@ fun RecipeDetailScreen(
             ClickableIcon(
                 painter = painterResource(R.drawable.back_arrow_icon),
                 contentDescription = stringResource(R.string.back_button),
-                modifier = Modifier,
                 onClick = onBack
             )
 

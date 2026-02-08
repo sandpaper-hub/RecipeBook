@@ -59,7 +59,7 @@ fun ImageBanner(
     modifier: Modifier
 ) {
     AsyncImage(
-        model = imageUrl ?: R.drawable.profile_image,
+        model = imageUrl,
         contentDescription = contentDescription,
         placeholder = painterResource(R.drawable.profile_image),
         modifier = modifier
