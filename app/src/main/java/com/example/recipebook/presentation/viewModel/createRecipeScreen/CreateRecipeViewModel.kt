@@ -207,10 +207,11 @@ class CreateRecipeViewModel @Inject constructor(
                             measure = ingredient.measure.toString()
                         )
                     },
-                    steps = uiState.recipeSteps.map { recipeStepUiState ->
+                    steps = uiState.recipeSteps.mapIndexed {index, recipeStepUiState ->
                         NewRecipeStepDraft(
                             id = recipeStepUiState.id,
                             title = recipeStepUiState.title,
+                            order = index,
                             imageSource = recipeStepUiState.imageUri?.toString(),
                             description = recipeStepUiState.stepDescription
                         )
