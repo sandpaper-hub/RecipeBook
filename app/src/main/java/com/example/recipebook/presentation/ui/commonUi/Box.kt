@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -215,8 +214,10 @@ fun TitleTextFieldBox(
 @Suppress
 fun RecipeStepBox(
     imageUri: Uri?,
+    titleValue: String,
     descriptionValue: String,
     onImageChange: () -> Unit,
+    onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onDeleteClick: () -> Unit,
     onCancelImageClick: () -> Unit
@@ -256,6 +257,14 @@ fun RecipeStepBox(
                     )
             )
         }
+
+        CustomTextField(
+            value = titleValue,
+            onValueChange = onTitleChange,
+            hint = "Title",
+            isError = false,
+            modifier = Modifier.padding(top = 12.dp, start = 12.dp)
+        )
 
         CustomTextField(
             value = descriptionValue,

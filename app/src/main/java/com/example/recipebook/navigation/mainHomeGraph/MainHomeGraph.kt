@@ -6,12 +6,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.recipebook.R
+import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailRoutes
+import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.recipeDetailNavGraph
 import com.example.recipebook.navigation.mainHomeGraph.settingsGraph.settingsGraph
-import com.example.recipebook.navigation.mainHomeGraph.recipesGraph.recipesNavGraph
 import com.example.recipebook.presentation.ui.mainHomeScreen.MainHomeScreen
 import com.example.recipebook.presentation.ui.collectionScreen.CollectionScreen
 import com.example.recipebook.presentation.ui.createCollectionScreen.CreateCollectionScreen
 import com.example.recipebook.presentation.ui.createRecipeScreen.CreateRecipeScreen
+import com.example.recipebook.presentation.ui.recipesScreen.RecipesScreen
 
 @Composable
 fun MainHomeGraph(
@@ -28,9 +30,15 @@ fun MainHomeGraph(
             MainHomeScreen()
         }
 
-        composable(BottomNavigationItem.Collections.route) {
-            CollectionScreen()
+        composable(BottomNavigationItem.Recipes.route) {
+            RecipesScreen(onRecipeDetail = { recipeId ->
+                navController.navigate(
+                    RecipeDetailRoutes.RecipeDetail.createRoute(recipeId)
+                )
+            })
         }
+
+        recipeDetailNavGraph(navController)
 
         composable(BottomNavigationItem.CreateRecipe.route) {
             CreateRecipeScreen(
@@ -48,7 +56,9 @@ fun MainHomeGraph(
             )
         }
 
-        recipesNavGraph(navController = navController)
+        composable(BottomNavigationItem.Collections.route) {
+            CollectionScreen()
+        }
 
         settingsGraph(
             navController = navController,

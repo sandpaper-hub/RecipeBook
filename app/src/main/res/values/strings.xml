@@ -112,4 +112,6 @@
     <string name="edit_text" translatable="true">Edit</string>
     <string name="delete_text" translatable="true">Delete</string>
     <string name="unknown_measure" translatable="false">\?</string>
+    <string name="list_pages" translatable="true">List of pages</string>
+    <string name="banner" translatable="true">Banner</string>
 </resources>
