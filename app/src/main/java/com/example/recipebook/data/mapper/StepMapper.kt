@@ -17,6 +17,7 @@ fun NewRecipeStep.toDto(): NewStepDto {
 fun StepDto.toDomain(): Step{
     return Step(
         title = this.title,
+        order = this.order,
         description = this.description,
         imageSource = this.imageUrl
     )

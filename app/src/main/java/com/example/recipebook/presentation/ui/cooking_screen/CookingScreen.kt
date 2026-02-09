@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -18,9 +21,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.CustomDropDownMenu
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.IndexedDropdownMenu
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeStep
 import com.example.recipebook.presentation.ui.commonUi.recipe.StepsIndicator
+import com.example.recipebook.presentation.viewModel.cookingScreen.CookingEvent
 import com.example.recipebook.presentation.viewModel.cookingScreen.CookingViewModel
 
 @Composable
@@ -29,11 +33,19 @@ fun CookingScreen(
     viewModel: CookingViewModel = hiltViewModel(),
     onBack: () -> Unit
 ) {
-    val uiState = viewModel.uiState
+    val uiState by viewModel.uiState.collectAsState()
     val pagerState = rememberPagerState(
         initialPage = 0,
         pageCount = { uiState.recipeSteps.size }
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is CookingEvent.GoToPage -> pagerState.animateScrollToPage(event.index)
+            }
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -56,15 +68,19 @@ fun CookingScreen(
             ClickableIcon(
                 painter = painterResource(R.drawable.list_pages_icon),
                 contentDescription = stringResource(R.string.list_pages),
-                onClick = {}
+                onClick = { viewModel.expandPagesMenu(true) }
             )
 
-            CustomDropDownMenu(
-                menuItems = listOf("ABC"),
-                isExpanded = false,
-                onDismissRequest = {},
-                onItemClick = { item -> },
-                modifier = Modifier
+            IndexedDropdownMenu(
+                menuItems = uiState.recipeSteps.map {
+                    it.title
+                },
+                isExpanded = uiState.isPagesMenuExpanded,
+                onDismissRequest = { viewModel.expandPagesMenu(false) },
+                onItemClick = { index ->
+                    viewModel.goToPage(index)
+                    viewModel.expandPagesMenu(false)
+                }
             )
 
             Spacer(modifier = Modifier.width(24.dp))

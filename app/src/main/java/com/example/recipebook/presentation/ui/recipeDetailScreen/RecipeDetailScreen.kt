@@ -28,7 +28,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.CustomDropDownMenuNew
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.ResourcesDropDownMenu
 import com.example.recipebook.presentation.ui.commonUi.ImageBanner
 import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
@@ -74,7 +74,7 @@ fun RecipeDetailScreen(
                     onClick = { viewModel.isOpenDropdownMenu(true) }
                 )
 
-                CustomDropDownMenuNew(
+                ResourcesDropDownMenu(
                     expanded = uiState.isOpenDropdownMenu,
                     items = uiState.dropdownMenuItems,
                     onDismiss = { viewModel.isOpenDropdownMenu(false) },

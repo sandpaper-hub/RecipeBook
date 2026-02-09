@@ -44,7 +44,32 @@ fun CustomDropDownMenu(
 
 @Composable
 @Suppress("FunctionName")
-fun <T> CustomDropDownMenuNew(
+fun IndexedDropdownMenu(
+    menuItems: List<String>,
+    isExpanded: Boolean,
+    onDismissRequest: () -> Unit,
+    onItemClick: (index: Int) -> Unit,
+) {
+    val scrollState = rememberScrollState()
+    DropdownMenu(
+        expanded = isExpanded,
+        onDismissRequest = onDismissRequest,
+        scrollState = scrollState,
+        containerColor = MaterialTheme.colorScheme.background,
+        modifier = Modifier.heightIn(max = 300.dp)
+    ) {
+        menuItems.forEachIndexed { index, menuItem ->
+            DropdownMenuItem(
+                text = { Text(text = menuItem) },
+                onClick = { onItemClick(index) }
+            )
+        }
+    }
+}
+
+@Composable
+@Suppress("FunctionName")
+fun <T> ResourcesDropDownMenu(
     expanded: Boolean,
     items: List<DropdownMenuItem<T>>,
     onDismiss: () -> Unit,
