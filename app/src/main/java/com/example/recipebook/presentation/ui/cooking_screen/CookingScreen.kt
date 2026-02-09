@@ -1,5 +1,6 @@
 package com.example.recipebook.presentation.ui.cooking_screen
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -65,23 +66,26 @@ fun CookingScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            ClickableIcon(
-                painter = painterResource(R.drawable.list_pages_icon),
-                contentDescription = stringResource(R.string.list_pages),
-                onClick = { viewModel.expandPagesMenu(true) }
-            )
 
-            IndexedDropdownMenu(
-                menuItems = uiState.recipeSteps.map {
-                    it.title
-                },
-                isExpanded = uiState.isPagesMenuExpanded,
-                onDismissRequest = { viewModel.expandPagesMenu(false) },
-                onItemClick = { index ->
-                    viewModel.goToPage(index)
-                    viewModel.expandPagesMenu(false)
-                }
-            )
+            Box(contentAlignment = Alignment.BottomCenter) {
+                ClickableIcon(
+                    painter = painterResource(R.drawable.list_pages_icon),
+                    contentDescription = stringResource(R.string.list_pages),
+                    onClick = { viewModel.expandPagesMenu(true) }
+                )
+
+                IndexedDropdownMenu(
+                    menuItems = uiState.recipeSteps.map {
+                        it.title
+                    },
+                    isExpanded = uiState.isPagesMenuExpanded,
+                    onDismissRequest = { viewModel.expandPagesMenu(false) },
+                    onItemClick = { index ->
+                        viewModel.goToPage(index)
+                        viewModel.expandPagesMenu(false)
+                    }
+                )
+            }
 
             Spacer(modifier = Modifier.width(24.dp))
         }

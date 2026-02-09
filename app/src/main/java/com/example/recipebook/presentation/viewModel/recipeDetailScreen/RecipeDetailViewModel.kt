@@ -28,7 +28,8 @@ class RecipeDetailViewModel @Inject constructor(
 
     init {
         initDropdownMenuItems()
-        val recipeId = checkNotNull(savedStateHandle[RecipeDetailRoutes.RecipeDetail.RECIPE_ID_ARG]).toString()
+        val recipeId =
+            checkNotNull(savedStateHandle[RecipeDetailRoutes.RecipeDetail.RECIPE_ID_ARG]).toString()
         uiState = uiState.copy(id = recipeId)
         getRecipeById(recipeId)
     }

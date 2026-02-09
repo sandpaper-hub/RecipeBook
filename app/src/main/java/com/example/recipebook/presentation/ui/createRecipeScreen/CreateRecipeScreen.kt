@@ -3,7 +3,6 @@ package com.example.recipebook.presentation.ui.createRecipeScreen
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,7 +12,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -23,7 +21,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.CustomDropDownMenu
 import com.example.recipebook.presentation.ui.commonUi.IngredientDialog
 import com.example.recipebook.presentation.ui.commonUi.DoubleActionTextBox
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
@@ -35,8 +32,10 @@ import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.ResourcesDropDownMenu
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.CreateRecipeViewModel
 import com.example.recipebook.presentation.util.debounce
+import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.CategoryMenuAction
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.MeasureMenuAction
 
 @Composable
@@ -197,7 +196,19 @@ fun CreateRecipeScreen(
 
             item {
                 SingleActionTextBox(
-                    value = uiState.recipeCategory,
+                    value = stringResource(
+                        when(uiState.recipeCategory) {
+                            CategoryMenuAction.APPETIZER -> R.string.appetizer
+                            CategoryMenuAction.SALAD -> R.string.salad
+                            CategoryMenuAction.SOUP -> R.string.soup
+                            CategoryMenuAction.MAIN -> R.string.main
+                            CategoryMenuAction.GARNISH -> R.string.garnish
+                            CategoryMenuAction.SAUCE -> R.string.sauce
+                            CategoryMenuAction.DESERT -> R.string.desert
+                            CategoryMenuAction.DRINK -> R.string.drink
+                            else -> R.string.unknown_measure
+                        }
+                    ),
                     hint = stringResource(R.string.category_hint),
                     isError = null,
                     contentDescription = "",
@@ -206,15 +217,13 @@ fun CreateRecipeScreen(
                     modifier = Modifier.padding(bottom = 32.dp)
                 )
 
-                val categoryList = listOf(
-                    "Main", "Desert", "Drink"
-                )
-                CustomDropDownMenu(
-                    menuItems = categoryList,
-                    isExpanded = uiState.isCategoryMenuExpand,
-                    onDismissRequest = { viewModel.showCategoryMenu(false) },
-                    onItemClick = viewModel::onCategoryChange,
-                    modifier = Modifier.background(MaterialTheme.colorScheme.background)
+                ResourcesDropDownMenu(
+                    expanded = uiState.isCategoryMenuExpand,
+                    items = uiState.categoryMenuItems,
+                    onDismiss = {viewModel.showCategoryMenu(false)},
+                    onItemClick = {categoryMenuAction ->
+                        viewModel.onCategoryChange(categoryMenuAction)
+                    }
                 )
             }
 
@@ -277,7 +286,7 @@ fun CreateRecipeScreen(
 
         uiState.editingIngredientId?.let { ingredientId ->
             IngredientDialog(
-                items = uiState.dropdownMenuItems,
+                items = uiState.measureMenuItems,
                 onDialogDismiss = { viewModel.showIngredientDialog(null) },
                 onConfirm = { ingredientValue, amount, measure ->
                     viewModel.onIngredientChange(

@@ -14,6 +14,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.example.recipebook.R
+import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeCardList
 import com.example.recipebook.presentation.util.toUpdatedAgoText
 import com.example.recipebook.presentation.viewModel.recipesScreen.RecipesViewModel
@@ -43,7 +45,17 @@ fun RecipesTab(
             RecipeCardList(
                 recipeId = recipe.id,
                 imageUrl = recipe.imageUrl,
-                category = recipe.category,
+                categoryResource = when(recipe.category) {
+                    RecipeCategory.APPETIZER -> R.string.appetizer
+                    RecipeCategory.SALAD -> R.string.salad
+                    RecipeCategory.SOUP -> R.string.soup
+                    RecipeCategory.MAIN -> R.string.main
+                    RecipeCategory.GARNISH -> R.string.garnish
+                    RecipeCategory.SAUCE -> R.string.sauce
+                    RecipeCategory.DESERT -> R.string.desert
+                    RecipeCategory.DRINK -> R.string.drink
+                    else -> R.string.unknown_measure
+                },
                 name = recipe.recipeName,
                 timeEstimation = recipe.recipeTimeEstimation,
                 uploadedTime = recipe.createdAt.toUpdatedAgoText(),

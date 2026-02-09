@@ -33,9 +33,11 @@ fun CreateBottomSheet(
             containerColor = MaterialTheme.colorScheme.background,
             onDismissRequest = onDismiss
         ) {
-            ConstraintLayout(modifier = Modifier
-                .height(200.dp)
-                .fillMaxWidth()) {
+            ConstraintLayout(
+                modifier = Modifier
+                    .height(200.dp)
+                    .fillMaxWidth()
+            ) {
                 val (dismissButton, titleText, createContainer) = createRefs()
 
 

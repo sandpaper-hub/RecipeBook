@@ -7,6 +7,7 @@ import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipe
 import com.example.recipebook.domain.model.recipe.getRecipe.Ingredient
 import com.example.recipebook.domain.model.recipe.getRecipe.IngredientMeasure
 import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
+import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
 
 fun NewRecipe.toDto(): NewRecipeDto {
     return NewRecipeDto(
@@ -36,7 +37,7 @@ fun RecipeDto.toDomain(): Recipe {
         recipeDescription = this.recipeDescription,
         recipeTimeEstimation = this.recipeTimeEstimation,
         imageUrl = this.imageUrl,
-        category = this.category,
+        category = RecipeCategory.from(this.category),
         ingredients = this.ingredients.map {
             Ingredient(
                 id = it.id,

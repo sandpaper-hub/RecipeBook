@@ -6,11 +6,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.R
 import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredient
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStepDraft
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
+import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.CategoryMenuAction
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.MeasureMenuAction
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.NewRecipeUiState
@@ -27,7 +26,6 @@ class CreateRecipeViewModel @Inject constructor(
         private set
 
     init {
-        initDropdownMenuItems()
         viewModelScope.launch {
             uiState = uiState.copy(
                 ingredients = listOf(
@@ -42,43 +40,6 @@ class CreateRecipeViewModel @Inject constructor(
                 )
             )
         }
-    }
-
-    private fun initDropdownMenuItems() {
-        val dropdownMenuItems = listOf(
-            DropdownMenuItem(
-                action = MeasureMenuAction.TEASPOON,
-                titleResource = R.string.measure_teaspoon
-            ),
-            DropdownMenuItem(
-                action = MeasureMenuAction.TABLESPOON,
-                titleResource = R.string.measure_tablespoon
-            ),
-            DropdownMenuItem(
-                action = MeasureMenuAction.GRAM,
-                titleResource = R.string.measure_g,
-            ),
-            DropdownMenuItem(
-                action = MeasureMenuAction.KILOGRAM,
-                titleResource = R.string.measure_kg
-            ),
-            DropdownMenuItem(
-                action = MeasureMenuAction.MILLILITER,
-                titleResource = R.string.measure_ml
-            ),
-            DropdownMenuItem(
-                action = MeasureMenuAction.LITER,
-                titleResource = R.string.measure_l
-            ),
-            DropdownMenuItem(
-                action = MeasureMenuAction.PCS,
-                titleResource = R.string.measure_pcs
-            )
-        )
-
-        uiState = uiState.copy(
-            dropdownMenuItems = dropdownMenuItems
-        )
     }
 
 
@@ -120,7 +81,7 @@ class CreateRecipeViewModel @Inject constructor(
         uiState = uiState.copy(isCategoryMenuExpand = isShow)
     }
 
-    fun onCategoryChange(value: String) {
+    fun onCategoryChange(value: CategoryMenuAction) {
         uiState = uiState.copy(
             recipeCategory = value,
             isCategoryMenuExpand = false
@@ -198,7 +159,7 @@ class CreateRecipeViewModel @Inject constructor(
                     recipeDescription = uiState.recipeDescription,
                     recipeTimeEstimation = uiState.timeEstimation,
                     recipeImageSource = uiState.recipeImageUri?.toString(),
-                    category = uiState.recipeCategory,
+                    category = uiState.recipeCategory.toString(),
                     ingredients = uiState.ingredients.map { ingredient ->
                         NewRecipeIngredient(
                             id = ingredient.id,
