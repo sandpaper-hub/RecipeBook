@@ -122,4 +122,8 @@
     <string name="sauce" translatable="true">Sauce</string>
     <string name="desert" translatable="true">Desert</string>
     <string name="drink" translatable="true">Drink</string>
+    <string name="delete_recipe_title" translatable="true">Delete recipe?</string>
+    <string name="delete_description_title" translatable="true">Are you sure you want to delete </string>
+    <string name="delete_warning_title" translatable="true">The recipe and all its data will be permanently deleted.</string>
+    <string name="cancel_text" translatable="true">Cancel</string>
 </resources>

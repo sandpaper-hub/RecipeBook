@@ -1,6 +1,7 @@
 package com.example.recipebook.presentation.ui.commonUi
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.recipebook.R
@@ -35,7 +37,7 @@ import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.Me
 fun IngredientDialog(
     items: List<DropdownMenuItem<MeasureMenuAction>>,
     onDialogDismiss: () -> Unit,
-    onConfirm: (value:String, amount:String, measure:MeasureMenuAction) -> Unit
+    onConfirm: (value: String, amount: String, measure: MeasureMenuAction) -> Unit
 ) {
 
     var ingredientValue by rememberSaveable { mutableStateOf("") }
@@ -153,6 +155,66 @@ fun IngredientDialog(
                     }) {
                         Text("OK")
                     }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+@Suppress("FunctionName")
+fun ConfirmDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+    recipeName: String
+) {
+
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(),
+            colors = CardColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.onBackground,
+                disabledContentColor = Color.Unspecified,
+                disabledContainerColor = Color.Unspecified
+            ),
+            modifier = Modifier.width(320.dp)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                HeadingTextMedium(
+                    text = stringResource(R.string.delete_recipe_title),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Medium
+                    )
+                )
+
+                SubHeadingTextSmall(
+                    text = "${stringResource(R.string.delete_description_title)} \"$recipeName\"?\n" +
+                            stringResource(R.string.delete_warning_title),
+                    modifier = Modifier
+                        .padding(top = 8.dp),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+                Row(
+                    modifier = Modifier
+                        .padding(top = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    SquareRoundedButton(
+                        onClick = onDismiss,
+                        text = stringResource(R.string.cancel_text),
+                        containerColor = MaterialTheme.colorScheme.inversePrimary,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    SquareRoundedButton(
+                        onClick = onConfirm,
+                        text = stringResource(R.string.delete_text),
+                        containerColor = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.weight(1f)
+                    )
                 }
             }
         }

@@ -162,4 +162,14 @@ class RecipesRepositoryImpl @Inject constructor(
                 it.toDomain()
             }
     }
+
+    override suspend fun deleteRecipe(recipeId: String) {
+        firestore
+            .collection("users")
+            .document(userId)
+            .collection("recipes")
+            .document(recipeId)
+            .delete()
+            .await()
+    }
 }

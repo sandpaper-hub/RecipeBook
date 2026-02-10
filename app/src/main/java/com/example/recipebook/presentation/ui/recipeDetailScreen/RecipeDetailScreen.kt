@@ -29,6 +29,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
+import com.example.recipebook.presentation.ui.commonUi.ConfirmDialog
 import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.ResourcesDropDownMenu
 import com.example.recipebook.presentation.ui.commonUi.ImageBanner
 import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
@@ -82,7 +83,9 @@ fun RecipeDetailScreen(
                     onItemClick = { action ->
                         when (action) {
                             DropdownMenuAction.EDIT -> {}
-                            DropdownMenuAction.DELETE -> {}
+                            DropdownMenuAction.DELETE -> {
+                                viewModel.openDeleteDialog(true)
+                            }
                         }
                     }
                 )
@@ -139,7 +142,7 @@ fun RecipeDetailScreen(
             RecipeDescription(
                 timeEstimation = uiState.timeEstimation,
                 descriptionText = uiState.description,
-                categoryResource = when(uiState.category) {
+                categoryResource = when (uiState.category) {
                     RecipeCategory.APPETIZER -> R.string.appetizer
                     RecipeCategory.SALAD -> R.string.salad
                     RecipeCategory.SOUP -> R.string.soup
@@ -190,6 +193,17 @@ fun RecipeDetailScreen(
                     )
                 }
             }
+        }
+
+        if (uiState.isOpedDeleteDialog) {
+            ConfirmDialog(
+                recipeName = uiState.name,
+                onDismiss = { viewModel.openDeleteDialog(false) },
+                onConfirm = {
+                    viewModel.deleteRecipe(uiState.id, onBack)
+                    viewModel.openDeleteDialog(false)
+                }
+            )
         }
 
         SquareRoundedButton(

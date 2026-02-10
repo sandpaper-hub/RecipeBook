@@ -122,4 +122,8 @@
     <string name="sauce">Соус</string>
     <string name="desert">Десерт</string>
     <string name="drink">Напиток</string>
+    <string name="delete_recipe_title">Удалить рецепт?</string>
+    <string name="delete_description_title">Вы уверены, что хотите удалить </string>
+    <string name="delete_warning_title">Рецепт и все его данные будут безвозвратно удалены</string>
+    <string name="cancel_text" translatable="true">Отмена</string>
 </resources>

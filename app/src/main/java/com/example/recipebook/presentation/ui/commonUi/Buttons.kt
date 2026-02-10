@@ -38,7 +38,7 @@ fun SquareRoundedButton(
     onClick: () -> Unit,
     text: String,
     containerColor: Color = MaterialTheme.colorScheme.primary,
-    isLoading: Boolean,
+    isLoading: Boolean = false,
     modifier: Modifier
 ) {
     Button(

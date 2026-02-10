@@ -7,6 +7,7 @@ import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStepDraf
 import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
 import com.example.recipebook.domain.model.recipe.step.Step
 import com.example.recipebook.domain.useCase.CreateRandomIdUseCase
+import com.example.recipebook.domain.useCase.DeleteRecipeUseCase
 import com.example.recipebook.domain.useCase.GetCurrentUserIdUseCase
 import com.example.recipebook.domain.useCase.GetRecipeByIdUseCase
 import com.example.recipebook.domain.useCase.GetRecipeCoverUrlUseCase
@@ -27,7 +28,8 @@ class RecipesInteractorImpl @Inject constructor(
     private val getUserRecipesUseCase: GetUserRecipesUseCase,
     private val getUserIdFlowUseCase: GetUserIdFlowUseCase,
     private val getRecipeByIdUseCase: GetRecipeByIdUseCase,
-    private val getRecipeStepsUseCase: GetRecipeStepsUseCase
+    private val getRecipeStepsUseCase: GetRecipeStepsUseCase,
+    private val deleteRecipeUseCase: DeleteRecipeUseCase
 ) : RecipesInteractor {
     override suspend fun getRecipeById(recipeId: String): Recipe {
         return getRecipeByIdUseCase.execute(recipeId)
@@ -91,5 +93,9 @@ class RecipesInteractorImpl @Inject constructor(
 
     override suspend fun getRecipeSteps(recipeId: String): List<Step> {
        return getRecipeStepsUseCase.execute(recipeId)
+    }
+
+    override suspend fun deleteRecipe(recipeId: String) {
+        deleteRecipeUseCase.execute(recipeId)
     }
 }

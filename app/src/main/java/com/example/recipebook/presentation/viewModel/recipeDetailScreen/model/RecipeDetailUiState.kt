@@ -11,6 +11,7 @@ data class RecipeDetailUiState(
     val category: RecipeCategory = RecipeCategory.UNKNOWN,
     val dropdownMenuItems: List<DropdownMenuItem<DropdownMenuAction>> = listOf(),
     val isOpenDropdownMenu: Boolean = false,
+    val isOpedDeleteDialog: Boolean = false,
     val timeEstimation: String = "",
     val ingredients: List<IngredientUiState> = listOf(),
     val createdAt: Long = 0L
