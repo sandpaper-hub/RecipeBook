@@ -4,6 +4,7 @@ import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredie
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStep
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStepDraft
 import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
+import com.example.recipebook.domain.model.recipe.step.Step
 import kotlinx.coroutines.flow.Flow
 
 interface RecipesInteractor {
@@ -27,4 +28,5 @@ interface RecipesInteractor {
 
     fun observeUserRecipes(userId: String): Flow<List<Recipe>>
     fun getUserIdFlow(): Flow<String?>
+    suspend fun getRecipeSteps(recipeId: String): List<Step>
 }

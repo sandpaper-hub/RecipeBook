@@ -5,10 +5,12 @@ import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredie
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStep
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStepDraft
 import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
+import com.example.recipebook.domain.model.recipe.step.Step
 import com.example.recipebook.domain.useCase.CreateRandomIdUseCase
 import com.example.recipebook.domain.useCase.GetCurrentUserIdUseCase
 import com.example.recipebook.domain.useCase.GetRecipeByIdUseCase
 import com.example.recipebook.domain.useCase.GetRecipeCoverUrlUseCase
+import com.example.recipebook.domain.useCase.GetRecipeStepsUseCase
 import com.example.recipebook.domain.useCase.GetStepImagesUrlUseCase
 import com.example.recipebook.domain.useCase.GetUserIdFlowUseCase
 import com.example.recipebook.domain.useCase.GetUserRecipesUseCase
@@ -24,7 +26,8 @@ class RecipesInteractorImpl @Inject constructor(
     private val getRecipeCoverUrlUseCase: GetRecipeCoverUrlUseCase,
     private val getUserRecipesUseCase: GetUserRecipesUseCase,
     private val getUserIdFlowUseCase: GetUserIdFlowUseCase,
-    private val getRecipeByIdUseCase: GetRecipeByIdUseCase
+    private val getRecipeByIdUseCase: GetRecipeByIdUseCase,
+    private val getRecipeStepsUseCase: GetRecipeStepsUseCase
 ) : RecipesInteractor {
     override suspend fun getRecipeById(recipeId: String): Recipe {
         return getRecipeByIdUseCase.execute(recipeId)
@@ -74,6 +77,7 @@ class RecipesInteractorImpl @Inject constructor(
             NewRecipeStep(
                 id = draft.id,
                 title = draft.title,
+                order = draft.order,
                 description = draft.description,
                 imageUrl = stepImageUrls[draft.id]
             )
@@ -84,4 +88,8 @@ class RecipesInteractorImpl @Inject constructor(
         getUserRecipesUseCase.execute(userId)
 
     override fun getUserIdFlow(): Flow<String?> = getUserIdFlowUseCase.execute()
+
+    override suspend fun getRecipeSteps(recipeId: String): List<Step> {
+       return getRecipeStepsUseCase.execute(recipeId)
+    }
 }

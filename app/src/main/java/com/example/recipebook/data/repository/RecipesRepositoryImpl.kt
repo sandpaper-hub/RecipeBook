@@ -1,7 +1,7 @@
 package com.example.recipebook.data.repository
 
-import com.example.recipebook.data.dto.createRecipe.NewStepDto
 import com.example.recipebook.data.dto.getRecipe.RecipeDto
+import com.example.recipebook.data.dto.getRecipe.StepDto
 import com.example.recipebook.data.mapper.toDomain
 import com.example.recipebook.data.mapper.toDto
 import com.example.recipebook.data.util.ImageCompressorImpl
@@ -9,9 +9,11 @@ import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipe
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStep
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStepDraft
 import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
+import com.example.recipebook.domain.model.recipe.step.Step
 import com.example.recipebook.domain.repository.RecipesRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -87,19 +89,14 @@ class RecipesRepositoryImpl @Inject constructor(
                 newRecipe.toDto()
             )
 
-            recipeSteps.forEachIndexed { index, step ->
+            recipeSteps.forEach { step ->
                 val stepReference = recipeReference
                     .collection("steps")
                     .document(step.id)
 
                 batch.set(
                     stepReference,
-                    NewStepDto(
-                        order = index,
-                        title = step.title,
-                        imageUrl = step.imageUrl,
-                        description = step.description
-                    )
+                    step.toDto()
                 )
             }
         }
@@ -120,6 +117,7 @@ class RecipesRepositoryImpl @Inject constructor(
             .collection("users")
             .document(userId)
             .collection("recipes")
+            .orderBy("createdAt", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     close(error)
@@ -148,5 +146,20 @@ class RecipesRepositoryImpl @Inject constructor(
             .await()
             .toObject(RecipeDto::class.java)?.toDomain()
             ?: throw IllegalStateException("Recipe not found")
+    }
+
+    override suspend fun getRecipeSteps(recipeId: String): List<Step> {
+        return firestore
+            .collection("users")
+            .document(userId)
+            .collection("recipes")
+            .document(recipeId)
+            .collection("steps")
+            .orderBy("order", Query.Direction.ASCENDING)
+            .get()
+            .await()
+            .toObjects(StepDto::class.java).map {
+                it.toDomain()
+            }
     }
 }

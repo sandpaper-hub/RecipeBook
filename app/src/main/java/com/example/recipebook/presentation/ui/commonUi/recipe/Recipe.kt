@@ -33,7 +33,7 @@ import com.example.recipebook.presentation.ui.commonUi.ExpandableText
 fun RecipeCardList(
     recipeId: String,
     imageUrl: Any?,
-    category: String,
+    categoryResource: Int,
     name: String,
     timeEstimation: String,
     uploadedTime: String,
@@ -66,7 +66,7 @@ fun RecipeCardList(
 
         Column {
             Text(
-                text = category,
+                text = stringResource(categoryResource),
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -101,6 +101,7 @@ fun RecipeCardList(
 fun RecipeDescription(
     timeEstimation: String,
     descriptionText: String,
+    categoryResource: Int,
     modifier: Modifier
 ) {
     Column(
@@ -108,6 +109,16 @@ fun RecipeDescription(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
+
+            Text(
+                text = stringResource(categoryResource),
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = MaterialTheme.colorScheme.primary
+                )
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
             Icon(
                 painter = painterResource(R.drawable.time_icon),
                 contentDescription = stringResource(R.string.time_estimation),

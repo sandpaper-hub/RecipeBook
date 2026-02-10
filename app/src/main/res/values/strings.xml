@@ -114,4 +114,12 @@
     <string name="unknown_measure" translatable="false">\?</string>
     <string name="list_pages" translatable="true">List of pages</string>
     <string name="banner" translatable="true">Banner</string>
+    <string name="appetizer" translatable="true">Appetizer</string>
+    <string name="salad" translatable="true">Salad</string>
+    <string name="soup" translatable="true">Soup</string>
+    <string name="main" translatable="true">Main</string>
+    <string name="garnish" translatable="true">Garnish</string>
+    <string name="sauce" translatable="true">Sauce</string>
+    <string name="desert" translatable="true">Desert</string>
+    <string name="drink" translatable="true">Drink</string>
 </resources>

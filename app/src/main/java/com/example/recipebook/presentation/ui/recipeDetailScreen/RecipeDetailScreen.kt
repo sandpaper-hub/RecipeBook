@@ -27,8 +27,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
+import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.CustomDropDownMenuNew
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.ResourcesDropDownMenu
 import com.example.recipebook.presentation.ui.commonUi.ImageBanner
 import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
@@ -74,7 +75,7 @@ fun RecipeDetailScreen(
                     onClick = { viewModel.isOpenDropdownMenu(true) }
                 )
 
-                CustomDropDownMenuNew(
+                ResourcesDropDownMenu(
                     expanded = uiState.isOpenDropdownMenu,
                     items = uiState.dropdownMenuItems,
                     onDismiss = { viewModel.isOpenDropdownMenu(false) },
@@ -138,6 +139,17 @@ fun RecipeDetailScreen(
             RecipeDescription(
                 timeEstimation = uiState.timeEstimation,
                 descriptionText = uiState.description,
+                categoryResource = when(uiState.category) {
+                    RecipeCategory.APPETIZER -> R.string.appetizer
+                    RecipeCategory.SALAD -> R.string.salad
+                    RecipeCategory.SOUP -> R.string.soup
+                    RecipeCategory.MAIN -> R.string.main
+                    RecipeCategory.GARNISH -> R.string.garnish
+                    RecipeCategory.SAUCE -> R.string.sauce
+                    RecipeCategory.DESERT -> R.string.desert
+                    RecipeCategory.DRINK -> R.string.drink
+                    else -> R.string.unknown_measure
+                },
                 modifier = Modifier.constrainAs(descriptionText) {
                     linkTo(start = startGuideline, end = endGuideline)
                     top.linkTo(recipeNameText.bottom, margin = 8.dp)

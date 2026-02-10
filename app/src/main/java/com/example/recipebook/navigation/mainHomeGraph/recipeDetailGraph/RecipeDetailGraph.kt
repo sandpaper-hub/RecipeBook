@@ -37,7 +37,9 @@ fun NavGraphBuilder.recipeDetailNavGraph(navController: NavController) {
                 type = NavType.StringType
             })
         ) {
-            CookingScreen(onBack = {})
+            CookingScreen(onBack = {
+                navController.popBackStack()
+            })
         }
     }
 }

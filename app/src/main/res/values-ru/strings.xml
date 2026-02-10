@@ -114,4 +114,12 @@
     <!-- unknown measure not translatable -->
     <string name="list_pages">Список страниц</string>
     <string name="banner">Банер</string>
+    <string name="appetizer">Закуска</string>
+    <string name="salad">Салат</string>
+    <string name="soup">Суп</string>
+    <string name="main">Основное блюдо</string>
+    <string name="garnish">Гарнир</string>
+    <string name="sauce">Соус</string>
+    <string name="desert">Десерт</string>
+    <string name="drink">Напиток</string>
 </resources>

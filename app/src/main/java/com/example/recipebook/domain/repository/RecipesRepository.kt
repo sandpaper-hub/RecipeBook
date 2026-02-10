@@ -4,6 +4,7 @@ import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipe
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStep
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStepDraft
 import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
+import com.example.recipebook.domain.model.recipe.step.Step
 import kotlinx.coroutines.flow.Flow
 
 interface RecipesRepository {
@@ -19,4 +20,5 @@ interface RecipesRepository {
     suspend fun uploadRecipeImage(recipeId: String, imageSource: String): String
     fun observeUserRecipes(userId: String): Flow<List<Recipe>>
     suspend fun getRecipeById(recipeId: String): Recipe
+    suspend fun getRecipeSteps(recipeId: String): List<Step>
 }

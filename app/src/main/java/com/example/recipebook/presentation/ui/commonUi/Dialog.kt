@@ -25,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.recipebook.R
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.CustomDropDownMenuNew
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.ResourcesDropDownMenu
 import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.MeasureMenuAction
 
@@ -118,7 +118,7 @@ fun IngredientDialog(
                             modifier = Modifier.width(60.dp)
                         )
 
-                        CustomDropDownMenuNew(
+                        ResourcesDropDownMenu(
                             expanded = isMenuExpanded,
                             items = items,
                             onDismiss = { isMenuExpanded = false },

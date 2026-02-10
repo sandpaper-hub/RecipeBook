@@ -19,7 +19,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.CustomCircleIconButton
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.CustomDropDownMenuNew
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.ResourcesDropDownMenu
 import com.example.recipebook.presentation.ui.commonUi.CustomTextField
 import com.example.recipebook.presentation.ui.commonUi.DatePickerDialog
 import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
@@ -181,7 +181,7 @@ fun AccountScreen(
                 }
         )
 
-        CustomDropDownMenuNew(
+        ResourcesDropDownMenu(
             expanded = uiState.showRegionMenu,
             items = uiState.regionLocales,
             onDismiss = { viewModel.showCountryMenu(false) },
