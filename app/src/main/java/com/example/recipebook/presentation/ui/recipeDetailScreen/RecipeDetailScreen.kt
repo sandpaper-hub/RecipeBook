@@ -29,6 +29,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
+import com.example.recipebook.presentation.ui.commonUi.CollectionsBottomSheet
 import com.example.recipebook.presentation.ui.commonUi.ConfirmDialog
 import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.ResourcesDropDownMenu
 import com.example.recipebook.presentation.ui.commonUi.ImageBanner
@@ -127,7 +128,7 @@ fun RecipeDetailScreen(
             )
 
             IconButton(
-                onClick = {},
+                onClick = { viewModel.showSheet(true) },
                 modifier = Modifier
                     .constrainAs(addToCollectionButton) {
                         linkTo(start = recipeNameText.end, end = endGuideline)
@@ -215,6 +216,13 @@ fun RecipeDetailScreen(
             modifier = Modifier
                 .padding(horizontal = 24.dp)
                 .padding(bottom = 24.dp)
+        )
+
+
+        CollectionsBottomSheet(
+            showSheet = uiState.isShowCollectionSheet,
+            onDismiss = { viewModel.showSheet(false) },
+            onItemClick = {}
         )
     }
 }

@@ -80,6 +80,12 @@ class RecipeDetailViewModel @Inject constructor(
         }
     }
 
+    fun showSheet(isShow: Boolean) {
+        uiState = uiState.copy(
+            isShowCollectionSheet = isShow
+        )
+    }
+
     private fun initDropdownMenuItems() {
         val dropdownMenuItems = listOf(
             DropdownMenuItem(

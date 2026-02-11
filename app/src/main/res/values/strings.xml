@@ -126,4 +126,5 @@
     <string name="delete_description_title" translatable="true">Are you sure you want to delete </string>
     <string name="delete_warning_title" translatable="true">The recipe and all its data will be permanently deleted.</string>
     <string name="cancel_text" translatable="true">Cancel</string>
+    <string name="added_to_collection" translatable="true">Added to collection</string>
 </resources>
