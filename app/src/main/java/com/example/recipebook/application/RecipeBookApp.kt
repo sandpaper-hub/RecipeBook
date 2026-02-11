@@ -7,8 +7,9 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltAndroidApp
-class RecipeBookApp: Application(){
-    @Inject lateinit var settingsInteractor: SettingsInteractor
+class RecipeBookApp : Application() {
+    @Inject
+    lateinit var settingsInteractor: SettingsInteractor
 
     override fun onCreate() {
         super.onCreate()

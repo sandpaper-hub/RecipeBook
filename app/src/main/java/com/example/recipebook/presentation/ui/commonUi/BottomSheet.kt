@@ -1,9 +1,13 @@
 package com.example.recipebook.presentation.ui.commonUi
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.recipebook.R
+import com.example.recipebook.presentation.ui.commonUi.collection.CollectionListCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,6 +99,41 @@ fun CreateBottomSheet(
                     )
 
                     Spacer(modifier = Modifier.weight(1f))
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+@Suppress("FunctionName")
+fun CollectionsBottomSheet(
+    showSheet: Boolean,
+    onDismiss: () -> Unit,
+    onItemClick: () -> Unit
+) {
+    if (showSheet) {
+        ModalBottomSheet(
+            containerColor = MaterialTheme.colorScheme.background,
+            onDismissRequest = onDismiss
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                HeadingTextMedium(
+                    text = stringResource(R.string.added_to_collection),
+                    modifier = Modifier.padding(vertical = 12.dp))
+
+                LazyColumn(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(200) {
+                        CollectionListCard(
+                            "Collection",
+                            "https://firebasestorage.googleapis.com/v0/b/recipebook-4b1fd.firebasestorage.app/o/collections%2FNwDrbK4tR7MBgSLL7uAb%2Fcover%2Fcollection_cover.jpg?alt=media&token=800a9750-1df2-4052-8476-efcfc7ab5118",
+                            isRecipeContainCollection = false
+                        )
+                    }
                 }
             }
         }

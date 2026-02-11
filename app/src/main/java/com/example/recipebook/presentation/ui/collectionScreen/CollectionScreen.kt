@@ -17,7 +17,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
-import com.example.recipebook.presentation.ui.commonUi.collection.CollectionCard
+import com.example.recipebook.presentation.ui.commonUi.collection.CollectionSquareCard
 import com.example.recipebook.presentation.viewModel.collectionsScreen.CollectionsViewModel
 
 @Composable
@@ -55,7 +55,7 @@ fun CollectionScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
           items(items = uiState.collections, key = {it.id})  { collection ->
-                CollectionCard(
+                CollectionSquareCard(
                     name = collection.name,
                     count = collection.recipesCount,
                     imageUrl = collection.imageUrl,

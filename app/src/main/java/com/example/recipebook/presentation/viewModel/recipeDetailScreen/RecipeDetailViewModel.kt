@@ -65,6 +65,27 @@ class RecipeDetailViewModel @Inject constructor(
         }
     }
 
+    fun openDeleteDialog(isOpen: Boolean) {
+        uiState = uiState.copy(isOpedDeleteDialog = isOpen)
+    }
+
+    fun deleteRecipe(recipeId: String, onBack: () -> Unit) {
+        viewModelScope.launch {
+            runCatching {
+                recipesInteractor.deleteRecipe(recipeId)
+            }
+                .onSuccess {
+                    onBack()
+                }
+        }
+    }
+
+    fun showSheet(isShow: Boolean) {
+        uiState = uiState.copy(
+            isShowCollectionSheet = isShow
+        )
+    }
+
     private fun initDropdownMenuItems() {
         val dropdownMenuItems = listOf(
             DropdownMenuItem(

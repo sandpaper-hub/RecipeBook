@@ -12,3 +12,6 @@ runtimeconfig.json
 # Env
 .env
 .env.*
+
+# Firebase Functions build
+lib/
