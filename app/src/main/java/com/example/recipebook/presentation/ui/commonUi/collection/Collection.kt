@@ -1,6 +1,7 @@
 package com.example.recipebook.presentation.ui.commonUi.collection
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -72,10 +73,13 @@ fun CollectionSquareCard(
 fun CollectionListCard(
     name: String,
     imageUrl: String?,
-    isRecipeContainCollection: Boolean
+    isRecipeContainCollection: Boolean,
+    onItemClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier.padding(horizontal = 12.dp),
+        modifier = Modifier
+            .padding(horizontal = 12.dp)
+            .clickable(onClick = onItemClick),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {

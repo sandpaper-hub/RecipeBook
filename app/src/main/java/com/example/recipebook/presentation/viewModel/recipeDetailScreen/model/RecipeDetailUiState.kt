@@ -13,6 +13,7 @@ data class RecipeDetailUiState(
     val isOpenDropdownMenu: Boolean = false,
     val isOpedDeleteDialog: Boolean = false,
     val isShowCollectionSheet: Boolean = false,
+    val collectionsUiState: List<CollectionUiState> = listOf(),
     val timeEstimation: String = "",
     val ingredients: List<IngredientUiState> = listOf(),
     val createdAt: Long = 0L

@@ -17,6 +17,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -47,7 +49,7 @@ fun RecipeDetailScreen(
     onCookingScreen: (String) -> Unit,
     viewModel: RecipeDetailViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.uiState
+    val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
 
     Column(
@@ -220,9 +222,11 @@ fun RecipeDetailScreen(
 
 
         CollectionsBottomSheet(
+            collections = uiState.collectionsUiState,
             showSheet = uiState.isShowCollectionSheet,
             onDismiss = { viewModel.showSheet(false) },
-            onItemClick = {}
+            addToCollection = {collectionId -> viewModel.addRecipeToCollection(collectionId)},
+            removeFromCollection = {collectionId -> viewModel.removeRecipeFromCollection(collectionId)}
         )
     }
 }
