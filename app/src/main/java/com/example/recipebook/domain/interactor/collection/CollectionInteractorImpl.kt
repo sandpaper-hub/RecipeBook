@@ -1,10 +1,12 @@
 package com.example.recipebook.domain.interactor.collection
 
 import com.example.recipebook.domain.model.collection.UserCollection
+import com.example.recipebook.domain.useCase.AddRecipeToCollectionUseCase
 import com.example.recipebook.domain.useCase.CreateCollectionDocumentUseCase
 import com.example.recipebook.domain.useCase.CreateCollectionUseCase
 import com.example.recipebook.domain.useCase.GetUserCollectionsUseCase
 import com.example.recipebook.domain.useCase.GetUserIdFlowUseCase
+import com.example.recipebook.domain.useCase.RemoveRecipeFromCollectionUseCase
 import com.example.recipebook.domain.useCase.UploadCollectionCoverUseCase
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -14,7 +16,10 @@ class CollectionInteractorImpl @Inject constructor(
     private val createCollectionDocumentUseCase: CreateCollectionDocumentUseCase,
     private val uploadCollectionCoverUseCase: UploadCollectionCoverUseCase,
     private val getUserCollectionsUseCase: GetUserCollectionsUseCase,
-    private val getUserIdFlowUseCase: GetUserIdFlowUseCase
+    private val getUserIdFlowUseCase: GetUserIdFlowUseCase,
+    private val addRecipeToCollectionUseCase: AddRecipeToCollectionUseCase,
+    private val removeRecipeFromCollectionUseCase: RemoveRecipeFromCollectionUseCase
+
 ) : CollectionInteractor {
     override fun getUserIdFlow(): Flow<String?> = getUserIdFlowUseCase.execute()
 
@@ -43,4 +48,20 @@ class CollectionInteractorImpl @Inject constructor(
             )
         )
     }
+
+    override suspend fun addRecipeToCollection(
+        collectionId: String,
+        recipeId: String
+    ) {
+        addRecipeToCollectionUseCase.execute(collectionId = collectionId, recipeId = recipeId)
+    }
+
+    override suspend fun removeRecipeFromCollection(
+        collectionId: String,
+        recipeId: String
+    ) {
+        removeRecipeFromCollectionUseCase.execute(collectionId = collectionId, recipeId = recipeId)
+    }
+
+
 }

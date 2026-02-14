@@ -7,6 +7,7 @@ import com.example.recipebook.data.util.ImageCompressorImpl
 import com.example.recipebook.domain.model.collection.UserCollection
 import com.example.recipebook.domain.repository.CollectionsRepository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
@@ -99,5 +100,29 @@ class CollectionRepositoryImpl @Inject constructor(
 
         ref.putBytes(imageCompressorImpl.compress(imageSource)).await()
         return ref.downloadUrl.await().toString()
+    }
+
+    override suspend fun addRecipeToCollection(
+        collectionId: String,
+        recipeId: String
+    ) {
+        firestore.collection("users")
+            .document(userId)
+            .collection("collections")
+            .document(collectionId)
+            .update("recipeIds", FieldValue.arrayUnion(recipeId))
+            .await()
+    }
+
+    override suspend fun removeRecipeFromCollection(
+        collectionId: String,
+        recipeId: String
+    ) {
+        firestore.collection("users")
+            .document(userId)
+            .collection("collections")
+            .document(collectionId)
+            .update("recipeIds", FieldValue.arrayRemove(recipeId))
+            .await()
     }
 }

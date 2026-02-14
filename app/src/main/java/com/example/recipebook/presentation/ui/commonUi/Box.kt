@@ -281,7 +281,7 @@ fun RecipeStepBox(
 fun IngredientTextBox(
     value: String,
     amount: String,
-    measure: Int
+    measure: String
 ) {
     Row( modifier = Modifier
         .background(
@@ -312,7 +312,7 @@ fun IngredientTextBox(
         Spacer(modifier = Modifier.width(4.dp))
 
         Text(
-            text = stringResource(measure),
+            text = measure,
             style = MaterialTheme.typography.bodyLarge.copy(
                 fontWeight = FontWeight.Medium
             )

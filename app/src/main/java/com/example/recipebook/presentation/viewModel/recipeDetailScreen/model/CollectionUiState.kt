@@ -4,5 +4,6 @@ data class CollectionUiState(
     val id: String = "",
     val name: String = "",
     val imageUrl: String? = null,
-    val containRecipe: Boolean = false
+    val containRecipe: Boolean = false,
+    val isUpdating: Boolean = false
 )

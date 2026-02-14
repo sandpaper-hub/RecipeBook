@@ -71,6 +71,7 @@ fun CollectionSquareCard(
 @Composable
 @Suppress("FunctionName")
 fun CollectionListCard(
+    clickEnabled: Boolean,
     name: String,
     imageUrl: String?,
     isRecipeContainCollection: Boolean,
@@ -79,7 +80,9 @@ fun CollectionListCard(
     Card(
         modifier = Modifier
             .padding(horizontal = 12.dp)
-            .clickable(onClick = onItemClick),
+            .clickable(
+                enabled = clickEnabled,
+                onClick = onItemClick),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {

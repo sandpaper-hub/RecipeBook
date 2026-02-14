@@ -4,14 +4,13 @@ import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
 import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
 
 data class RecipeDetailUiState(
-    val id: String = "",
     val imageUrl: String? = null,
     val name: String = "",
     val description: String = "",
     val category: RecipeCategory = RecipeCategory.UNKNOWN,
     val dropdownMenuItems: List<DropdownMenuItem<DropdownMenuAction>> = listOf(),
     val isOpenDropdownMenu: Boolean = false,
-    val isOpedDeleteDialog: Boolean = false,
+    val isOpenedDeleteDialog: Boolean = false,
     val isShowCollectionSheet: Boolean = false,
     val collectionsUiState: List<CollectionUiState> = listOf(),
     val timeEstimation: String = "",

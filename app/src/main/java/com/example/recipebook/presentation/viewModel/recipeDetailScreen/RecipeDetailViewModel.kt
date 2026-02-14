@@ -6,17 +6,19 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipebook.R
 import com.example.recipebook.domain.interactor.collection.CollectionInteractor
 import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
-import com.example.recipebook.domain.model.recipe.getRecipe.IngredientMeasure
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailRoutes
 import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.CollectionUiState
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.DropdownMenuAction
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.IngredientUiState
+import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.RecipeDetailEvent
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.RecipeDetailUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
@@ -31,20 +33,18 @@ class RecipeDetailViewModel @Inject constructor(
     private val collectionsInteractor: CollectionInteractor,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val recipeId: String =
+        checkNotNull(savedStateHandle[RecipeDetailRoutes.RecipeDetail.RECIPE_ID_ARG]).toString()
+    private val _events = MutableSharedFlow<RecipeDetailEvent>()
+    val events = _events.asSharedFlow()
     private val _uiState = MutableStateFlow(RecipeDetailUiState())
     val uiState: StateFlow<RecipeDetailUiState> = _uiState
-    private var recipeId = ""
 
     init {
         initDropdownMenuItems()
-        recipeId =
-            checkNotNull(savedStateHandle[RecipeDetailRoutes.RecipeDetail.RECIPE_ID_ARG]).toString()
+
         observeUserCollections()
-        _uiState.update {
-            it.copy(
-                id = recipeId
-            )
-        }
         getRecipeById(recipeId)
     }
 
@@ -59,28 +59,96 @@ class RecipeDetailViewModel @Inject constructor(
                 }
             }
             .onEach { collections ->
-                val collectionsUiState = collections.map { collection ->
-                    CollectionUiState(
-                        id = collection.id,
-                        name = collection.name,
-                        imageUrl = collection.imageUrl,
-                        containRecipe = collection.recipeIds.contains(recipeId)
-                    )
-                }
-
-                _uiState.update {
-                    it.copy(collectionsUiState = collectionsUiState)
+                _uiState.update { currentState ->
+                    val updated = collections.map { collection ->
+                        val oldItem = currentState.collectionsUiState
+                            .find { it.id == collection.id }
+                        CollectionUiState(
+                            id = collection.id,
+                            name = collection.name,
+                            imageUrl = collection.imageUrl,
+                            containRecipe = collection.recipeIds.contains(recipeId),
+                            isUpdating = oldItem?.isUpdating ?: false
+                        )
+                    }
+                    currentState.copy(collectionsUiState = updated)
                 }
             }
             .launchIn(viewModelScope)
     }
 
-    fun addRecipeToCollection(collectionId: String) {
+    fun toggleRecipeInCollection(collectionId: String) {
+        val currentState = _uiState.value
 
+        val target = currentState.collectionsUiState
+            .find { it.id == collectionId }
+            ?: return
+
+        if (target.isUpdating) {
+            return
+        }
+
+        val wasContained = target.containRecipe
+
+        _uiState.update { current ->
+            current.copy(
+                collectionsUiState = current.collectionsUiState.map { item ->
+                    if (item.id == collectionId) {
+                        item.copy(
+                            containRecipe = !item.containRecipe,
+                            isUpdating = true
+                        )
+                    } else item
+                }
+            )
+        }
+
+        syncToggle(collectionId, wasContained)
     }
 
-    fun removeRecipeFromCollection(collectionId: String) {
+    private fun syncToggle(collectionId: String, containedRecipe: Boolean) {
+        viewModelScope.launch {
+            runCatching {
+                if (containedRecipe) {
+                    collectionsInteractor.removeRecipeFromCollection(
+                        collectionId = collectionId,
+                        recipeId = recipeId
+                    )
+                } else {
+                    collectionsInteractor.addRecipeToCollection(
+                        collectionId = collectionId,
+                        recipeId = recipeId
+                    )
+                }
+            }
+                .onFailure {
+                    rollbackCollectionUiState(collectionId)
+                }
 
+            _uiState.update { state ->
+                state.copy(
+                    collectionsUiState = state.collectionsUiState.map { item ->
+                        if (item.id == collectionId) {
+                            item.copy(isUpdating = false)
+                        } else item
+                    }
+                )
+            }
+        }
+    }
+
+    private fun rollbackCollectionUiState(collectionId: String) {
+        _uiState.update { state ->
+            state.copy(
+                collectionsUiState = state.collectionsUiState.map { collectionUiState ->
+                    if (collectionUiState.id == collectionId) {
+                        collectionUiState.copy(
+                            containRecipe = !collectionUiState.containRecipe
+                        )
+                    } else collectionUiState
+                }
+            )
+        }
     }
 
     private fun getRecipeById(recipeId: String) {
@@ -93,21 +161,12 @@ class RecipeDetailViewModel @Inject constructor(
                     description = recipe.recipeDescription,
                     category = recipe.category,
                     timeEstimation = recipe.recipeTimeEstimation,
-                    ingredients = recipe.ingredients.map { recipe ->
+                    ingredients = recipe.ingredients.map { ingredient ->
                         IngredientUiState(
-                            id = recipe.id,
-                            value = recipe.value,
-                            amount = recipe.amount,
-                            measure = when (recipe.measure) {
-                                IngredientMeasure.TEASPOON -> R.string.measure_teaspoon
-                                IngredientMeasure.TABLESPOON -> R.string.measure_tablespoon
-                                IngredientMeasure.MILLILITER -> R.string.measure_ml
-                                IngredientMeasure.LITER -> R.string.measure_l
-                                IngredientMeasure.GRAM -> R.string.measure_g
-                                IngredientMeasure.KILOGRAM -> R.string.measure_kg
-                                IngredientMeasure.PCS -> R.string.measure_pcs
-                                else -> R.string.unknown_measure
-                            }
+                            id = ingredient.id,
+                            value = ingredient.value,
+                            amount = ingredient.amount,
+                            measure = ingredient.measure
                         )
                     },
                     createdAt = recipe.createdAt
@@ -118,26 +177,41 @@ class RecipeDetailViewModel @Inject constructor(
 
     fun openDeleteDialog(isOpen: Boolean) {
         _uiState.update {
-            it.copy(isOpedDeleteDialog = isOpen)
+            it.copy(isOpenedDeleteDialog = isOpen)
         }
     }
 
-    fun deleteRecipe(recipeId: String, onBack: () -> Unit) {
+    fun deleteRecipe() {
         viewModelScope.launch {
             runCatching {
                 recipesInteractor.deleteRecipe(recipeId)
             }
                 .onSuccess {
-                    onBack()
+                    _uiState.update {
+                        it.copy(isOpenedDeleteDialog = false)
+                    }
+                    _events.emit(RecipeDetailEvent.GoBack())
                 }
         }
     }
 
-    fun showSheet(isShow: Boolean) {
+    fun showCollectionSheet(isShow: Boolean) {
         _uiState.update {
             it.copy(
                 isShowCollectionSheet = isShow
             )
+        }
+    }
+
+    fun goBack() {
+        viewModelScope.launch {
+            _events.emit(RecipeDetailEvent.GoBack())
+        }
+    }
+
+    fun onCookingScreen() {
+        viewModelScope.launch {
+            _events.emit(RecipeDetailEvent.OnCookingScreen(recipeId))
         }
     }
 
@@ -160,7 +234,7 @@ class RecipeDetailViewModel @Inject constructor(
         }
     }
 
-    fun isOpenDropdownMenu(isOpen: Boolean) {
+    fun showDropdownMenu(isOpen: Boolean) {
         _uiState.update {
             it.copy(isOpenDropdownMenu = isOpen)
         }

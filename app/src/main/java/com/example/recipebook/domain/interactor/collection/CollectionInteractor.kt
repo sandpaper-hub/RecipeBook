@@ -13,4 +13,7 @@ interface CollectionInteractor {
         description: String,
         imageSource: String?
     ): Result<Unit>
+
+    suspend fun addRecipeToCollection(collectionId: String, recipeId: String)
+    suspend fun removeRecipeFromCollection(collectionId: String, recipeId: String)
 }

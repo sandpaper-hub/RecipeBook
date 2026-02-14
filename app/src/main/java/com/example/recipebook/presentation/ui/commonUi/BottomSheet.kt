@@ -114,8 +114,7 @@ fun CollectionsBottomSheet(
     collections: List<CollectionUiState>,
     showSheet: Boolean,
     onDismiss: () -> Unit,
-    addToCollection: (collectionId: String) -> Unit,
-    removeFromCollection: (collectionId: String) -> Unit
+    toggleRecipeInCollection: (collectionId: String) -> Unit
 ) {
     if (showSheet) {
         ModalBottomSheet(
@@ -134,15 +133,12 @@ fun CollectionsBottomSheet(
                 ) {
                     items(collections) { collectionUiState ->
                         CollectionListCard(
-                            collectionUiState.name,
-                            collectionUiState.imageUrl,
+                            clickEnabled = !collectionUiState.isUpdating,
+                            name = collectionUiState.name,
+                            imageUrl = collectionUiState.imageUrl,
                             isRecipeContainCollection = collectionUiState.containRecipe,
                             onItemClick = {
-                                if (collectionUiState.containRecipe) {
-                                    removeFromCollection(collectionUiState.id)
-                                } else {
-                                    addToCollection(collectionUiState.id)
-                                }
+                                toggleRecipeInCollection(collectionUiState.id)
                             })
                     }
                 }
