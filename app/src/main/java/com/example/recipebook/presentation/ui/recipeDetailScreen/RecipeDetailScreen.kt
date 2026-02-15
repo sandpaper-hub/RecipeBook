@@ -17,6 +17,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -27,6 +30,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
+import com.example.recipebook.domain.model.recipe.getRecipe.IngredientMeasure
 import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.CollectionsBottomSheet
@@ -39,6 +43,7 @@ import com.example.recipebook.presentation.ui.commonUi.TitleTextLarge
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeDescription
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.RecipeDetailViewModel
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.DropdownMenuAction
+import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.RecipeDetailEvent
 
 @Composable
 @Suppress("FunctionName")
@@ -47,8 +52,17 @@ fun RecipeDetailScreen(
     onCookingScreen: (String) -> Unit,
     viewModel: RecipeDetailViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.uiState
+    val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is RecipeDetailEvent.GoBack -> onBack()
+                is RecipeDetailEvent.OnCookingScreen -> onCookingScreen(event.recipeId)
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -64,7 +78,7 @@ fun RecipeDetailScreen(
             ClickableIcon(
                 painter = painterResource(R.drawable.back_arrow_icon),
                 contentDescription = stringResource(R.string.back_button),
-                onClick = onBack
+                onClick = { viewModel.goBack() }
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -74,13 +88,13 @@ fun RecipeDetailScreen(
                     painter = painterResource(R.drawable.more_vert_icon),
                     contentDescription = stringResource(R.string.more_action_button),
                     modifier = Modifier,
-                    onClick = { viewModel.isOpenDropdownMenu(true) }
+                    onClick = { viewModel.showDropdownMenu(true) }
                 )
 
                 ResourcesDropDownMenu(
                     expanded = uiState.isOpenDropdownMenu,
                     items = uiState.dropdownMenuItems,
-                    onDismiss = { viewModel.isOpenDropdownMenu(false) },
+                    onDismiss = { viewModel.showDropdownMenu(false) },
                     onItemClick = { action ->
                         when (action) {
                             DropdownMenuAction.EDIT -> {}
@@ -128,7 +142,7 @@ fun RecipeDetailScreen(
             )
 
             IconButton(
-                onClick = { viewModel.showSheet(true) },
+                onClick = { viewModel.showCollectionSheet(true) },
                 modifier = Modifier
                     .constrainAs(addToCollectionButton) {
                         linkTo(start = recipeNameText.end, end = endGuideline)
@@ -189,19 +203,28 @@ fun RecipeDetailScreen(
                 uiState.ingredients.forEach { ingredient ->
                     IngredientTextBox(
                         value = ingredient.value,
-                        measure = ingredient.measure,
+                        measure = when (ingredient.measure) {
+                            IngredientMeasure.TEASPOON -> stringResource(R.string.measure_teaspoon)
+                            IngredientMeasure.TABLESPOON -> stringResource(R.string.measure_tablespoon)
+                            IngredientMeasure.GRAM -> stringResource(R.string.measure_g)
+                            IngredientMeasure.KILOGRAM -> stringResource(R.string.measure_kg)
+                            IngredientMeasure.MILLILITER -> stringResource(R.string.measure_ml)
+                            IngredientMeasure.LITER -> stringResource(R.string.measure_l)
+                            IngredientMeasure.PCS -> stringResource(R.string.measure_pcs)
+                            else -> stringResource(R.string.unknown_measure)
+                        },
                         amount = ingredient.amount
                     )
                 }
             }
         }
 
-        if (uiState.isOpedDeleteDialog) {
+        if (uiState.isOpenedDeleteDialog) {
             ConfirmDialog(
                 recipeName = uiState.name,
                 onDismiss = { viewModel.openDeleteDialog(false) },
                 onConfirm = {
-                    viewModel.deleteRecipe(uiState.id, onBack)
+                    viewModel.deleteRecipe()
                     viewModel.openDeleteDialog(false)
                 }
             )
@@ -209,7 +232,7 @@ fun RecipeDetailScreen(
 
         SquareRoundedButton(
             onClick = {
-                onCookingScreen(uiState.id)
+                viewModel.onCookingScreen()
             },
             text = stringResource(R.string.lets_cook),
             isLoading = false,
@@ -220,9 +243,14 @@ fun RecipeDetailScreen(
 
 
         CollectionsBottomSheet(
+            collections = uiState.collectionsUiState,
             showSheet = uiState.isShowCollectionSheet,
-            onDismiss = { viewModel.showSheet(false) },
-            onItemClick = {}
+            onDismiss = { viewModel.showCollectionSheet(false) },
+            toggleRecipeInCollection = { collectionId ->
+                viewModel.toggleRecipeInCollection(
+                    collectionId
+                )
+            },
         )
     }
 }

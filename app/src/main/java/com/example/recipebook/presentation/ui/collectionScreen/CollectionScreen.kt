@@ -23,6 +23,7 @@ import com.example.recipebook.presentation.viewModel.collectionsScreen.Collectio
 @Composable
 @Suppress("FunctionName")
 fun CollectionScreen(
+    onCollectionDetail: (String) -> Unit,
     viewModel: CollectionsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -54,11 +55,12 @@ fun CollectionScreen(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-          items(items = uiState.collections, key = {it.id})  { collection ->
+            items(items = uiState.collections, key = { it.id }) { collection ->
                 CollectionSquareCard(
                     name = collection.name,
                     count = collection.recipesCount,
                     imageUrl = collection.imageUrl,
+                    onItemClick = { onCollectionDetail(collection.id) },
                     modifier = Modifier.fillMaxWidth()
                 )
             }

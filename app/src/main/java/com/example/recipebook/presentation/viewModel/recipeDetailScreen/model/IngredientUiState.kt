@@ -1,10 +1,10 @@
 package com.example.recipebook.presentation.viewModel.recipeDetailScreen.model
 
-import androidx.annotation.StringRes
+import com.example.recipebook.domain.model.recipe.getRecipe.IngredientMeasure
 
 data class IngredientUiState(
     val id: String = "",
     val value: String = "",
     val amount: String = "",
-    @StringRes val measure: Int = 0
+    val measure: IngredientMeasure = IngredientMeasure.UNKNOWN
 )
