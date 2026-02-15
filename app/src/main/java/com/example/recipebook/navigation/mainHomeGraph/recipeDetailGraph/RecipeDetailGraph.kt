@@ -13,11 +13,11 @@ import com.example.recipebook.presentation.ui.recipeDetailScreen.RecipeDetailScr
 fun NavGraphBuilder.recipeDetailNavGraph(navController: NavController) {
     navigation(
         route = Graph.RECIPE_DETAIL,
-        startDestination = "${RecipeDetailRoutes.RecipeDetail.route}/{${RecipeDetailRoutes.RecipeDetail.RECIPE_ID_ARG}}"
+        startDestination = "${RecipeDetailRoutes.RecipeDetail.route}/{${RecipeDetailRoutes.RecipeDetail.fullRoute}}"
     ) {
         composable(
-            route = "${RecipeDetailRoutes.RecipeDetail.route}/{${RecipeDetailRoutes.RecipeDetail.RECIPE_ID_ARG}}",
-            arguments = listOf(navArgument(RecipeDetailRoutes.RecipeDetail.RECIPE_ID_ARG) {
+            route = RecipeDetailRoutes.RecipeDetail.fullRoute,
+            arguments = listOf(navArgument(RecipeDetailDestination.RECIPE_ID_ARG) {
                 type = NavType.StringType
             })
         ) {
@@ -32,8 +32,8 @@ fun NavGraphBuilder.recipeDetailNavGraph(navController: NavController) {
         }
 
         composable(
-            route = "${RecipeDetailRoutes.Cooking.route}/{${RecipeDetailRoutes.Cooking.RECIPE_ID_ARG}}",
-            arguments = listOf(navArgument(RecipeDetailRoutes.Cooking.RECIPE_ID_ARG) {
+            route = RecipeDetailRoutes.Cooking.fullRoute,
+            arguments = listOf(navArgument(RecipeDetailDestination.RECIPE_ID_ARG) {
                 type = NavType.StringType
             })
         ) {

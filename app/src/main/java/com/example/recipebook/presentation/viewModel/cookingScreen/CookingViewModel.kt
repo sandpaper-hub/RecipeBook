@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
-import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailRoutes
+import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +27,7 @@ class CookingViewModel @Inject constructor(
 
     init {
         val recipeId =
-            checkNotNull(savedStateHandle[RecipeDetailRoutes.Cooking.RECIPE_ID_ARG]).toString()
+            checkNotNull(savedStateHandle[RecipeDetailDestination.RECIPE_ID_ARG]).toString()
         _uiState.update { it.copy(recipeId = recipeId) }
         getRecipeStepsById(recipeId)
     }

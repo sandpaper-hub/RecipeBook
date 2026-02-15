@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipebook.R
 import com.example.recipebook.domain.interactor.collection.CollectionInteractor
 import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
-import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailRoutes
+import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailDestination
 import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.CollectionUiState
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.DropdownMenuAction
@@ -33,9 +33,8 @@ class RecipeDetailViewModel @Inject constructor(
     private val collectionsInteractor: CollectionInteractor,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-
     private val recipeId: String =
-        checkNotNull(savedStateHandle[RecipeDetailRoutes.RecipeDetail.RECIPE_ID_ARG]).toString()
+        checkNotNull(savedStateHandle[RecipeDetailDestination.RECIPE_ID_ARG]).toString()
     private val _events = MutableSharedFlow<RecipeDetailEvent>()
     val events = _events.asSharedFlow()
     private val _uiState = MutableStateFlow(RecipeDetailUiState())

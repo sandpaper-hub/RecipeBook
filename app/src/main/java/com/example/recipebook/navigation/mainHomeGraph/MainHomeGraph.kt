@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.recipebook.R
+import com.example.recipebook.navigation.mainHomeGraph.collectionDetailGraph.CollectionDetailRoutes
+import com.example.recipebook.navigation.mainHomeGraph.collectionDetailGraph.collectionDetailGraph
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailRoutes
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.recipeDetailNavGraph
 import com.example.recipebook.navigation.mainHomeGraph.settingsGraph.settingsGraph
@@ -48,7 +50,7 @@ fun MainHomeGraph(
             )
         }
 
-        composable(BottomNavigationItem.CreateCollection.route){
+        composable(BottomNavigationItem.CreateCollection.route) {
             CreateCollectionScreen(
                 onBack = {
                     navController.popBackStack()
@@ -57,8 +59,16 @@ fun MainHomeGraph(
         }
 
         composable(BottomNavigationItem.Collections.route) {
-            CollectionScreen()
+            CollectionScreen(
+                onCollectionDetail = { collectionId ->
+                    navController.navigate(
+                        CollectionDetailRoutes.CollectionDetail.createRoute(collectionId)
+                    )
+                }
+            )
         }
+
+        collectionDetailGraph(navController)
 
         settingsGraph(
             navController = navController,
@@ -90,7 +100,7 @@ sealed class BottomNavigationItem(
         label = "Create recipe"
     )
 
-    data object CreateCollection: BottomNavigationItem(
+    data object CreateCollection : BottomNavigationItem(
         route = "create_collection",
         icon = R.drawable.collection_icon,
         label = "Create collection"

@@ -35,11 +35,13 @@ fun CollectionSquareCard(
     name: String,
     count: Int,
     imageUrl: String?,
+    onItemClick: () -> Unit,
     modifier: Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .clickable(onClick = onItemClick)
     ) {
         AsyncImage(
             model = imageUrl ?: R.drawable.collection_background,
@@ -82,7 +84,8 @@ fun CollectionListCard(
             .padding(horizontal = 12.dp)
             .clickable(
                 enabled = clickEnabled,
-                onClick = onItemClick),
+                onClick = onItemClick
+            ),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
