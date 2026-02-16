@@ -12,7 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuResourceItem
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.MenuStringItem
 
 @Composable
 @Suppress("FunctionName")
@@ -35,10 +36,13 @@ fun IndexedDropdownMenu(
     ) {
         menuItems.forEachIndexed { index, menuItem ->
             DropdownMenuItem(
-                text = { Text(
-                    maxLines = 1,
-                    text = menuItem,
-                    overflow = TextOverflow.Ellipsis) },
+                text = {
+                    Text(
+                        maxLines = 1,
+                        text = menuItem,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
                 onClick = { onItemClick(index) }
             )
         }
@@ -49,7 +53,34 @@ fun IndexedDropdownMenu(
 @Suppress("FunctionName")
 fun <T> ResourcesDropDownMenu(
     expanded: Boolean,
-    items: List<DropdownMenuItem<T>>,
+    items: List<DropdownMenuResourceItem<T>>,
+    onDismiss: () -> Unit,
+    onItemClick: (T) -> Unit
+) {
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.background
+    ) {
+        items.forEach { item ->
+            DropdownMenuItem(
+                text = {
+                    Text(text = stringResource(item.titleResource))
+                },
+                onClick = {
+                    onItemClick(item.action)
+                    onDismiss()
+                }
+            )
+        }
+    }
+}
+
+@Composable
+@Suppress("FunctionName")
+fun <T> StringsDropDownMenu(
+    expanded: Boolean,
+    items: List<MenuStringItem<T>>,
     onDismiss: () -> Unit,
     onItemClick: (T) -> Unit
 ) {
@@ -62,19 +93,7 @@ fun <T> ResourcesDropDownMenu(
         items.forEach { item ->
             DropdownMenuItem(
                 text = {
-                    Text(
-                        text = when {
-                            item.titleResource != null -> {
-                                stringResource(item.titleResource)
-                            }
-
-                            item.title != null -> {
-                                item.title
-                            }
-
-                            else -> error("No title resource")
-                        }
-                    )
+                    Text(text = item.title)
                 },
                 onClick = {
                     onItemClick(item.action)

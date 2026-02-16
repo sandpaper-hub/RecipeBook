@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,9 +36,10 @@ import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleTextLarge
 import com.example.recipebook.presentation.ui.commonUi.TopBarBackNavigation
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuResourceItem
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeDescription
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.RecipeDetailViewModel
-import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.DropdownMenuAction
+import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.RecipeDetailMenuAction
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.RecipeDetailEvent
 
 @Composable
@@ -49,6 +51,18 @@ fun RecipeDetailScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
+
+    val dropdownMenuResourceItems = remember {
+        uiState.dropdownMenuItems.map { action->
+            DropdownMenuResourceItem(
+                action = action,
+                titleResource = when (action) {
+                    RecipeDetailMenuAction.EDIT -> R.string.edit_text
+                    RecipeDetailMenuAction.DELETE -> R.string.delete_text
+                }
+            )
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
@@ -64,17 +78,17 @@ fun RecipeDetailScreen(
             .fillMaxSize()
     ) {
         TopBarBackNavigation(
-            onBackClick = onBack,
+            onBackClick = { viewModel.goBack() },
             onMenuClick = { viewModel.showDropdownMenu(true) }
         ) {
             ResourcesDropDownMenu(
                 expanded = uiState.isOpenDropdownMenu,
-                items = uiState.dropdownMenuItems,
+                items = dropdownMenuResourceItems,
                 onDismiss = { viewModel.showDropdownMenu(false) },
                 onItemClick = { action ->
                     when (action) {
-                        DropdownMenuAction.EDIT -> {}
-                        DropdownMenuAction.DELETE -> {
+                        RecipeDetailMenuAction.EDIT -> {}
+                        RecipeDetailMenuAction.DELETE -> {
                             viewModel.openDeleteDialog(true)
                         }
                     }

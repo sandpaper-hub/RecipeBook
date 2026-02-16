@@ -3,13 +3,11 @@ package com.example.recipebook.presentation.viewModel.recipeDetailScreen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.R
 import com.example.recipebook.domain.interactor.collection.CollectionInteractor
 import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailDestination
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.CollectionUiState
-import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.DropdownMenuAction
+import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.RecipeDetailMenuAction
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.RecipeDetailEvent
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.RecipeDetailUiState
@@ -42,7 +40,6 @@ class RecipeDetailViewModel @Inject constructor(
 
     init {
         initDropdownMenuItems()
-
         observeUserCollections()
         getRecipeById(recipeId)
     }
@@ -215,20 +212,12 @@ class RecipeDetailViewModel @Inject constructor(
     }
 
     private fun initDropdownMenuItems() {
-        val dropdownMenuItems = listOf(
-            DropdownMenuItem(
-                action = DropdownMenuAction.EDIT,
-                titleResource = R.string.edit_text
-            ),
-            DropdownMenuItem(
-                action = DropdownMenuAction.DELETE,
-                titleResource = R.string.delete_text
-            )
-        )
-
         _uiState.update {
             it.copy(
-                dropdownMenuItems = dropdownMenuItems
+                dropdownMenuItems = listOf(
+                    RecipeDetailMenuAction.EDIT,
+                    RecipeDetailMenuAction.DELETE
+                )
             )
         }
     }

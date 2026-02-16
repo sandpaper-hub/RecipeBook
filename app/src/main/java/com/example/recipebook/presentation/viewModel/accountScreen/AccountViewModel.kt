@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.profile.ProfileInteractor
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.MenuStringItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
@@ -50,7 +50,7 @@ class AccountViewModel @Inject constructor(
     private fun initRegionLocales() {
         val regionLocales = profileInteractor.getLocales()
         val menuItems = regionLocales.map { regionLocale ->
-            DropdownMenuItem(
+            MenuStringItem(
                 action = regionLocale,
                 title = regionLocale
             )

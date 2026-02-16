@@ -2,7 +2,7 @@ package com.example.recipebook.presentation.viewModel.createRecipeScreen.model
 
 import android.net.Uri
 import com.example.recipebook.R
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuResourceItem
 
 data class NewRecipeUiState(
     val recipeImageUri: Uri? = null,
@@ -10,66 +10,66 @@ data class NewRecipeUiState(
     val recipeDescription: String = "",
     val timeEstimation: String = "",
     val editingIngredientId: String? = null,
-    val categoryMenuItems: List<DropdownMenuItem<CategoryMenuAction>> = listOf(
-        DropdownMenuItem(
+    val categoryMenuItems: List<DropdownMenuResourceItem<CategoryMenuAction>> = listOf(
+        DropdownMenuResourceItem(
             action = CategoryMenuAction.APPETIZER,
             titleResource = R.string.appetizer
         ),
-        DropdownMenuItem(
+        DropdownMenuResourceItem(
             action = CategoryMenuAction.SALAD,
             titleResource = R.string.salad
         ),
-        DropdownMenuItem(
+        DropdownMenuResourceItem(
             action = CategoryMenuAction.SOUP,
             titleResource = R.string.soup
         ),
-        DropdownMenuItem(
+        DropdownMenuResourceItem(
             action = CategoryMenuAction.MAIN,
             titleResource = R.string.main
         ),
-        DropdownMenuItem(
+        DropdownMenuResourceItem(
             action = CategoryMenuAction.GARNISH,
             titleResource = R.string.garnish
         ),
-        DropdownMenuItem(
+        DropdownMenuResourceItem(
             action = CategoryMenuAction.SAUCE,
             titleResource = R.string.sauce
         ),
-        DropdownMenuItem(
+        DropdownMenuResourceItem(
             action = CategoryMenuAction.DESERT,
             titleResource = R.string.desert
         ),
-        DropdownMenuItem(
+        DropdownMenuResourceItem(
             action = CategoryMenuAction.DRINK,
             titleResource = R.string.drink
         )
     ),
-    val measureMenuItems: List<DropdownMenuItem<MeasureMenuAction>> = listOf(
-        DropdownMenuItem(
+    val measureMenuItems: List<DropdownMenuResourceItem<MeasureMenuAction>> = listOf(
+        DropdownMenuResourceItem(
             action = MeasureMenuAction.TEASPOON,
             titleResource = R.string.measure_teaspoon
         ),
-        DropdownMenuItem(
+        DropdownMenuResourceItem(
             action = MeasureMenuAction.TABLESPOON,
             titleResource = R.string.measure_tablespoon
         ),
-        DropdownMenuItem(
+        DropdownMenuResourceItem(
             action = MeasureMenuAction.GRAM,
             titleResource = R.string.measure_g,
         ),
-        DropdownMenuItem(
+        DropdownMenuResourceItem(
             action = MeasureMenuAction.KILOGRAM,
             titleResource = R.string.measure_kg
         ),
-        DropdownMenuItem(
+        DropdownMenuResourceItem(
             action = MeasureMenuAction.MILLILITER,
             titleResource = R.string.measure_ml
         ),
-        DropdownMenuItem(
+        DropdownMenuResourceItem(
             action = MeasureMenuAction.LITER,
             titleResource = R.string.measure_l
         ),
-        DropdownMenuItem(
+        DropdownMenuResourceItem(
             action = MeasureMenuAction.PCS,
             titleResource = R.string.measure_pcs
         )

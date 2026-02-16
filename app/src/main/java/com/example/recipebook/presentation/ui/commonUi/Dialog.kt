@@ -28,14 +28,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.ResourcesDropDownMenu
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuResourceItem
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.MeasureMenuAction
 
 
 @Composable
 @Suppress("FunctionName")
 fun IngredientDialog(
-    items: List<DropdownMenuItem<MeasureMenuAction>>,
+    items: List<DropdownMenuResourceItem<MeasureMenuAction>>,
     onDialogDismiss: () -> Unit,
     onConfirm: (value: String, amount: String, measure: MeasureMenuAction) -> Unit
 ) {

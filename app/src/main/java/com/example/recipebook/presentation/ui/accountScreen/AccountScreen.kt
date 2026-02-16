@@ -19,7 +19,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.CustomCircleIconButton
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.ResourcesDropDownMenu
 import com.example.recipebook.presentation.ui.commonUi.CustomTextField
 import com.example.recipebook.presentation.ui.commonUi.DatePickerDialog
 import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
@@ -28,6 +27,7 @@ import com.example.recipebook.presentation.ui.commonUi.ProfileAvatar
 import com.example.recipebook.presentation.ui.commonUi.SelectableButtonBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleText
+import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.StringsDropDownMenu
 import com.example.recipebook.presentation.util.debounce
 import com.example.recipebook.presentation.viewModel.accountScreen.AccountViewModel
 import com.example.recipebook.presentation.util.toFormatedDate
@@ -181,7 +181,7 @@ fun AccountScreen(
                 }
         )
 
-        ResourcesDropDownMenu(
+        StringsDropDownMenu(
             expanded = uiState.showRegionMenu,
             items = uiState.regionLocales,
             onDismiss = { viewModel.showCountryMenu(false) },
