@@ -26,7 +26,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.recipebook.R
+import com.example.recipebook.presentation.ui.commonUi.ExpandableText
+import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
+import com.example.recipebook.presentation.ui.commonUi.ImageBanner
 import com.example.recipebook.presentation.ui.commonUi.SecondaryText
 
 @Composable
@@ -131,5 +134,45 @@ fun CollectionListCard(
                 }
             )
         }
+    }
+}
+
+@Composable
+@Suppress("FunctionName")
+fun CollectionBannerBox(
+    collectionImage: String,
+    collectionName: String,
+    collectionDescription: String,
+    collectionSize: Int
+) {
+    Column {
+        ImageBanner(
+            imageUrl = collectionImage,
+            contentDescription = stringResource(R.string.collection_image),
+            modifier = Modifier.height(250.dp)
+        )
+
+        HeadingTextLarge(
+            text = collectionName,
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .padding(top = 24.dp)
+        )
+
+        SecondaryText(
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .padding(horizontal = 24.dp),
+            text = "$collectionSize ${stringResource(R.string.recipes).lowercase()}",
+            style = MaterialTheme.typography.labelMedium.copy(
+                color = MaterialTheme.colorScheme.inversePrimary
+            )
+        )
+
+        ExpandableText(
+            modifier = Modifier
+                .padding(24.dp),
+            text = collectionDescription
+        )
     }
 }

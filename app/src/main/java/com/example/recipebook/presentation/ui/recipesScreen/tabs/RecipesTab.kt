@@ -1,10 +1,10 @@
 package com.example.recipebook.presentation.ui.recipesScreen.tabs
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -33,7 +33,6 @@ fun RecipesTab(
         state = listState,
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(24.dp),
-        contentPadding = PaddingValues(horizontal = 24.dp)
     ) {
         item {
             Spacer(modifier = Modifier.height(4.dp))
@@ -59,7 +58,8 @@ fun RecipesTab(
                 name = recipe.recipeName,
                 timeEstimation = recipe.recipeTimeEstimation,
                 uploadedTime = recipe.createdAt.toUpdatedAgoText(),
-                onRecipeClick = { onRecipeDetail(recipe.id) }
+                onRecipeClick = { onRecipeDetail(recipe.id) },
+                modifier = Modifier.padding(horizontal = 24.dp)
             )
         }
     }

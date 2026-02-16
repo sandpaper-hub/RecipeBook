@@ -37,10 +37,11 @@ fun RecipeCardList(
     name: String,
     timeEstimation: String,
     uploadedTime: String,
-    onRecipeClick: (String) -> Unit
+    onRecipeClick: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clickable(
                 onClick = { onRecipeClick(recipeId) },

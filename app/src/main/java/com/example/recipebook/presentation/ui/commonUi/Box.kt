@@ -283,15 +283,17 @@ fun IngredientTextBox(
     amount: String,
     measure: String
 ) {
-    Row( modifier = Modifier
-        .background(
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            shape = RoundedCornerShape(14.dp)
-        )
-        .fillMaxWidth()
-        .height(48.dp)
-        .padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = Modifier
+            .background(
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                shape = RoundedCornerShape(14.dp)
+            )
+            .fillMaxWidth()
+            .height(48.dp)
+            .padding(horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Text(
             overflow = TextOverflow.Ellipsis,
             text = value,

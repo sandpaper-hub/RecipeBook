@@ -452,13 +452,14 @@ fun SelectableText(
 @Composable
 @Suppress("FunctionName")
 fun ExpandableText(
+    modifier: Modifier = Modifier,
     text: String,
     minimizedMaxLines: Int = 3
 ) {
     var isExpanded by remember { mutableStateOf(false) }
     var isOverflowing by remember { mutableStateOf(false) }
 
-    Column {
+    Column(modifier =modifier) {
         Text(
             text = text,
             maxLines = if (isExpanded) Int.MAX_VALUE else minimizedMaxLines,
