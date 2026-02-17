@@ -9,8 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredient
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStepDraft
-import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.CategoryMenuAction
-import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.MeasureMenuAction
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.NewRecipeUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeStepUiState
@@ -63,7 +61,7 @@ class CreateRecipeViewModel @Inject constructor(
         id: String,
         value: String,
         amount: String,
-        measure: MeasureMenuAction
+        measure: String
     ) {
         uiState = uiState.copy(
             ingredients = uiState.ingredients.map {
@@ -81,7 +79,7 @@ class CreateRecipeViewModel @Inject constructor(
         uiState = uiState.copy(isCategoryMenuExpand = isShow)
     }
 
-    fun onCategoryChange(value: CategoryMenuAction) {
+    fun onCategoryChange(value: String) {
         uiState = uiState.copy(
             recipeCategory = value,
             isCategoryMenuExpand = false
@@ -159,13 +157,13 @@ class CreateRecipeViewModel @Inject constructor(
                     recipeDescription = uiState.recipeDescription,
                     recipeTimeEstimation = uiState.timeEstimation,
                     recipeImageSource = uiState.recipeImageUri?.toString(),
-                    category = uiState.recipeCategory.toString(),
+                    category = uiState.recipeCategory,
                     ingredients = uiState.ingredients.map { ingredient ->
                         NewRecipeIngredient(
                             id = ingredient.id,
                             value = ingredient.value,
                             amount = ingredient.amount,
-                            measure = ingredient.measure.toString()
+                            measure = ingredient.measure
                         )
                     },
                     steps = uiState.recipeSteps.mapIndexed {index, recipeStepUiState ->
