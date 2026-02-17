@@ -1,6 +1,6 @@
-package com.example.recipebook.presentation.viewModel.registrationScreen
+package com.example.recipebook.presentation.viewModel.registrationScreen.model
 
-data class RegistrationState(
+data class RegistrationUiState(
     val name: String = "",
     val email: String = "",
     val password: String = "",

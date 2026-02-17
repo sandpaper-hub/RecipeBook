@@ -1,4 +1,4 @@
-package com.example.recipebook.presentation.viewModel.collectionsScreen
+package com.example.recipebook.presentation.viewModel.collectionsScreen.model
 
 import com.example.recipebook.domain.model.collection.UserCollection
 

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipebook.R
 import com.example.recipebook.domain.interactor.registration.RegistrationInteractor
 import com.example.recipebook.presentation.viewModel.model.UiEvent
+import com.example.recipebook.presentation.viewModel.registrationScreen.model.RegistrationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -18,7 +19,7 @@ import javax.inject.Inject
 class RegistrationViewModel @Inject constructor(
     private val registrationInteractor: RegistrationInteractor
 ) : ViewModel() {
-    var uiState by mutableStateOf(RegistrationState())
+    var uiState by mutableStateOf(RegistrationUiState())
         private set
     private val _events = MutableSharedFlow<UiEvent>()
     val events: SharedFlow<UiEvent> = _events

@@ -1,4 +1,4 @@
-package com.example.recipebook.presentation.viewModel.recipesScreen
+package com.example.recipebook.presentation.viewModel.recipesScreen.model
 
 import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
 

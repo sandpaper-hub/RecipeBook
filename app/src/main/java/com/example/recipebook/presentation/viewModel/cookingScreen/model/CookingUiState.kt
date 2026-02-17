@@ -1,4 +1,4 @@
-package com.example.recipebook.presentation.viewModel.cookingScreen
+package com.example.recipebook.presentation.viewModel.cookingScreen.model
 
 data class CookingUiState(
     val recipeId: String = "",

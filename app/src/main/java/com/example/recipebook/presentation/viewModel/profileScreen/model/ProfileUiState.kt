@@ -1,9 +1,9 @@
-package com.example.recipebook.presentation.viewModel.profileScreen
+package com.example.recipebook.presentation.viewModel.profileScreen.model
 
 import android.net.Uri
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipe
 
-data class ProfileState(
+data class ProfileUiState(
     val fullName: String = "",
     val nickName: String = "",
     val localImageUri: Uri? = null,

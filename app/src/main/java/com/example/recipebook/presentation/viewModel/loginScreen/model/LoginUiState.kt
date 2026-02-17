@@ -1,4 +1,4 @@
-package com.example.recipebook.presentation.viewModel.loginScreen
+package com.example.recipebook.presentation.viewModel.loginScreen.model
 
 data class LoginUiState(
     val email: String = "",

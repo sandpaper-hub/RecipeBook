@@ -1,4 +1,4 @@
-package com.example.recipebook.presentation.viewModel.settingsScreen
+package com.example.recipebook.presentation.viewModel.settingsScreen.model
 
 import com.example.recipebook.domain.model.ThemeMode
 

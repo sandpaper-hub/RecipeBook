@@ -26,7 +26,7 @@ import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeStep
 import com.example.recipebook.presentation.ui.commonUi.recipe.StepsIndicator
-import com.example.recipebook.presentation.viewModel.cookingScreen.CookingEvent
+import com.example.recipebook.presentation.viewModel.cookingScreen.model.CookingEvent
 import com.example.recipebook.presentation.viewModel.cookingScreen.CookingViewModel
 
 @Composable

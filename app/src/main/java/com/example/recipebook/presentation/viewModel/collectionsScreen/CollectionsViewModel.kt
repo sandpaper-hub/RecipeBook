@@ -3,6 +3,7 @@ package com.example.recipebook.presentation.viewModel.collectionsScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.collection.CollectionInteractor
+import com.example.recipebook.presentation.viewModel.collectionsScreen.model.CollectionsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow

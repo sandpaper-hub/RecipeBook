@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.R
 import com.example.recipebook.domain.interactor.login.LoginInteractor
+import com.example.recipebook.presentation.viewModel.loginScreen.model.LoginUiState
 import com.example.recipebook.presentation.viewModel.model.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
