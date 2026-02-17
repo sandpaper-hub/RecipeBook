@@ -55,6 +55,35 @@ class CollectionRepositoryImpl @Inject constructor(
             }
         }
 
+    override fun observeCollectionDetail(
+        userId: String,
+        collectionId: String
+    ): Flow<UserCollection?> = callbackFlow {
+        val listener = firestore
+            .collection("users")
+            .document(userId)
+            .collection("collections")
+            .document(collectionId)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot == null || !snapshot.exists()) {
+                    trySend(null)
+                    return@addSnapshotListener
+                }
+
+                val collection = snapshot
+                    .toObject(CollectionDto::class.java)
+                    ?.toDomain()
+
+                trySend(collection)
+            }
+        awaitClose { listener.remove() }
+    }
+
     override suspend fun createDocument(): String {
         val document = firestore
             .collection("users")

@@ -62,10 +62,10 @@ fun CollectionDetailScreen(
         ) {
             item {
                 CollectionBannerBox(
-                    collectionImage = "https://firebasestorage.googleapis.com/v0/b/recipebook-4b1fd.firebasestorage.app/o/collections%2FWw2jHgA7QZuU0CZcdns1%2Fcover%2Fcollection_cover.jpg?alt=media&token=bd4d74b1-efbf-460f-ae3b-bf76f94a2f34",
-                    collectionName = "123",
-                    collectionDescription = "https://firebasestorage.googleapis.com/v0/b/recipebook-4b1fd.firebasestorage.app/o/collections%2FWw2jHgA7QZuU0CZcdns1%2Fcover%2Fcollection_cover.jpg?alt=media&token=bd4d74b1-efbf-460f-ae3b-bf76f94a2f34",
-                    collectionSize = 4
+                    collectionImage = uiState.imageSource,
+                    collectionName = uiState.name,
+                    collectionDescription = uiState.description,
+                    collectionSize = uiState.collectionSize
                 )
             }
 

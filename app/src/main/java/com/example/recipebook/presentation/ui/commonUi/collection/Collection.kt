@@ -140,7 +140,7 @@ fun CollectionListCard(
 @Composable
 @Suppress("FunctionName")
 fun CollectionBannerBox(
-    collectionImage: String,
+    collectionImage: String?,
     collectionName: String,
     collectionDescription: String,
     collectionSize: Int
