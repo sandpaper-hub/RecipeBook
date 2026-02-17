@@ -7,7 +7,6 @@ import com.example.recipebook.domain.interactor.collection.CollectionInteractor
 import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailDestination
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.CollectionUiState
-import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.RecipeDetailMenuAction
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.RecipeDetailEvent
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.RecipeDetailUiState
@@ -39,7 +38,6 @@ class RecipeDetailViewModel @Inject constructor(
     val uiState: StateFlow<RecipeDetailUiState> = _uiState
 
     init {
-        initDropdownMenuItems()
         observeUserCollections()
         getRecipeById(recipeId)
     }
@@ -208,17 +206,6 @@ class RecipeDetailViewModel @Inject constructor(
     fun onCookingScreen() {
         viewModelScope.launch {
             _events.emit(RecipeDetailEvent.OnCookingScreen(recipeId))
-        }
-    }
-
-    private fun initDropdownMenuItems() {
-        _uiState.update {
-            it.copy(
-                dropdownMenuItems = listOf(
-                    RecipeDetailMenuAction.EDIT,
-                    RecipeDetailMenuAction.DELETE
-                )
-            )
         }
     }
 

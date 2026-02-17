@@ -7,7 +7,6 @@ data class RecipeDetailUiState(
     val name: String = "",
     val description: String = "",
     val category: RecipeCategory = RecipeCategory.UNKNOWN,
-    val dropdownMenuItems: List<RecipeDetailMenuAction> = listOf(),
     val isOpenDropdownMenu: Boolean = false,
     val isOpenedDeleteDialog: Boolean = false,
     val isShowCollectionSheet: Boolean = false,

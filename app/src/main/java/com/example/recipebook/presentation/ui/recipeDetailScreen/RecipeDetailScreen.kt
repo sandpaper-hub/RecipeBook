@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,16 +29,15 @@ import com.example.recipebook.domain.model.recipe.getRecipe.IngredientMeasure
 import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
 import com.example.recipebook.presentation.ui.commonUi.CollectionsBottomSheet
 import com.example.recipebook.presentation.ui.commonUi.ConfirmDialog
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.ResourcesDropDownMenu
 import com.example.recipebook.presentation.ui.commonUi.ImageBanner
 import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleTextLarge
 import com.example.recipebook.presentation.ui.commonUi.TopBarBackNavigation
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuResourceItem
+import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeDescription
+import com.example.recipebook.presentation.ui.recipeDetailScreen.model.RecipeDetailMenuItem
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.RecipeDetailViewModel
-import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.RecipeDetailMenuAction
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.RecipeDetailEvent
 
 @Composable
@@ -52,17 +50,10 @@ fun RecipeDetailScreen(
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
 
-    val dropdownMenuResourceItems = remember {
-        uiState.dropdownMenuItems.map { action->
-            DropdownMenuResourceItem(
-                action = action,
-                titleResource = when (action) {
-                    RecipeDetailMenuAction.EDIT -> R.string.edit_text
-                    RecipeDetailMenuAction.DELETE -> R.string.delete_text
-                }
-            )
-        }
-    }
+    val dropdownMenuResourceItems = listOf(
+        RecipeDetailMenuItem.EDIT,
+        RecipeDetailMenuItem.DELETE
+    )
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
@@ -81,14 +72,17 @@ fun RecipeDetailScreen(
             onBackClick = { viewModel.goBack() },
             onMenuClick = { viewModel.showDropdownMenu(true) }
         ) {
-            ResourcesDropDownMenu(
+            AppDropdownMenu(
                 expanded = uiState.isOpenDropdownMenu,
                 items = dropdownMenuResourceItems,
+                itemContent = { menuItem ->
+                    Text(stringResource(menuItem.stringResource))
+                },
                 onDismiss = { viewModel.showDropdownMenu(false) },
-                onItemClick = { action ->
-                    when (action) {
-                        RecipeDetailMenuAction.EDIT -> {}
-                        RecipeDetailMenuAction.DELETE -> {
+                onItemClick = { menuItem ->
+                    when (menuItem) {
+                        RecipeDetailMenuItem.EDIT -> {}
+                        RecipeDetailMenuItem.DELETE -> {
                             viewModel.openDeleteDialog(true)
                         }
                     }

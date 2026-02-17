@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +28,7 @@ import com.example.recipebook.presentation.ui.commonUi.ProfileAvatar
 import com.example.recipebook.presentation.ui.commonUi.SelectableButtonBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleText
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.StringsDropDownMenu
+import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.util.debounce
 import com.example.recipebook.presentation.viewModel.accountScreen.AccountViewModel
 import com.example.recipebook.presentation.util.toFormatedDate
@@ -181,10 +182,13 @@ fun AccountScreen(
                 }
         )
 
-        StringsDropDownMenu(
+        AppDropdownMenu(
             expanded = uiState.showRegionMenu,
             items = uiState.regionLocales,
             onDismiss = { viewModel.showCountryMenu(false) },
+            itemContent = { regionLocale ->
+                Text(regionLocale)
+            },
             onItemClick = { regionLocale ->
                 viewModel.onCountryChange(regionLocale)
             }

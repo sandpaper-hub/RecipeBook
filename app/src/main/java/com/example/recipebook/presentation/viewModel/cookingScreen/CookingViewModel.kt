@@ -37,12 +37,13 @@ class CookingViewModel @Inject constructor(
             val steps = recipesInteractor.getRecipeSteps(recipeId)
             _uiState.update { cookingUiState ->
                 cookingUiState.copy(
-                    recipeSteps = steps.map {
+                    recipeSteps = steps.mapIndexed { index, step ->
                         StepUiState(
-                            title = it.title,
-                            order = it.order,
-                            description = it.description,
-                            imageUrl = it.imageSource
+                            index = index,
+                            title = step.title,
+                            order = step.order,
+                            description = step.description,
+                            imageUrl = step.imageSource
                         )
                     }
                 )
