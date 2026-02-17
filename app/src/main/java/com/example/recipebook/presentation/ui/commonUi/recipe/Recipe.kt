@@ -53,7 +53,7 @@ fun RecipeCardList(
         Box(
             modifier = Modifier
                 .size(84.dp)
-                .clip(RoundedCornerShape(20.dp))
+                .clip(RoundedCornerShape(8.dp))
         ) {
             AsyncImage(
                 model = imageUrl ?: R.drawable.recipe_placeholder,

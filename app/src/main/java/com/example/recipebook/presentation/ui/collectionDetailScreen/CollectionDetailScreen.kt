@@ -6,11 +6,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
+import com.example.recipebook.presentation.ui.collectionDetailScreen.model.MenuItem
+import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.ui.commonUi.TopBarBackNavigation
 import com.example.recipebook.presentation.ui.commonUi.collection.CollectionBannerBox
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeCardList
@@ -21,15 +27,35 @@ import com.example.recipebook.presentation.viewModel.collectionDetailScreen.Coll
 fun CollectionDetailScreen(
     viewModel: CollectionDetailViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+    val menuItems = listOf(
+        MenuItem.EDIT,
+        MenuItem.DELETE
+    )
+
     Column(modifier = Modifier.fillMaxSize()) {
         TopBarBackNavigation(
             onBackClick = {},
-            onMenuClick = {}
+            onMenuClick = { viewModel.expandMenu(true) }
         ) {
-            //DROPDOWN MENU
+            AppDropdownMenu(
+                expanded = uiState.isMenuExpanded,
+                items = menuItems,
+                itemContent = { menuItem ->
+                    Text(stringResource(menuItem.stringResource))
+                },
+                onItemClick = { menuItem ->
+                    when (menuItem) {
+                        MenuItem.EDIT -> {}
+                        MenuItem.DELETE -> {}
+                    }
+                },
+                onDismiss = { viewModel.expandMenu(false) }
+            )
         }
 
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp),
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
