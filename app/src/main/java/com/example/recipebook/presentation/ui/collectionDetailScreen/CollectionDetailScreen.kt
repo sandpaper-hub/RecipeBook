@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,6 +21,7 @@ import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.ui.commonUi.TopBarBackNavigation
 import com.example.recipebook.presentation.ui.commonUi.collection.CollectionBannerBox
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeCardList
+import com.example.recipebook.presentation.util.toUpdatedAgoText
 import com.example.recipebook.presentation.viewModel.collectionDetailScreen.CollectionDetailViewModel
 
 @Composable
@@ -69,14 +71,15 @@ fun CollectionDetailScreen(
                 )
             }
 
-            items(10) {
+
+            items(uiState.recipeList, key = { it.id }) { recipe ->
                 RecipeCardList(
-                    recipeId = "",
-                    imageUrl = "https://firebasestorage.googleapis.com/v0/b/recipebook-4b1fd.firebasestorage.app/o/collections%2FWw2jHgA7QZuU0CZcdns1%2Fcover%2Fcollection_cover.jpg?alt=media&token=bd4d74b1-efbf-460f-ae3b-bf76f94a2f34",
+                    recipeId = recipe.id,
+                    imageUrl = recipe.imageUrl,
                     categoryResource = R.string.category,
-                    name = "someRecipe",
-                    timeEstimation = "2 hour",
-                    uploadedTime = "1234",
+                    name = recipe.recipeName,
+                    timeEstimation = recipe.recipeTimeEstimation,
+                    uploadedTime = recipe.createdAt.toUpdatedAgoText(),
                     onRecipeClick = {},
                     modifier = Modifier.padding(horizontal = 24.dp)
                 )

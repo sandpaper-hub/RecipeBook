@@ -12,6 +12,7 @@ import com.example.recipebook.domain.useCase.GetCurrentUserIdUseCase
 import com.example.recipebook.domain.useCase.GetRecipeByIdUseCase
 import com.example.recipebook.domain.useCase.GetRecipeCoverUrlUseCase
 import com.example.recipebook.domain.useCase.GetRecipeStepsUseCase
+import com.example.recipebook.domain.useCase.GetRecipesByIdsUseCase
 import com.example.recipebook.domain.useCase.GetStepImagesUrlUseCase
 import com.example.recipebook.domain.useCase.GetUserIdFlowUseCase
 import com.example.recipebook.domain.useCase.GetUserRecipesUseCase
@@ -29,7 +30,8 @@ class RecipesInteractorImpl @Inject constructor(
     private val getUserIdFlowUseCase: GetUserIdFlowUseCase,
     private val getRecipeByIdUseCase: GetRecipeByIdUseCase,
     private val getRecipeStepsUseCase: GetRecipeStepsUseCase,
-    private val deleteRecipeUseCase: DeleteRecipeUseCase
+    private val deleteRecipeUseCase: DeleteRecipeUseCase,
+    private val getRecipesByIdsUseCase: GetRecipesByIdsUseCase
 ) : RecipesInteractor {
     override suspend fun getRecipeById(recipeId: String): Recipe {
         return getRecipeByIdUseCase.execute(recipeId)
@@ -92,10 +94,16 @@ class RecipesInteractorImpl @Inject constructor(
     override fun getUserIdFlow(): Flow<String?> = getUserIdFlowUseCase.execute()
 
     override suspend fun getRecipeSteps(recipeId: String): List<Step> {
-       return getRecipeStepsUseCase.execute(recipeId)
+        return getRecipeStepsUseCase.execute(recipeId)
     }
 
     override suspend fun deleteRecipe(recipeId: String) {
         deleteRecipeUseCase.execute(recipeId)
+    }
+
+    override suspend fun getRecipesByIds(
+        recipeIds: List<String>
+    ): List<Recipe> {
+        return getRecipesByIdsUseCase.execute(recipeIds)
     }
 }

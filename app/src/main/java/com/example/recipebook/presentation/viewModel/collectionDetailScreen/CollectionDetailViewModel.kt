@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.collection.CollectionInteractor
+import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
 import com.example.recipebook.navigation.mainHomeGraph.collectionDetailGraph.CollectionDetailDestination
 import com.example.recipebook.presentation.viewModel.collectionDetailScreen.model.CollectionDetailUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +22,7 @@ import javax.inject.Inject
 class
 CollectionDetailViewModel @Inject constructor(
     private val collectionInteractor: CollectionInteractor,
+    private val recipesInteractor: RecipesInteractor,
     savedStateHandle: SavedStateHandle
 ) :
     ViewModel() {
@@ -49,15 +51,13 @@ CollectionDetailViewModel @Inject constructor(
                 }
 
                 if (collection != null) {
-
-
                     _uiState.update {
                         it.copy(
                             name = collection.name,
                             imageSource = collection.imageUrl,
                             description = collection.description,
                             collectionSize = collection.recipeIds.size,
-                            recipeIds = collection.recipeIds,
+                            recipeList = recipesInteractor.getRecipesByIds(collection.recipeIds ),
                         )
                     }
                 }

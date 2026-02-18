@@ -30,4 +30,5 @@ interface RecipesInteractor {
     fun getUserIdFlow(): Flow<String?>
     suspend fun getRecipeSteps(recipeId: String): List<Step>
     suspend fun deleteRecipe(recipeId: String)
+    suspend fun getRecipesByIds(recipeIds: List<String>): List<Recipe>
 }

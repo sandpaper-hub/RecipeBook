@@ -21,6 +21,6 @@ interface RecipesRepository {
     fun observeUserRecipes(userId: String): Flow<List<Recipe>>
     suspend fun getRecipeById(recipeId: String): Recipe
     suspend fun getRecipeSteps(recipeId: String): List<Step>
-
     suspend fun deleteRecipe(recipeId: String)
+    suspend fun getRecipesByIds(recipesIds: List<String>): List<Recipe>
 }

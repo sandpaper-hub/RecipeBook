@@ -12,6 +12,7 @@ import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
 import com.example.recipebook.domain.model.recipe.step.Step
 import com.example.recipebook.domain.repository.RecipesRepository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
@@ -171,5 +172,27 @@ class RecipesRepositoryImpl @Inject constructor(
             .document(recipeId)
             .delete()
             .await()
+    }
+
+    override suspend fun getRecipesByIds(
+        recipesIds: List<String>
+    ): List<Recipe> {
+        if (recipesIds.isEmpty()) return emptyList()
+
+        val chunks = recipesIds.chunked(10)
+        val result = mutableListOf<Recipe>()
+
+        for (chunk in chunks) {
+            val snapshot = firestore
+                .collection("users")
+                .document(userId)
+                .collection("recipes")
+                .whereIn(FieldPath.documentId(), chunk)
+                .get()
+                .await()
+            result += snapshot.toObjects(RecipeDto::class.java)
+                .map { it.toDomain() }
+        }
+        return result
     }
 }
