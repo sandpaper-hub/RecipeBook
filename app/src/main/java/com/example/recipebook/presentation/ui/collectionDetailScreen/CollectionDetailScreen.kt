@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -23,10 +24,13 @@ import com.example.recipebook.presentation.ui.commonUi.collection.CollectionBann
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeCardList
 import com.example.recipebook.presentation.util.toUpdatedAgoText
 import com.example.recipebook.presentation.viewModel.collectionDetailScreen.CollectionDetailViewModel
+import com.example.recipebook.presentation.viewModel.collectionDetailScreen.model.CollectionDetailEvent
 
 @Composable
 @Suppress("FunctionName")
 fun CollectionDetailScreen(
+    onBack: () -> Unit,
+    onRecipeDetail: (String) -> Unit,
     viewModel: CollectionDetailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -35,9 +39,18 @@ fun CollectionDetailScreen(
         MenuItem.DELETE
     )
 
+    LaunchedEffect(Unit) {
+        viewModel.event.collect { event ->
+            when (event) {
+                is CollectionDetailEvent.GoBack -> onBack()
+                is CollectionDetailEvent.OnRecipeDetail -> onRecipeDetail(event.recipeId)
+            }
+        }
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
         TopBarBackNavigation(
-            onBackClick = {},
+            onBackClick = { viewModel.onBack() },
             onMenuClick = { viewModel.expandMenu(true) }
         ) {
             AppDropdownMenu(
@@ -80,7 +93,9 @@ fun CollectionDetailScreen(
                     name = recipe.recipeName,
                     timeEstimation = recipe.recipeTimeEstimation,
                     uploadedTime = recipe.createdAt.toUpdatedAgoText(),
-                    onRecipeClick = {},
+                    onRecipeClick = { recipeId ->
+                        viewModel.onRecipeDetail(recipeId)
+                    },
                     modifier = Modifier.padding(horizontal = 24.dp)
                 )
             }

@@ -184,7 +184,7 @@ class RecipeDetailViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(isOpenedDeleteDialog = false)
                     }
-                    _events.emit(RecipeDetailEvent.GoBack())
+                    _events.emit(RecipeDetailEvent.GoBack)
                 }
         }
     }
@@ -199,7 +199,7 @@ class RecipeDetailViewModel @Inject constructor(
 
     fun goBack() {
         viewModelScope.launch {
-            _events.emit(RecipeDetailEvent.GoBack())
+            _events.emit(RecipeDetailEvent.GoBack)
         }
     }
 

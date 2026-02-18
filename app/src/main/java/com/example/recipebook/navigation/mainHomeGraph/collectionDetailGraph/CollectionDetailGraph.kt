@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.recipebook.navigation.Graph
+import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailRoutes
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.recipeDetailNavGraph
 import com.example.recipebook.presentation.ui.collectionDetailScreen.CollectionDetailScreen
 
@@ -21,7 +22,16 @@ fun NavGraphBuilder.collectionDetailGraph(navController: NavController) {
                 type = NavType.StringType
             })
         ) {
-            CollectionDetailScreen()
+            CollectionDetailScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+                onRecipeDetail = { recipeId ->
+                    navController.navigate(
+                        RecipeDetailRoutes.RecipeDetail.createRoute(recipeId)
+                    )
+                }
+            )
         }
 
         recipeDetailNavGraph(navController)
