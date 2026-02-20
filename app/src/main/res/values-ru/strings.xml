@@ -124,7 +124,9 @@
     <string name="drink">Напиток</string>
     <string name="delete_recipe_title">Удалить рецепт?</string>
     <string name="delete_description_title">Вы уверены, что хотите удалить </string>
-    <string name="delete_warning_title">Рецепт и все его данные будут безвозвратно удалены</string>
-    <string name="cancel_text" translatable="true">Отмена</string>
+    <string name="delete_recipe_warning_title">Рецепт и все его данные будут безвозвратно удалены</string>
+    <string name="cancel_text">Отмена</string>
     <string name="added_to_collection">Добавлено в коллекцию</string>
+    <string name="delete_collection">Удалить коллекцию?</string>
+    <string name="delete_collection_warning_title">Коллекция и её данные будут безвозвратно удалены</string>
 </resources>

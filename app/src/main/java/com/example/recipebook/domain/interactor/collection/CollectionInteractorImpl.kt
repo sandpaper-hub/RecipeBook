@@ -4,6 +4,7 @@ import com.example.recipebook.domain.model.collection.UserCollection
 import com.example.recipebook.domain.useCase.AddRecipeToCollectionUseCase
 import com.example.recipebook.domain.useCase.CreateCollectionDocumentUseCase
 import com.example.recipebook.domain.useCase.CreateCollectionUseCase
+import com.example.recipebook.domain.useCase.DeleteCollectionUseCase
 import com.example.recipebook.domain.useCase.GetUserCollectionsUseCase
 import com.example.recipebook.domain.useCase.GetUserIdFlowUseCase
 import com.example.recipebook.domain.useCase.ObserveCollectionDetailUseCase
@@ -20,7 +21,8 @@ class CollectionInteractorImpl @Inject constructor(
     private val observeCollectionDetailUseCase: ObserveCollectionDetailUseCase,
     private val getUserIdFlowUseCase: GetUserIdFlowUseCase,
     private val addRecipeToCollectionUseCase: AddRecipeToCollectionUseCase,
-    private val removeRecipeFromCollectionUseCase: RemoveRecipeFromCollectionUseCase
+    private val removeRecipeFromCollectionUseCase: RemoveRecipeFromCollectionUseCase,
+    private val deleteCollectionUseCase: DeleteCollectionUseCase
 
 ) : CollectionInteractor {
     override fun getUserIdFlow(): Flow<String?> = getUserIdFlowUseCase.execute()
@@ -71,5 +73,7 @@ class CollectionInteractorImpl @Inject constructor(
         removeRecipeFromCollectionUseCase.execute(collectionId = collectionId, recipeId = recipeId)
     }
 
-
+    override suspend fun deleteCollection(collectionId: String) {
+        deleteCollectionUseCase.execute(collectionId)
+    }
 }

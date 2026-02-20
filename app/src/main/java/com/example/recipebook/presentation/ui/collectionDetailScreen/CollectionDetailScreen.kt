@@ -19,6 +19,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.collectionDetailScreen.model.MenuItem
 import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
+import com.example.recipebook.presentation.ui.commonUi.DeleteDialog
 import com.example.recipebook.presentation.ui.commonUi.TopBarBackNavigation
 import com.example.recipebook.presentation.ui.commonUi.collection.CollectionBannerBox
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeCardList
@@ -62,7 +63,9 @@ fun CollectionDetailScreen(
                 onItemClick = { menuItem ->
                     when (menuItem) {
                         MenuItem.EDIT -> {}
-                        MenuItem.DELETE -> {}
+                        MenuItem.DELETE -> {
+                            viewModel.showDeleteDialog(true)
+                        }
                     }
                 },
                 onDismiss = { viewModel.expandMenu(false) }
@@ -99,6 +102,19 @@ fun CollectionDetailScreen(
                     modifier = Modifier.padding(horizontal = 24.dp)
                 )
             }
+        }
+
+        if (uiState.isDeleteDialogOpen) {
+            DeleteDialog(
+                headingText = stringResource(R.string.delete_collection),
+                warningText = stringResource(R.string.delete_collection_warning_title),
+                itemName = uiState.name,
+                onDismiss = { viewModel.showDeleteDialog(false) },
+                onConfirm = {
+                    viewModel.deleteCollection()
+                    viewModel.showDeleteDialog(false)
+                }
+            )
         }
     }
 }

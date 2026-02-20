@@ -161,10 +161,12 @@ fun IngredientDialog(
 
 @Composable
 @Suppress("FunctionName")
-fun ConfirmDialog(
+fun DeleteDialog(
+    headingText: String,
+    warningText: String,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
-    recipeName: String
+    itemName: String
 ) {
 
     Dialog(onDismissRequest = onDismiss) {
@@ -181,15 +183,15 @@ fun ConfirmDialog(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 HeadingTextMedium(
-                    text = stringResource(R.string.delete_recipe_title),
+                    text = headingText,
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Medium
                     )
                 )
 
                 SubHeadingTextSmall(
-                    text = "${stringResource(R.string.delete_description_title)} \"$recipeName\"?\n" +
-                            stringResource(R.string.delete_warning_title),
+                    text = "${stringResource(R.string.delete_description_title)} \"$itemName\"?\n" +
+                            warningText,
                     modifier = Modifier
                         .padding(top = 8.dp),
                     color = MaterialTheme.colorScheme.onBackground

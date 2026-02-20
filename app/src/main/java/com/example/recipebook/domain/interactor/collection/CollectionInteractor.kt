@@ -17,4 +17,5 @@ interface CollectionInteractor {
 
     suspend fun addRecipeToCollection(collectionId: String, recipeId: String)
     suspend fun removeRecipeFromCollection(collectionId: String, recipeId: String)
+    suspend fun deleteCollection(collectionId: String)
 }

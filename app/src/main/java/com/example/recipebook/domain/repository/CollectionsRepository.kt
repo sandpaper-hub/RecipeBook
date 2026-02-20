@@ -15,9 +15,10 @@ interface CollectionsRepository {
     suspend fun uploadCollectionImage(
         collectionId: String,
         imageSource: String
-    ) : String
+    ): String
 
     suspend fun addRecipeToCollection(collectionId: String, recipeId: String)
 
     suspend fun removeRecipeFromCollection(collectionId: String, recipeId: String)
+    suspend fun deleteCollection(collectionId: String)
 }

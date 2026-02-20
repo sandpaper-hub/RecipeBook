@@ -8,5 +8,6 @@ data class CollectionDetailUiState(
     val description: String = "",
     val collectionSize: Int = 0,
     val recipeList: List<Recipe> = listOf(),
-    val isMenuExpanded: Boolean = false
+    val isMenuExpanded: Boolean = false,
+    val isDeleteDialogOpen: Boolean = false
 )

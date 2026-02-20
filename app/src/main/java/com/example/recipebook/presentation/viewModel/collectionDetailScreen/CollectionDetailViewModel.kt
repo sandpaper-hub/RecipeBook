@@ -77,8 +77,21 @@ CollectionDetailViewModel @Inject constructor(
         }
     }
 
+    fun showDeleteDialog(isShow: Boolean) {
+        _uiState.update {
+            it.copy(isDeleteDialogOpen = isShow)
+        }
+    }
+
     fun onBack() {
         viewModelScope.launch {
+            _events.emit(CollectionDetailEvent.GoBack)
+        }
+    }
+
+    fun deleteCollection() {
+        viewModelScope.launch {
+            collectionInteractor.deleteCollection(collectionId)
             _events.emit(CollectionDetailEvent.GoBack)
         }
     }

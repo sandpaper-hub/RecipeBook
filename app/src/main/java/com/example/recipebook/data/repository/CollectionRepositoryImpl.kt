@@ -154,4 +154,14 @@ class CollectionRepositoryImpl @Inject constructor(
             .update("recipeIds", FieldValue.arrayRemove(recipeId))
             .await()
     }
+
+    override suspend fun deleteCollection(collectionId: String) {
+        firestore
+            .collection("users")
+            .document(userId)
+            .collection("collections")
+            .document(collectionId)
+            .delete()
+            .await()
+    }
 }

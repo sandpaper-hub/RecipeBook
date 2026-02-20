@@ -28,7 +28,7 @@ import com.example.recipebook.R
 import com.example.recipebook.domain.model.recipe.getRecipe.IngredientMeasure
 import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
 import com.example.recipebook.presentation.ui.commonUi.CollectionsBottomSheet
-import com.example.recipebook.presentation.ui.commonUi.ConfirmDialog
+import com.example.recipebook.presentation.ui.commonUi.DeleteDialog
 import com.example.recipebook.presentation.ui.commonUi.ImageBanner
 import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
@@ -201,8 +201,10 @@ fun RecipeDetailScreen(
         }
 
         if (uiState.isOpenedDeleteDialog) {
-            ConfirmDialog(
-                recipeName = uiState.name,
+            DeleteDialog(
+                headingText = stringResource(R.string.delete_recipe_title),
+                warningText = stringResource(R.string.delete_recipe_warning_title),
+                itemName = uiState.name,
                 onDismiss = { viewModel.openDeleteDialog(false) },
                 onConfirm = {
                     viewModel.deleteRecipe()
