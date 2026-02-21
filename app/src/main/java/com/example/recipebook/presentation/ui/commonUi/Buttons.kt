@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -224,6 +225,25 @@ fun TitleIconButton(
         SecondaryText(
             text = title,
             style = MaterialTheme.typography.labelMedium.copy(
+                color = MaterialTheme.colorScheme.primary
+            )
+        )
+    }
+}
+
+@Composable
+@Suppress("FunctionName")
+fun CustomTextButton(
+    onClick: () -> Unit,
+    text: String,
+    modifier: Modifier
+) {
+    TextButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        Text(
+            text = text, style = MaterialTheme.typography.bodyLarge.copy(
                 color = MaterialTheme.colorScheme.primary
             )
         )

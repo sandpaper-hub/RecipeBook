@@ -34,6 +34,7 @@ import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
+import com.example.recipebook.presentation.ui.commonUi.CustomTextButton
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.CategoryMenuItem
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMenuItem
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.CreateRecipeViewModel
@@ -66,9 +67,23 @@ fun CreateRecipeScreen(
     )
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (recipeColumn, headingText, closeButton) = createRefs()
+        val (recipeColumn, headingText, closeButton, button) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
+
+        IconButton(
+            onClick = onBack,
+            modifier = Modifier
+                .constrainAs(closeButton) {
+                    centerVerticallyTo(headingText)
+                    start.linkTo(startGuideline)
+                }
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.delete_icon),
+                contentDescription = stringResource(R.string.cancel_icon)
+            )
+        }
 
         HeadingTextMedium(
             text = stringResource(R.string.create_recipe),
@@ -79,19 +94,14 @@ fun CreateRecipeScreen(
                 }
         )
 
-        IconButton(
-            onClick = onBack,
-            modifier = Modifier
-                .constrainAs(closeButton) {
-                    centerVerticallyTo(headingText)
-                    end.linkTo(parent.end, margin = 24.dp)
-                }
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.delete_icon),
-                contentDescription = stringResource(R.string.cancel_icon)
-            )
-        }
+        CustomTextButton(
+            onClick = {},
+            text = "Button",
+            modifier = Modifier.constrainAs(button) {
+                centerVerticallyTo(headingText)
+                end.linkTo(endGuideline)
+            }
+        )
 
         LazyColumn(
             state = listState,
