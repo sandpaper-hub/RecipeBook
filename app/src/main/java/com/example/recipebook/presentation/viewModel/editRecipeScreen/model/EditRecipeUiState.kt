@@ -1,13 +1,15 @@
-package com.example.recipebook.presentation.viewModel.createRecipeScreen.model
+package com.example.recipebook.presentation.viewModel.editRecipeScreen.model
 
-data class NewRecipeUiState(
-    val recipeImageSource: String? = null,
+import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
+
+data class EditRecipeUiState(
+    val recipeImageSource: ImageSource = ImageSource.None,
     val recipeName: String = "",
     val recipeDescription: String = "",
     val timeEstimation: String = "",
     val editingIngredientId: String? = null,
     val ingredients: List<IngredientUiState> = emptyList(),
-    val recipeSteps: List<RecipeStepUiState> = emptyList(),
+    val recipeSteps: List<EditRecipeStepUiState> = emptyList(),
     val recipeCategory: String = "",
     val isCategoryMenuExpand: Boolean = false,
     val isEditIngredientDialogOpen: Boolean = false,

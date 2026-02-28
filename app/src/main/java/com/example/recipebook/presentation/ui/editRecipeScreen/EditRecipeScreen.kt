@@ -1,4 +1,4 @@
-package com.example.recipebook.presentation.ui.createRecipeScreen
+package com.example.recipebook.presentation.ui.editRecipeScreen
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -14,6 +14,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -36,16 +39,26 @@ import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.ui.commonUi.CustomTextButton
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.CategoryMenuItem
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMenuItem
-import com.example.recipebook.presentation.viewModel.createRecipeScreen.CreateRecipeViewModel
 import com.example.recipebook.presentation.util.debounce
+import com.example.recipebook.presentation.viewModel.editRecipeScreen.EditRecipeViewModel
+import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
+import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.ImageSource
 
 @Composable
 @Suppress("FunctionName")
-fun CreateRecipeScreen(
+fun EditRecipeScreen(
     onBack: () -> Unit,
-    viewModel: CreateRecipeViewModel = hiltViewModel()
+    viewModel: EditRecipeViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.uiState
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is EditRecipeEvent.GoBack -> onBack()
+
+            }
+        }
+    }
+    val uiState by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
     val recipeImagePickerLaunch = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -71,7 +84,7 @@ fun CreateRecipeScreen(
         val endGuideline = createGuidelineFromEnd(24.dp)
 
         IconButton(
-            onClick = onBack,
+            onClick = { viewModel.goBack() },
             modifier = Modifier
                 .constrainAs(closeButton) {
                     centerVerticallyTo(headingText)
@@ -85,7 +98,7 @@ fun CreateRecipeScreen(
         }
 
         HeadingTextMedium(
-            text = stringResource(R.string.create_recipe),
+            text = stringResource(R.string.edit_recipe),
             modifier = Modifier
                 .constrainAs(headingText) {
                     linkTo(start = startGuideline, end = endGuideline)
@@ -94,7 +107,7 @@ fun CreateRecipeScreen(
         )
 
         CustomTextButton(
-            onClick = { viewModel.uploadNewRecipe(onBack) },
+            onClick = { viewModel.uploadNewRecipe() },
             text = stringResource(R.string.save_button),
             modifier = Modifier.constrainAs(button) {
                 centerVerticallyTo(headingText)
@@ -117,19 +130,25 @@ fun CreateRecipeScreen(
                     .fillMaxWidth()
                     .height(150.dp)
 
-                if (uiState.recipeImageSource != null) {
-                    ImageCover(
-                        imageSource = uiState.recipeImageSource,
-                        contentDescription = stringResource(R.string.recipe_image),
-                        modifier = imageModifier,
-                        onCancelClick = { viewModel.onRecipeImagePicked(null) }
-                    )
-                } else {
+                val imageSource = when (uiState.recipeImageSource) {
+                    is ImageSource.None -> null
+                    is ImageSource.Remote -> (uiState.recipeImageSource as ImageSource.Remote).url
+                    is ImageSource.Local -> (uiState.recipeImageSource as ImageSource.Local).uri
+                }
+
+                if (imageSource == null) {
                     UploadImageBox(
                         text = stringResource(R.string.upload_photo),
                         modifier = imageModifier,
                         onClick = debounce { recipeImagePickerLaunch.launch("image/*") },
                         cornerShapeDp = 20.dp
+                    )
+                } else {
+                    ImageCover(
+                        imageSource = imageSource,
+                        contentDescription = stringResource(R.string.recipe_image),
+                        modifier = imageModifier,
+                        onCancelClick = { viewModel.onRecipeImagePicked(null) }
                     )
                 }
             }
@@ -249,9 +268,14 @@ fun CreateRecipeScreen(
                 ) { uri: Uri? ->
                     viewModel.onStepImageChange(recipeStep.id, uri)
                 }
+                val imageSource = when (recipeStep.imageSource) {
+                    is ImageSource.None -> null
+                    is ImageSource.Remote -> recipeStep.imageSource.url
+                    is ImageSource.Local -> recipeStep.imageSource.uri
+                }
 
                 RecipeStepBox(
-                    imageSource = recipeStep.imageSource,
+                    imageSource = imageSource,
                     titleValue = recipeStep.title,
                     descriptionValue = recipeStep.stepDescription,
                     onImageChange = debounce { imagePicker.launch("image/*") },

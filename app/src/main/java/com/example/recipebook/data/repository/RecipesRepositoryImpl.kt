@@ -5,9 +5,9 @@ import com.example.recipebook.data.dto.getRecipe.StepDto
 import com.example.recipebook.data.mapper.toDomain
 import com.example.recipebook.data.mapper.toDto
 import com.example.recipebook.data.util.ImageCompressorImpl
-import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipe
-import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStep
-import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStepDraft
+import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipe
+import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStep
+import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
 import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
 import com.example.recipebook.domain.model.recipe.step.Step
 import com.example.recipebook.domain.repository.RecipesRepository
@@ -44,7 +44,7 @@ class RecipesRepositoryImpl @Inject constructor(
 
     override suspend fun uploadStepImages(
         recipeId: String,
-        steps: List<NewRecipeStepDraft>
+        steps: List<UploadRecipeStepDraft>
     ): Map<String, String> = coroutineScope {
         steps
             .mapNotNull { step ->
@@ -54,7 +54,7 @@ class RecipesRepositoryImpl @Inject constructor(
                     step.id to uploadStepImage(
                         recipeId = recipeId,
                         stepId = step.id,
-                        imageBytes = imageCompressorImpl.compress(source)
+                        source = source
                     )
                 }
             }
@@ -65,8 +65,9 @@ class RecipesRepositoryImpl @Inject constructor(
     override suspend fun uploadStepImage(
         recipeId: String,
         stepId: String,
-        imageBytes: ByteArray
+        source: String
     ): String {
+        val imageBytes = imageCompressorImpl.compress(source)
         val ref = firebaseStorage.reference
             .child("recipes")
             .child(recipeId)
@@ -77,7 +78,7 @@ class RecipesRepositoryImpl @Inject constructor(
         return ref.downloadUrl.await().toString()
     }
 
-    override suspend fun saveRecipe(newRecipe: NewRecipe, recipeSteps: List<NewRecipeStep>) {
+    override suspend fun saveRecipe(newRecipe: UploadRecipe, recipeSteps: List<UploadRecipeStep>) {
         val recipeReference = firestore
             .collection("users")
             .document(userId)
@@ -194,5 +195,46 @@ class RecipesRepositoryImpl @Inject constructor(
                 .map { it.toDomain() }
         }
         return result
+    }
+
+    override suspend fun updateRecipe(
+        recipe: UploadRecipe,
+        deleteSteps: List<UploadRecipeStep>,
+        updateSteps: List<UploadRecipeStep>,
+        addSteps: List<UploadRecipeStep>
+    ) {
+        val batch = firestore.batch()
+        val recipeRef = firestore
+            .collection("users")
+            .document(userId)
+            .collection("recipes")
+            .document(recipe.id)
+
+        batch.set(recipeRef, recipe.toDto())
+
+        deleteSteps.forEach { step ->
+            val stepRef = recipeRef
+                .collection("steps")
+                .document(step.id)
+            batch.delete(stepRef)
+        }
+
+        updateSteps.forEach { step ->
+            val stepRef = recipeRef
+                .collection("steps")
+                .document(step.id)
+
+            batch.set(stepRef, step.toDto())
+        }
+
+        addSteps.forEach { step ->
+            val stepRef = recipeRef
+                .collection("steps")
+                .document(step.id)
+
+            batch.set(stepRef, step.toDto())
+        }
+
+        batch.commit().await()
     }
 }

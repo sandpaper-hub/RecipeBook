@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredient
-import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStepDraft
+import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.NewRecipeUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeStepUiState
@@ -42,7 +42,9 @@ class CreateRecipeViewModel @Inject constructor(
 
 
     fun onRecipeImagePicked(uri: Uri?) {
-        uiState = uiState.copy(recipeImageUri = uri)
+        uiState = uiState.copy(
+            recipeImageSource = uri?.toString()
+        )
     }
 
     fun onRecipeNameChanged(value: String) {
@@ -112,9 +114,7 @@ class CreateRecipeViewModel @Inject constructor(
         viewModelScope.launch {
             uiState = uiState.copy(
                 recipeSteps = uiState.recipeSteps + RecipeStepUiState(
-                    id = recipesInteractor.createRandomId(),
-                    imageUri = null,
-                    stepDescription = ""
+                    id = recipesInteractor.createRandomId()
                 )
             )
         }
@@ -145,7 +145,7 @@ class CreateRecipeViewModel @Inject constructor(
     fun onStepImageChange(id: String, uri: Uri?) {
         uiState = uiState.copy(
             recipeSteps = uiState.recipeSteps.map {
-                if (it.id == id) it.copy(imageUri = uri) else it
+                if (it.id == id) it.copy(imageSource = uri?.toString()) else it
             })
     }
 
@@ -156,7 +156,7 @@ class CreateRecipeViewModel @Inject constructor(
                     recipeName = uiState.recipeName,
                     recipeDescription = uiState.recipeDescription,
                     recipeTimeEstimation = uiState.timeEstimation,
-                    recipeImageSource = uiState.recipeImageUri?.toString(),
+                    recipeImageSource = uiState.recipeImageSource,
                     category = uiState.recipeCategory,
                     ingredients = uiState.ingredients.map { ingredient ->
                         NewRecipeIngredient(
@@ -166,12 +166,12 @@ class CreateRecipeViewModel @Inject constructor(
                             measure = ingredient.measure
                         )
                     },
-                    steps = uiState.recipeSteps.mapIndexed {index, recipeStepUiState ->
-                        NewRecipeStepDraft(
+                    steps = uiState.recipeSteps.mapIndexed { index, recipeStepUiState ->
+                        UploadRecipeStepDraft(
                             id = recipeStepUiState.id,
                             title = recipeStepUiState.title,
                             order = index,
-                            imageSource = recipeStepUiState.imageUri?.toString(),
+                            imageSource = recipeStepUiState.imageSource,
                             description = recipeStepUiState.stepDescription
                         )
                     }

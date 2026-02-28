@@ -1,6 +1,5 @@
 package com.example.recipebook.presentation.ui.commonUi
 
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -213,7 +212,7 @@ fun TitleTextFieldBox(
 @Composable
 @Suppress
 fun RecipeStepBox(
-    imageUri: Uri?,
+    imageSource: String?,
     titleValue: String,
     descriptionValue: String,
     onImageChange: () -> Unit,
@@ -228,7 +227,7 @@ fun RecipeStepBox(
         ) {
             Spacer(modifier = Modifier.width(17.dp))
 
-            if (imageUri == null) {
+            if (imageSource == null) {
                 UploadImageBox(
                     text = null,
                     modifier = Modifier.size(70.dp),
@@ -237,7 +236,7 @@ fun RecipeStepBox(
                 )
             } else {
                 RecipeStepImage(
-                    imageUri = imageUri,
+                    imageSource = imageSource,
                     contentDescription = stringResource(R.string.recipe_step_image),
                     onCancelClick = onCancelImageClick
                 )

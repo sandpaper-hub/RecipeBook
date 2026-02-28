@@ -1,6 +1,6 @@
 package com.example.recipebook.domain.model.recipe.createRecipe
 
-data class NewRecipe(
+data class UploadRecipe(
     val id: String = "",
     val authorId: String = "",
     val recipeName: String = "",

@@ -45,6 +45,7 @@ import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.Re
 fun RecipeDetailScreen(
     onBack: () -> Unit,
     onCookingScreen: (String) -> Unit,
+    onRecipeEditScreen: (String) -> Unit,
     viewModel: RecipeDetailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -60,6 +61,7 @@ fun RecipeDetailScreen(
             when (event) {
                 is RecipeDetailEvent.GoBack -> onBack()
                 is RecipeDetailEvent.OnCookingScreen -> onCookingScreen(event.recipeId)
+                is RecipeDetailEvent.OnRecipeEditScreen -> onRecipeEditScreen(event.recipeId)
             }
         }
     }
@@ -81,7 +83,9 @@ fun RecipeDetailScreen(
                 onDismiss = { viewModel.showDropdownMenu(false) },
                 onItemClick = { menuItem ->
                     when (menuItem) {
-                        RecipeDetailMenuItem.EDIT -> {}
+                        RecipeDetailMenuItem.EDIT -> {
+                            viewModel.onRecipeEdit()
+                        }
                         RecipeDetailMenuItem.DELETE -> {
                             viewModel.openDeleteDialog(true)
                         }

@@ -1,8 +1,9 @@
 package com.example.recipebook.domain.interactor.recipes
 
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredient
-import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStep
-import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStepDraft
+import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStep
+import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
+import com.example.recipebook.domain.model.recipe.getRecipe.FullRecipe
 import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
 import com.example.recipebook.domain.model.recipe.step.Step
 import kotlinx.coroutines.flow.Flow
@@ -18,17 +19,20 @@ interface RecipesInteractor {
         recipeImageSource: String?,
         category: String,
         ingredients: List<NewRecipeIngredient>,
-        steps: List<NewRecipeStepDraft>
+        steps: List<UploadRecipeStepDraft>
     )
 
     suspend fun buildRecipeSteps(
         recipeId: String,
-        newRecipeStepDrafts: List<NewRecipeStepDraft>
-    ): List<NewRecipeStep>
+        uploadRecipeStepDrafts: List<UploadRecipeStepDraft>
+    ): List<UploadRecipeStep>
 
     fun observeUserRecipes(userId: String): Flow<List<Recipe>>
     fun getUserIdFlow(): Flow<String?>
     suspend fun getRecipeSteps(recipeId: String): List<Step>
     suspend fun deleteRecipe(recipeId: String)
     suspend fun getRecipesByIds(recipeIds: List<String>): List<Recipe>
+    suspend fun getFullRecipe(recipeId: String): FullRecipe
+    suspend fun updateRecipe(editedRecipe: FullRecipe,
+        originalRecipe: FullRecipe)
 }

@@ -1,6 +1,5 @@
 package com.example.recipebook.presentation.ui.commonUi
 
-import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -72,7 +71,7 @@ fun ImageBanner(
 @Composable
 @Suppress("FunctionName")
 fun ImageCover(
-    imageUri: Uri?,
+    imageSource: String,
     contentDescription: String,
     onCancelClick: () -> Unit,
     modifier: Modifier
@@ -86,7 +85,7 @@ fun ImageCover(
     ) {
         AsyncImage(
             modifier = Modifier.fillMaxSize(),
-            model = imageUri,
+            model = imageSource,
             contentDescription = contentDescription,
             contentScale = ContentScale.Crop
         )
@@ -114,7 +113,7 @@ fun ImageCover(
 @Composable
 @Suppress("FunctionName")
 fun RecipeStepImage(
-    imageUri: Uri?,
+    imageSource: String?,
     contentDescription: String,
     onCancelClick: () -> Unit
 ) {
@@ -132,7 +131,7 @@ fun RecipeStepImage(
                     centerHorizontallyTo(parent)
                     centerVerticallyTo(parent)
                 },
-            model = imageUri,
+            model = imageSource,
             contentDescription = contentDescription,
             contentScale = ContentScale.Crop
         )

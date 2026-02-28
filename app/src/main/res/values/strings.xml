@@ -129,4 +129,5 @@
     <string name="added_to_collection" translatable="true">Added to collection</string>
     <string name="delete_collection" translatable="true">Delete collection?</string>
     <string name="delete_collection_warning_title" translatable="true">The collection and all its data will be permanently deleted.</string>
+    <string name="edit_recipe" translatable="true">Edit recipe</string>
 </resources>

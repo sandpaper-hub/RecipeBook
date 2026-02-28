@@ -29,7 +29,7 @@ class CreateCollectionViewModel @Inject constructor(
     }
 
     fun onImageChange(uri: Uri?) {
-        uiState = uiState.copy(imageUri = uri)
+        uiState = uiState.copy(imageSource = uri?.toString())
     }
 
     fun createCollection(onBack: () -> Unit) {
@@ -37,7 +37,7 @@ class CreateCollectionViewModel @Inject constructor(
             collectionInteractor.createCollection(
                     name = uiState.name,
                     description = uiState.description,
-                    imageSource = uiState.imageUri?.toString()
+                    imageSource = uiState.imageSource
             )
                 .onSuccess {
                     onBack()

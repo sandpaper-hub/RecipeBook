@@ -203,6 +203,12 @@ class RecipeDetailViewModel @Inject constructor(
         }
     }
 
+    fun onRecipeEdit() {
+        viewModelScope.launch {
+            _events.emit(RecipeDetailEvent.OnRecipeEditScreen(recipeId))
+        }
+    }
+
     fun onCookingScreen() {
         viewModelScope.launch {
             _events.emit(RecipeDetailEvent.OnCookingScreen(recipeId))

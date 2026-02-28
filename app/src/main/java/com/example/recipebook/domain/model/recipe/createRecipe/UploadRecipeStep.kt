@@ -1,9 +1,9 @@
 package com.example.recipebook.domain.model.recipe.createRecipe
 
-data class NewRecipeStepDraft(
+data class UploadRecipeStep(
     val id: String = "",
     val title: String = "",
-    val description: String = "",
     val order: Int = 0,
-    val imageSource: String? = null
+    val description: String = "",
+    val imageUrl: String? = null
 )

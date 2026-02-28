@@ -129,4 +129,5 @@
     <string name="added_to_collection">Добавлено в коллекцию</string>
     <string name="delete_collection">Удалить коллекцию?</string>
     <string name="delete_collection_warning_title">Коллекция и её данные будут безвозвратно удалены</string>
+    <string name="edit_recipe">Редактировать рецепт</string>
 </resources>
