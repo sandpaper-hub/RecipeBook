@@ -1,4 +1,4 @@
-package com.example.recipebook.presentation.viewModel.editRecipeScreen.model
+package com.example.recipebook.presentation.viewModel.model
 
 sealed interface ImageSource {
     data class Remote(val url: String) : ImageSource

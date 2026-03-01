@@ -5,7 +5,7 @@ import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipe
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStep
 import com.example.recipebook.domain.model.recipe.getRecipe.FullRecipe
 import com.example.recipebook.domain.model.recipe.step.EditStep
-import com.example.recipebook.domain.model.recipe.step.SourceType
+import com.example.recipebook.domain.model.recipe.step.ImageSourceType
 import com.example.recipebook.domain.service.StepImageProcessor
 import com.example.recipebook.domain.useCase.GetRecipeCoverUrlUseCase
 import com.example.recipebook.domain.useCase.UpdateRecipeUseCase
@@ -83,7 +83,7 @@ class UpdateRecipeInteractorImpl @Inject constructor(
                 id = step.id,
                 imageUrl = imageProcessor.resolveImageUrl(
                     recipeId = editedRecipe.id,
-                    step = EditStep(id = step.id, sourceType = SourceType.None),
+                    step = EditStep(id = step.id, imageSourceType = ImageSourceType.None),
                     oldStep = originalMap[step.id]
                 )
             )
@@ -102,15 +102,15 @@ class UpdateRecipeInteractorImpl @Inject constructor(
         originalRecipe: FullRecipe
     ): String? {
         return when (editedRecipe.imageSourceType) {
-            is SourceType.None -> {
-                if (originalRecipe.imageSourceType is SourceType.Remote) {
+            is ImageSourceType.None -> {
+                if (originalRecipe.imageSourceType is ImageSourceType.Remote) {
                     deleteRecipeImageUseCase.execute(editedRecipe.id)
                 }
                 null
             }
 
-            is SourceType.Remote -> editedRecipe.imageSourceType.source
-            is SourceType.Local -> {
+            is ImageSourceType.Remote -> editedRecipe.imageSourceType.source
+            is ImageSourceType.Local -> {
                 getRecipeCoverUrlUseCase.execute(
                     editedRecipe.id,
                     editedRecipe.imageSourceType.source

@@ -164,4 +164,16 @@ class CollectionRepositoryImpl @Inject constructor(
             .delete()
             .await()
     }
+
+    override suspend fun getCollectionById(collectionId: String): UserCollection {
+        return firestore
+            .collection("users")
+            .document(userId)
+            .collection("collections")
+            .document(collectionId)
+            .get()
+            .await()
+            .toObject(CollectionDto::class.java)?.toDomain()
+            ?: throw IllegalStateException("Collection not found")
+    }
 }

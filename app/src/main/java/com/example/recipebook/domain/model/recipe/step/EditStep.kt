@@ -5,5 +5,5 @@ data class EditStep(
     val title: String = "",
     val order: Int = 0,
     val description: String = "",
-    val sourceType: SourceType = SourceType.None
+    val imageSourceType: ImageSourceType = ImageSourceType.None
 )

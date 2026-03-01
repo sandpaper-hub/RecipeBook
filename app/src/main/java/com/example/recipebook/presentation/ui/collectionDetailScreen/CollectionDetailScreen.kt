@@ -32,6 +32,7 @@ import com.example.recipebook.presentation.viewModel.collectionDetailScreen.mode
 fun CollectionDetailScreen(
     onBack: () -> Unit,
     onRecipeDetail: (String) -> Unit,
+    onCollectionEdit: (String) -> Unit,
     viewModel: CollectionDetailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -45,6 +46,7 @@ fun CollectionDetailScreen(
             when (event) {
                 is CollectionDetailEvent.GoBack -> onBack()
                 is CollectionDetailEvent.OnRecipeDetail -> onRecipeDetail(event.recipeId)
+                is CollectionDetailEvent.OnCollectionEdit -> onCollectionEdit(event.collectionId)
             }
         }
     }
@@ -62,7 +64,9 @@ fun CollectionDetailScreen(
                 },
                 onItemClick = { menuItem ->
                     when (menuItem) {
-                        MenuItem.EDIT -> {}
+                        MenuItem.EDIT -> {
+                            viewModel.onCollectionEdit()
+                        }
                         MenuItem.DELETE -> {
                             viewModel.showDeleteDialog(true)
                         }

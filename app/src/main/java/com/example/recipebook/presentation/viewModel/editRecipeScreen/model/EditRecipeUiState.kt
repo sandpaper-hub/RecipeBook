@@ -1,6 +1,7 @@
 package com.example.recipebook.presentation.viewModel.editRecipeScreen.model
 
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
+import com.example.recipebook.presentation.viewModel.model.ImageSource
 
 data class EditRecipeUiState(
     val recipeImageSource: ImageSource = ImageSource.None,

@@ -42,7 +42,7 @@ import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMe
 import com.example.recipebook.presentation.util.debounce
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.EditRecipeViewModel
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
-import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.ImageSource
+import com.example.recipebook.presentation.viewModel.model.ImageSource
 
 @Composable
 @Suppress("FunctionName")

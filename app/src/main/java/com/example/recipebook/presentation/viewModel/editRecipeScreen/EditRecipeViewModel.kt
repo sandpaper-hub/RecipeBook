@@ -11,14 +11,14 @@ import com.example.recipebook.domain.model.recipe.getRecipe.Ingredient
 import com.example.recipebook.domain.model.recipe.getRecipe.IngredientMeasure
 import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
 import com.example.recipebook.domain.model.recipe.step.EditStep
-import com.example.recipebook.domain.model.recipe.step.SourceType
+import com.example.recipebook.domain.model.recipe.step.ImageSourceType
 import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCase
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailDestination
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeStepUiState
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeUiState
-import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.ImageSource
+import com.example.recipebook.presentation.viewModel.model.ImageSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -55,9 +55,9 @@ class EditRecipeViewModel @Inject constructor(
             _uiState.update { editRecipeUiState ->
                 editRecipeUiState.copy(
                     recipeImageSource = when (originalRecipe.imageSourceType) {
-                        is SourceType.None -> ImageSource.None
-                        is SourceType.Remote -> ImageSource.Remote((originalRecipe.imageSourceType as SourceType.Remote).source)
-                        is SourceType.Local -> ImageSource.Local((originalRecipe.imageSourceType as SourceType.Local).source)
+                        is ImageSourceType.None -> ImageSource.None
+                        is ImageSourceType.Remote -> ImageSource.Remote((originalRecipe.imageSourceType as ImageSourceType.Remote).source)
+                        is ImageSourceType.Local -> ImageSource.Local((originalRecipe.imageSourceType as ImageSourceType.Local).source)
                     },
                     recipeName = originalRecipe.recipeName,
                     recipeDescription = originalRecipe.recipeDescription,
@@ -74,10 +74,10 @@ class EditRecipeViewModel @Inject constructor(
                         EditRecipeStepUiState(
                             id = step.id,
                             title = step.title,
-                            imageSource = when (step.sourceType) {
-                                is SourceType.None -> ImageSource.None
-                                is SourceType.Remote -> ImageSource.Remote(step.sourceType.source)
-                                is SourceType.Local -> ImageSource.Local(step.sourceType.source)
+                            imageSource = when (step.imageSourceType) {
+                                is ImageSourceType.None -> ImageSource.None
+                                is ImageSourceType.Remote -> ImageSource.Remote(step.imageSourceType.source)
+                                is ImageSourceType.Local -> ImageSource.Local(step.imageSourceType.source)
                             },
                             stepDescription = step.description
                         )
@@ -252,9 +252,9 @@ class EditRecipeViewModel @Inject constructor(
                         recipeDescription = _uiState.value.recipeDescription,
                         recipeTimeEstimation = _uiState.value.timeEstimation,
                         imageSourceType = when (_uiState.value.recipeImageSource) {
-                            is ImageSource.None -> SourceType.None
-                            is ImageSource.Remote -> SourceType.Remote((_uiState.value.recipeImageSource as ImageSource.Remote).url)
-                            is ImageSource.Local -> SourceType.Local((_uiState.value.recipeImageSource as ImageSource.Local).uri)
+                            is ImageSource.None -> ImageSourceType.None
+                            is ImageSource.Remote -> ImageSourceType.Remote((_uiState.value.recipeImageSource as ImageSource.Remote).url)
+                            is ImageSource.Local -> ImageSourceType.Local((_uiState.value.recipeImageSource as ImageSource.Local).uri)
                         },
                         category = RecipeCategory.from(_uiState.value.recipeCategory),
                         ingredients = _uiState.value.ingredients.map { ingredientUiState ->
@@ -271,10 +271,10 @@ class EditRecipeViewModel @Inject constructor(
                                 title = stepUiState.title,
                                 order = index,
                                 description = stepUiState.stepDescription,
-                                sourceType = when (stepUiState.imageSource) {
-                                    is ImageSource.None -> SourceType.None
-                                    is ImageSource.Local -> SourceType.Local(stepUiState.imageSource.uri)
-                                    is ImageSource.Remote -> SourceType.Remote(stepUiState.imageSource.url)
+                                imageSourceType = when (stepUiState.imageSource) {
+                                    is ImageSource.None -> ImageSourceType.None
+                                    is ImageSource.Local -> ImageSourceType.Local(stepUiState.imageSource.uri)
+                                    is ImageSource.Remote -> ImageSourceType.Remote(stepUiState.imageSource.url)
                                 }
                             )
                         }

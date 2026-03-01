@@ -2,7 +2,7 @@ package com.example.recipebook.domain.interactor.recipes
 
 import com.example.recipebook.domain.model.recipe.getRecipe.FullRecipe
 import com.example.recipebook.domain.model.recipe.step.EditStep
-import com.example.recipebook.domain.model.recipe.step.SourceType
+import com.example.recipebook.domain.model.recipe.step.ImageSourceType
 import com.example.recipebook.domain.useCase.GetRecipeByIdUseCase
 import com.example.recipebook.domain.useCase.GetRecipeStepsUseCase
 import kotlinx.coroutines.async
@@ -30,8 +30,8 @@ class FullRecipeInteractorImpl @Inject constructor(
             recipeDescription = recipe.recipeDescription,
             recipeTimeEstimation = recipe.recipeTimeEstimation,
             imageSourceType = if (recipe.imageUrl == null) {
-                SourceType.None
-            } else SourceType.Remote(recipe.imageUrl),
+                ImageSourceType.None
+            } else ImageSourceType.Remote(recipe.imageUrl),
             category = recipe.category,
             ingredients = recipe.ingredients,
             steps = steps.map { step ->
@@ -40,9 +40,9 @@ class FullRecipeInteractorImpl @Inject constructor(
                     title = step.title,
                     order = step.order,
                     description = step.description,
-                    sourceType = if (step.imageSource == null) {
-                        SourceType.None
-                    } else SourceType.Remote(step.imageSource)
+                    imageSourceType = if (step.imageSource == null) {
+                        ImageSourceType.None
+                    } else ImageSourceType.Remote(step.imageSource)
                 )
             })
     }

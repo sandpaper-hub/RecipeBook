@@ -101,4 +101,10 @@ CollectionDetailViewModel @Inject constructor(
             _events.emit(CollectionDetailEvent.OnRecipeDetail(recipeId))
         }
     }
+
+    fun onCollectionEdit() {
+        viewModelScope.launch {
+            _events.emit(CollectionDetailEvent.OnCollectionEdit(collectionId))
+        }
+    }
 }

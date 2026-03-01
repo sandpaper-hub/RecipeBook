@@ -2,7 +2,7 @@ package com.example.recipebook.domain.useCase.updateRecipe
 
 import com.example.recipebook.domain.model.recipe.getRecipe.FullRecipe
 import com.example.recipebook.domain.model.recipe.step.EditStep
-import com.example.recipebook.domain.model.recipe.step.SourceType
+import com.example.recipebook.domain.model.recipe.step.ImageSourceType
 import com.example.recipebook.domain.model.recipe.update.RecipeDifference
 import javax.inject.Inject
 
@@ -17,7 +17,7 @@ class BuildRecipeDifferenceUseCase @Inject constructor() {
         val delete = originalRecipe.steps.filter { it.id !in editedIds }.map { deleteStep ->
             EditStep(
                 id = deleteStep.id,
-                sourceType = SourceType.None
+                imageSourceType = ImageSourceType.None
             )
         }
         val add = editedRecipe.steps.filter { it.id !in originalIds }

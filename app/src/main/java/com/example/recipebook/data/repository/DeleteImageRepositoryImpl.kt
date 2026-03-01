@@ -1,7 +1,6 @@
 package com.example.recipebook.data.repository
 
 import com.example.recipebook.domain.repository.DeleteImageRepository
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
