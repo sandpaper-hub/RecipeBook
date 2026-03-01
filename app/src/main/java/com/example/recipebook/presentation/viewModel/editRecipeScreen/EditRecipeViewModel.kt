@@ -4,13 +4,15 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
+import com.example.recipebook.domain.interactor.recipes.FullRecipeInteractor
+import com.example.recipebook.domain.interactor.recipes.UpdateRecipeInteractor
 import com.example.recipebook.domain.model.recipe.getRecipe.FullRecipe
 import com.example.recipebook.domain.model.recipe.getRecipe.Ingredient
 import com.example.recipebook.domain.model.recipe.getRecipe.IngredientMeasure
 import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
 import com.example.recipebook.domain.model.recipe.step.EditStep
 import com.example.recipebook.domain.model.recipe.step.SourceType
+import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCase
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailDestination
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
@@ -28,7 +30,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditRecipeViewModel @Inject constructor(
-    private val recipesInteractor: RecipesInteractor,
+    private val updateRecipeInteractor: UpdateRecipeInteractor,
+    private val getRandomIdUseCase: CreateRandomIdUseCase,
+    private val fullRecipeInteractor: FullRecipeInteractor,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -47,7 +51,7 @@ class EditRecipeViewModel @Inject constructor(
 
     private fun getFullRecipe() {
         viewModelScope.launch {
-            originalRecipe = recipesInteractor.getFullRecipe(recipeId)
+            originalRecipe = fullRecipeInteractor.getFullRecipe(recipeId)
             _uiState.update { editRecipeUiState ->
                 editRecipeUiState.copy(
                     recipeImageSource = when (originalRecipe.imageSourceType) {
@@ -164,7 +168,7 @@ class EditRecipeViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     ingredients = _uiState.value.ingredients + IngredientUiState(
-                        id = recipesInteractor.createRandomId(),
+                        id = getRandomIdUseCase.execute(),
                     )
                 )
             }
@@ -184,7 +188,7 @@ class EditRecipeViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     recipeSteps = _uiState.value.recipeSteps + EditRecipeStepUiState(
-                        id = recipesInteractor.createRandomId()
+                        id = getRandomIdUseCase.execute()
                     )
                 )
             }
@@ -241,7 +245,7 @@ class EditRecipeViewModel @Inject constructor(
     fun uploadNewRecipe() {
         viewModelScope.launch {
             runCatching {
-                recipesInteractor.updateRecipe(
+                updateRecipeInteractor.updateRecipe(
                     editedRecipe = FullRecipe(
                         id = recipeId,
                         recipeName = _uiState.value.recipeName,

@@ -1,12 +1,12 @@
-package com.example.recipebook.domain.useCase
+package com.example.recipebook.domain.useCase.createRandomId
 
 import com.example.recipebook.domain.repository.RecipesRepository
 import javax.inject.Inject
 
-class CreateRandomIdUseCase @Inject constructor(
+class CreateRandomIdUseCaseImpl @Inject constructor(
     private val recipesRepository: RecipesRepository
-) {
-    suspend fun execute(): String {
+): CreateRandomIdUseCase {
+    override suspend fun execute(): String {
         return recipesRepository.createRandomId()
     }
 }
