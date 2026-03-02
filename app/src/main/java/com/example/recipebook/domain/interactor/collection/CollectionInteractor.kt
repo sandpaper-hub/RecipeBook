@@ -1,7 +1,6 @@
 package com.example.recipebook.domain.interactor.collection
 
 import com.example.recipebook.domain.model.collection.UserCollection
-import com.example.recipebook.domain.model.collection.UserCollectionEdit
 import kotlinx.coroutines.flow.Flow
 
 interface CollectionInteractor {
@@ -19,5 +18,4 @@ interface CollectionInteractor {
     suspend fun addRecipeToCollection(collectionId: String, recipeId: String)
     suspend fun removeRecipeFromCollection(collectionId: String, recipeId: String)
     suspend fun deleteCollection(collectionId: String)
-    suspend fun getCollectionById(collectionId: String): UserCollectionEdit
 }

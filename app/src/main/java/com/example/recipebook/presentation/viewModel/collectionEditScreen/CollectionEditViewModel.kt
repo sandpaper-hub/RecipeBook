@@ -4,9 +4,9 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.collection.CollectionInteractor
 import com.example.recipebook.domain.model.collection.UserCollectionEdit
 import com.example.recipebook.domain.model.recipe.step.ImageSourceType
+import com.example.recipebook.domain.useCase.getUserCollection.GetUserCollectionUseCaseImpl
 import com.example.recipebook.navigation.mainHomeGraph.collectionDetailGraph.CollectionDetailDestination
 import com.example.recipebook.presentation.viewModel.collectionEditScreen.model.CollectionEditUiState
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CollectionEditViewModel @Inject constructor(
-    private val collectionInteractor: CollectionInteractor,
+    private val getUserCollectionUseCaseImpl: GetUserCollectionUseCaseImpl,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -41,7 +41,7 @@ class CollectionEditViewModel @Inject constructor(
 
     private fun getCollection() {
         viewModelScope.launch {
-            oldCollection = collectionInteractor.getCollectionById(collectionId)
+            oldCollection = getUserCollectionUseCaseImpl.execute(collectionId)
             _uiState.update { collectionEditUiState ->
                 collectionEditUiState.copy(
                     name = oldCollection.name,

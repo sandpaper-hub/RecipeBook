@@ -97,7 +97,7 @@ class UpdateRecipeInteractorImpl @Inject constructor(
         )
     }
 
-    suspend fun updateRecipeImageSource(
+    private suspend fun updateRecipeImageSource(
         editedRecipe: FullRecipe,
         originalRecipe: FullRecipe
     ): String? {

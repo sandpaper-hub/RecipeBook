@@ -1,13 +1,10 @@
 package com.example.recipebook.domain.interactor.collection
 
 import com.example.recipebook.domain.model.collection.UserCollection
-import com.example.recipebook.domain.model.collection.UserCollectionEdit
-import com.example.recipebook.domain.model.recipe.step.ImageSourceType
 import com.example.recipebook.domain.useCase.AddRecipeToCollectionUseCase
 import com.example.recipebook.domain.useCase.CreateCollectionDocumentUseCase
 import com.example.recipebook.domain.useCase.CreateCollectionUseCase
 import com.example.recipebook.domain.useCase.DeleteCollectionUseCase
-import com.example.recipebook.domain.useCase.GetUserCollectionUseCase
 import com.example.recipebook.domain.useCase.GetUserCollectionsUseCase
 import com.example.recipebook.domain.useCase.GetUserIdFlowUseCase
 import com.example.recipebook.domain.useCase.ObserveCollectionDetailUseCase
@@ -25,9 +22,7 @@ class CollectionInteractorImpl @Inject constructor(
     private val getUserIdFlowUseCase: GetUserIdFlowUseCase,
     private val addRecipeToCollectionUseCase: AddRecipeToCollectionUseCase,
     private val removeRecipeFromCollectionUseCase: RemoveRecipeFromCollectionUseCase,
-    private val deleteCollectionUseCase: DeleteCollectionUseCase,
-    private val getUserCollectionUseCase: GetUserCollectionUseCase
-
+    private val deleteCollectionUseCase: DeleteCollectionUseCase
 ) : CollectionInteractor {
     override fun getUserIdFlow(): Flow<String?> = getUserIdFlowUseCase.execute()
 
@@ -79,21 +74,5 @@ class CollectionInteractorImpl @Inject constructor(
 
     override suspend fun deleteCollection(collectionId: String) {
         deleteCollectionUseCase.execute(collectionId)
-    }
-
-    override suspend fun getCollectionById(collectionId: String): UserCollectionEdit {
-        val userCollection = getUserCollectionUseCase.execute(collectionId)
-        return UserCollectionEdit(
-            id = userCollection.id,
-            name = userCollection.name,
-            description = userCollection.description,
-            recipeIds = userCollection.recipeIds,
-            imageSource = if (userCollection.imageUrl == null) {
-                ImageSourceType.None
-            } else {
-                ImageSourceType.Remote(userCollection.imageUrl)
-            },
-            createdAt = userCollection.createdAt
-        )
     }
 }
