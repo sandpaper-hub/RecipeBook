@@ -60,7 +60,7 @@ CollectionDetailViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             name = collection.name,
-                            imageSource = collection.imageUrl,
+                            imageSource = collection.imageSource,
                             description = collection.description,
                             collectionSize = collection.recipeIds.size,
                             recipeList = recipesInteractor.getRecipesByIds(collection.recipeIds),

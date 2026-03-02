@@ -52,8 +52,7 @@ class CollectionInteractorImpl @Inject constructor(
                 id = collectionId,
                 name = name,
                 description = description,
-                imageUrl = collectionImageSource,
-                recipesCount = 0
+                imageSource = collectionImageSource
             )
         )
     }

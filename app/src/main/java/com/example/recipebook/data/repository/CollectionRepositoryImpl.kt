@@ -176,4 +176,19 @@ class CollectionRepositoryImpl @Inject constructor(
             .toObject(CollectionDto::class.java)?.toDomain()
             ?: throw IllegalStateException("Collection not found")
     }
+
+    override suspend fun updateCollection(userCollection: UserCollection) {
+        val updates = mapOf(
+            "name" to userCollection.name,
+            "description" to userCollection.description,
+            "imageUrl" to userCollection.imageSource
+        )
+        firestore
+            .collection("users")
+            .document(userId)
+            .collection("collections")
+            .document(userCollection.id)
+            .update(updates)
+            .await()
+    }
 }

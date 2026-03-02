@@ -22,4 +22,5 @@ interface CollectionsRepository {
     suspend fun removeRecipeFromCollection(collectionId: String, recipeId: String)
     suspend fun deleteCollection(collectionId: String)
     suspend fun getCollectionById(collectionId: String): UserCollection
+    suspend fun updateCollection(userCollection: UserCollection)
 }

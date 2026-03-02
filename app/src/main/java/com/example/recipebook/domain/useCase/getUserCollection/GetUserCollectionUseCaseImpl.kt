@@ -14,13 +14,11 @@ class GetUserCollectionUseCaseImpl @Inject constructor(
             id = userCollection.id,
             name = userCollection.name,
             description = userCollection.description,
-            recipeIds = userCollection.recipeIds,
-            imageSource = if (userCollection.imageUrl == null) {
+            imageSource = if (userCollection.imageSource == null) {
                 ImageSourceType.None
             } else {
-                ImageSourceType.Remote(userCollection.imageUrl)
-            },
-            createdAt = userCollection.createdAt
+                ImageSourceType.Remote(userCollection.imageSource)
+            }
         )
     }
 }

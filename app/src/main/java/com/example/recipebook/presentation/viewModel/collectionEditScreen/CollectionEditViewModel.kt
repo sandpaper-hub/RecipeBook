@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipebook.domain.interactor.collection.UpdateCollectionInteractor
 import com.example.recipebook.domain.model.collection.UserCollectionEdit
 import com.example.recipebook.domain.model.recipe.step.ImageSourceType
 import com.example.recipebook.domain.useCase.getUserCollection.GetUserCollectionUseCaseImpl
@@ -23,12 +24,13 @@ import javax.inject.Inject
 @HiltViewModel
 class CollectionEditViewModel @Inject constructor(
     private val getUserCollectionUseCaseImpl: GetUserCollectionUseCaseImpl,
+    private val updateCollectionInteractor: UpdateCollectionInteractor,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val collectionId =
         checkNotNull(savedStateHandle[CollectionDetailDestination.COLLECTION_ID_ARG]).toString()
-    private var oldCollection = UserCollectionEdit()
+    private var originalCollection = UserCollectionEdit()
     private val _event = MutableSharedFlow<EditRecipeEvent>()
     val event = _event.asSharedFlow()
     private val _uiState = MutableStateFlow(CollectionEditUiState())
@@ -41,22 +43,22 @@ class CollectionEditViewModel @Inject constructor(
 
     private fun getCollection() {
         viewModelScope.launch {
-            oldCollection = getUserCollectionUseCaseImpl.execute(collectionId)
+            originalCollection = getUserCollectionUseCaseImpl.execute(collectionId)
             _uiState.update { collectionEditUiState ->
                 collectionEditUiState.copy(
-                    name = oldCollection.name,
-                    description = oldCollection.description,
-                    imageSource = when (oldCollection.imageSource) {
+                    name = originalCollection.name,
+                    description = originalCollection.description,
+                    imageSource = when (originalCollection.imageSource) {
                         is ImageSourceType.None -> ImageSource.None
                         is ImageSourceType.Remote -> {
                             ImageSource.Remote(
-                                (oldCollection.imageSource as ImageSourceType.Remote).source
+                                (originalCollection.imageSource as ImageSourceType.Remote).source
                             )
                         }
 
                         is ImageSourceType.Local -> {
                             ImageSource.Local(
-                                (oldCollection.imageSource as ImageSourceType.Local).source
+                                (originalCollection.imageSource as ImageSourceType.Local).source
                             )
                         }
                     }
@@ -94,6 +96,20 @@ class CollectionEditViewModel @Inject constructor(
     }
 
     fun updateCollection() {
-
+        viewModelScope.launch {
+            updateCollectionInteractor.updateCollection(
+                editedCollection = UserCollectionEdit(
+                    id = collectionId,
+                    name = _uiState.value.name,
+                    description = _uiState.value.description,
+                    imageSource = when (_uiState.value.imageSource) {
+                        is ImageSource.None -> ImageSourceType.None
+                        is ImageSource.Local -> ImageSourceType.Local((_uiState.value.imageSource as ImageSource.Local).uri)
+                        is ImageSource.Remote -> ImageSourceType.Remote((_uiState.value.imageSource as ImageSource.Remote).url)
+                    }
+                ),
+                originalCollection = originalCollection
+            )
+        }
     }
 }

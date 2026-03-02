@@ -9,7 +9,6 @@ data class CollectionDto(
     val description: String = "",
     val imageUrl: String? = null,
     val recipeIds: List<String> = listOf(),
-    val recipesCount: Int = 0,
     @ServerTimestamp
     val createdAt: Timestamp? = null
 )

@@ -58,8 +58,8 @@ fun CollectionScreen(
             items(items = uiState.collections, key = { it.id }) { collection ->
                 CollectionSquareCard(
                     name = collection.name,
-                    count = collection.recipesCount,
-                    imageUrl = collection.imageUrl,
+                    count = collection.recipeIds.size,
+                    imageUrl = collection.imageSource,
                     onItemClick = { onCollectionDetail(collection.id) },
                     modifier = Modifier.fillMaxWidth()
                 )

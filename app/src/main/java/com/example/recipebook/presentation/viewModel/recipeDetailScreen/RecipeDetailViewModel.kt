@@ -60,7 +60,7 @@ class RecipeDetailViewModel @Inject constructor(
                         CollectionUiState(
                             id = collection.id,
                             name = collection.name,
-                            imageUrl = collection.imageUrl,
+                            imageUrl = collection.imageSource,
                             containRecipe = collection.recipeIds.contains(recipeId),
                             isUpdating = oldItem?.isUpdating ?: false
                         )
