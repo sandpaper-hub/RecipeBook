@@ -4,8 +4,8 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.recipes.FullRecipeInteractor
-import com.example.recipebook.domain.interactor.recipes.UpdateRecipeInteractor
+import com.example.recipebook.domain.interactor.recipes.fullRecipeInteractor.FullRecipeInteractor
+import com.example.recipebook.domain.interactor.recipes.updateRecipeInteractor.UpdateRecipeInteractor
 import com.example.recipebook.domain.model.recipe.getRecipe.FullRecipe
 import com.example.recipebook.domain.model.recipe.getRecipe.Ingredient
 import com.example.recipebook.domain.model.recipe.getRecipe.IngredientMeasure

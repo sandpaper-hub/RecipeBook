@@ -23,4 +23,10 @@ class DeleteImageRepositoryImpl @Inject constructor(
             .child("recipes/$recipeId/cover/recipe_cover.jpg")
         storageRef.delete().await()
     }
+
+    override suspend fun deleteCollectionImage(collectionId: String){
+        val storageRef = firebaseStorage.reference
+            .child("collections/$collectionId/cover/collection_cover.jpg")
+        storageRef.delete().await()
+    }
 }

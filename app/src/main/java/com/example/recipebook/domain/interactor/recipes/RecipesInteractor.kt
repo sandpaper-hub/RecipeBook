@@ -8,8 +8,6 @@ import com.example.recipebook.domain.model.recipe.step.Step
 import kotlinx.coroutines.flow.Flow
 
 interface RecipesInteractor {
-    suspend fun getRecipeById(recipeId: String): Recipe
-
     suspend fun createRandomId(): String
     suspend fun uploadNewRecipe(
         recipeName: String,
@@ -29,6 +27,5 @@ interface RecipesInteractor {
     fun observeUserRecipes(userId: String): Flow<List<Recipe>>
     fun getUserIdFlow(): Flow<String?>
     suspend fun getRecipeSteps(recipeId: String): List<Step>
-    suspend fun deleteRecipe(recipeId: String)
     suspend fun getRecipesByIds(recipeIds: List<String>): List<Recipe>
 }

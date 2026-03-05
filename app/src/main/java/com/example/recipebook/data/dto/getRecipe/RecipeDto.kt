@@ -11,6 +11,7 @@ data class RecipeDto(
     val recipeTimeEstimation: String = "",
     val imageUrl: String? = null,
     val category: String = "",
+    val collectionIds: List<String> = emptyList(),
     val ingredients: List<IngredientDto> = emptyList(),
     @field:ServerTimestamp
     val createdAt: Timestamp? = null

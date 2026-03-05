@@ -131,30 +131,6 @@ class CollectionRepositoryImpl @Inject constructor(
         return ref.downloadUrl.await().toString()
     }
 
-    override suspend fun addRecipeToCollection(
-        collectionId: String,
-        recipeId: String
-    ) {
-        firestore.collection("users")
-            .document(userId)
-            .collection("collections")
-            .document(collectionId)
-            .update("recipeIds", FieldValue.arrayUnion(recipeId))
-            .await()
-    }
-
-    override suspend fun removeRecipeFromCollection(
-        collectionId: String,
-        recipeId: String
-    ) {
-        firestore.collection("users")
-            .document(userId)
-            .collection("collections")
-            .document(collectionId)
-            .update("recipeIds", FieldValue.arrayRemove(recipeId))
-            .await()
-    }
-
     override suspend fun deleteCollection(collectionId: String) {
         firestore
             .collection("users")
@@ -190,5 +166,48 @@ class CollectionRepositoryImpl @Inject constructor(
             .document(userCollection.id)
             .update(updates)
             .await()
+    }
+
+    override suspend fun toggleRecipeInCollection(
+        collectionId: String,
+        recipeId: String,
+        add: Boolean
+    ) {
+        val collectionReference = firestore
+            .collection("users")
+            .document(userId)
+            .collection("collections")
+            .document(collectionId)
+
+        val recipeReference = firestore
+            .collection("users")
+            .document(userId)
+            .collection("recipes")
+            .document(recipeId)
+
+        val recipeOperation = if (add) {
+            FieldValue.arrayUnion(collectionId)
+        } else FieldValue.arrayRemove(collectionId)
+
+        val collectionOperation = if (add) {
+            FieldValue.arrayUnion(recipeId)
+        } else FieldValue.arrayRemove(recipeId)
+
+        firestore.runBatch { batch ->
+            batch.update(recipeReference, "collectionIds", recipeOperation)
+            batch.update(collectionReference, "recipeIds", collectionOperation)
+        }
+    }
+
+
+    override suspend fun getCollectionIdsByRecipe(recipeId: String): List<String> {
+        val document = firestore.collection("users")
+            .document(userId)
+            .collection("recipes")
+            .document(recipeId)
+            .get()
+            .await()
+        @Suppress("UNCHECKED_CAST")
+        return document.get("collectionIds") as? List<String> ?: emptyList()
     }
 }

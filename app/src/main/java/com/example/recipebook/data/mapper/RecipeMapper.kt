@@ -38,6 +38,7 @@ fun RecipeDto.toDomain(): Recipe {
         recipeTimeEstimation = this.recipeTimeEstimation,
         imageUrl = this.imageUrl,
         category = RecipeCategory.from(this.category),
+        collectionIds = this.collectionIds,
         ingredients = this.ingredients.map {
             Ingredient(
                 id = it.id,

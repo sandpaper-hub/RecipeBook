@@ -8,8 +8,8 @@ import com.example.recipebook.domain.interactor.login.LoginInteractor
 import com.example.recipebook.domain.interactor.login.LoginInteractorImpl
 import com.example.recipebook.domain.interactor.profile.ProfileInteractor
 import com.example.recipebook.domain.interactor.profile.ProfileInteractorImpl
-import com.example.recipebook.domain.interactor.recipes.FullRecipeInteractor
-import com.example.recipebook.domain.interactor.recipes.FullRecipeInteractorImpl
+import com.example.recipebook.domain.interactor.recipes.fullRecipeInteractor.FullRecipeInteractor
+import com.example.recipebook.domain.interactor.recipes.fullRecipeInteractor.FullRecipeInteractorImpl
 import com.example.recipebook.domain.interactor.registration.RegistrationInteractor
 import com.example.recipebook.domain.interactor.registration.RegistrationInteractorImpl
 import com.example.recipebook.domain.interactor.settings.SettingsInteractor
@@ -18,8 +18,11 @@ import com.example.recipebook.domain.interactor.splash.SplashInteractor
 import com.example.recipebook.domain.interactor.splash.SplashInteractorImpl
 import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
 import com.example.recipebook.domain.interactor.recipes.RecipesInteractorImpl
-import com.example.recipebook.domain.interactor.recipes.UpdateRecipeInteractor
-import com.example.recipebook.domain.interactor.recipes.UpdateRecipeInteractorImpl
+import com.example.recipebook.domain.interactor.recipes.deleteRecipeInteractor.DeleteRecipeInteractor
+import com.example.recipebook.domain.interactor.recipes.deleteRecipeInteractor.DeleteRecipeInteractorImpl
+import com.example.recipebook.domain.interactor.recipes.updateRecipeInteractor.UpdateRecipeInteractor
+import com.example.recipebook.domain.interactor.recipes.updateRecipeInteractor.UpdateRecipeInteractorImpl
+import com.example.recipebook.domain.useCase.recipe.deleteRecipe.DeleteRecipeUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -79,4 +82,9 @@ abstract class InteractorBindings {
     abstract fun bindUpdateCollectionInteractor(
         impl: UpdateCollectionInteractorImpl
     ): UpdateCollectionInteractor
+
+    @Binds
+    abstract fun bindDeleteRecipeInteractor(
+        impl: DeleteRecipeInteractorImpl
+    ): DeleteRecipeInteractor
 }

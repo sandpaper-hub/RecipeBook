@@ -3,7 +3,7 @@ package com.example.recipebook.domain.service
 import com.example.recipebook.domain.model.recipe.step.EditStep
 import com.example.recipebook.domain.model.recipe.step.ImageSourceType
 import com.example.recipebook.domain.useCase.GetStepImageUrlUseCase
-import com.example.recipebook.domain.useCase.deleteImage.DeleteStepImageUseCase
+import com.example.recipebook.domain.useCase.recipe.deleteStepImage.DeleteStepImageUseCase
 import javax.inject.Inject
 
 class StepImageProcessor @Inject constructor(

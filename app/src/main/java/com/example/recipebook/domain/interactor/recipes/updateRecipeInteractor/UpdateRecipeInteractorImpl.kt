@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.interactor.recipes
+package com.example.recipebook.domain.interactor.recipes.updateRecipeInteractor
 
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredient
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipe
@@ -9,8 +9,8 @@ import com.example.recipebook.domain.model.recipe.step.ImageSourceType
 import com.example.recipebook.domain.service.StepImageProcessor
 import com.example.recipebook.domain.useCase.GetRecipeCoverUrlUseCase
 import com.example.recipebook.domain.useCase.UpdateRecipeUseCase
-import com.example.recipebook.domain.useCase.deleteImage.DeleteRecipeImageUseCase
-import com.example.recipebook.domain.useCase.updateRecipe.BuildRecipeDifferenceUseCase
+import com.example.recipebook.domain.useCase.recipe.deleteRecipeImage.DeleteRecipeImageUseCase
+import com.example.recipebook.domain.useCase.recipe.updateRecipe.BuildRecipeDifferenceUseCase
 import javax.inject.Inject
 
 class UpdateRecipeInteractorImpl @Inject constructor(

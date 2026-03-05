@@ -1,14 +1,12 @@
 package com.example.recipebook.domain.interactor.collection
 
 import com.example.recipebook.domain.model.collection.UserCollection
-import com.example.recipebook.domain.useCase.AddRecipeToCollectionUseCase
 import com.example.recipebook.domain.useCase.CreateCollectionDocumentUseCase
 import com.example.recipebook.domain.useCase.CreateCollectionUseCase
 import com.example.recipebook.domain.useCase.DeleteCollectionUseCase
 import com.example.recipebook.domain.useCase.GetUserCollectionsUseCase
-import com.example.recipebook.domain.useCase.GetUserIdFlowUseCase
+import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCaseImpl
 import com.example.recipebook.domain.useCase.ObserveCollectionDetailUseCase
-import com.example.recipebook.domain.useCase.RemoveRecipeFromCollectionUseCase
 import com.example.recipebook.domain.useCase.UploadCollectionCoverUseCase
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -19,12 +17,10 @@ class CollectionInteractorImpl @Inject constructor(
     private val uploadCollectionCoverUseCase: UploadCollectionCoverUseCase,
     private val getUserCollectionsUseCase: GetUserCollectionsUseCase,
     private val observeCollectionDetailUseCase: ObserveCollectionDetailUseCase,
-    private val getUserIdFlowUseCase: GetUserIdFlowUseCase,
-    private val addRecipeToCollectionUseCase: AddRecipeToCollectionUseCase,
-    private val removeRecipeFromCollectionUseCase: RemoveRecipeFromCollectionUseCase,
+    private val getUserIdFlowUseCaseImpl: GetUserIdFlowUseCaseImpl,
     private val deleteCollectionUseCase: DeleteCollectionUseCase
 ) : CollectionInteractor {
-    override fun getUserIdFlow(): Flow<String?> = getUserIdFlowUseCase.execute()
+    override fun getUserIdFlow(): Flow<String?> = getUserIdFlowUseCaseImpl.execute()
 
 
     override fun observeUserCollections(userId: String): Flow<List<UserCollection>> =
@@ -55,20 +51,6 @@ class CollectionInteractorImpl @Inject constructor(
                 imageSource = collectionImageSource
             )
         )
-    }
-
-    override suspend fun addRecipeToCollection(
-        collectionId: String,
-        recipeId: String
-    ) {
-        addRecipeToCollectionUseCase.execute(collectionId = collectionId, recipeId = recipeId)
-    }
-
-    override suspend fun removeRecipeFromCollection(
-        collectionId: String,
-        recipeId: String
-    ) {
-        removeRecipeFromCollectionUseCase.execute(collectionId = collectionId, recipeId = recipeId)
     }
 
     override suspend fun deleteCollection(collectionId: String) {

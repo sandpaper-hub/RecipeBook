@@ -4,12 +4,14 @@ import com.example.recipebook.domain.model.collection.UserCollection
 import com.example.recipebook.domain.model.collection.UserCollectionEdit
 import com.example.recipebook.domain.model.recipe.step.ImageSourceType
 import com.example.recipebook.domain.useCase.UploadCollectionCoverUseCase
-import com.example.recipebook.domain.useCase.updateCollectionUseCase.UpdateCollectionUseCase
+import com.example.recipebook.domain.useCase.collection.deleteCollectionImage.DeleteCollectionImageUseCase
+import com.example.recipebook.domain.useCase.collection.updateCollectionUseCase.UpdateCollectionUseCase
 import javax.inject.Inject
 
 class UpdateCollectionInteractorImpl @Inject constructor(
     private val uploadCollectionCoverUseCase: UploadCollectionCoverUseCase,
-    private val updateCollectionUseCase: UpdateCollectionUseCase
+    private val updateCollectionUseCase: UpdateCollectionUseCase,
+    private val deleteCollectionImageUseCase: DeleteCollectionImageUseCase
 ) : UpdateCollectionInteractor {
     override suspend fun updateCollection(
         editedCollection: UserCollectionEdit,
@@ -32,7 +34,7 @@ class UpdateCollectionInteractorImpl @Inject constructor(
         return when (editedCollection.imageSource) {
             is ImageSourceType.None -> {
                 if (originalCollection.imageSource is ImageSourceType.Remote) {
-
+                    deleteCollectionImageUseCase.execute(editedCollection.id)
                 }
                 null
             }

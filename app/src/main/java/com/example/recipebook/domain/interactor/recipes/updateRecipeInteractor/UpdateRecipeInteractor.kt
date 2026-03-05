@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.interactor.recipes
+package com.example.recipebook.domain.interactor.recipes.updateRecipeInteractor
 
 import com.example.recipebook.domain.model.recipe.getRecipe.FullRecipe
 

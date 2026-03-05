@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.collection.UpdateCollectionInteractor
 import com.example.recipebook.domain.model.collection.UserCollectionEdit
 import com.example.recipebook.domain.model.recipe.step.ImageSourceType
-import com.example.recipebook.domain.useCase.getUserCollection.GetUserCollectionUseCaseImpl
+import com.example.recipebook.domain.useCase.collection.getUserCollectionUseCase.GetUserCollectionUseCaseImpl
 import com.example.recipebook.navigation.mainHomeGraph.collectionDetailGraph.CollectionDetailDestination
 import com.example.recipebook.presentation.viewModel.collectionEditScreen.model.CollectionEditUiState
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent

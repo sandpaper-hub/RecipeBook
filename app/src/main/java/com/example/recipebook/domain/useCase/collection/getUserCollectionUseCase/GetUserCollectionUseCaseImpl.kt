@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.useCase.getUserCollection
+package com.example.recipebook.domain.useCase.collection.getUserCollectionUseCase
 
 import com.example.recipebook.domain.model.collection.UserCollectionEdit
 import com.example.recipebook.domain.model.recipe.step.ImageSourceType

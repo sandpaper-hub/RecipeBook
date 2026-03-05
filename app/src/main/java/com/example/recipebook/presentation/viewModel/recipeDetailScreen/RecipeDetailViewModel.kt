@@ -3,8 +3,12 @@ package com.example.recipebook.presentation.viewModel.recipeDetailScreen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.collection.CollectionInteractor
-import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
+import com.example.recipebook.domain.interactor.recipes.deleteRecipeInteractor.DeleteRecipeInteractor
+import com.example.recipebook.domain.useCase.recipe.addRecipeToCollectionUseCase.AddRecipeToCollectionUseCase
+import com.example.recipebook.domain.useCase.collection.observeUserCollectionUseCase.ObserveUserCollectionUseCase
+import com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUseCase.RemoveRecipeFromCollectionUseCase
+import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCase
+import com.example.recipebook.domain.useCase.recipe.getRecipeById.GetRecipeByIdUseCase
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailDestination
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.CollectionUiState
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.IngredientUiState
@@ -26,8 +30,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
-    private val recipesInteractor: RecipesInteractor,
-    private val collectionsInteractor: CollectionInteractor,
+    private val getRecipeByIdUseCaseImpl: GetRecipeByIdUseCase,
+    private val getUserIdFlowUseCase: GetUserIdFlowUseCase,
+    private val observeUserCollectionUseCase: ObserveUserCollectionUseCase,
+    private val addRecipeToCollectionUseCase: AddRecipeToCollectionUseCase,
+    private val removeRecipeFromCollectionUseCase: RemoveRecipeFromCollectionUseCase,
+    private val deleteRecipeInteractor: DeleteRecipeInteractor,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val recipeId: String =
@@ -39,17 +47,17 @@ class RecipeDetailViewModel @Inject constructor(
 
     init {
         observeUserCollections()
-        getRecipeById(recipeId)
+        getRecipeById()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeUserCollections() {
-        collectionsInteractor.getUserIdFlow()
+        getUserIdFlowUseCase.execute()
             .flatMapLatest { uid ->
                 if (uid == null) {
                     flowOf(emptyList())
                 } else {
-                    collectionsInteractor.observeUserCollections(uid)
+                    observeUserCollectionUseCase.execute(uid)
                 }
             }
             .onEach { collections ->
@@ -104,12 +112,12 @@ class RecipeDetailViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 if (containedRecipe) {
-                    collectionsInteractor.removeRecipeFromCollection(
+                    removeRecipeFromCollectionUseCase.execute(
                         collectionId = collectionId,
                         recipeId = recipeId
                     )
                 } else {
-                    collectionsInteractor.addRecipeToCollection(
+                    addRecipeToCollectionUseCase.execute(
                         collectionId = collectionId,
                         recipeId = recipeId
                     )
@@ -145,9 +153,9 @@ class RecipeDetailViewModel @Inject constructor(
         }
     }
 
-    private fun getRecipeById(recipeId: String) {
+    private fun getRecipeById() {
         viewModelScope.launch {
-            val recipe = recipesInteractor.getRecipeById(recipeId)
+            val recipe = getRecipeByIdUseCaseImpl.execute(recipeId)
             _uiState.update {
                 it.copy(
                     imageUrl = recipe.imageUrl,
@@ -178,7 +186,7 @@ class RecipeDetailViewModel @Inject constructor(
     fun deleteRecipe() {
         viewModelScope.launch {
             runCatching {
-                recipesInteractor.deleteRecipe(recipeId)
+                deleteRecipeInteractor.invoke(recipeId)
             }
                 .onSuccess {
                     _uiState.update {

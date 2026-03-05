@@ -2,8 +2,7 @@ package com.example.recipebook.domain.interactor.profile
 
 import com.example.recipebook.domain.model.profile.UserProfile
 import com.example.recipebook.domain.useCase.GetLocalesUseCase
-import com.example.recipebook.domain.useCase.GetUserIdFlowUseCase
-import com.example.recipebook.domain.useCase.GetUserRecipesUseCase
+import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCaseImpl
 import com.example.recipebook.domain.useCase.UpdateUserProfileUseCase
 import com.example.recipebook.domain.useCase.GetUserProfileUseCase
 import com.example.recipebook.domain.util.ImageCompressor
@@ -15,8 +14,7 @@ class ProfileInteractorImpl @Inject constructor(
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
     private val getLocalesUseCase: GetLocalesUseCase,
-    private val getUserRecipesUseCase: GetUserRecipesUseCase,
-    private val getUserIdFlowUseCase: GetUserIdFlowUseCase
+    private val getUserIdFlowUseCaseImpl: GetUserIdFlowUseCaseImpl
 ) : ProfileInteractor {
 
     override fun observerUserProfile(): Flow<UserProfile> =
@@ -35,5 +33,5 @@ class ProfileInteractorImpl @Inject constructor(
     override fun getLocales(): List<String> =
         getLocalesUseCase.execute()
 
-    override fun getUserIdFlow(): Flow<String?> = getUserIdFlowUseCase.execute()
+    override fun getUserIdFlow(): Flow<String?> = getUserIdFlowUseCaseImpl.execute()
 }

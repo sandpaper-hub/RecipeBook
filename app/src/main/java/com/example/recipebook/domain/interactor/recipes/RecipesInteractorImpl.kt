@@ -7,14 +7,12 @@ import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepD
 import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
 import com.example.recipebook.domain.model.recipe.step.Step
 import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCaseImpl
-import com.example.recipebook.domain.useCase.DeleteRecipeUseCase
 import com.example.recipebook.domain.useCase.GetCurrentUserIdUseCase
-import com.example.recipebook.domain.useCase.GetRecipeByIdUseCase
 import com.example.recipebook.domain.useCase.GetRecipeCoverUrlUseCase
 import com.example.recipebook.domain.useCase.GetRecipeStepsUseCase
 import com.example.recipebook.domain.useCase.GetRecipesByIdsUseCase
 import com.example.recipebook.domain.useCase.GetStepImagesUrlUseCase
-import com.example.recipebook.domain.useCase.GetUserIdFlowUseCase
+import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCaseImpl
 import com.example.recipebook.domain.useCase.GetUserRecipesUseCase
 import com.example.recipebook.domain.useCase.UploadNewRecipeUseCase
 import kotlinx.coroutines.flow.Flow
@@ -27,16 +25,10 @@ class RecipesInteractorImpl @Inject constructor(
     private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
     private val getRecipeCoverUrlUseCase: GetRecipeCoverUrlUseCase,
     private val getUserRecipesUseCase: GetUserRecipesUseCase,
-    private val getUserIdFlowUseCase: GetUserIdFlowUseCase,
-    private val getRecipeByIdUseCase: GetRecipeByIdUseCase,
+    private val getUserIdFlowUseCaseImpl: GetUserIdFlowUseCaseImpl,
     private val getRecipeStepsUseCase: GetRecipeStepsUseCase,
-    private val deleteRecipeUseCase: DeleteRecipeUseCase,
     private val getRecipesByIdsUseCase: GetRecipesByIdsUseCase
 ) : RecipesInteractor {
-    override suspend fun getRecipeById(recipeId: String): Recipe {
-        return getRecipeByIdUseCase.execute(recipeId)
-    }
-
     override suspend fun createRandomId(): String {
         return createRandomIdUseCaseImpl.execute()
     }
@@ -91,14 +83,10 @@ class RecipesInteractorImpl @Inject constructor(
     override fun observeUserRecipes(userId: String): Flow<List<Recipe>> =
         getUserRecipesUseCase.execute(userId)
 
-    override fun getUserIdFlow(): Flow<String?> = getUserIdFlowUseCase.execute()
+    override fun getUserIdFlow(): Flow<String?> = getUserIdFlowUseCaseImpl.execute()
 
     override suspend fun getRecipeSteps(recipeId: String): List<Step> {
         return getRecipeStepsUseCase.execute(recipeId)
-    }
-
-    override suspend fun deleteRecipe(recipeId: String) {
-        deleteRecipeUseCase.execute(recipeId)
     }
 
     override suspend fun getRecipesByIds(

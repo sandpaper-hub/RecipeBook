@@ -16,11 +16,13 @@ interface CollectionsRepository {
         collectionId: String,
         imageSource: String
     ): String
-
-    suspend fun addRecipeToCollection(collectionId: String, recipeId: String)
-
-    suspend fun removeRecipeFromCollection(collectionId: String, recipeId: String)
     suspend fun deleteCollection(collectionId: String)
     suspend fun getCollectionById(collectionId: String): UserCollection
     suspend fun updateCollection(userCollection: UserCollection)
+    suspend fun toggleRecipeInCollection(
+        collectionId: String,
+        recipeId: String,
+        add: Boolean
+    )
+    suspend fun getCollectionIdsByRecipe(recipeId: String): List<String>
 }

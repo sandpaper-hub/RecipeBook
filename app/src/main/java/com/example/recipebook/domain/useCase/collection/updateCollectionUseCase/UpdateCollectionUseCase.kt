@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.useCase.updateCollectionUseCase
+package com.example.recipebook.domain.useCase.collection.updateCollectionUseCase
 
 import com.example.recipebook.domain.model.collection.UserCollection
 import com.example.recipebook.domain.repository.CollectionsRepository
