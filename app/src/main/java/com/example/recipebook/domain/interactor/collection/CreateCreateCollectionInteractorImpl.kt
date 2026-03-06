@@ -3,21 +3,14 @@ package com.example.recipebook.domain.interactor.collection
 import com.example.recipebook.domain.model.collection.UserCollection
 import com.example.recipebook.domain.useCase.CreateCollectionDocumentUseCase
 import com.example.recipebook.domain.useCase.CreateCollectionUseCase
-import com.example.recipebook.domain.useCase.DeleteCollectionUseCase
-import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCaseImpl
 import com.example.recipebook.domain.useCase.UploadCollectionCoverUseCase
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class CollectionInteractorImpl @Inject constructor(
+class CreateCreateCollectionInteractorImpl @Inject constructor(
     private val createCollectionUseCase: CreateCollectionUseCase,
     private val createCollectionDocumentUseCase: CreateCollectionDocumentUseCase,
-    private val uploadCollectionCoverUseCase: UploadCollectionCoverUseCase,
-    private val getUserIdFlowUseCaseImpl: GetUserIdFlowUseCaseImpl,
-    private val deleteCollectionUseCase: DeleteCollectionUseCase
-) : CollectionInteractor {
-    override fun getUserIdFlow(): Flow<String?> = getUserIdFlowUseCaseImpl.execute()
-
+    private val uploadCollectionCoverUseCase: UploadCollectionCoverUseCase
+) : CreateCollectionInteractor {
     override suspend fun createCollection(
         name: String,
         description: String,
@@ -36,9 +29,5 @@ class CollectionInteractorImpl @Inject constructor(
                 imageSource = collectionImageSource
             )
         )
-    }
-
-    override suspend fun deleteCollection(collectionId: String) {
-        deleteCollectionUseCase.execute(collectionId)
     }
 }
