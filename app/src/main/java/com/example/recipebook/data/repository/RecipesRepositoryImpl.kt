@@ -138,13 +138,31 @@ class RecipesRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getRecipeByIdFlow(recipeId: String): Flow<Recipe> = callbackFlow {
+        val listener = firestore
+            .collection("users")
+            .document(userId)
+            .collection("recipes")
+            .document(recipeId)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    close(exception)
+                    return@addSnapshotListener
+                }
+                val recipe = snapshot?.toObject(RecipeDto::class.java)?.toDomain()
+                    ?: return@addSnapshotListener
+                trySend(recipe)
+            }
+        awaitClose { listener.remove() }
+    }
+
     override suspend fun getRecipeById(recipeId: String): Recipe {
         return firestore
             .collection("users")
             .document(userId)
             .collection("recipes")
             .document(recipeId)
-            .get()
+        .get()
             .await()
             .toObject(RecipeDto::class.java)?.toDomain()
             ?: throw IllegalStateException("Recipe not found")

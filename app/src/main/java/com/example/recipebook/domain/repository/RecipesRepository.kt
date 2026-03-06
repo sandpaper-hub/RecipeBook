@@ -19,6 +19,7 @@ interface RecipesRepository {
     suspend fun saveRecipe(newRecipe: UploadRecipe, recipeSteps: List<UploadRecipeStep>)
     suspend fun uploadRecipeImage(recipeId: String, imageSource: String): String
     fun observeUserRecipes(userId: String): Flow<List<Recipe>>
+    fun getRecipeByIdFlow(recipeId: String): Flow<Recipe>
     suspend fun getRecipeById(recipeId: String): Recipe
     suspend fun getRecipeSteps(recipeId: String): List<Step>
     suspend fun deleteRecipe(recipeId: String)

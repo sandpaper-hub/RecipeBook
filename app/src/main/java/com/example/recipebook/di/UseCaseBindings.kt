@@ -14,8 +14,8 @@ import com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUs
 import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCase
 import com.example.recipebook.domain.useCase.recipe.deleteRecipe.DeleteRecipeUseCase
 import com.example.recipebook.domain.useCase.recipe.deleteRecipe.DeleteRecipeUseCaseImpl
-import com.example.recipebook.domain.useCase.recipe.getRecipeById.GetRecipeByIdUseCase
-import com.example.recipebook.domain.useCase.recipe.getRecipeById.GetRecipeByIdUseCaseImpl
+import com.example.recipebook.domain.useCase.recipe.getRecipeById.GetRecipeByIdFlowUseCase
+import com.example.recipebook.domain.useCase.recipe.getRecipeById.GetRecipeByIdFlowUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -37,8 +37,8 @@ abstract class UseCaseBindings {
 
     @Binds
     abstract fun bindGetRecipeByIdUseCase(
-        impl: GetRecipeByIdUseCaseImpl
-    ): GetRecipeByIdUseCase
+        impl: GetRecipeByIdFlowUseCaseImpl
+    ): GetRecipeByIdFlowUseCase
 
     @Binds
     abstract fun bindDeleteRecipeUseCase(

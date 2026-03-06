@@ -8,7 +8,7 @@ import com.example.recipebook.domain.useCase.recipe.addRecipeToCollectionUseCase
 import com.example.recipebook.domain.useCase.collection.observeUserCollectionUseCase.ObserveUserCollectionUseCase
 import com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUseCase.RemoveRecipeFromCollectionUseCase
 import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCase
-import com.example.recipebook.domain.useCase.recipe.getRecipeById.GetRecipeByIdUseCase
+import com.example.recipebook.domain.useCase.recipe.getRecipeById.GetRecipeByIdFlowUseCase
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailDestination
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.CollectionUiState
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.IngredientUiState
@@ -20,17 +20,19 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
-    private val getRecipeByIdUseCaseImpl: GetRecipeByIdUseCase,
+    private val getRecipeByIdFlowUseCaseImpl: GetRecipeByIdFlowUseCase,
     private val getUserIdFlowUseCase: GetUserIdFlowUseCase,
     private val observeUserCollectionUseCase: ObserveUserCollectionUseCase,
     private val addRecipeToCollectionUseCase: AddRecipeToCollectionUseCase,
@@ -60,6 +62,13 @@ class RecipeDetailViewModel @Inject constructor(
                     observeUserCollectionUseCase.execute(uid)
                 }
             }
+            .onStart {
+                _uiState.update {
+                    it.copy(
+                        isCollectionsLoading = true
+                    )
+                }
+            }
             .onEach { collections ->
                 _uiState.update { currentState ->
                     val updated = collections.map { collection ->
@@ -74,6 +83,11 @@ class RecipeDetailViewModel @Inject constructor(
                         )
                     }
                     currentState.copy(collectionsUiState = updated)
+                }
+            }
+            .catch { error ->
+                _uiState.update {
+                    it.copy(collectionsErrorMessage = error.message)
                 }
             }
             .launchIn(viewModelScope)
@@ -155,25 +169,42 @@ class RecipeDetailViewModel @Inject constructor(
 
     private fun getRecipeById() {
         viewModelScope.launch {
-            val recipe = getRecipeByIdUseCaseImpl.execute(recipeId)
-            _uiState.update {
-                it.copy(
-                    imageUrl = recipe.imageUrl,
-                    name = recipe.recipeName,
-                    description = recipe.recipeDescription,
-                    category = recipe.category,
-                    timeEstimation = recipe.recipeTimeEstimation,
-                    ingredients = recipe.ingredients.map { ingredient ->
-                        IngredientUiState(
-                            id = ingredient.id,
-                            value = ingredient.value,
-                            amount = ingredient.amount,
-                            measure = ingredient.measure
+            getRecipeByIdFlowUseCaseImpl.execute(recipeId)
+                .onStart {
+                    _uiState.update {
+                        it.copy(
+                            isRecipeLoading = true
                         )
-                    },
-                    createdAt = recipe.createdAt
-                )
-            }
+                    }
+                }
+                .onEach { recipe ->
+                    _uiState.update {
+                        it.copy(
+                            imageUrl = recipe.imageUrl,
+                            name = recipe.recipeName,
+                            description = recipe.recipeDescription,
+                            category = recipe.category,
+                            timeEstimation = recipe.recipeTimeEstimation,
+                            ingredients = recipe.ingredients.map { ingredient ->
+                                IngredientUiState(
+                                    id = ingredient.id,
+                                    value = ingredient.value,
+                                    amount = ingredient.amount,
+                                    measure = ingredient.measure
+                                )
+                            },
+                            createdAt = recipe.createdAt
+                        )
+                    }
+                }
+                .catch { error ->
+                    _uiState.update {
+                        it.copy(
+                            recipeErrorMessage = error.message
+                        )
+                    }
+                }
+                .launchIn(viewModelScope)
         }
     }
 
