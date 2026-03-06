@@ -4,7 +4,6 @@ import com.example.recipebook.domain.model.collection.UserCollection
 import com.example.recipebook.domain.useCase.CreateCollectionDocumentUseCase
 import com.example.recipebook.domain.useCase.CreateCollectionUseCase
 import com.example.recipebook.domain.useCase.DeleteCollectionUseCase
-import com.example.recipebook.domain.useCase.collection.getUserCollection.GetUserCollectionsUseCaseImpl
 import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCaseImpl
 import com.example.recipebook.domain.useCase.UploadCollectionCoverUseCase
 import kotlinx.coroutines.flow.Flow
@@ -14,15 +13,10 @@ class CollectionInteractorImpl @Inject constructor(
     private val createCollectionUseCase: CreateCollectionUseCase,
     private val createCollectionDocumentUseCase: CreateCollectionDocumentUseCase,
     private val uploadCollectionCoverUseCase: UploadCollectionCoverUseCase,
-    private val getUserCollectionsUseCaseImpl: GetUserCollectionsUseCaseImpl,
     private val getUserIdFlowUseCaseImpl: GetUserIdFlowUseCaseImpl,
     private val deleteCollectionUseCase: DeleteCollectionUseCase
 ) : CollectionInteractor {
     override fun getUserIdFlow(): Flow<String?> = getUserIdFlowUseCaseImpl.execute()
-
-
-    override fun observeUserCollections(userId: String): Flow<List<UserCollection>> =
-        getUserCollectionsUseCaseImpl.execute(userId)
 
     override suspend fun createCollection(
         name: String,

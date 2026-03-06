@@ -7,8 +7,6 @@ interface CollectionInteractor {
 
     fun getUserIdFlow(): Flow<String?>
 
-    fun observeUserCollections(userId: String): Flow<List<UserCollection>>
-
     suspend fun createCollection(
         name: String,
         description: String,
