@@ -198,16 +198,4 @@ class CollectionRepositoryImpl @Inject constructor(
             batch.update(collectionReference, "recipeIds", collectionOperation)
         }
     }
-
-
-    override suspend fun getCollectionIdsByRecipe(recipeId: String): List<String> {
-        val document = firestore.collection("users")
-            .document(userId)
-            .collection("recipes")
-            .document(recipeId)
-            .get()
-            .await()
-        @Suppress("UNCHECKED_CAST")
-        return document.get("collectionIds") as? List<String> ?: emptyList()
-    }
 }

@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.recipes.deleteRecipeInteractor.DeleteRecipeInteractor
 import com.example.recipebook.domain.useCase.recipe.addRecipeToCollectionUseCase.AddRecipeToCollectionUseCase
 import com.example.recipebook.domain.useCase.collection.observeUserCollectionUseCase.ObserveUserCollectionUseCase
-import com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUseCase.RemoveRecipeFromCollectionUseCase
+import com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUseCase.RemoveBrokenIdUseCase
 import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCase
 import com.example.recipebook.domain.useCase.recipe.getRecipeById.GetRecipeByIdFlowUseCase
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailDestination
@@ -36,7 +36,7 @@ class RecipeDetailViewModel @Inject constructor(
     private val getUserIdFlowUseCase: GetUserIdFlowUseCase,
     private val observeUserCollectionUseCase: ObserveUserCollectionUseCase,
     private val addRecipeToCollectionUseCase: AddRecipeToCollectionUseCase,
-    private val removeRecipeFromCollectionUseCase: RemoveRecipeFromCollectionUseCase,
+    private val removeBrokenIdUseCase: RemoveBrokenIdUseCase,
     private val deleteRecipeInteractor: DeleteRecipeInteractor,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -126,7 +126,7 @@ class RecipeDetailViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 if (containedRecipe) {
-                    removeRecipeFromCollectionUseCase.execute(
+                    removeBrokenIdUseCase.execute(
                         collectionId = collectionId,
                         recipeId = recipeId
                     )
@@ -217,7 +217,12 @@ class RecipeDetailViewModel @Inject constructor(
     fun deleteRecipe() {
         viewModelScope.launch {
             runCatching {
-                deleteRecipeInteractor.invoke(recipeId)
+                val collectionIdsToDelete =
+                    _uiState.value.collectionsUiState.filter { it.containRecipe }.map {
+                        it.id
+                    }
+
+                deleteRecipeInteractor.invoke(recipeId, collectionIdsToDelete)
             }
                 .onSuccess {
                     _uiState.update {

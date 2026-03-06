@@ -27,5 +27,4 @@ interface RecipesInteractor {
     fun observeUserRecipes(userId: String): Flow<List<Recipe>>
     fun getUserIdFlow(): Flow<String?>
     suspend fun getRecipeSteps(recipeId: String): List<Step>
-    suspend fun getRecipesByIds(recipeIds: List<String>): List<Recipe>
 }

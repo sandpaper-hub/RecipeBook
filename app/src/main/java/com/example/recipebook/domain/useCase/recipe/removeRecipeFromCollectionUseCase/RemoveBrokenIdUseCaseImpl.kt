@@ -3,9 +3,9 @@ package com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionU
 import com.example.recipebook.domain.repository.CollectionsRepository
 import javax.inject.Inject
 
-class RemoveRecipeFromCollectionUseCaseImpl @Inject constructor(
+class RemoveBrokenIdUseCaseImpl @Inject constructor(
     private val collectionsRepository: CollectionsRepository
-) : RemoveRecipeFromCollectionUseCase {
+) : RemoveBrokenIdUseCase {
     override suspend fun execute(collectionId: String, recipeId: String) {
         collectionsRepository.toggleRecipeInCollection(
             collectionId = collectionId, recipeId = recipeId, add = false

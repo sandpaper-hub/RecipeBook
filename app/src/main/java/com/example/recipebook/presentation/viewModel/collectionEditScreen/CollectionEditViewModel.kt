@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.collection.UpdateCollectionInteractor
+import com.example.recipebook.domain.interactor.collection.updateCollectionInteractor.UpdateCollectionInteractor
 import com.example.recipebook.domain.model.collection.UserCollectionEdit
 import com.example.recipebook.domain.model.recipe.step.ImageSourceType
 import com.example.recipebook.domain.useCase.collection.getUserCollectionUseCase.GetUserCollectionUseCaseImpl

@@ -2,8 +2,10 @@ package com.example.recipebook.di
 
 import com.example.recipebook.domain.interactor.collection.CollectionInteractor
 import com.example.recipebook.domain.interactor.collection.CollectionInteractorImpl
-import com.example.recipebook.domain.interactor.collection.UpdateCollectionInteractor
-import com.example.recipebook.domain.interactor.collection.UpdateCollectionInteractorImpl
+import com.example.recipebook.domain.interactor.collection.deleteCollectionInteractor.DeleteCollectionInteractor
+import com.example.recipebook.domain.interactor.collection.deleteCollectionInteractor.DeleteCollectionInteractorImpl
+import com.example.recipebook.domain.interactor.collection.updateCollectionInteractor.UpdateCollectionInteractor
+import com.example.recipebook.domain.interactor.collection.updateCollectionInteractor.UpdateCollectionInteractorImpl
 import com.example.recipebook.domain.interactor.login.LoginInteractor
 import com.example.recipebook.domain.interactor.login.LoginInteractorImpl
 import com.example.recipebook.domain.interactor.profile.ProfileInteractor
@@ -22,7 +24,6 @@ import com.example.recipebook.domain.interactor.recipes.deleteRecipeInteractor.D
 import com.example.recipebook.domain.interactor.recipes.deleteRecipeInteractor.DeleteRecipeInteractorImpl
 import com.example.recipebook.domain.interactor.recipes.updateRecipeInteractor.UpdateRecipeInteractor
 import com.example.recipebook.domain.interactor.recipes.updateRecipeInteractor.UpdateRecipeInteractorImpl
-import com.example.recipebook.domain.useCase.recipe.deleteRecipe.DeleteRecipeUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -87,4 +88,9 @@ abstract class InteractorBindings {
     abstract fun bindDeleteRecipeInteractor(
         impl: DeleteRecipeInteractorImpl
     ): DeleteRecipeInteractor
+
+    @Binds
+    abstract fun bindDeleteCollectionInteractor(
+        impl: DeleteCollectionInteractorImpl
+    ): DeleteCollectionInteractor
 }

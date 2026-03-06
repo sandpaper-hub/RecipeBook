@@ -10,7 +10,6 @@ import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCas
 import com.example.recipebook.domain.useCase.GetCurrentUserIdUseCase
 import com.example.recipebook.domain.useCase.GetRecipeCoverUrlUseCase
 import com.example.recipebook.domain.useCase.GetRecipeStepsUseCase
-import com.example.recipebook.domain.useCase.GetRecipesByIdsUseCase
 import com.example.recipebook.domain.useCase.GetStepImagesUrlUseCase
 import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCaseImpl
 import com.example.recipebook.domain.useCase.GetUserRecipesUseCase
@@ -26,9 +25,7 @@ class RecipesInteractorImpl @Inject constructor(
     private val getRecipeCoverUrlUseCase: GetRecipeCoverUrlUseCase,
     private val getUserRecipesUseCase: GetUserRecipesUseCase,
     private val getUserIdFlowUseCaseImpl: GetUserIdFlowUseCaseImpl,
-    private val getRecipeStepsUseCase: GetRecipeStepsUseCase,
-    private val getRecipesByIdsUseCase: GetRecipesByIdsUseCase
-) : RecipesInteractor {
+    private val getRecipeStepsUseCase: GetRecipeStepsUseCase) : RecipesInteractor {
     override suspend fun createRandomId(): String {
         return createRandomIdUseCaseImpl.execute()
     }
@@ -87,11 +84,5 @@ class RecipesInteractorImpl @Inject constructor(
 
     override suspend fun getRecipeSteps(recipeId: String): List<Step> {
         return getRecipeStepsUseCase.execute(recipeId)
-    }
-
-    override suspend fun getRecipesByIds(
-        recipeIds: List<String>
-    ): List<Recipe> {
-        return getRecipesByIdsUseCase.execute(recipeIds)
     }
 }

@@ -7,15 +7,17 @@ import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCas
 import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCaseImpl
 import com.example.recipebook.domain.useCase.collection.getUserCollectionUseCase.GetUserCollectionUseCase
 import com.example.recipebook.domain.useCase.collection.getUserCollectionUseCase.GetUserCollectionUseCaseImpl
+import com.example.recipebook.domain.useCase.collection.observeCollectionDetailUseCase.ObserveCollectionDetailUseCase
+import com.example.recipebook.domain.useCase.collection.observeCollectionDetailUseCase.ObserveCollectionDetailUseCaseImpl
 import com.example.recipebook.domain.useCase.collection.observeUserCollectionUseCase.ObserveUserCollectionUseCase
 import com.example.recipebook.domain.useCase.collection.observeUserCollectionUseCase.ObserveUserCollectionUseCaseImpl
-import com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUseCase.RemoveRecipeFromCollectionUseCase
-import com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUseCase.RemoveRecipeFromCollectionUseCaseImpl
+import com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUseCase.RemoveBrokenIdUseCase
+import com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUseCase.RemoveBrokenIdUseCaseImpl
 import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCase
-import com.example.recipebook.domain.useCase.recipe.deleteRecipe.DeleteRecipeUseCase
-import com.example.recipebook.domain.useCase.recipe.deleteRecipe.DeleteRecipeUseCaseImpl
 import com.example.recipebook.domain.useCase.recipe.getRecipeById.GetRecipeByIdFlowUseCase
 import com.example.recipebook.domain.useCase.recipe.getRecipeById.GetRecipeByIdFlowUseCaseImpl
+import com.example.recipebook.domain.useCase.recipe.getRecipeListByIds.GetRecipeListByIdsUseCase
+import com.example.recipebook.domain.useCase.recipe.getRecipeListByIds.GetRecipeListByIdsUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -41,11 +43,6 @@ abstract class UseCaseBindings {
     ): GetRecipeByIdFlowUseCase
 
     @Binds
-    abstract fun bindDeleteRecipeUseCase(
-        impl: DeleteRecipeUseCaseImpl
-    ): DeleteRecipeUseCase
-
-    @Binds
     abstract fun bindGetUserIdFlowUseCase(
         impl: GetUserIdFlowUseCaseImpl
     ): GetUserIdFlowUseCase
@@ -62,6 +59,16 @@ abstract class UseCaseBindings {
 
     @Binds
     abstract fun bindRemoveRecipeFromCollectionUseCase(
-        impl: RemoveRecipeFromCollectionUseCaseImpl
-    ): RemoveRecipeFromCollectionUseCase
+        impl: RemoveBrokenIdUseCaseImpl
+    ): RemoveBrokenIdUseCase
+
+    @Binds
+    abstract fun bindObserveCollectionDetailUseCase(
+        impl: ObserveCollectionDetailUseCaseImpl
+    ): ObserveCollectionDetailUseCase
+
+    @Binds
+    abstract fun bindGetRecipeListByIdsUseCase(
+        impl: GetRecipeListByIdsUseCaseImpl
+    ): GetRecipeListByIdsUseCase
 }

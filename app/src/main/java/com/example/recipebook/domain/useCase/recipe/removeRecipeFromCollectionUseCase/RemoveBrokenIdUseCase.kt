@@ -1,5 +1,5 @@
 package com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUseCase
 
-interface RemoveRecipeFromCollectionUseCase {
+interface RemoveBrokenIdUseCase {
     suspend fun execute(collectionId: String, recipeId: String)
 }

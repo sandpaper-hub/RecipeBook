@@ -3,8 +3,10 @@ package com.example.recipebook.presentation.viewModel.collectionDetailScreen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.collection.CollectionInteractor
-import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
+import com.example.recipebook.domain.interactor.collection.deleteCollectionInteractor.DeleteCollectionInteractor
+import com.example.recipebook.domain.useCase.collection.observeCollectionDetailUseCase.ObserveCollectionDetailUseCase
+import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCase
+import com.example.recipebook.domain.useCase.recipe.getRecipeListByIds.GetRecipeListByIdsUseCase
 import com.example.recipebook.navigation.mainHomeGraph.collectionDetailGraph.CollectionDetailDestination
 import com.example.recipebook.presentation.viewModel.collectionDetailScreen.model.CollectionDetailEvent
 import com.example.recipebook.presentation.viewModel.collectionDetailScreen.model.CollectionDetailUiState
@@ -25,8 +27,10 @@ import javax.inject.Inject
 @HiltViewModel
 class
 CollectionDetailViewModel @Inject constructor(
-    private val collectionInteractor: CollectionInteractor,
-    private val recipesInteractor: RecipesInteractor,
+    private val getUserIdFlowUseCase: GetUserIdFlowUseCase,
+    private val observeCollectionDetailUseCase: ObserveCollectionDetailUseCase,
+    private val deleteCollectionInteractor: DeleteCollectionInteractor,
+    private val getRecipeListByIdsUseCase: GetRecipeListByIdsUseCase,
     savedStateHandle: SavedStateHandle
 ) :
     ViewModel() {
@@ -43,12 +47,12 @@ CollectionDetailViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeCollectionDetail() {
-        collectionInteractor.getUserIdFlow()
+        getUserIdFlowUseCase.execute()
             .flatMapLatest { uid ->
                 if (uid == null) {
                     flowOf(null)
                 } else {
-                    collectionInteractor.observeCollectionDetail(uid, collectionId)
+                    observeCollectionDetailUseCase.execute(uid, collectionId)
                 }
             }
             .onEach { collection ->
@@ -63,7 +67,7 @@ CollectionDetailViewModel @Inject constructor(
                             imageSource = collection.imageSource,
                             description = collection.description,
                             collectionSize = collection.recipeIds.size,
-                            recipeList = recipesInteractor.getRecipesByIds(collection.recipeIds),
+                            recipeList = getRecipeListByIdsUseCase.execute(collection.recipeIds),
                         )
                     }
                 }
@@ -91,7 +95,9 @@ CollectionDetailViewModel @Inject constructor(
 
     fun deleteCollection() {
         viewModelScope.launch {
-            collectionInteractor.deleteCollection(collectionId)
+            val recipeIdsToDelete = _uiState.value.recipeList.map { it.id }
+
+            deleteCollectionInteractor.invoke(collectionId, recipeIdsToDelete)
             _events.emit(CollectionDetailEvent.GoBack)
         }
     }

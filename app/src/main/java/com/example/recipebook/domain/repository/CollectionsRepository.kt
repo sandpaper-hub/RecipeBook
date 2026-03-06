@@ -24,5 +24,4 @@ interface CollectionsRepository {
         recipeId: String,
         add: Boolean
     )
-    suspend fun getCollectionIdsByRecipe(recipeId: String): List<String>
 }
