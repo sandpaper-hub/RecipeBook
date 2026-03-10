@@ -10,7 +10,7 @@ import com.example.recipebook.domain.service.StepImageProcessor
 import com.example.recipebook.domain.useCase.GetRecipeCoverUrlUseCase
 import com.example.recipebook.domain.useCase.UpdateRecipeUseCase
 import com.example.recipebook.domain.useCase.recipe.deleteRecipeImage.DeleteRecipeImageUseCase
-import com.example.recipebook.domain.useCase.recipe.updateRecipe.BuildRecipeDifferenceUseCase
+import com.example.recipebook.domain.useCase.recipe.BuildRecipeDifferenceUseCase
 import javax.inject.Inject
 
 class UpdateRecipeInteractorImpl @Inject constructor(

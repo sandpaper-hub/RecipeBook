@@ -1,7 +1,7 @@
 package com.example.recipebook.di
 
-import com.example.recipebook.domain.interactor.collection.CreateCollectionInteractor
-import com.example.recipebook.domain.interactor.collection.CreateCreateCollectionInteractorImpl
+import com.example.recipebook.domain.interactor.collection.createCollectionInteractor.CreateCollectionInteractor
+import com.example.recipebook.domain.interactor.collection.createCollectionInteractor.CreateCreateCollectionInteractorImpl
 import com.example.recipebook.domain.interactor.collection.deleteCollectionInteractor.DeleteCollectionInteractor
 import com.example.recipebook.domain.interactor.collection.deleteCollectionInteractor.DeleteCollectionInteractorImpl
 import com.example.recipebook.domain.interactor.collection.updateCollectionInteractor.UpdateCollectionInteractor

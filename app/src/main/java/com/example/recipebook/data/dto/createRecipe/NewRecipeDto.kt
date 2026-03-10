@@ -7,6 +7,7 @@ data class NewRecipeDto(
     val id: String = "",
     val authorId: String = "",
     val recipeName: String = "",
+    val nameLowerCase: String = "",
     val recipeDescription: String = "",
     val recipeTimeEstimation: String = "",
     val imageUrl: String? = null,

@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.useCase.recipe.deleteRecipe
+package com.example.recipebook.domain.useCase.recipe
 
 import com.example.recipebook.domain.repository.RecipesRepository
 import javax.inject.Inject

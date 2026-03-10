@@ -18,6 +18,8 @@ import com.example.recipebook.domain.useCase.recipe.getRecipeById.GetRecipeByIdF
 import com.example.recipebook.domain.useCase.recipe.getRecipeById.GetRecipeByIdFlowUseCaseImpl
 import com.example.recipebook.domain.useCase.recipe.getRecipeListByIds.GetRecipeListByIdsUseCase
 import com.example.recipebook.domain.useCase.recipe.getRecipeListByIds.GetRecipeListByIdsUseCaseImpl
+import com.example.recipebook.domain.useCase.recipe.searchRecipe.SearchRecipeUseCase
+import com.example.recipebook.domain.useCase.recipe.searchRecipe.SearchRecipeUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -71,4 +73,9 @@ abstract class UseCaseBindings {
     abstract fun bindGetRecipeListByIdsUseCase(
         impl: GetRecipeListByIdsUseCaseImpl
     ): GetRecipeListByIdsUseCase
+
+    @Binds
+    abstract fun bindSearchRecipeUseCase(
+        impl: SearchRecipeUseCaseImpl
+    ): SearchRecipeUseCase
 }

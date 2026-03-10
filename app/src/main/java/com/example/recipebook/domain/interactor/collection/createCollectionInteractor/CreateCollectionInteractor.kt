@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.interactor.collection
+package com.example.recipebook.domain.interactor.collection.createCollectionInteractor
 
 interface CreateCollectionInteractor {
     suspend fun createCollection(

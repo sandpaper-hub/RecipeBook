@@ -1,6 +1,6 @@
 package com.example.recipebook.domain.interactor.recipes.deleteRecipeInteractor
 
-import com.example.recipebook.domain.useCase.recipe.deleteRecipe.DeleteRecipeUseCase
+import com.example.recipebook.domain.useCase.recipe.DeleteRecipeUseCase
 import com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUseCase.RemoveBrokenIdUseCase
 import javax.inject.Inject
 

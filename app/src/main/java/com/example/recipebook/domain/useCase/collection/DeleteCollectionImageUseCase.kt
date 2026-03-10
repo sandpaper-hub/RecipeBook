@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.useCase.collection.deleteCollectionImage
+package com.example.recipebook.domain.useCase.collection
 
 import com.example.recipebook.domain.repository.DeleteImageRepository
 import javax.inject.Inject

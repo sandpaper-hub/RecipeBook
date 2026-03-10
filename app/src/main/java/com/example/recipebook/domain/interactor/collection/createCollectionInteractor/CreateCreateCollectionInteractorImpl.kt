@@ -1,7 +1,7 @@
-package com.example.recipebook.domain.interactor.collection
+package com.example.recipebook.domain.interactor.collection.createCollectionInteractor
 
 import com.example.recipebook.domain.model.collection.UserCollection
-import com.example.recipebook.domain.useCase.CreateCollectionDocumentUseCase
+import com.example.recipebook.domain.useCase.collection.CreateCollectionDocumentUseCase
 import com.example.recipebook.domain.useCase.CreateCollectionUseCase
 import com.example.recipebook.domain.useCase.UploadCollectionCoverUseCase
 import javax.inject.Inject

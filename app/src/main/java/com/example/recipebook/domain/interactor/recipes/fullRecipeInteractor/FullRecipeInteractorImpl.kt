@@ -4,7 +4,7 @@ import com.example.recipebook.domain.model.recipe.getRecipe.FullRecipe
 import com.example.recipebook.domain.model.recipe.step.EditStep
 import com.example.recipebook.domain.model.recipe.step.ImageSourceType
 import com.example.recipebook.domain.useCase.GetRecipeStepsUseCase
-import com.example.recipebook.domain.useCase.recipe.getRecipeById.GetRecipeByIdUseCase
+import com.example.recipebook.domain.useCase.recipe.GetRecipeByIdUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject

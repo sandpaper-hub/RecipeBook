@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.useCase.recipe.updateRecipe
+package com.example.recipebook.domain.useCase.recipe
 
 import com.example.recipebook.domain.model.recipe.getRecipe.FullRecipe
 import com.example.recipebook.domain.model.recipe.step.EditStep
