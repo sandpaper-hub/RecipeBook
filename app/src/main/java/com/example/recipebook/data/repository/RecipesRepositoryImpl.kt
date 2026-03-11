@@ -2,9 +2,12 @@ package com.example.recipebook.data.repository
 
 import com.example.recipebook.data.dto.getRecipe.RecipeDto
 import com.example.recipebook.data.dto.getRecipe.StepDto
+import com.example.recipebook.data.mapper.toDataError
 import com.example.recipebook.data.mapper.toDomain
 import com.example.recipebook.data.mapper.toDto
 import com.example.recipebook.data.util.ImageCompressorImpl
+import com.example.recipebook.domain.model.AppResult
+import com.example.recipebook.domain.model.DataError
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipe
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStep
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
@@ -14,6 +17,7 @@ import com.example.recipebook.domain.repository.RecipesRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
@@ -162,7 +166,7 @@ class RecipesRepositoryImpl @Inject constructor(
             .document(userId)
             .collection("recipes")
             .document(recipeId)
-        .get()
+            .get()
             .await()
             .toObject(RecipeDto::class.java)?.toDomain()
             ?: throw IllegalStateException("Recipe not found")
@@ -254,5 +258,26 @@ class RecipesRepositoryImpl @Inject constructor(
         }
 
         batch.commit().await()
+    }
+
+    override suspend fun searchRecipe(query: String): AppResult<List<Recipe>> {
+        return try {
+            val recipes = firestore.collection("users")
+                .document(userId)
+                .collection("recipes")
+                .whereGreaterThanOrEqualTo("nameLowercase", query.lowercase())
+                .whereLessThan("nameLowercase", "${query.lowercase()}\uF7FF")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .limit(20)
+                .get()
+                .await()
+                .toObjects(RecipeDto::class.java).map { it.toDomain() }
+
+            AppResult.Success(recipes)
+        } catch (exception: FirebaseFirestoreException) {
+            AppResult.Error(exception.toDataError())
+        } catch (_: Exception) {
+            AppResult.Error(DataError.Unknown)
+        }
     }
 }

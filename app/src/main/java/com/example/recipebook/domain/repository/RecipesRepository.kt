@@ -1,5 +1,6 @@
 package com.example.recipebook.domain.repository
 
+import com.example.recipebook.domain.model.AppResult
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipe
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStep
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
@@ -30,4 +31,6 @@ interface RecipesRepository {
         updateSteps: List<UploadRecipeStep>,
         addSteps: List<UploadRecipeStep>
     )
+
+    suspend fun searchRecipe(query: String): AppResult<List<Recipe>>
 }
