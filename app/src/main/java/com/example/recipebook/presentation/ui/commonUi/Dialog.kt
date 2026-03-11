@@ -27,24 +27,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.recipebook.R
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.ResourcesDropDownMenu
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.model.DropdownMenuItem
-import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.MeasureMenuAction
-
+import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMenuItem
 
 @Composable
 @Suppress("FunctionName")
 fun IngredientDialog(
-    items: List<DropdownMenuItem<MeasureMenuAction>>,
     onDialogDismiss: () -> Unit,
-    onConfirm: (value: String, amount: String, measure: MeasureMenuAction) -> Unit
+    onConfirm: (value: String, amount: String, measure: String) -> Unit
 ) {
+    val measureMenuItems = listOf(
+        MeasureMenuItem.TEASPOON,
+        MeasureMenuItem.TABLESPOON,
+        MeasureMenuItem.MILLILITER,
+        MeasureMenuItem.LITER,
+        MeasureMenuItem.GRAM,
+        MeasureMenuItem.KILOGRAM,
+        MeasureMenuItem.PCS
+    )
 
     var ingredientValue by rememberSaveable { mutableStateOf("") }
     var isValueError by rememberSaveable { mutableStateOf(false) }
     var ingredientAmount by rememberSaveable { mutableStateOf("") }
     var isAmountError by rememberSaveable { mutableStateOf(false) }
-    var ingredientMeasure by rememberSaveable { mutableStateOf<MeasureMenuAction?>(null) }
+    var ingredientMeasure by rememberSaveable { mutableStateOf(MeasureMenuItem.NULL) }
     var isMeasureError by rememberSaveable { mutableStateOf(false) }
     var isMenuExpanded by rememberSaveable { mutableStateOf(false) }
 
@@ -99,19 +104,9 @@ fun IngredientDialog(
 
                     Column {
                         SingleActionTextBox(
-                            value = ingredientMeasure?.let {
-                                stringResource(
-                                    when (it) {
-                                        MeasureMenuAction.TEASPOON -> R.string.measure_teaspoon
-                                        MeasureMenuAction.TABLESPOON -> R.string.measure_tablespoon
-                                        MeasureMenuAction.GRAM -> R.string.measure_g
-                                        MeasureMenuAction.KILOGRAM -> R.string.measure_kg
-                                        MeasureMenuAction.MILLILITER -> R.string.measure_ml
-                                        MeasureMenuAction.LITER -> R.string.measure_l
-                                        MeasureMenuAction.PCS -> R.string.measure_pcs
-                                    }
-                                )
-                            } ?: "",
+                            value = if (ingredientMeasure.stringResource != 0) {
+                                stringResource(ingredientMeasure.stringResource)
+                            } else "",
                             hint = stringResource(R.string.empty_hint),
                             isError = isMeasureError,
                             contentDescription = stringResource(R.string.measure),
@@ -120,14 +115,17 @@ fun IngredientDialog(
                             modifier = Modifier.width(60.dp)
                         )
 
-                        ResourcesDropDownMenu(
+                        AppDropdownMenu(
                             expanded = isMenuExpanded,
-                            items = items,
-                            onDismiss = { isMenuExpanded = false },
-                            onItemClick = { selectedMeasure ->
-                                ingredientMeasure = selectedMeasure
+                            items = measureMenuItems,
+                            itemContent = { menuItem ->
+                                Text(stringResource(menuItem.stringResource))
+                            },
+                            onItemClick = { menuItem ->
+                                ingredientMeasure = menuItem
                                 isMeasureError = false
-                            }
+                            },
+                            onDismiss = { isMenuExpanded = false },
                         )
                     }
                 }
@@ -146,11 +144,11 @@ fun IngredientDialog(
                         when {
                             ingredientValue.isBlank() -> isValueError = true
                             ingredientAmount.isBlank() -> isAmountError = true
-                            ingredientMeasure == null -> isMeasureError = true
+                            ingredientMeasure == MeasureMenuItem.NULL -> isMeasureError = true
                         }
 
                         if (!isValueError && !isAmountError && !isMeasureError) {
-                            onConfirm(ingredientValue, ingredientAmount, ingredientMeasure!!)
+                            onConfirm(ingredientValue, ingredientAmount, ingredientMeasure.name)
                         }
                     }) {
                         Text("OK")
@@ -163,10 +161,12 @@ fun IngredientDialog(
 
 @Composable
 @Suppress("FunctionName")
-fun ConfirmDialog(
+fun DeleteDialog(
+    headingText: String,
+    warningText: String,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
-    recipeName: String
+    itemName: String
 ) {
 
     Dialog(onDismissRequest = onDismiss) {
@@ -183,15 +183,15 @@ fun ConfirmDialog(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 HeadingTextMedium(
-                    text = stringResource(R.string.delete_recipe_title),
+                    text = headingText,
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Medium
                     )
                 )
 
                 SubHeadingTextSmall(
-                    text = "${stringResource(R.string.delete_description_title)} \"$recipeName\"?\n" +
-                            stringResource(R.string.delete_warning_title),
+                    text = "${stringResource(R.string.delete_description_title)} \"$itemName\"?\n" +
+                            warningText,
                     modifier = Modifier
                         .padding(top = 8.dp),
                     color = MaterialTheme.colorScheme.onBackground

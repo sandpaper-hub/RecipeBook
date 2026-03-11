@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.settings.SettingsInteractor
 import com.example.recipebook.domain.interactor.profile.ProfileInteractor
+import com.example.recipebook.presentation.viewModel.settingsScreen.model.SettingsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch

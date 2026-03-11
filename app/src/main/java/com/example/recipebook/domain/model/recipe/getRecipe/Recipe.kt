@@ -8,6 +8,7 @@ data class Recipe(
     val recipeTimeEstimation: String = "",
     val imageUrl: String? = null,
     val category: RecipeCategory = RecipeCategory.UNKNOWN,
+    val collectionIds: List<String> = emptyList(),
     val ingredients: List<Ingredient> = emptyList(),
     val createdAt: Long = 0L
 )

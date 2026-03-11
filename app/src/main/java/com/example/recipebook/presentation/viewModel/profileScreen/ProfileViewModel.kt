@@ -3,6 +3,7 @@ package com.example.recipebook.presentation.viewModel.profileScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.profile.ProfileInteractor
+import com.example.recipebook.presentation.viewModel.profileScreen.model.ProfileUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,8 +18,8 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val profileInteractor: ProfileInteractor
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(ProfileState())
-    val uiState: StateFlow<ProfileState> = _uiState
+    private val _uiState = MutableStateFlow(ProfileUiState())
+    val uiState: StateFlow<ProfileUiState> = _uiState
 
 
     init {

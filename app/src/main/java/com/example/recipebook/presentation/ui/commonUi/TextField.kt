@@ -7,11 +7,13 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -31,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -46,7 +49,7 @@ fun CustomTextField(
     value: String,
     onValueChange: (String) -> Unit,
     hint: String,
-    isError: Boolean,
+    isError: Boolean = false,
     modifier: Modifier
 ) {
     var isFocused by remember { mutableStateOf(false) }
@@ -228,9 +231,8 @@ fun CustomPasswordTextField(
             interactionSource = interaction,
             decorationBox = { innerTextField ->
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-
-                    ) {
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Box(Modifier.weight(1f)) {
                         if (value.isEmpty()) {
                             Text(
@@ -264,5 +266,106 @@ fun CustomPasswordTextField(
                     }
                 }
             })
+    }
+}
+
+@Composable
+fun SearchTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    onClearText: () -> Unit,
+    hint: String,
+    isError: Boolean = false,
+    modifier: Modifier
+) {
+    var isFocused by remember { mutableStateOf(false) }
+    val borderColor by animateColorAsState(
+        if (isFocused) {
+            MaterialTheme.colorScheme.primary
+        } else if (isError) {
+            MaterialTheme.colorScheme.error
+        } else
+            Color.Transparent
+    )
+    val borderWidth by animateDpAsState(
+        if (isFocused) 0.5.dp else 1.dp
+    )
+
+    Box(
+        modifier = modifier.then(
+            Modifier
+                .background(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    shape = RoundedCornerShape(14.dp)
+                )
+                .border(
+                    width = borderWidth,
+                    color = borderColor,
+                    shape = RoundedCornerShape(14.dp)
+                )
+                .height(48.dp)
+        )
+    ) {
+        BasicTextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged { state ->
+                    isFocused = state.isFocused
+                },
+            textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.inversePrimary),
+            singleLine = true,
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            decorationBox = { innerTextField ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Box {
+                        Icon(
+                            modifier = Modifier.size(32.dp),
+                            painter = painterResource(R.drawable.search_icon),
+                            contentDescription = stringResource(R.string.search_icon),
+                            tint = MaterialTheme.colorScheme.inversePrimary
+                        )
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .weight(1f),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        if (value.isEmpty()) {
+                            Text(
+                                text = hint,
+                                style = MaterialTheme.typography.labelMedium,
+                                color = TitleGray
+                            )
+                        }
+                        innerTextField()
+                    }
+
+                    if (value.isNotBlank()) {
+                        Box(
+                            modifier = Modifier
+                                .clickable(
+                                    onClick = onClearText,
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                )
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(24.dp),
+                                painter = painterResource(R.drawable.cancel_icon),
+                                contentDescription = stringResource(R.string.cancel_icon),
+                                tint = MaterialTheme.colorScheme.inversePrimary
+                            )
+                        }
+                    }
+                }
+            }
+        )
     }
 }

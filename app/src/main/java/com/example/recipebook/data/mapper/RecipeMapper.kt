@@ -3,17 +3,18 @@ package com.example.recipebook.data.mapper
 import com.example.recipebook.data.dto.createRecipe.NewIngredientDto
 import com.example.recipebook.data.dto.createRecipe.NewRecipeDto
 import com.example.recipebook.data.dto.getRecipe.RecipeDto
-import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipe
+import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipe
 import com.example.recipebook.domain.model.recipe.getRecipe.Ingredient
 import com.example.recipebook.domain.model.recipe.getRecipe.IngredientMeasure
 import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
 import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
 
-fun NewRecipe.toDto(): NewRecipeDto {
+fun UploadRecipe.toDto(): NewRecipeDto {
     return NewRecipeDto(
         id = this.id,
         authorId = this.authorId,
         recipeName = this.recipeName,
+        nameLowerCase = this.recipeName.lowercase(),
         recipeDescription = this.recipeDescription,
         recipeTimeEstimation = this.recipeTimeEstimation,
         imageUrl = this.imageUrl,
@@ -38,6 +39,7 @@ fun RecipeDto.toDomain(): Recipe {
         recipeTimeEstimation = this.recipeTimeEstimation,
         imageUrl = this.imageUrl,
         category = RecipeCategory.from(this.category),
+        collectionIds = this.collectionIds,
         ingredients = this.ingredients.map {
             Ingredient(
                 id = it.id,

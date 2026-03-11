@@ -10,9 +10,12 @@ sealed class CollectionDetailRoutes(val route: String) {
 
     data object CollectionDetail :
         CollectionDetailRoutes(CollectionDetailDestination.COLLECTION_DETAIL)
+
+    data object CollectionEdit : CollectionDetailRoutes(CollectionDetailDestination.COLLECTION_EDIT)
 }
 
 object CollectionDetailDestination {
     const val COLLECTION_DETAIL = "collection_detail"
+    const val COLLECTION_EDIT = "collection_edit"
     const val COLLECTION_ID_ARG = "collectionId"
 }

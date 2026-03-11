@@ -5,6 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailDestination
+import com.example.recipebook.presentation.viewModel.cookingScreen.model.CookingEvent
+import com.example.recipebook.presentation.viewModel.cookingScreen.model.CookingUiState
+import com.example.recipebook.presentation.viewModel.cookingScreen.model.StepUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,12 +40,13 @@ class CookingViewModel @Inject constructor(
             val steps = recipesInteractor.getRecipeSteps(recipeId)
             _uiState.update { cookingUiState ->
                 cookingUiState.copy(
-                    recipeSteps = steps.map {
+                    recipeSteps = steps.mapIndexed { index, step ->
                         StepUiState(
-                            title = it.title,
-                            order = it.order,
-                            description = it.description,
-                            imageUrl = it.imageSource
+                            index = index,
+                            title = step.title,
+                            order = step.order,
+                            description = step.description,
+                            imageUrl = step.imageSource
                         )
                     }
                 )

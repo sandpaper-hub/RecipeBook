@@ -82,9 +82,9 @@ fun CreateCollectionScreen(
                 .fillMaxWidth()
                 .height(150.dp)
 
-            if (uiState.imageUri != null) {
+            if (uiState.imageSource != null) {
                 ImageCover(
-                    imageUri = uiState.imageUri,
+                    imageSource = uiState.imageSource,
                     contentDescription = stringResource(R.string.collection_image),
                     onCancelClick = { viewModel.onImageChange(null) },
                     modifier = imageModifier

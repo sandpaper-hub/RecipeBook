@@ -43,7 +43,7 @@ fun RecipeStep(
             .verticalScroll(state = scrollState)
     ) {
         AsyncImage(
-            model = imageUrl,
+            model = imageUrl ?: R.drawable.recipe_placeholder,
             contentDescription = stringResource((R.string.banner)),
             placeholder = painterResource(R.drawable.recipe_placeholder),
             modifier = Modifier

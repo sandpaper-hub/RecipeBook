@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -28,15 +29,15 @@ import com.example.recipebook.presentation.ui.commonUi.IconTextButton
 import com.example.recipebook.presentation.ui.commonUi.RecipeStepBox
 import com.example.recipebook.presentation.ui.commonUi.ImageCover
 import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
-import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
-import com.example.recipebook.presentation.ui.commonUi.dropDownMenu.ResourcesDropDownMenu
+import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
+import com.example.recipebook.presentation.ui.commonUi.CustomTextButton
+import com.example.recipebook.presentation.ui.createRecipeScreen.model.CategoryMenuItem
+import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMenuItem
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.CreateRecipeViewModel
 import com.example.recipebook.presentation.util.debounce
-import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.CategoryMenuAction
-import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.MeasureMenuAction
 
 @Composable
 @Suppress("FunctionName")
@@ -53,11 +54,35 @@ fun CreateRecipeScreen(
             viewModel.onRecipeImagePicked(uri)
         }
     }
+    val categoryMenuItems = listOf(
+        CategoryMenuItem.APPETIZER,
+        CategoryMenuItem.SALAD,
+        CategoryMenuItem.SOUP,
+        CategoryMenuItem.MAIN,
+        CategoryMenuItem.GARNISH,
+        CategoryMenuItem.SAUCE,
+        CategoryMenuItem.DESERT,
+        CategoryMenuItem.DRINK
+    )
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (recipeColumn, headingText, closeButton) = createRefs()
+        val (recipeColumn, headingText, closeButton, button) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
+
+        IconButton(
+            onClick = onBack,
+            modifier = Modifier
+                .constrainAs(closeButton) {
+                    centerVerticallyTo(headingText)
+                    start.linkTo(startGuideline)
+                }
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.delete_icon),
+                contentDescription = stringResource(R.string.cancel_icon)
+            )
+        }
 
         HeadingTextMedium(
             text = stringResource(R.string.create_recipe),
@@ -68,19 +93,14 @@ fun CreateRecipeScreen(
                 }
         )
 
-        IconButton(
-            onClick = onBack,
-            modifier = Modifier
-                .constrainAs(closeButton) {
-                    centerVerticallyTo(headingText)
-                    end.linkTo(parent.end, margin = 24.dp)
-                }
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.delete_icon),
-                contentDescription = stringResource(R.string.cancel_icon)
-            )
-        }
+        CustomTextButton(
+            onClick = { viewModel.uploadNewRecipe(onBack) },
+            text = stringResource(R.string.save_button),
+            modifier = Modifier.constrainAs(button) {
+                centerVerticallyTo(headingText)
+                end.linkTo(endGuideline)
+            }
+        )
 
         LazyColumn(
             state = listState,
@@ -97,9 +117,9 @@ fun CreateRecipeScreen(
                     .fillMaxWidth()
                     .height(150.dp)
 
-                if (uiState.recipeImageUri != null) {
+                if (uiState.recipeImageSource != null) {
                     ImageCover(
-                        imageUri = uiState.recipeImageUri,
+                        imageSource = uiState.recipeImageSource,
                         contentDescription = stringResource(R.string.recipe_image),
                         modifier = imageModifier,
                         onCancelClick = { viewModel.onRecipeImagePicked(null) }
@@ -159,19 +179,9 @@ fun CreateRecipeScreen(
                 DoubleActionTextBox(
                     ingredient = ingredient.value,
                     amount = ingredient.amount,
-                    measure = ingredient.measure?.let {
-                        stringResource(
-                            when (ingredient.measure) {
-                                MeasureMenuAction.TEASPOON -> R.string.measure_teaspoon
-                                MeasureMenuAction.TABLESPOON -> R.string.measure_tablespoon
-                                MeasureMenuAction.GRAM -> R.string.measure_g
-                                MeasureMenuAction.KILOGRAM -> R.string.measure_kg
-                                MeasureMenuAction.MILLILITER -> R.string.measure_ml
-                                MeasureMenuAction.LITER -> R.string.measure_l
-                                MeasureMenuAction.PCS -> R.string.measure_pcs
-                            }
-                        )
-                    } ?: "",
+                    measure = if (ingredient.measure.isNotEmpty()) {
+                        stringResource(MeasureMenuItem.from(ingredient.measure).stringResource)
+                    } else "",
                     hint = stringResource(R.string.add_ingredient),
                     onBoxClick = { viewModel.showIngredientDialog(ingredient.id) },
                     onIconClick = { viewModel.removeIngredient(ingredient.id) }
@@ -196,19 +206,12 @@ fun CreateRecipeScreen(
 
             item {
                 SingleActionTextBox(
-                    value = stringResource(
-                        when(uiState.recipeCategory) {
-                            CategoryMenuAction.APPETIZER -> R.string.appetizer
-                            CategoryMenuAction.SALAD -> R.string.salad
-                            CategoryMenuAction.SOUP -> R.string.soup
-                            CategoryMenuAction.MAIN -> R.string.main
-                            CategoryMenuAction.GARNISH -> R.string.garnish
-                            CategoryMenuAction.SAUCE -> R.string.sauce
-                            CategoryMenuAction.DESERT -> R.string.desert
-                            CategoryMenuAction.DRINK -> R.string.drink
-                            else -> R.string.unknown_measure
-                        }
-                    ),
+                    value = if (uiState.recipeCategory.isNotEmpty()) {
+                        stringResource(
+                            CategoryMenuItem.from(uiState.recipeCategory)
+                                .stringResource
+                        )
+                    } else "",
                     hint = stringResource(R.string.category_hint),
                     isError = null,
                     contentDescription = "",
@@ -217,13 +220,16 @@ fun CreateRecipeScreen(
                     modifier = Modifier.padding(bottom = 32.dp)
                 )
 
-                ResourcesDropDownMenu(
+                AppDropdownMenu(
                     expanded = uiState.isCategoryMenuExpand,
-                    items = uiState.categoryMenuItems,
-                    onDismiss = {viewModel.showCategoryMenu(false)},
-                    onItemClick = {categoryMenuAction ->
-                        viewModel.onCategoryChange(categoryMenuAction)
-                    }
+                    items = categoryMenuItems,
+                    itemContent = { menuItem ->
+                        Text(stringResource(menuItem.stringResource))
+                    },
+                    onItemClick = { menuItem ->
+                        viewModel.onCategoryChange(menuItem.toString())
+                    },
+                    onDismiss = { viewModel.showCategoryMenu(false) },
                 )
             }
 
@@ -245,7 +251,7 @@ fun CreateRecipeScreen(
                 }
 
                 RecipeStepBox(
-                    imageUri = recipeStep.imageUri,
+                    imageSource = recipeStep.imageSource,
                     titleValue = recipeStep.title,
                     descriptionValue = recipeStep.stepDescription,
                     onImageChange = debounce { imagePicker.launch("image/*") },
@@ -273,20 +279,10 @@ fun CreateRecipeScreen(
                     modifier = Modifier.padding(bottom = 32.dp)
                 )
             }
-
-            item {
-                SquareRoundedButton(
-                    onClick = { viewModel.uploadNewRecipe(onBack) },
-                    text = stringResource(R.string.upload),
-                    isLoading = false,
-                    modifier = Modifier.padding(bottom = 24.dp)
-                )
-            }
         }
 
         uiState.editingIngredientId?.let { ingredientId ->
             IngredientDialog(
-                items = uiState.measureMenuItems,
                 onDialogDismiss = { viewModel.showIngredientDialog(null) },
                 onConfirm = { ingredientValue, amount, measure ->
                     viewModel.onIngredientChange(

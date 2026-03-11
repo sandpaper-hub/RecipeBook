@@ -4,5 +4,5 @@ data class IngredientUiState(
     val id: String = "",
     val value: String = "",
     val amount: String = "",
-    val measure: MeasureMenuAction? = null
+    val measure: String = ""
 )

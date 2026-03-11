@@ -1,42 +1,33 @@
 package com.example.recipebook.domain.interactor.recipes
 
-import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipe
+import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipe
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredient
-import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStep
-import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeStepDraft
+import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStep
+import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
 import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
 import com.example.recipebook.domain.model.recipe.step.Step
-import com.example.recipebook.domain.useCase.CreateRandomIdUseCase
-import com.example.recipebook.domain.useCase.DeleteRecipeUseCase
+import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCaseImpl
 import com.example.recipebook.domain.useCase.GetCurrentUserIdUseCase
-import com.example.recipebook.domain.useCase.GetRecipeByIdUseCase
 import com.example.recipebook.domain.useCase.GetRecipeCoverUrlUseCase
 import com.example.recipebook.domain.useCase.GetRecipeStepsUseCase
 import com.example.recipebook.domain.useCase.GetStepImagesUrlUseCase
-import com.example.recipebook.domain.useCase.GetUserIdFlowUseCase
+import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCaseImpl
 import com.example.recipebook.domain.useCase.GetUserRecipesUseCase
 import com.example.recipebook.domain.useCase.UploadNewRecipeUseCase
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RecipesInteractorImpl @Inject constructor(
-    private val createRandomIdUseCase: CreateRandomIdUseCase,
+    private val createRandomIdUseCaseImpl: CreateRandomIdUseCaseImpl,
     private val getStepImagesUrlUseCase: GetStepImagesUrlUseCase,
     private val uploadNewRecipeUseCase: UploadNewRecipeUseCase,
     private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
     private val getRecipeCoverUrlUseCase: GetRecipeCoverUrlUseCase,
     private val getUserRecipesUseCase: GetUserRecipesUseCase,
-    private val getUserIdFlowUseCase: GetUserIdFlowUseCase,
-    private val getRecipeByIdUseCase: GetRecipeByIdUseCase,
-    private val getRecipeStepsUseCase: GetRecipeStepsUseCase,
-    private val deleteRecipeUseCase: DeleteRecipeUseCase
-) : RecipesInteractor {
-    override suspend fun getRecipeById(recipeId: String): Recipe {
-        return getRecipeByIdUseCase.execute(recipeId)
-    }
-
+    private val getUserIdFlowUseCaseImpl: GetUserIdFlowUseCaseImpl,
+    private val getRecipeStepsUseCase: GetRecipeStepsUseCase) : RecipesInteractor {
     override suspend fun createRandomId(): String {
-        return createRandomIdUseCase.execute()
+        return createRandomIdUseCaseImpl.execute()
     }
 
     override suspend fun uploadNewRecipe(
@@ -46,14 +37,14 @@ class RecipesInteractorImpl @Inject constructor(
         recipeImageSource: String?,
         category: String,
         ingredients: List<NewRecipeIngredient>,
-        steps: List<NewRecipeStepDraft>
+        steps: List<UploadRecipeStepDraft>
     ) {
-        val recipeId = createRandomIdUseCase.execute()
+        val recipeId = createRandomIdUseCaseImpl.execute()
         val recipeImageUrl: String? = getRecipeCoverUrlUseCase.execute(recipeId, recipeImageSource)
         val currentUserId = getCurrentUserIdUseCase.execute()
         val recipeSteps = buildRecipeSteps(recipeId, steps)
         uploadNewRecipeUseCase.execute(
-            NewRecipe(
+            UploadRecipe(
                 id = recipeId,
                 authorId = currentUserId,
                 recipeName = recipeName,
@@ -69,14 +60,14 @@ class RecipesInteractorImpl @Inject constructor(
 
     override suspend fun buildRecipeSteps(
         recipeId: String,
-        newRecipeStepDrafts: List<NewRecipeStepDraft>
-    ): List<NewRecipeStep> {
+        uploadRecipeStepDrafts: List<UploadRecipeStepDraft>
+    ): List<UploadRecipeStep> {
         val stepImageUrls = getStepImagesUrlUseCase.execute(
             recipeId = recipeId,
-            recipeSteps = newRecipeStepDrafts
+            recipeSteps = uploadRecipeStepDrafts
         )
-        return newRecipeStepDrafts.map { draft ->
-            NewRecipeStep(
+        return uploadRecipeStepDrafts.map { draft ->
+            UploadRecipeStep(
                 id = draft.id,
                 title = draft.title,
                 order = draft.order,
@@ -89,13 +80,9 @@ class RecipesInteractorImpl @Inject constructor(
     override fun observeUserRecipes(userId: String): Flow<List<Recipe>> =
         getUserRecipesUseCase.execute(userId)
 
-    override fun getUserIdFlow(): Flow<String?> = getUserIdFlowUseCase.execute()
+    override fun getUserIdFlow(): Flow<String?> = getUserIdFlowUseCaseImpl.execute()
 
     override suspend fun getRecipeSteps(recipeId: String): List<Step> {
-       return getRecipeStepsUseCase.execute(recipeId)
-    }
-
-    override suspend fun deleteRecipe(recipeId: String) {
-        deleteRecipeUseCase.execute(recipeId)
+        return getRecipeStepsUseCase.execute(recipeId)
     }
 }

@@ -55,6 +55,35 @@ class CollectionRepositoryImpl @Inject constructor(
             }
         }
 
+    override fun observeCollectionDetail(
+        userId: String,
+        collectionId: String
+    ): Flow<UserCollection?> = callbackFlow {
+        val listener = firestore
+            .collection("users")
+            .document(userId)
+            .collection("collections")
+            .document(collectionId)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot == null || !snapshot.exists()) {
+                    trySend(null)
+                    return@addSnapshotListener
+                }
+
+                val collection = snapshot
+                    .toObject(CollectionDto::class.java)
+                    ?.toDomain()
+
+                trySend(collection)
+            }
+        awaitClose { listener.remove() }
+    }
+
     override suspend fun createDocument(): String {
         val document = firestore
             .collection("users")
@@ -102,27 +131,71 @@ class CollectionRepositoryImpl @Inject constructor(
         return ref.downloadUrl.await().toString()
     }
 
-    override suspend fun addRecipeToCollection(
-        collectionId: String,
-        recipeId: String
-    ) {
-        firestore.collection("users")
+    override suspend fun deleteCollection(collectionId: String) {
+        firestore
+            .collection("users")
             .document(userId)
             .collection("collections")
             .document(collectionId)
-            .update("recipeIds", FieldValue.arrayUnion(recipeId))
+            .delete()
             .await()
     }
 
-    override suspend fun removeRecipeFromCollection(
-        collectionId: String,
-        recipeId: String
-    ) {
-        firestore.collection("users")
+    override suspend fun getCollectionById(collectionId: String): UserCollection {
+        return firestore
+            .collection("users")
             .document(userId)
             .collection("collections")
             .document(collectionId)
-            .update("recipeIds", FieldValue.arrayRemove(recipeId))
+            .get()
             .await()
+            .toObject(CollectionDto::class.java)?.toDomain()
+            ?: throw IllegalStateException("Collection not found")
+    }
+
+    override suspend fun updateCollection(userCollection: UserCollection) {
+        val updates = mapOf(
+            "name" to userCollection.name,
+            "description" to userCollection.description,
+            "imageUrl" to userCollection.imageSource
+        )
+        firestore
+            .collection("users")
+            .document(userId)
+            .collection("collections")
+            .document(userCollection.id)
+            .update(updates)
+            .await()
+    }
+
+    override suspend fun toggleRecipeInCollection(
+        collectionId: String,
+        recipeId: String,
+        add: Boolean
+    ) {
+        val collectionReference = firestore
+            .collection("users")
+            .document(userId)
+            .collection("collections")
+            .document(collectionId)
+
+        val recipeReference = firestore
+            .collection("users")
+            .document(userId)
+            .collection("recipes")
+            .document(recipeId)
+
+        val recipeOperation = if (add) {
+            FieldValue.arrayUnion(collectionId)
+        } else FieldValue.arrayRemove(collectionId)
+
+        val collectionOperation = if (add) {
+            FieldValue.arrayUnion(recipeId)
+        } else FieldValue.arrayRemove(recipeId)
+
+        firestore.runBatch { batch ->
+            batch.update(recipeReference, "collectionIds", recipeOperation)
+            batch.update(collectionReference, "recipeIds", collectionOperation)
+        }
     }
 }

@@ -8,6 +8,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.recipebook.navigation.Graph
 import com.example.recipebook.presentation.ui.cooking_screen.CookingScreen
+import com.example.recipebook.presentation.ui.editRecipeScreen.EditRecipeScreen
 import com.example.recipebook.presentation.ui.recipeDetailScreen.RecipeDetailScreen
 
 fun NavGraphBuilder.recipeDetailNavGraph(navController: NavController) {
@@ -27,7 +28,21 @@ fun NavGraphBuilder.recipeDetailNavGraph(navController: NavController) {
                 },
                 onCookingScreen = { recipeId ->
                     navController.navigate(RecipeDetailRoutes.Cooking.createRoute(recipeId))
+                },
+                onRecipeEditScreen = { recipeId->
+                    navController.navigate(RecipeDetailRoutes.EditRecipe.createRoute(recipeId))
                 }
+            )
+        }
+
+        composable(
+            route = RecipeDetailRoutes.EditRecipe.fullRoute,
+            arguments = listOf(navArgument(RecipeDetailDestination.RECIPE_ID_ARG) {
+                type = NavType.StringType
+            })
+        ) {
+            EditRecipeScreen(
+                onBack = { navController.popBackStack() }
             )
         }
 

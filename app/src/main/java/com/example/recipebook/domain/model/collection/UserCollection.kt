@@ -5,7 +5,6 @@ data class UserCollection(
     val name: String = "",
     val description: String = "",
     val recipeIds: List<String> = listOf(),
-    val imageUrl: String? = null,
-    val recipesCount: Int = 0,
+    val imageSource: String? = null,
     val createdAt: Long = 0L
 )

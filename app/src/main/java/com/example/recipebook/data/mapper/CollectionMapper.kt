@@ -9,8 +9,7 @@ fun UserCollection.toDto(): CollectionDto {
         name = this.name,
         description = this.description,
         recipeIds = this.recipeIds,
-        imageUrl = this.imageUrl,
-        recipesCount = this.recipesCount
+        imageUrl = this.imageSource
     )
 }
 
@@ -19,9 +18,8 @@ fun CollectionDto.toDomain(): UserCollection {
         id = this.id,
         name = this.name,
         description = this.description,
-        imageUrl = this.imageUrl,
+        imageSource = this.imageUrl,
         recipeIds =  this.recipeIds,
-        recipesCount = this.recipesCount,
         createdAt = createdAt?.toDate()?.time ?: 0L
     )
 }
