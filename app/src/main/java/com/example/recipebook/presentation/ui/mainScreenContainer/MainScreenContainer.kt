@@ -19,7 +19,7 @@ fun MainScreenContainer(onLogout: () -> Unit) {
     val currentDestination = navBackStackEntry?.destination
 
     val bottomBarDestinations = setOf(
-        BottomNavigationItem.Home.route,
+        BottomNavigationItem.Search.route,
         BottomNavigationItem.Collections.route,
         BottomNavigationItem.Recipes.route,
         BottomNavigationItem.Settings.route
