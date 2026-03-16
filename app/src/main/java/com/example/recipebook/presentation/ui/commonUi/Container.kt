@@ -33,7 +33,7 @@ fun RootScaffold(
             contentWindowInsets = if (applySystemInsets) {
                 WindowInsets.systemBars
             } else {
-                androidx.compose.foundation.layout.WindowInsets(0)
+                WindowInsets(0)
             }
         ) { innerPadding ->
             content(innerPadding)
