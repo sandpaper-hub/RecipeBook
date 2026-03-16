@@ -77,7 +77,7 @@ fun CollectionEditScreen(
                 centerVerticallyTo(headingText)
                 end.linkTo(endGuideline)
             },
-            onClick = onBack
+            onClick = { viewModel.onBack() }
         ) {
             Icon(
                 painter = painterResource(R.drawable.delete_icon),

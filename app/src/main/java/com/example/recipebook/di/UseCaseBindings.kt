@@ -1,5 +1,7 @@
 package com.example.recipebook.di
 
+import com.example.recipebook.domain.useCase.authentication.ValidateAuthenticationInputUseCase
+import com.example.recipebook.domain.useCase.authentication.ValidateAuthenticationInputUseCaseImpl
 import com.example.recipebook.domain.useCase.recipe.addRecipeToCollectionUseCase.AddRecipeIdToCollectionUseCaseImpl
 import com.example.recipebook.domain.useCase.recipe.addRecipeToCollectionUseCase.AddRecipeToCollectionUseCase
 import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCaseImpl
@@ -78,4 +80,9 @@ abstract class UseCaseBindings {
     abstract fun bindSearchRecipeUseCase(
         impl: SearchRecipeUseCaseImpl
     ): SearchRecipeUseCase
+
+    @Binds
+    abstract fun bindValidateLoginInputUseCase(
+        impl: ValidateAuthenticationInputUseCaseImpl
+    ): ValidateAuthenticationInputUseCase
 }

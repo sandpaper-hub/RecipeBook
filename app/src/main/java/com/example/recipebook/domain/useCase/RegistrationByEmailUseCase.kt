@@ -7,9 +7,10 @@ import javax.inject.Inject
 class RegistrationByEmailUseCase @Inject constructor(
     private val authenticationRepository: AuthenticationRepository
 ) {
-    suspend fun execute(name: String,
-                        email: String,
-                        password: String
+    suspend fun execute(
+        name: String,
+        email: String,
+        password: String
     ): Result<Unit> {
         val authenticationResult =
             authenticationRepository.register(
@@ -19,13 +20,7 @@ class RegistrationByEmailUseCase @Inject constructor(
                 nickName = email.convertToNickName()
             )
 
-        return authenticationResult.fold(
-            onSuccess = { authenticatedUser ->
-                authenticationRepository.createUserDocumentIfNeeded(authenticatedUser)
-            },
-            onFailure = { exception ->
-                Result.failure(exception)
-            }
-        )
+        val user = authenticationResult.getOrElse { return Result.failure(it) }
+        return authenticationRepository.createUserDocumentIfNeeded(user)
     }
 }

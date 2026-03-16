@@ -12,7 +12,7 @@ import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeD
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.recipeDetailNavGraph
 import com.example.recipebook.navigation.mainHomeGraph.settingsGraph.settingsGraph
 import com.example.recipebook.presentation.ui.searchScreen.SearchScreen
-import com.example.recipebook.presentation.ui.collectionScreen.CollectionScreen
+import com.example.recipebook.presentation.ui.collectionScreen.CollectionsScreen
 import com.example.recipebook.presentation.ui.createCollectionScreen.CreateCollectionScreen
 import com.example.recipebook.presentation.ui.createRecipeScreen.CreateRecipeScreen
 import com.example.recipebook.presentation.ui.recipesScreen.RecipesScreen
@@ -65,7 +65,7 @@ fun MainHomeGraph(
         }
 
         composable(BottomNavigationItem.Collections.route) {
-            CollectionScreen(
+            CollectionsScreen(
                 onCollectionDetail = { collectionId ->
                     navController.navigate(
                         CollectionDetailRoutes.CollectionDetail.createRoute(collectionId)

@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -25,8 +27,9 @@ import com.example.recipebook.presentation.ui.commonUi.TitleText
 import com.example.recipebook.presentation.ui.commonUi.OutlinedIconButton
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.viewModel.loginScreen.LoginViewModel
-import com.example.recipebook.presentation.viewModel.model.UiEvent
 import com.example.recipebook.presentation.util.debounce
+import com.example.recipebook.presentation.util.toStringRes
+import com.example.recipebook.presentation.viewModel.loginScreen.model.LoginUiEvent
 
 @Composable
 @Suppress("FunctionName")
@@ -35,18 +38,23 @@ fun LoginScreen(
     onRegistrationScreen: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
+    val snackbar = LocalSnackBarController.current
 
-    val uiState = viewModel.uiState
-    val snackBar = LocalSnackBarController.current
+    val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(uiState.isSignedIn) {
-        if (uiState.isSignedIn) {
-            onHomeScreen()
-        }
+    LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
-                is UiEvent.ShowMessage -> {
-                    snackBar.showMessage(event.message)
+                LoginUiEvent.NetworkError -> {
+                    snackbar.showMessage(message = "Network error")
+                }
+
+                LoginUiEvent.UnknownError ->{
+                    snackbar.showMessage(message = "Неизвестная ошибка")//TODO
+                }
+
+                LoginUiEvent.OnHomeScreen -> {
+                    onHomeScreen()
                 }
             }
         }
@@ -60,7 +68,7 @@ fun LoginScreen(
         val (headingText, subHeadingText, emailText, emailTextField,
             passwordText, passwordTextField, forgotPasswordText,
             loginButton, dontHaveAccountText, textDivider, googleSignInButton,
-            facebookSignInButton, emailErrorText, passwordErrorText) = createRefs()
+            emailErrorText, passwordErrorText) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -92,7 +100,7 @@ fun LoginScreen(
             value = uiState.email,
             onValueChange = viewModel::onEmailChanged,
             hint = stringResource(R.string.email_hint),
-            isError = uiState.emailErrorMessageCode != null,
+            isError = uiState.emailError != null,
             modifier = Modifier
                 .constrainAs(emailTextField) {
                     start.linkTo(startGuideline)
@@ -101,9 +109,9 @@ fun LoginScreen(
                     width = Dimension.fillToConstraints
                 })
 
-        if (uiState.emailErrorMessageCode != null) {
+        if (uiState.emailError != null) {
             SubHeadingTextSmall(
-                text = stringResource(uiState.emailErrorMessageCode),
+                text = stringResource(uiState.emailError!!.toStringRes()),
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier
                     .constrainAs(emailErrorText) {
@@ -125,7 +133,7 @@ fun LoginScreen(
             value = uiState.password,
             onValueChange = viewModel::onPasswordChange,
             hint = stringResource(R.string.password_hint),
-            isError = uiState.passwordErrorMessageCode != null,
+            isError = uiState.passwordError != null,
             modifier = Modifier
                 .constrainAs(passwordTextField) {
                     start.linkTo(startGuideline)
@@ -136,9 +144,9 @@ fun LoginScreen(
             visible = uiState.passwordVisibility,
             changeVisibility = { viewModel.onPasswordVisibilityChange(!uiState.passwordVisibility) })
 
-        if (uiState.passwordErrorMessageCode != null) {
+        if (uiState.passwordError != null) {
             SubHeadingTextSmall(
-                text = stringResource(uiState.passwordErrorMessageCode),
+                text = stringResource(uiState.passwordError!!.toStringRes()),
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier
                     .constrainAs(passwordErrorText) {
@@ -166,6 +174,7 @@ fun LoginScreen(
                     start.linkTo(startGuideline)
                     end.linkTo(endGuideline)
                     top.linkTo(forgotPasswordText.bottom, margin = 32.dp)
+                    width = Dimension.fillToConstraints
                 }
         )
 
@@ -199,20 +208,6 @@ fun LoginScreen(
                     start.linkTo(startGuideline)
                     end.linkTo(endGuideline)
                     top.linkTo(textDivider.bottom, margin = 24.dp)
-                    width = Dimension.fillToConstraints
-                }
-        )
-
-        OutlinedIconButton(
-            onClick = debounce { }, //TODO signIn with facebook
-            text = stringResource(R.string.facebook_sign_in),
-            textColor = MaterialTheme.colorScheme.onPrimary,
-            icon = painterResource(R.drawable.facebook_icon),
-            modifier = Modifier
-                .constrainAs(facebookSignInButton) {
-                    start.linkTo(startGuideline)
-                    end.linkTo(endGuideline)
-                    top.linkTo(googleSignInButton.bottom, margin = 24.dp)
                     width = Dimension.fillToConstraints
                 }
         )

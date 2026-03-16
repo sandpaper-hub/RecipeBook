@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -15,6 +18,7 @@ import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.SelectableText
 import com.example.recipebook.presentation.viewModel.languageScreen.LanguageViewModel
+import com.example.recipebook.presentation.viewModel.languageScreen.model.LanguageEvent
 import com.example.recipebook.presentation.viewModel.languageScreen.model.LanguageItem
 
 @Composable
@@ -24,11 +28,19 @@ fun LanguageScreen(
     viewModel: LanguageViewModel = hiltViewModel()
 ) {
 
-    val uiState = viewModel.uiState
+    val uiState by viewModel.uiState.collectAsState()
     val languages = listOf(
         LanguageItem("ru", "Русский"),
         LanguageItem("en", "English")
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when(event){
+                LanguageEvent.GoBack -> onBackNavigation()
+            }
+        }
+    }
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (backButton, headingText, languageBox) = createRefs()
@@ -43,7 +55,7 @@ fun LanguageScreen(
                     start.linkTo(startGuideline)
                     top.linkTo(parent.top, margin = 16.dp)
                 },
-            onClick = onBackNavigation
+            onClick = { viewModel.goBack() }
         )
 
         HeadingTextMedium(

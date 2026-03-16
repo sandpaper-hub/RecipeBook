@@ -65,4 +65,12 @@ class CookingViewModel @Inject constructor(
             _events.emit(CookingEvent.GoToPage(index))
         }
     }
+
+    fun onBack() {
+        viewModelScope.launch {
+            _events.emit(
+                CookingEvent.GoBack
+            )
+        }
+    }
 }

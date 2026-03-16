@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -26,6 +29,7 @@ import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.util.debounce
 import com.example.recipebook.presentation.viewModel.createCollectionScreen.CreateCollectionViewModel
+import com.example.recipebook.presentation.viewModel.createCollectionScreen.model.CreateCollectionEvent
 
 @Composable
 @Suppress("FunctionName")
@@ -34,12 +38,20 @@ fun CreateCollectionScreen(
     viewModel: CreateCollectionViewModel = hiltViewModel()
 ) {
 
-    val uiState = viewModel.uiState
+    val uiState by viewModel.uiState.collectAsState()
     val collectionImagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         if (uri != null) {
             viewModel.onImageChange(uri)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.uiEvents.collect { event ->
+            when (event) {
+                CreateCollectionEvent.GoBack -> onBack()
+            }
         }
     }
 
@@ -62,7 +74,7 @@ fun CreateCollectionScreen(
                 centerVerticallyTo(headingText)
                 end.linkTo(endGuideline)
             },
-            onClick = onBack
+            onClick = { viewModel.onBack() }
         ) {
             Icon(
                 painter = painterResource(R.drawable.delete_icon),
@@ -84,7 +96,7 @@ fun CreateCollectionScreen(
 
             if (uiState.imageSource != null) {
                 ImageCover(
-                    imageSource = uiState.imageSource,
+                    imageSource = uiState.imageSource.toString(),
                     contentDescription = stringResource(R.string.collection_image),
                     onCancelClick = { viewModel.onImageChange(null) },
                     modifier = imageModifier
@@ -127,7 +139,7 @@ fun CreateCollectionScreen(
         )
 
         SquareRoundedButton(
-            onClick = { viewModel.createCollection(onBack) },
+            onClick = { viewModel.createCollection() },
             text = stringResource(R.string.save_button),
             isLoading = false,
             modifier = Modifier

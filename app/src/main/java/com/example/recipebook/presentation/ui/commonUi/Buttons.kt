@@ -47,9 +47,12 @@ fun SquareRoundedButton(
             Modifier
                 .height(49.dp)
                 .fillMaxWidth()
-        ), shape = RoundedCornerShape(14.dp), colors = ButtonDefaults.buttonColors(
+        ),
+        shape = RoundedCornerShape(size = 14.dp),
+        colors = ButtonDefaults.buttonColors(
             containerColor = containerColor
-        )
+        ),
+        enabled = !isLoading
     ) {
         if (isLoading) {
             CircularProgressIndicator(

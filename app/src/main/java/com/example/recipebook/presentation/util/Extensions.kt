@@ -14,18 +14,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.recipebook.R
+import com.example.recipebook.domain.model.authentication.AuthenticationError
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-
-fun Int.convertToFollowersFormat(): String {
-    return when {
-        this >= 1_000_000 -> String.format("%.1fM", this / 1_000_000f)
-        this >= 1_000 -> String.format("%.1fK", this / 1_000f)
-        else -> this.toString()
-    }.replace(".0", "")
-}
 
 fun String.convertToNickName(): String =
     trim().substringBefore("@")
@@ -140,14 +133,16 @@ fun Long.toUpdatedAgoText(): String {
     }
 }
 
-fun String.parseIngredient(): Pair<String, String> {
-    val regex = Regex("""\d+([.,]\d+)?""")
-    val match = regex.find(this) ?: return this to ""
 
-    val index = match.range.first
+fun AuthenticationError.Email.toStringRes(): Int = when (this) {
+    AuthenticationError.Email.Empty -> R.string.blank_email
+    AuthenticationError.Email.InvalidFormat -> R.string.invalid_email
+    AuthenticationError.Email.WrongEmail -> R.string.wrong_email
+    AuthenticationError.Email.EmailAlreadyInUse -> R.string.email_already_in_use
+}
 
-    val name = this.substring(0, index).trim()
-    val amount = this.substring(index).trim()
-
-    return name to amount
+fun AuthenticationError.Password.toStringRes(): Int = when (this) {
+    AuthenticationError.Password.Empty -> R.string.blank_password
+    AuthenticationError.Password.MinLength -> R.string.password_min_digit
+    AuthenticationError.Password.WrongPassword -> R.string.wrong_password
 }

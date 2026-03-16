@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -19,14 +20,23 @@ import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
 import com.example.recipebook.presentation.ui.commonUi.collection.CollectionSquareCard
 import com.example.recipebook.presentation.viewModel.collectionsScreen.CollectionsViewModel
+import com.example.recipebook.presentation.viewModel.collectionsScreen.model.CollectionsUiEvents
 
 @Composable
 @Suppress("FunctionName")
-fun CollectionScreen(
+fun CollectionsScreen(
     onCollectionDetail: (String) -> Unit,
     viewModel: CollectionsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.uiEvents.collect { event ->
+            when (event) {
+                is CollectionsUiEvents.CollectionDetail -> onCollectionDetail(event.collectionId)
+            }
+        }
+    }
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
@@ -60,7 +70,7 @@ fun CollectionScreen(
                     name = collection.name,
                     count = collection.recipeIds.size,
                     imageUrl = collection.imageSource,
-                    onItemClick = { onCollectionDetail(collection.id) },
+                    onItemClick = { viewModel.onCollectionDetail(collection.id) },
                     modifier = Modifier.fillMaxWidth()
                 )
             }

@@ -45,6 +45,7 @@ fun CookingScreen(
         viewModel.events.collect { event ->
             when (event) {
                 is CookingEvent.GoToPage -> pagerState.animateScrollToPage(event.index)
+                is CookingEvent.GoBack -> onBack()
             }
         }
     }
@@ -62,7 +63,7 @@ fun CookingScreen(
             ClickableIcon(
                 painter = painterResource((R.drawable.back_arrow_icon)),
                 contentDescription = stringResource(R.string.back_button),
-                onClick = onBack
+                onClick = { viewModel.onBack() }
             )
 
             Spacer(modifier = Modifier.weight(1f))

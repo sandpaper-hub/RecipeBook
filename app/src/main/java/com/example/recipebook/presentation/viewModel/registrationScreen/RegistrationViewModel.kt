@@ -1,88 +1,114 @@
 package com.example.recipebook.presentation.viewModel.registrationScreen
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.R
 import com.example.recipebook.domain.interactor.registration.RegistrationInteractor
-import com.example.recipebook.presentation.viewModel.model.UiEvent
+import com.example.recipebook.domain.model.authentication.AuthenticationError
+import com.example.recipebook.domain.model.authentication.AuthenticationException
+import com.example.recipebook.domain.useCase.authentication.ValidateAuthenticationInputUseCase
+import com.example.recipebook.presentation.viewModel.registrationScreen.model.RegistrationUiEvent
 import com.example.recipebook.presentation.viewModel.registrationScreen.model.RegistrationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
-    private val registrationInteractor: RegistrationInteractor
+    private val registrationInteractor: RegistrationInteractor,
+    private val validateAuthenticationInputUseCase: ValidateAuthenticationInputUseCase
+
 ) : ViewModel() {
-    var uiState by mutableStateOf(RegistrationUiState())
-        private set
-    private val _events = MutableSharedFlow<UiEvent>()
-    val events: SharedFlow<UiEvent> = _events
+    private val _uiState = MutableStateFlow(RegistrationUiState())
+    val uiState = _uiState.asStateFlow()
+
+    private val _events = MutableSharedFlow<RegistrationUiEvent>()
+    val events: SharedFlow<RegistrationUiEvent> = _events
 
     fun onNameChanged(newName: String) {
-        uiState = uiState.copy(name = newName)
+        _uiState.update {
+            it.copy(name = newName)
+        }
     }
 
     fun onEmailChanged(newEmail: String) {
-        uiState = uiState.copy(email = newEmail, emailErrorCode = null)
+        _uiState.update {
+            it.copy(email = newEmail, emailError = null)
+        }
     }
 
     fun onPasswordChanged(newPassword: String) {
-        uiState = uiState.copy(password = newPassword, passwordErrorCode = null)
+        _uiState.update {
+            it.copy(password = newPassword, passwordError = null)
+        }
     }
 
     fun onPasswordVisibilityChange(newValue: Boolean) {
-        uiState = uiState.copy(passwordVisibility = newValue)
+        _uiState.update {
+            it.copy(passwordVisibility = newValue)
+        }
     }
 
     fun register(
         name: String,
         email: String,
         password: String,
-        onSuccess: () -> Unit
     ) {
-        uiState = uiState.copy(
-            emailErrorCode = when {
-                uiState.email.isBlank() -> R.string.blank_email
-                else -> null
-            },
-            passwordErrorCode = when {
-                uiState.password.isBlank() || uiState.password.length < 6 ->
-                    R.string.password_min_digit
+        val emailError = validateAuthenticationInputUseCase.validateEmail(email)
+        val passwordError = validateAuthenticationInputUseCase.validatePassword(password)
 
-                else -> null
+        if (emailError != null || passwordError != null) {
+            _uiState.update {
+                it.copy(
+                    emailError = emailError,
+                    passwordError = passwordError
+                )
             }
-        )
-        if (uiState.emailErrorCode != null || uiState.passwordErrorCode != null) return
+            return
+        }
 
         viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true)
-            val result = registrationInteractor.register(
+            _uiState.update { it.copy(isLoading = true) }
+            registrationInteractor.register(
                 name = name,
                 email = email,
                 password = password
-            )
+            ).fold(
+                onSuccess = {
+                    _events.emit(RegistrationUiEvent.OnHome)
+                },
+                onFailure = { exception ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false
+                        )
+                    }
+                    when (exception) {
+                        is AuthenticationException.EmailAlreadyInUse -> {
+                            _uiState.update {
+                                it.copy(emailError = AuthenticationError.Email.EmailAlreadyInUse)
+                            }
+                        }
 
-            result
-                .onSuccess {
-                    uiState = uiState.copy(isLoading = false)
-                    onSuccess()
-                }
-                .onFailure { exception ->
-                    uiState = uiState.copy(isLoading = false)
-                    showSnackBar(exception.message)
-                }
+                        is AuthenticationException.NetworkException -> {
+                            _events.emit(RegistrationUiEvent.NetworkError)
+                        }
+
+                        is AuthenticationException.InvalidEmail -> {
+                            _uiState.update {
+                                it.copy(emailError = AuthenticationError.Email.InvalidFormat)
+                            }
+                        }
+
+                        else -> {
+                            _events.emit(RegistrationUiEvent.UnknownError)
+                        }
+                    }
+                })
         }
-    }
-
-    private suspend fun showSnackBar(message: String?) {
-        _events.emit(
-            UiEvent.ShowMessage(message)
-        )
     }
 }

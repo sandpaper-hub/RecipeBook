@@ -1,71 +1,108 @@
 package com.example.recipebook.presentation.viewModel.loginScreen
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.R
 import com.example.recipebook.domain.interactor.login.LoginInteractor
+import com.example.recipebook.domain.model.authentication.AuthenticationException
+import com.example.recipebook.domain.model.authentication.AuthenticationError
+import com.example.recipebook.domain.useCase.authentication.ValidateAuthenticationInputUseCase
+import com.example.recipebook.presentation.viewModel.loginScreen.model.LoginUiEvent
 import com.example.recipebook.presentation.viewModel.loginScreen.model.LoginUiState
-import com.example.recipebook.presentation.viewModel.model.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginInteractor: LoginInteractor
+    private val loginInteractor: LoginInteractor,
+    private val validateAuthenticationInputUseCase: ValidateAuthenticationInputUseCase
 ) : ViewModel() {
-    var uiState by mutableStateOf(LoginUiState())
-        private set
+    private val _uiState = MutableStateFlow(LoginUiState())
+    val uiState = _uiState.asStateFlow()
 
-    private val _events = MutableSharedFlow<UiEvent>()
-    val events: SharedFlow<UiEvent> = _events
+    private val _events = MutableSharedFlow<LoginUiEvent>()
+    val events = _events.asSharedFlow()
     fun onEmailChanged(newEmail: String) {
-        uiState = uiState.copy(email = newEmail, emailErrorMessageCode = null)
+        _uiState.update {
+            it.copy(
+                email = newEmail,
+                emailError = null
+            )
+        }
     }
 
     fun onPasswordChange(newPassword: String) {
-        uiState = uiState.copy(password = newPassword, passwordErrorMessageCode = null)
+        _uiState.update {
+            it.copy(
+                password = newPassword,
+                passwordError = null
+            )
+        }
     }
 
     fun onPasswordVisibilityChange(isVisible: Boolean) {
-        uiState = uiState.copy(passwordVisibility = isVisible)
+        _uiState.update {
+            it.copy(passwordVisibility = isVisible)
+        }
     }
 
     fun signIn() {
-        val email = uiState.email.trim()
-        val password = uiState.password
+        val emailError = validateAuthenticationInputUseCase.validateEmail(_uiState.value.email)
+        val passwordError = validateAuthenticationInputUseCase.validatePassword(_uiState.value.password)
 
-
-        uiState = uiState.copy(
-            emailErrorMessageCode = when {
-                uiState.email.isBlank() -> R.string.blank_email
-                else -> null
-            },
-            passwordErrorMessageCode = when {
-                uiState.password.isBlank() || uiState.password.length < 6 ->
-                    R.string.password_min_digit
-
-                else -> null
-            }
-        )
-        if (uiState.emailErrorMessageCode != null || uiState.passwordErrorMessageCode != null) return
-
-        viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true, snackBarMessage = null)
-            val result = loginInteractor.loginByEmail(email = email, password = password)
-            if (result.isSuccess) {
-                uiState = uiState.copy(isLoading = false, isSignedIn = true)
-            } else {
-                uiState = uiState.copy(isLoading = false, isSignedIn = false)
-                _events.emit(
-                    UiEvent.ShowMessage(result.exceptionOrNull()?.message ?: "Ошибка авторизации")
+        if (emailError != null || passwordError != null) {
+            _uiState.update {
+                it.copy(
+                    emailError = emailError,
+                    passwordError = passwordError
                 )
             }
+            return
+        }
+
+
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(isLoading = true)
+            }
+
+            loginInteractor.loginByEmail(
+                email = _uiState.value.email,
+                password = _uiState.value.password
+            )
+                .onSuccess {
+                    _events.emit(LoginUiEvent.OnHomeScreen)
+                }
+                .onFailure { exception ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false
+                        )
+                    }
+                    when (exception) {
+                        is AuthenticationException.NetworkException -> {
+                            _events.emit(LoginUiEvent.NetworkError)
+                        }
+
+                        is AuthenticationException.WrongPassword -> {
+                            _uiState.update {
+                                it.copy(
+                                    emailError = AuthenticationError.Email.WrongEmail,
+                                    passwordError = AuthenticationError.Password.WrongPassword
+                                )
+                            }
+                        }
+
+                        else -> {
+                            _events.emit(LoginUiEvent.UnknownError)
+                        }
+                    }
+                }
         }
     }
 }

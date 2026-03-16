@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -32,6 +35,7 @@ import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.util.debounce
 import com.example.recipebook.presentation.viewModel.accountScreen.AccountViewModel
 import com.example.recipebook.presentation.util.toFormatedDate
+import com.example.recipebook.presentation.viewModel.accountScreen.model.AccountUiEvent
 
 @Composable
 @Suppress("FunctionName")
@@ -39,7 +43,7 @@ fun AccountScreen(
     onBackNavigation: () -> Unit,
     viewModel: AccountViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.uiState
+    val uiState by viewModel.uiState.collectAsState()
     val genderOptions = listOf("Male", "Female")
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
@@ -47,6 +51,14 @@ fun AccountScreen(
     ) { uri: Uri? ->
         if (uri != null) {
             viewModel.onImagePicked(uri)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.uiEvents.collect { event ->
+            when (event) {
+                AccountUiEvent.GoBack -> onBackNavigation()
+            }
         }
     }
 
@@ -73,7 +85,7 @@ fun AccountScreen(
             ClickableIcon(
                 painter = painterResource(R.drawable.back_arrow_icon),
                 contentDescription = stringResource(R.string.back_button),
-                onClick = onBackNavigation
+                onClick = { viewModel.onBack() }
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -249,7 +261,7 @@ fun AccountScreen(
         )
 
         SquareRoundedButton(
-            onClick = { viewModel.onSaveClick(onBackNavigation) },
+            onClick = { viewModel.onSaveClick() },
             text = stringResource(R.string.save_change),
             isLoading = uiState.isSaving,
             modifier = Modifier.constrainAs(saveButton) {
