@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.useCase.authentication
+package com.example.recipebook.domain.useCase.authentication.validateAuthenticationInput
 
 import com.example.recipebook.domain.model.authentication.AuthenticationError
 

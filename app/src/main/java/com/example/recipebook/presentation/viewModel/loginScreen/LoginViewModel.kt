@@ -2,10 +2,10 @@ package com.example.recipebook.presentation.viewModel.loginScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.login.LoginInteractor
 import com.example.recipebook.domain.model.authentication.AuthenticationException
 import com.example.recipebook.domain.model.authentication.AuthenticationError
-import com.example.recipebook.domain.useCase.authentication.ValidateAuthenticationInputUseCase
+import com.example.recipebook.domain.useCase.authentication.loginByEmail.LoginByEmailUseCase
+import com.example.recipebook.domain.useCase.authentication.validateAuthenticationInput.ValidateAuthenticationInputUseCase
 import com.example.recipebook.presentation.viewModel.loginScreen.model.LoginUiEvent
 import com.example.recipebook.presentation.viewModel.loginScreen.model.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginInteractor: LoginInteractor,
+    private val loginByEmailUseCase: LoginByEmailUseCase,
     private val validateAuthenticationInputUseCase: ValidateAuthenticationInputUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -71,7 +71,7 @@ class LoginViewModel @Inject constructor(
                 it.copy(isLoading = true)
             }
 
-            loginInteractor.loginByEmail(
+            loginByEmailUseCase.execute(
                 email = _uiState.value.email,
                 password = _uiState.value.password
             )

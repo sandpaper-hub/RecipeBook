@@ -6,8 +6,6 @@ import com.example.recipebook.domain.interactor.collection.deleteCollectionInter
 import com.example.recipebook.domain.interactor.collection.deleteCollectionInteractor.DeleteCollectionInteractorImpl
 import com.example.recipebook.domain.interactor.collection.updateCollectionInteractor.UpdateCollectionInteractor
 import com.example.recipebook.domain.interactor.collection.updateCollectionInteractor.UpdateCollectionInteractorImpl
-import com.example.recipebook.domain.interactor.login.LoginInteractor
-import com.example.recipebook.domain.interactor.login.LoginInteractorImpl
 import com.example.recipebook.domain.interactor.profile.ProfileInteractor
 import com.example.recipebook.domain.interactor.profile.ProfileInteractorImpl
 import com.example.recipebook.domain.interactor.recipes.fullRecipeInteractor.FullRecipeInteractor
@@ -38,11 +36,6 @@ abstract class InteractorBindings {
     abstract fun bingRegistrationInteractor(
         impl: RegistrationInteractorImpl
     ): RegistrationInteractor
-
-    @Binds
-    abstract fun bindLoginInteractor(
-        impl: LoginInteractorImpl
-    ): LoginInteractor
 
     @Binds
     abstract fun bindSplashInteractor(

@@ -1,11 +1,11 @@
-package com.example.recipebook.domain.useCase
+package com.example.recipebook.domain.useCase.authentication.loginByEmail
 
 import com.example.recipebook.domain.repository.AuthenticationRepository
 import javax.inject.Inject
 
-class LoginByEmailUseCase @Inject constructor(
+class LoginByEmailUseCaseImpl @Inject constructor(
     private val authenticationRepository: AuthenticationRepository
-) {
-    suspend fun execute(email: String, password: String): Result<Unit> =
+): LoginByEmailUseCase {
+    override suspend fun execute(email: String, password: String): Result<Unit> =
         authenticationRepository.signIn(email = email, password = password)
 }

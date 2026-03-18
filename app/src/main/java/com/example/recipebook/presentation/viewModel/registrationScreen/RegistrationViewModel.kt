@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.registration.RegistrationInteractor
 import com.example.recipebook.domain.model.authentication.AuthenticationError
 import com.example.recipebook.domain.model.authentication.AuthenticationException
-import com.example.recipebook.domain.useCase.authentication.ValidateAuthenticationInputUseCase
+import com.example.recipebook.domain.useCase.authentication.validateAuthenticationInput.ValidateAuthenticationInputUseCase
 import com.example.recipebook.presentation.viewModel.registrationScreen.model.RegistrationUiEvent
 import com.example.recipebook.presentation.viewModel.registrationScreen.model.RegistrationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
