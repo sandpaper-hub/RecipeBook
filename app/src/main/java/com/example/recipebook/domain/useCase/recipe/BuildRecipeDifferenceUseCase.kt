@@ -2,7 +2,7 @@ package com.example.recipebook.domain.useCase.recipe
 
 import com.example.recipebook.domain.model.recipe.getRecipe.FullRecipe
 import com.example.recipebook.domain.model.recipe.step.EditStep
-import com.example.recipebook.domain.model.recipe.step.ImageSourceType
+import com.example.recipebook.domain.model.ImageSourceType
 import com.example.recipebook.domain.model.recipe.update.RecipeDifference
 import javax.inject.Inject
 

@@ -28,9 +28,9 @@ import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.util.debounce
+import com.example.recipebook.presentation.util.toUiSource
 import com.example.recipebook.presentation.viewModel.collectionEditScreen.CollectionEditViewModel
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
-import com.example.recipebook.presentation.viewModel.model.ImageSource
 
 @Composable
 @Suppress("FunctionName")
@@ -97,11 +97,7 @@ fun CollectionEditScreen(
                 .fillMaxWidth()
                 .height(150.dp)
 
-            val imageSource = when (uiState.imageSource) {
-                is ImageSource.None -> null
-                is ImageSource.Local -> (uiState.imageSource as ImageSource.Local).uri
-                is ImageSource.Remote -> (uiState.imageSource as ImageSource.Remote).url
-            }
+            val imageSource = uiState.imageSource.toUiSource()
 
             if (imageSource == null) {
                 UploadImageBox(

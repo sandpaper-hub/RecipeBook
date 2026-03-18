@@ -6,9 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.collection.updateCollectionInteractor.UpdateCollectionInteractor
 import com.example.recipebook.domain.model.collection.UserCollectionEdit
-import com.example.recipebook.domain.model.recipe.step.ImageSourceType
 import com.example.recipebook.domain.useCase.collection.getUserCollectionUseCase.GetUserCollectionUseCaseImpl
 import com.example.recipebook.navigation.mainHomeGraph.collectionDetailGraph.CollectionDetailDestination
+import com.example.recipebook.presentation.util.toDomain
+import com.example.recipebook.presentation.util.toPresentation
 import com.example.recipebook.presentation.viewModel.collectionEditScreen.model.CollectionEditUiState
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
 import com.example.recipebook.presentation.viewModel.model.ImageSource
@@ -48,20 +49,7 @@ class CollectionEditViewModel @Inject constructor(
                 collectionEditUiState.copy(
                     name = originalCollection.name,
                     description = originalCollection.description,
-                    imageSource = when (originalCollection.imageSource) {
-                        is ImageSourceType.None -> ImageSource.None
-                        is ImageSourceType.Remote -> {
-                            ImageSource.Remote(
-                                (originalCollection.imageSource as ImageSourceType.Remote).source
-                            )
-                        }
-
-                        is ImageSourceType.Local -> {
-                            ImageSource.Local(
-                                (originalCollection.imageSource as ImageSourceType.Local).source
-                            )
-                        }
-                    }
+                    imageSource = originalCollection.imageSource.toPresentation()
                 )
             }
         }
@@ -102,11 +90,7 @@ class CollectionEditViewModel @Inject constructor(
                     id = collectionId,
                     name = _uiState.value.name,
                     description = _uiState.value.description,
-                    imageSource = when (_uiState.value.imageSource) {
-                        is ImageSource.None -> ImageSourceType.None
-                        is ImageSource.Local -> ImageSourceType.Local((_uiState.value.imageSource as ImageSource.Local).uri)
-                        is ImageSource.Remote -> ImageSourceType.Remote((_uiState.value.imageSource as ImageSource.Remote).url)
-                    }
+                    imageSource = _uiState.value.imageSource.toDomain()
                 ),
                 originalCollection = originalCollection
             )

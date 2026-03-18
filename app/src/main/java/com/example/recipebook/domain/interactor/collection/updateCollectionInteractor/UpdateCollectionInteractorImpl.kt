@@ -2,7 +2,7 @@ package com.example.recipebook.domain.interactor.collection.updateCollectionInte
 
 import com.example.recipebook.domain.model.collection.UserCollection
 import com.example.recipebook.domain.model.collection.UserCollectionEdit
-import com.example.recipebook.domain.model.recipe.step.ImageSourceType
+import com.example.recipebook.domain.model.ImageSourceType
 import com.example.recipebook.domain.useCase.UploadCollectionCoverUseCase
 import com.example.recipebook.domain.useCase.collection.DeleteCollectionImageUseCase
 import com.example.recipebook.domain.useCase.collection.UpdateCollectionUseCase

@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.useCase.userProfile
+package com.example.recipebook.domain.useCase.userProfile.updateUserProfile
 
 import com.example.recipebook.domain.repository.ProfileRepository
 import javax.inject.Inject

@@ -35,6 +35,7 @@ import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.util.debounce
 import com.example.recipebook.presentation.viewModel.accountScreen.AccountViewModel
 import com.example.recipebook.presentation.util.toFormatedDate
+import com.example.recipebook.presentation.util.toUiSource
 import com.example.recipebook.presentation.viewModel.accountScreen.model.AccountUiEvent
 
 @Composable
@@ -96,15 +97,7 @@ fun AccountScreen(
         }
 
         ProfileAvatar(
-            imageUrl = when {
-                uiState.localImageSource != null -> {
-                    uiState.localImageSource
-                }
-
-                else -> {
-                    uiState.profileImageSource
-                }
-            },
+            imageUrl = uiState.profileImageSource.toUiSource(),
             contentDescription = stringResource(R.string.profile_image),
             size = 120.dp,
             modifier = Modifier

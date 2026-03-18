@@ -1,7 +1,7 @@
 package com.example.recipebook.domain.model.recipe.getRecipe
 
 import com.example.recipebook.domain.model.recipe.step.EditStep
-import com.example.recipebook.domain.model.recipe.step.ImageSourceType
+import com.example.recipebook.domain.model.ImageSourceType
 
 data class FullRecipe(
     val id: String = "",

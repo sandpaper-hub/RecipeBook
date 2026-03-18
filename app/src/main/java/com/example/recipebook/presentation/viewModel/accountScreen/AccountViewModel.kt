@@ -3,11 +3,13 @@ package com.example.recipebook.presentation.viewModel.accountScreen
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.profile.ProfileInteractor
-import com.example.recipebook.domain.interactor.profile.UpdateUserDataInteractor
+import com.example.recipebook.domain.interactor.profile.updateProfile.UpdateUserDataInteractor
+import com.example.recipebook.domain.useCase.userProfile.getLocales.GetLocalesUseCase
 import com.example.recipebook.domain.useCase.userProfile.observeUserProfile.ObserveUserProfileUseCase
+import com.example.recipebook.presentation.util.toDomain
 import com.example.recipebook.presentation.viewModel.accountScreen.model.AccountUiEvent
 import com.example.recipebook.presentation.viewModel.accountScreen.model.AccountUiState
+import com.example.recipebook.presentation.viewModel.model.ImageSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     private val observeUserProfileUseCase: ObserveUserProfileUseCase,
-    private val profileInteractor: ProfileInteractor,
+    private val getLocalesUseCase: GetLocalesUseCase,
     private val updateUserDataInteractor: UpdateUserDataInteractor
 ) : ViewModel() {
 
@@ -52,7 +54,11 @@ class AccountViewModel @Inject constructor(
                             fullName = userProfile.fullName,
                             nickName = userProfile.nickName,
                             region = userProfile.region,
-                            profileImageSource = userProfile.photoUrl,
+                            profileImageSource = if (userProfile.photoUrl == null) {
+                                ImageSource.None
+                            } else {
+                                ImageSource.Remote(userProfile.photoUrl)
+                            },
                             dateOfBirth = userProfile.dateOfBirth,
                             gender = userProfile.gender
                         )
@@ -63,14 +69,18 @@ class AccountViewModel @Inject constructor(
 
     private fun initRegionLocales() {
         _uiState.update {
-            it.copy(regionLocales = profileInteractor.getLocales())
+            it.copy(regionLocales = getLocalesUseCase.execute())
         }
     }
 
     fun onImagePicked(uri: Uri?) {
         _uiState.update {
             it.copy(
-                localImageSource = uri
+                profileImageSource = if (uri == null) {
+                    ImageSource.None
+                } else {
+                    ImageSource.Local(uri.toString())
+                }
             )
         }
     }
@@ -141,7 +151,7 @@ class AccountViewModel @Inject constructor(
                     "dateOfBirth" to uiState.value.dateOfBirth,
                     "gender" to uiState.value.gender
                 ),
-                uriString = uiState.value.localImageSource?.toString()
+                imageSource = _uiState.value.profileImageSource.toDomain()
             )
             delay(2000)
             _uiState.update {

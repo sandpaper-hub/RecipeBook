@@ -14,7 +14,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.recipebook.R
+import com.example.recipebook.domain.model.ImageSourceType
 import com.example.recipebook.domain.model.authentication.AuthenticationError
+import com.example.recipebook.presentation.viewModel.model.ImageSource
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -133,6 +135,29 @@ fun Long.toUpdatedAgoText(): String {
     }
 }
 
+fun ImageSource.toUiSource(): String? {
+    return when (this) {
+        is ImageSource.None -> null
+        is ImageSource.Remote -> this.url
+        is ImageSource.Local -> this.uri
+    }
+}
+
+fun ImageSource.toDomain(): ImageSourceType {
+    return when (this) {
+        is ImageSource.None -> ImageSourceType.None
+        is ImageSource.Local -> ImageSourceType.Local(this.uri)
+        is ImageSource.Remote -> ImageSourceType.Remote(this.url)
+    }
+}
+
+fun ImageSourceType.toPresentation(): ImageSource {
+    return when (this) {
+        is ImageSourceType.None -> ImageSource.None
+        is ImageSourceType.Remote -> ImageSource.Remote(this.source)
+        is ImageSourceType.Local -> ImageSource.Local(this.source)
+    }
+}
 
 fun AuthenticationError.Email.toStringRes(): Int = when (this) {
     AuthenticationError.Email.Empty -> R.string.blank_email

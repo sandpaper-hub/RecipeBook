@@ -24,6 +24,8 @@ import com.example.recipebook.domain.useCase.recipe.getRecipeListByIds.GetRecipe
 import com.example.recipebook.domain.useCase.recipe.getRecipeListByIds.GetRecipeListByIdsUseCaseImpl
 import com.example.recipebook.domain.useCase.recipe.searchRecipe.SearchRecipeUseCase
 import com.example.recipebook.domain.useCase.recipe.searchRecipe.SearchRecipeUseCaseImpl
+import com.example.recipebook.domain.useCase.userProfile.getLocales.GetLocalesUseCase
+import com.example.recipebook.domain.useCase.userProfile.getLocales.GetLocalesUseCaseImpl
 import com.example.recipebook.domain.useCase.userProfile.observeUserProfile.ObserveUserProfileUseCase
 import com.example.recipebook.domain.useCase.userProfile.observeUserProfile.ObserveUserProfileUseCaseImpl
 import dagger.Binds
@@ -99,4 +101,9 @@ abstract class UseCaseBindings {
     abstract  fun bindObserveUserProfileUseCase(
         impl: ObserveUserProfileUseCaseImpl
     ): ObserveUserProfileUseCase
+
+    @Binds
+    abstract fun bindGetLocalesUseCase(
+        impl: GetLocalesUseCaseImpl
+    ): GetLocalesUseCase
 }

@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.model.recipe.step
+package com.example.recipebook.domain.model
 
 sealed interface ImageSourceType {
     data class Remote(val source: String): ImageSourceType

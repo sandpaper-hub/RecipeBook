@@ -1,5 +1,7 @@
 package com.example.recipebook.domain.model.recipe.step
 
+import com.example.recipebook.domain.model.ImageSourceType
+
 data class EditStep(
     val id: String = "",
     val title: String = "",

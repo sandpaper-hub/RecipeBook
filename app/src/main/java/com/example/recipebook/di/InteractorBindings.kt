@@ -6,10 +6,8 @@ import com.example.recipebook.domain.interactor.collection.deleteCollectionInter
 import com.example.recipebook.domain.interactor.collection.deleteCollectionInteractor.DeleteCollectionInteractorImpl
 import com.example.recipebook.domain.interactor.collection.updateCollectionInteractor.UpdateCollectionInteractor
 import com.example.recipebook.domain.interactor.collection.updateCollectionInteractor.UpdateCollectionInteractorImpl
-import com.example.recipebook.domain.interactor.profile.ProfileInteractor
-import com.example.recipebook.domain.interactor.profile.ProfileInteractorImpl
-import com.example.recipebook.domain.interactor.profile.UpdateUserDataInteractor
-import com.example.recipebook.domain.interactor.profile.UpdateUserDataInteractorImpl
+import com.example.recipebook.domain.interactor.profile.updateProfile.UpdateUserDataInteractor
+import com.example.recipebook.domain.interactor.profile.updateProfile.UpdateUserDataInteractorImpl
 import com.example.recipebook.domain.interactor.recipes.fullRecipeInteractor.FullRecipeInteractor
 import com.example.recipebook.domain.interactor.recipes.fullRecipeInteractor.FullRecipeInteractorImpl
 import com.example.recipebook.domain.interactor.registration.RegistrationInteractor
@@ -43,11 +41,6 @@ abstract class InteractorBindings {
     abstract fun bindSplashInteractor(
         impl: SplashInteractorImpl
     ): SplashInteractor
-
-    @Binds
-    abstract fun bindProfileInteractor(
-        impl: ProfileInteractorImpl
-    ): ProfileInteractor
 
     @Binds
     abstract fun bindSettingsInteractor(

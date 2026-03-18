@@ -1,7 +1,7 @@
 package com.example.recipebook.domain.service
 
 import com.example.recipebook.domain.model.recipe.step.EditStep
-import com.example.recipebook.domain.model.recipe.step.ImageSourceType
+import com.example.recipebook.domain.model.ImageSourceType
 import com.example.recipebook.domain.useCase.GetStepImageUrlUseCase
 import com.example.recipebook.domain.useCase.recipe.DeleteStepImageUseCase
 import javax.inject.Inject

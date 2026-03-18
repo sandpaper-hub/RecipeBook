@@ -40,9 +40,9 @@ import com.example.recipebook.presentation.ui.commonUi.CustomTextButton
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.CategoryMenuItem
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMenuItem
 import com.example.recipebook.presentation.util.debounce
+import com.example.recipebook.presentation.util.toUiSource
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.EditRecipeViewModel
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
-import com.example.recipebook.presentation.viewModel.model.ImageSource
 
 @Composable
 @Suppress("FunctionName")
@@ -130,11 +130,7 @@ fun EditRecipeScreen(
                     .fillMaxWidth()
                     .height(150.dp)
 
-                val imageSource = when (uiState.recipeImageSource) {
-                    is ImageSource.None -> null
-                    is ImageSource.Remote -> (uiState.recipeImageSource as ImageSource.Remote).url
-                    is ImageSource.Local -> (uiState.recipeImageSource as ImageSource.Local).uri
-                }
+                val imageSource = uiState.recipeImageSource.toUiSource()
 
                 if (imageSource == null) {
                     UploadImageBox(
@@ -268,11 +264,7 @@ fun EditRecipeScreen(
                 ) { uri: Uri? ->
                     viewModel.onStepImageChange(recipeStep.id, uri)
                 }
-                val imageSource = when (recipeStep.imageSource) {
-                    is ImageSource.None -> null
-                    is ImageSource.Remote -> recipeStep.imageSource.url
-                    is ImageSource.Local -> recipeStep.imageSource.uri
-                }
+                val imageSource = recipeStep.imageSource.toUiSource()
 
                 RecipeStepBox(
                     imageSource = imageSource,

@@ -1,7 +1,8 @@
-package com.example.recipebook.domain.interactor.profile
+package com.example.recipebook.domain.interactor.profile.updateProfile
 
-import com.example.recipebook.domain.useCase.userProfile.UpdateUserProfileUseCase
-import com.example.recipebook.domain.useCase.userProfile.UploadUserAvatarUseCase
+import com.example.recipebook.domain.model.ImageSourceType
+import com.example.recipebook.domain.useCase.userProfile.updateUserProfile.UpdateUserProfileUseCase
+import com.example.recipebook.domain.useCase.userProfile.updateUserProfile.UploadUserAvatarUseCase
 import javax.inject.Inject
 
 class UpdateUserDataInteractorImpl @Inject constructor(
@@ -10,16 +11,15 @@ class UpdateUserDataInteractorImpl @Inject constructor(
 ) : UpdateUserDataInteractor {
     override suspend fun invoke(
         data: Map<String, Any?>,
-        uriString: String?
+        imageSource: ImageSourceType
     ): Result<Unit> {
         val mutableData: MutableMap<String, Any?> = data.toMutableMap()
 
-        if (uriString != null) {
-            val userAvatarSource = uploadUserAvatarUseCase.execute(uriString)
+        if (imageSource is ImageSourceType.Local) {
+            val userAvatarSource = uploadUserAvatarUseCase.execute(imageSource.source)
             mutableData["photoUrl"] = userAvatarSource
-        } else {
-            mutableData["photoUrl"] = null
         }
+
         return updateUserProfileUseCase.execute(mutableData)
     }
 }

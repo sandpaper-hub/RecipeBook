@@ -1,7 +1,7 @@
 package com.example.recipebook.domain.useCase.collection.getUserCollectionUseCase
 
 import com.example.recipebook.domain.model.collection.UserCollectionEdit
-import com.example.recipebook.domain.model.recipe.step.ImageSourceType
+import com.example.recipebook.domain.model.ImageSourceType
 import com.example.recipebook.domain.repository.CollectionsRepository
 import javax.inject.Inject
 
