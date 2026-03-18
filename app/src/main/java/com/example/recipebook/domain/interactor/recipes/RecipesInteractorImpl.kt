@@ -11,7 +11,7 @@ import com.example.recipebook.domain.useCase.GetCurrentUserIdUseCase
 import com.example.recipebook.domain.useCase.GetRecipeCoverUrlUseCase
 import com.example.recipebook.domain.useCase.GetRecipeStepsUseCase
 import com.example.recipebook.domain.useCase.GetStepImagesUrlUseCase
-import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCaseImpl
+import com.example.recipebook.domain.useCase.userProfile.getUserIdFlow.GetUserIdFlowUseCaseImpl
 import com.example.recipebook.domain.useCase.GetUserRecipesUseCase
 import com.example.recipebook.domain.useCase.UploadNewRecipeUseCase
 import kotlinx.coroutines.flow.Flow

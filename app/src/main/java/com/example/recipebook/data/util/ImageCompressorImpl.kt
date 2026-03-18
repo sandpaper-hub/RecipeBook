@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
-import com.example.recipebook.domain.util.ImageCompressor
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -17,8 +16,8 @@ import java.lang.IllegalArgumentException
 
 class ImageCompressorImpl @Inject constructor(
     @ApplicationContext private val context: Context
-) : ImageCompressor {
-    override suspend fun compress(uriString: String): ByteArray = withContext(Dispatchers.IO) {
+) {
+     suspend fun compress(uriString: String): ByteArray = withContext(Dispatchers.IO) {
         val uri = uriString.toUri()
 
         val orientation = context.contentResolver

@@ -4,6 +4,8 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.profile.ProfileInteractor
+import com.example.recipebook.domain.interactor.profile.UpdateUserDataInteractor
+import com.example.recipebook.domain.useCase.userProfile.observeUserProfile.ObserveUserProfileUseCase
 import com.example.recipebook.presentation.viewModel.accountScreen.model.AccountUiEvent
 import com.example.recipebook.presentation.viewModel.accountScreen.model.AccountUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +21,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
-    private val profileInteractor: ProfileInteractor
+    private val observeUserProfileUseCase: ObserveUserProfileUseCase,
+    private val profileInteractor: ProfileInteractor,
+    private val updateUserDataInteractor: UpdateUserDataInteractor
 ) : ViewModel() {
 
     private val _uiEvents = MutableSharedFlow<AccountUiEvent>()
@@ -36,7 +40,7 @@ class AccountViewModel @Inject constructor(
 
     private fun observeUserProfile() {
         viewModelScope.launch {
-            profileInteractor.observerUserProfile()
+            observeUserProfileUseCase.execute()
                 .catch { error ->
                     _uiState.update {
                         it.copy(errorMessage = error.message)
@@ -129,7 +133,7 @@ class AccountViewModel @Inject constructor(
                 it.copy(isSaving = true)
             }
 
-            val result = profileInteractor.updateUserData(
+            val result = updateUserDataInteractor.invoke(
                 data = mapOf(
                     "fullName" to uiState.value.fullName,
                     "nickName" to uiState.value.nickName,
@@ -143,7 +147,6 @@ class AccountViewModel @Inject constructor(
             _uiState.update {
                 if (result.isSuccess) {
                     it.copy(
-                        isSaving = false,
                         errorMessage = result.exceptionOrNull()?.message
                     )
                 } else {

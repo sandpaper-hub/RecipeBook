@@ -7,7 +7,7 @@ import com.example.recipebook.domain.interactor.recipes.deleteRecipeInteractor.D
 import com.example.recipebook.domain.useCase.recipe.addRecipeToCollectionUseCase.AddRecipeToCollectionUseCase
 import com.example.recipebook.domain.useCase.collection.observeUserCollectionUseCase.ObserveUserCollectionUseCase
 import com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUseCase.RemoveBrokenIdUseCase
-import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCase
+import com.example.recipebook.domain.useCase.userProfile.getUserIdFlow.GetUserIdFlowUseCase
 import com.example.recipebook.domain.useCase.recipe.getRecipeById.GetRecipeByIdFlowUseCase
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailDestination
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.CollectionUiState

@@ -3,7 +3,7 @@ package com.example.recipebook.presentation.viewModel.settingsScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.settings.SettingsInteractor
-import com.example.recipebook.domain.interactor.profile.ProfileInteractor
+import com.example.recipebook.domain.useCase.userProfile.observeUserProfile.ObserveUserProfileUseCase
 import com.example.recipebook.presentation.viewModel.settingsScreen.model.SettingsEvent
 import com.example.recipebook.presentation.viewModel.settingsScreen.model.SettingsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val profileInteractor: ProfileInteractor,
+    private val observeUserProfileUseCase: ObserveUserProfileUseCase,
     private val settingsInteractor: SettingsInteractor
 ) : ViewModel() {
     private val _event = MutableSharedFlow<SettingsEvent>()
@@ -34,7 +34,7 @@ class SettingsViewModel @Inject constructor(
 
     private fun observeUserProfile() {
         viewModelScope.launch {
-            profileInteractor.observerUserProfile()
+            observeUserProfileUseCase.execute()
                 .catch { error ->
                     _uiState.update {
                         it.copy(errorMessage = error.message)

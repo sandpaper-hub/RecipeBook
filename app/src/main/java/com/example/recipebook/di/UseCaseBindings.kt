@@ -6,7 +6,7 @@ import com.example.recipebook.domain.useCase.authentication.validateAuthenticati
 import com.example.recipebook.domain.useCase.authentication.validateAuthenticationInput.ValidateAuthenticationInputUseCaseImpl
 import com.example.recipebook.domain.useCase.recipe.addRecipeToCollectionUseCase.AddRecipeIdToCollectionUseCaseImpl
 import com.example.recipebook.domain.useCase.recipe.addRecipeToCollectionUseCase.AddRecipeToCollectionUseCase
-import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCaseImpl
+import com.example.recipebook.domain.useCase.userProfile.getUserIdFlow.GetUserIdFlowUseCaseImpl
 import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCase
 import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCaseImpl
 import com.example.recipebook.domain.useCase.collection.getUserCollectionUseCase.GetUserCollectionUseCase
@@ -17,13 +17,15 @@ import com.example.recipebook.domain.useCase.collection.observeUserCollectionUse
 import com.example.recipebook.domain.useCase.collection.observeUserCollectionUseCase.ObserveUserCollectionUseCaseImpl
 import com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUseCase.RemoveBrokenIdUseCase
 import com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUseCase.RemoveBrokenIdUseCaseImpl
-import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCase
+import com.example.recipebook.domain.useCase.userProfile.getUserIdFlow.GetUserIdFlowUseCase
 import com.example.recipebook.domain.useCase.recipe.getRecipeById.GetRecipeByIdFlowUseCase
 import com.example.recipebook.domain.useCase.recipe.getRecipeById.GetRecipeByIdFlowUseCaseImpl
 import com.example.recipebook.domain.useCase.recipe.getRecipeListByIds.GetRecipeListByIdsUseCase
 import com.example.recipebook.domain.useCase.recipe.getRecipeListByIds.GetRecipeListByIdsUseCaseImpl
 import com.example.recipebook.domain.useCase.recipe.searchRecipe.SearchRecipeUseCase
 import com.example.recipebook.domain.useCase.recipe.searchRecipe.SearchRecipeUseCaseImpl
+import com.example.recipebook.domain.useCase.userProfile.observeUserProfile.ObserveUserProfileUseCase
+import com.example.recipebook.domain.useCase.userProfile.observeUserProfile.ObserveUserProfileUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -92,4 +94,9 @@ abstract class UseCaseBindings {
     abstract fun bindLoginByEmailUseCase(
         impl: LoginByEmailUseCaseImpl
     ): LoginByEmailUseCase
+
+    @Binds
+    abstract  fun bindObserveUserProfileUseCase(
+        impl: ObserveUserProfileUseCaseImpl
+    ): ObserveUserProfileUseCase
 }

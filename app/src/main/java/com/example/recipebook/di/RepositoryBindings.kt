@@ -8,7 +8,6 @@ import com.example.recipebook.data.repository.DeleteImageRepositoryImpl
 import com.example.recipebook.data.repository.LocaleRepositoryImpl
 import com.example.recipebook.data.repository.SettingsRepositoryImpl
 import com.example.recipebook.data.repository.RecipesRepositoryImpl
-import com.example.recipebook.data.util.ImageCompressorImpl
 import com.example.recipebook.domain.repository.ProfileRepository
 import com.example.recipebook.domain.repository.AuthenticationRepository
 import com.example.recipebook.domain.repository.CollectionsRepository
@@ -17,7 +16,6 @@ import com.example.recipebook.domain.repository.DeleteImageRepository
 import com.example.recipebook.domain.repository.LocaleRepository
 import com.example.recipebook.domain.repository.SettingsRepository
 import com.example.recipebook.domain.repository.RecipesRepository
-import com.example.recipebook.domain.util.ImageCompressor
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -38,11 +36,6 @@ abstract class RepositoryBindings {
     abstract fun bindFirestoreRepository(
         impl: ProfileRepositoryImpl
     ): ProfileRepository
-
-    @Binds
-    abstract fun bindImageCompressor(
-        imageCompressorImpl: ImageCompressorImpl
-    ): ImageCompressor
 
     @Binds
     abstract fun bindDataStoreRepository(

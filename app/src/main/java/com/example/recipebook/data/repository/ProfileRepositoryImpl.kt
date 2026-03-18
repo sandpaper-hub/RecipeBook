@@ -1,5 +1,6 @@
 package com.example.recipebook.data.repository
 
+import com.example.recipebook.data.util.ImageCompressorImpl
 import com.example.recipebook.domain.repository.ProfileRepository
 import com.example.recipebook.domain.model.profile.UserProfile
 import com.google.firebase.auth.FirebaseAuth
@@ -9,16 +10,16 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
 class ProfileRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    firestore: FirebaseFirestore,
-    private val firebaseStorage: FirebaseStorage
+    private val firestore: FirebaseFirestore,
+    private val firebaseStorage: FirebaseStorage,
+    private val imageCompressorImpl: ImageCompressorImpl
 ) : ProfileRepository {
-
-    private val usersCollection = firestore.collection("users")
 
     override fun observeUserProfile(): Flow<UserProfile> = callbackFlow {
         val uid = getCurrentUserUidOrNull()
@@ -27,7 +28,8 @@ class ProfileRepositoryImpl @Inject constructor(
             return@callbackFlow
         }
 
-        val registration = usersCollection
+        val registration = firestore
+            .collection("users")
             .document(uid)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
@@ -59,45 +61,20 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun uploadUserAvatar(bytes: ByteArray): Result<String> {
-        val uid = getCurrentUserUidOrNull()
-            ?: return Result.failure(Exception("User isn't authenticated"))
+    override suspend fun uploadUserAvatar(imageSource: String): String {
+        val imageBytes = imageCompressorImpl.compress(imageSource)
+        val ref = firebaseStorage.reference
+            .child("users_avatar/${getCurrentUserUidOrNull()}/avatar.jpg")
 
-        return suspendCancellableCoroutine { continuation ->
-            val ref = firebaseStorage.reference.child("users_avatar/$uid/avatar.jpg")
-            val uploadTask = ref.putBytes(bytes)
-
-            uploadTask
-                .addOnSuccessListener {
-                    ref.downloadUrl
-                        .addOnSuccessListener { uri ->
-                            if (continuation.isActive) {
-                                continuation.resume(Result.success(uri.toString()))
-                            }
-                        }
-                        .addOnFailureListener { exception ->
-                            if (continuation.isActive) {
-                                continuation.resume(Result.failure(exception))
-                            }
-                        }
-                }
-                .addOnFailureListener { exception ->
-                    if (continuation.isActive) {
-                        continuation.resume(Result.failure(exception))
-                    }
-                }
-
-            continuation.invokeOnCancellation {
-                uploadTask.cancel()
-            }
-        }
+        ref.putBytes(imageBytes).await()
+        return ref.downloadUrl.await().toString()
     }
 
     override suspend fun updateUserData(data: Map<String, Any?>): Result<Unit> {
         val uid = getCurrentUserUidOrNull()
             ?: return Result.failure(Exception("User isn't authenticated"))
         return suspendCancellableCoroutine { continuation ->
-            usersCollection
+            firestore.collection("users")
                 .document(uid)
                 .update(data)
                 .addOnSuccessListener {

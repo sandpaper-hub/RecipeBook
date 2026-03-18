@@ -3,7 +3,7 @@ package com.example.recipebook.presentation.viewModel.collectionsScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.useCase.collection.observeUserCollectionUseCase.ObserveUserCollectionUseCase
-import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCase
+import com.example.recipebook.domain.useCase.userProfile.getUserIdFlow.GetUserIdFlowUseCase
 import com.example.recipebook.presentation.viewModel.collectionsScreen.model.CollectionsUiEvents
 import com.example.recipebook.presentation.viewModel.collectionsScreen.model.CollectionsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel

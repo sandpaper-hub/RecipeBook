@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.useCase.getUserIdFlow
+package com.example.recipebook.domain.useCase.userProfile.getUserIdFlow
 
 import com.example.recipebook.domain.repository.ProfileRepository
 import kotlinx.coroutines.flow.Flow
