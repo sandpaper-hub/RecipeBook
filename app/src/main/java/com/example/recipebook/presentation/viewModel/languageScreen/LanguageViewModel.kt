@@ -2,7 +2,8 @@ package com.example.recipebook.presentation.viewModel.languageScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.settings.SettingsInteractor
+import com.example.recipebook.domain.useCase.settings.changeApplicationLanguage.ChangeApplicationLanguageUseCase
+import com.example.recipebook.domain.useCase.settings.observeSavedLanguage.ObserveSavedLanguageUseCase
 import com.example.recipebook.presentation.viewModel.languageScreen.model.LanguageEvent
 import com.example.recipebook.presentation.viewModel.languageScreen.model.LanguageUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LanguageViewModel @Inject constructor(
-    private val settingsInteractor: SettingsInteractor
+    private val observeSavedLanguageUseCase: ObserveSavedLanguageUseCase,
+    private val changeApplicationLanguageUseCase: ChangeApplicationLanguageUseCase
 ) : ViewModel() {
 
     private val _uiEvents = MutableSharedFlow<LanguageEvent>()
@@ -26,7 +28,7 @@ class LanguageViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            settingsInteractor.observeSavedLanguage()
+            observeSavedLanguageUseCase.execute()
                 .collect { savedCode ->
                     _uiState.update {
                         it.copy(language = savedCode)
@@ -37,7 +39,7 @@ class LanguageViewModel @Inject constructor(
 
     fun changeApplicationLanguage(value: String) {
         viewModelScope.launch {
-            settingsInteractor.changeApplicationLanguage(value)
+            changeApplicationLanguageUseCase.execute(value)
             _uiState.update {
                 it.copy(language = value)
             }

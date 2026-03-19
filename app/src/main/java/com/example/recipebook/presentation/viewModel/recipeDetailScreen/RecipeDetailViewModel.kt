@@ -8,7 +8,7 @@ import com.example.recipebook.domain.useCase.recipe.addRecipeToCollectionUseCase
 import com.example.recipebook.domain.useCase.collection.observeUserCollectionUseCase.ObserveUserCollectionUseCase
 import com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUseCase.RemoveBrokenIdUseCase
 import com.example.recipebook.domain.useCase.userProfile.getUserIdFlow.GetUserIdFlowUseCase
-import com.example.recipebook.domain.useCase.recipe.getRecipeById.GetRecipeByIdFlowUseCase
+import com.example.recipebook.domain.useCase.recipe.observeRecipeById.ObserveRecipeByIdUseCase
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailDestination
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.CollectionUiState
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.IngredientUiState
@@ -32,7 +32,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
-    private val getRecipeByIdFlowUseCaseImpl: GetRecipeByIdFlowUseCase,
+    private val observeRecipeByIdUseCaseImpl: ObserveRecipeByIdUseCase,
     private val getUserIdFlowUseCase: GetUserIdFlowUseCase,
     private val observeUserCollectionUseCase: ObserveUserCollectionUseCase,
     private val addRecipeToCollectionUseCase: AddRecipeToCollectionUseCase,
@@ -169,7 +169,7 @@ class RecipeDetailViewModel @Inject constructor(
 
     private fun getRecipeById() {
         viewModelScope.launch {
-            getRecipeByIdFlowUseCaseImpl.execute(recipeId)
+            observeRecipeByIdUseCaseImpl.execute(recipeId)
                 .onStart {
                     _uiState.update {
                         it.copy(

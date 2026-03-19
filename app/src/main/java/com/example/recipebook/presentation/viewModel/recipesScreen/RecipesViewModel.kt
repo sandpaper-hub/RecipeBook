@@ -2,7 +2,8 @@ package com.example.recipebook.presentation.viewModel.recipesScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
+import com.example.recipebook.domain.useCase.recipe.observeRecipeListByIds.ObserveRecipeListByIdsUseCase
+import com.example.recipebook.domain.useCase.userProfile.getUserIdFlow.GetUserIdFlowUseCase
 import com.example.recipebook.presentation.viewModel.recipesScreen.model.RecipesUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipesViewModel @Inject constructor(
-    private val recipesInteractor: RecipesInteractor
+    private val getUserIdFlowUseCase: GetUserIdFlowUseCase,
+    private val observeRecipeListByIdsUseCase: ObserveRecipeListByIdsUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(RecipesUiState())
     val uiState: StateFlow<RecipesUiState> = _uiState
@@ -30,12 +32,12 @@ class RecipesViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeUserRecipes() {
-        recipesInteractor.getUserIdFlow()
+        getUserIdFlowUseCase.execute()
             .flatMapLatest { uid ->
                 if (uid == null) {
                     flowOf(emptyList())
                 } else {
-                    recipesInteractor.observeUserRecipes(uid)
+                    observeRecipeListByIdsUseCase.execute(uid)
                 }
             }
             .onStart {

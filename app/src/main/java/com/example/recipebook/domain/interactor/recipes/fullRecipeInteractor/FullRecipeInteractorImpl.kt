@@ -3,7 +3,7 @@ package com.example.recipebook.domain.interactor.recipes.fullRecipeInteractor
 import com.example.recipebook.domain.model.recipe.getRecipe.FullRecipe
 import com.example.recipebook.domain.model.recipe.step.EditStep
 import com.example.recipebook.domain.model.ImageSourceType
-import com.example.recipebook.domain.useCase.GetRecipeStepsUseCase
+import com.example.recipebook.domain.interactor.recipes.getRecipeSteps.GetRecipeStepsUseCaseImpl
 import com.example.recipebook.domain.useCase.recipe.GetRecipeByIdUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class FullRecipeInteractorImpl @Inject constructor(
     private val  getRecipeByIdUseCaseImpl: GetRecipeByIdUseCase,
-    private val getRecipeStepsUseCase: GetRecipeStepsUseCase
+    private val getRecipeStepsUseCaseImpl: GetRecipeStepsUseCaseImpl
 ) : FullRecipeInteractor {
     override suspend fun getFullRecipe(recipeId: String) = coroutineScope {
         val recipeDeferred = async {
@@ -19,7 +19,7 @@ class FullRecipeInteractorImpl @Inject constructor(
         }
 
         val stepsDeferred = async {
-            getRecipeStepsUseCase.execute(recipeId)
+            getRecipeStepsUseCaseImpl.execute(recipeId)
         }
 
         val recipe = recipeDeferred.await()

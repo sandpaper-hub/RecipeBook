@@ -2,7 +2,9 @@ package com.example.recipebook.presentation.viewModel.settingsScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.settings.SettingsInteractor
+import com.example.recipebook.domain.useCase.authentication.logout.LogOutUseCase
+import com.example.recipebook.domain.useCase.settings.observeSavedLanguage.ObserveSavedLanguageUseCase
+import com.example.recipebook.domain.useCase.settings.observeTheme.ObserveThemeUseCase
 import com.example.recipebook.domain.useCase.userProfile.observeUserProfile.ObserveUserProfileUseCase
 import com.example.recipebook.presentation.viewModel.settingsScreen.model.SettingsEvent
 import com.example.recipebook.presentation.viewModel.settingsScreen.model.SettingsUiState
@@ -19,7 +21,9 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val observeUserProfileUseCase: ObserveUserProfileUseCase,
-    private val settingsInteractor: SettingsInteractor
+    private val observeSavedLanguageUseCase: ObserveSavedLanguageUseCase,
+    private val observeThemeUseCase: ObserveThemeUseCase,
+    private val logOutUseCase: LogOutUseCase,
 ) : ViewModel() {
     private val _event = MutableSharedFlow<SettingsEvent>()
     val event = _event.asSharedFlow()
@@ -55,7 +59,7 @@ class SettingsViewModel @Inject constructor(
 
     private fun observeTheme() {
         viewModelScope.launch {
-            settingsInteractor.getTheme()
+            observeThemeUseCase.execute()
                 .collect { themeMode ->
                     _uiState.update {
                         it.copy(themeMode = themeMode)
@@ -66,7 +70,7 @@ class SettingsViewModel @Inject constructor(
 
     private fun observeLanguage() {
         viewModelScope.launch {
-            settingsInteractor.observeSavedLanguage()
+            observeSavedLanguageUseCase.execute()
                 .collect { language ->
                     _uiState.update {
                         it.copy(language = language)
@@ -77,7 +81,7 @@ class SettingsViewModel @Inject constructor(
 
     fun logOut() {
         viewModelScope.launch {
-            settingsInteractor.logOut()
+            logOutUseCase.execute()
             _event.emit(SettingsEvent.OnLogout)
         }
     }

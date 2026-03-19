@@ -1,6 +1,6 @@
 package com.example.recipebook.domain.interactor.registration
 
-import com.example.recipebook.domain.useCase.RegistrationByEmailUseCase
+import com.example.recipebook.domain.useCase.authentication.RegistrationByEmailUseCase
 import javax.inject.Inject
 
 class RegistrationInteractorImpl @Inject constructor(

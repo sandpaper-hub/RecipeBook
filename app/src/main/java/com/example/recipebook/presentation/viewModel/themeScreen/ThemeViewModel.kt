@@ -2,8 +2,9 @@ package com.example.recipebook.presentation.viewModel.themeScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.settings.SettingsInteractor
 import com.example.recipebook.domain.model.ThemeMode
+import com.example.recipebook.domain.useCase.settings.changeTheme.ChangeThemeUseCase
+import com.example.recipebook.domain.useCase.settings.observeTheme.ObserveThemeUseCase
 import com.example.recipebook.presentation.viewModel.themeScreen.model.ThemeEvent
 import com.example.recipebook.presentation.viewModel.themeScreen.model.ThemeUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ThemeViewModel @Inject constructor(
-    private val settingsInteractor: SettingsInteractor
+    private val observeThemeUseCase: ObserveThemeUseCase,
+    private val changeThemeUseCase: ChangeThemeUseCase,
 ) : ViewModel() {
 
     private val _event = MutableSharedFlow<ThemeEvent>()
@@ -31,7 +33,7 @@ class ThemeViewModel @Inject constructor(
 
     private fun observeAppTheme() {
         viewModelScope.launch {
-            settingsInteractor.getTheme()
+            observeThemeUseCase.execute()
                 .collect { themeMode ->
                     _uiState.update {
                         it.copy(themeMode = themeMode)
@@ -42,7 +44,7 @@ class ThemeViewModel @Inject constructor(
 
     fun changeTheme(mode: ThemeMode) {
         viewModelScope.launch {
-            settingsInteractor.changeTheme(mode)
+            changeThemeUseCase.execute(mode)
         }
     }
 
