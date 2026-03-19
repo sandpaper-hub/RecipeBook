@@ -235,7 +235,7 @@ class EditRecipeViewModel @Inject constructor(
         }
     }
 
-    fun uploadNewRecipe() {
+    fun updateRecipe() {
         viewModelScope.launch {
             runCatching {
                 updateRecipeInteractor.updateRecipe(

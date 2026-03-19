@@ -22,6 +22,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
+import com.example.recipebook.presentation.ui.commonUi.CustomTextButton
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.ImageCover
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
@@ -61,18 +62,10 @@ fun CreateCollectionScreen(
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
-        HeadingTextMedium(
-            text = stringResource(R.string.create_collection),
-            modifier = Modifier.constrainAs(headingText) {
-                centerHorizontallyTo(parent)
-                top.linkTo(parent.top, margin = 24.dp)
-            }
-        )
-
         IconButton(
             modifier = Modifier.constrainAs(closeButton) {
                 centerVerticallyTo(headingText)
-                end.linkTo(endGuideline)
+                start.linkTo(startGuideline)
             },
             onClick = { viewModel.onBack() }
         ) {
@@ -81,6 +74,23 @@ fun CreateCollectionScreen(
                 contentDescription = stringResource(R.string.cancel_icon)
             )
         }
+
+        CustomTextButton(
+            onClick = { viewModel.createCollection() },
+            text = stringResource(R.string.save_button),
+            modifier = Modifier.constrainAs(saveButton) {
+                centerVerticallyTo(headingText)
+                end.linkTo(endGuideline)
+            }
+        )
+
+        HeadingTextMedium(
+            text = stringResource(R.string.create_collection),
+            modifier = Modifier.constrainAs(headingText) {
+                centerHorizontallyTo(parent)
+                top.linkTo(parent.top, margin = 24.dp)
+            }
+        )
 
         Box(
             modifier = Modifier
@@ -134,18 +144,6 @@ fun CreateCollectionScreen(
                 .constrainAs(collectionDescriptionBox) {
                     linkTo(start = startGuideline, end = endGuideline)
                     top.linkTo(collectionNameBox.bottom)
-                    width = Dimension.fillToConstraints
-                }
-        )
-
-        SquareRoundedButton(
-            onClick = { viewModel.createCollection() },
-            text = stringResource(R.string.save_button),
-            isLoading = false,
-            modifier = Modifier
-                .constrainAs(saveButton) {
-                    linkTo(start = startGuideline, end = endGuideline)
-                    bottom.linkTo(parent.bottom, margin = 24.dp)
                     width = Dimension.fillToConstraints
                 }
         )
