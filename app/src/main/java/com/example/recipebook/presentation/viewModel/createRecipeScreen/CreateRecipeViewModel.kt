@@ -6,9 +6,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
+import com.example.recipebook.domain.interactor.recipes.createNewRecipe.CreateNewRecipeInteractor
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredient
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
+import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCase
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.NewRecipeUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeStepUiState
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateRecipeViewModel @Inject constructor(
-    private val recipesInteractor: RecipesInteractor
+    private val createRandomIdUseCase: CreateRandomIdUseCase,
+    private val createNewRecipeInteractor: CreateNewRecipeInteractor
 ) : ViewModel() {
     var uiState by mutableStateOf(NewRecipeUiState())
         private set
@@ -28,12 +30,12 @@ class CreateRecipeViewModel @Inject constructor(
             uiState = uiState.copy(
                 ingredients = listOf(
                     IngredientUiState(
-                        id = recipesInteractor.createRandomId(),
+                        id = createRandomIdUseCase.execute(),
                     )
                 ),
                 recipeSteps = listOf(
                     RecipeStepUiState(
-                        id = recipesInteractor.createRandomId(),
+                        id = createRandomIdUseCase.execute(),
                     )
                 )
             )
@@ -98,7 +100,7 @@ class CreateRecipeViewModel @Inject constructor(
         viewModelScope.launch {
             uiState = uiState.copy(
                 ingredients = uiState.ingredients + IngredientUiState(
-                    id = recipesInteractor.createRandomId(),
+                    id = createRandomIdUseCase.execute(),
                 )
             )
         }
@@ -114,7 +116,7 @@ class CreateRecipeViewModel @Inject constructor(
         viewModelScope.launch {
             uiState = uiState.copy(
                 recipeSteps = uiState.recipeSteps + RecipeStepUiState(
-                    id = recipesInteractor.createRandomId()
+                    id = createRandomIdUseCase.execute()
                 )
             )
         }
@@ -152,7 +154,7 @@ class CreateRecipeViewModel @Inject constructor(
     fun uploadNewRecipe(onBack: () -> Unit) {
         viewModelScope.launch {
             runCatching {
-                recipesInteractor.uploadNewRecipe(
+                createNewRecipeInteractor.invoke(
                     recipeName = uiState.recipeName,
                     recipeDescription = uiState.recipeDescription,
                     recipeTimeEstimation = uiState.timeEstimation,

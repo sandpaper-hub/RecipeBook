@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -18,6 +19,7 @@ import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
 import com.example.recipebook.presentation.ui.commonUi.SelectableText
 import com.example.recipebook.presentation.viewModel.themeScreen.ThemeViewModel
+import com.example.recipebook.presentation.viewModel.themeScreen.model.ThemeEvent
 
 @Composable
 @Suppress("FunctionName")
@@ -30,7 +32,15 @@ fun ThemeScreen(
         ThemeMode.DARK,
         ThemeMode.SYSTEM
     )
-    val selectedValue by viewModel.theme.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.event.collect { event ->
+            when(event) {
+                ThemeEvent.OnBack -> onBack()
+            }
+        }
+    }
 
     ConstraintLayout(
         modifier = Modifier
@@ -48,7 +58,7 @@ fun ThemeScreen(
                     start.linkTo(startGuideline)
                     top.linkTo(parent.top, margin = 16.dp)
                 },
-            onClick = onBack
+            onClick = { viewModel.onBack() }
         )
 
         HeadingTextMedium(
@@ -66,7 +76,8 @@ fun ThemeScreen(
                     linkTo(start = parent.start, end = parent.end)
                     top.linkTo(backButton.bottom, margin = 16.dp)
                 }
-                .selectableGroup()) {
+                .selectableGroup()
+        ) {
             themeModes.forEach { themeMode ->
                 SelectableText(
                     text = when(themeMode) {
@@ -74,7 +85,7 @@ fun ThemeScreen(
                         ThemeMode.LIGHT -> stringResource(R.string.light_theme)
                         ThemeMode.SYSTEM -> stringResource(R.string.system_theme)
                     },
-                    selected = themeMode.toString().uppercase() == selectedValue.toString(),
+                    selected = themeMode.toString().uppercase() == uiState.themeMode.toString(),
                     onClick = { viewModel.changeTheme(themeMode) }
                 )
             }

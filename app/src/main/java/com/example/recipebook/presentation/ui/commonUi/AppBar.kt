@@ -34,8 +34,8 @@ import com.example.recipebook.theme.GreenAccent
 @Suppress("FunctionName")
 fun MainBottomNavigationBar(navController: NavController) {
     val items = listOf(
-        BottomNavigationItem.Home,
         BottomNavigationItem.Recipes,
+        BottomNavigationItem.Search,
         BottomNavigationItem.CreateRecipe,
         BottomNavigationItem.Collections,
         BottomNavigationItem.Settings

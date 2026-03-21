@@ -54,6 +54,7 @@
     <string name="save_change" translatable="true">Save Change</string>
     <string name="forgot_password" translatable="true">Forgot password?</string>
     <string name="blank_email" translatable="true">Email shouldn\'t be blank</string>
+    <string name="blank_password" translatable="true">Password shouldn\'t be blank</string>
     <string name="password_min_digit" translatable="true">Password must be at least 6 characters long</string>
     <string name="check_icon" translatable="true"> Check icon</string>
     <string name="dark_theme" translatable="true">Dark</string>
@@ -138,4 +139,8 @@
     <string name="search_icon" translatable="true">Search icon</string>
     <string name="no_internet" translatable="true">No internet connection</string>
     <string name="unknown_error" translatable="true">Something went wrong, unknown error</string>
+    <string name="invalid_email" translatable="true">Invalid email format</string>
+    <string name="wrong_password" translatable="true">Wrong password</string>
+    <string name="wrong_email" translatable="true">Wrong email</string>
+    <string name="email_already_in_use" translatable="true">Email already in use</string>
 </resources>

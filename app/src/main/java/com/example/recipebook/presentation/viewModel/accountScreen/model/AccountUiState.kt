@@ -1,6 +1,6 @@
 package com.example.recipebook.presentation.viewModel.accountScreen.model
 
-import android.net.Uri
+import com.example.recipebook.presentation.viewModel.model.ImageSource
 
 data class AccountUiState(
     val fullName: String = "",
@@ -8,8 +8,7 @@ data class AccountUiState(
     val region: String = "",
     val regionLocales: List<String> = listOf(),
     val dateOfBirth: Long? = null,
-    val localImageSource: Uri? = null,
-    val profileImageSource: String? = null,
+    val profileImageSource: ImageSource = ImageSource.None,
     val showDatePicker: Boolean = false,
     val showRegionMenu: Boolean = false,
     val gender: String = "",

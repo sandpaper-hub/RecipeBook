@@ -37,12 +37,13 @@ import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.ui.commonUi.CustomTextButton
+import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.CategoryMenuItem
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMenuItem
 import com.example.recipebook.presentation.util.debounce
+import com.example.recipebook.presentation.util.toUiSource
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.EditRecipeViewModel
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
-import com.example.recipebook.presentation.viewModel.model.ImageSource
 
 @Composable
 @Suppress("FunctionName")
@@ -83,20 +84,6 @@ fun EditRecipeScreen(
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
-        IconButton(
-            onClick = { viewModel.goBack() },
-            modifier = Modifier
-                .constrainAs(closeButton) {
-                    centerVerticallyTo(headingText)
-                    start.linkTo(startGuideline)
-                }
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.delete_icon),
-                contentDescription = stringResource(R.string.cancel_icon)
-            )
-        }
-
         HeadingTextMedium(
             text = stringResource(R.string.edit_recipe),
             modifier = Modifier
@@ -106,14 +93,19 @@ fun EditRecipeScreen(
                 }
         )
 
-        CustomTextButton(
-            onClick = { viewModel.uploadNewRecipe() },
-            text = stringResource(R.string.save_button),
-            modifier = Modifier.constrainAs(button) {
-                centerVerticallyTo(headingText)
-                end.linkTo(endGuideline)
-            }
-        )
+        IconButton(
+            onClick = { viewModel.goBack() },
+            modifier = Modifier
+                .constrainAs(closeButton) {
+                    centerVerticallyTo(headingText)
+                    end.linkTo(endGuideline)
+                }
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.delete_icon),
+                contentDescription = stringResource(R.string.cancel_icon)
+            )
+        }
 
         LazyColumn(
             state = listState,
@@ -130,11 +122,7 @@ fun EditRecipeScreen(
                     .fillMaxWidth()
                     .height(150.dp)
 
-                val imageSource = when (uiState.recipeImageSource) {
-                    is ImageSource.None -> null
-                    is ImageSource.Remote -> (uiState.recipeImageSource as ImageSource.Remote).url
-                    is ImageSource.Local -> (uiState.recipeImageSource as ImageSource.Local).uri
-                }
+                val imageSource = uiState.recipeImageSource.toUiSource()
 
                 if (imageSource == null) {
                     UploadImageBox(
@@ -268,11 +256,7 @@ fun EditRecipeScreen(
                 ) { uri: Uri? ->
                     viewModel.onStepImageChange(recipeStep.id, uri)
                 }
-                val imageSource = when (recipeStep.imageSource) {
-                    is ImageSource.None -> null
-                    is ImageSource.Remote -> recipeStep.imageSource.url
-                    is ImageSource.Local -> recipeStep.imageSource.uri
-                }
+                val imageSource = recipeStep.imageSource.toUiSource()
 
                 RecipeStepBox(
                     imageSource = imageSource,
@@ -301,6 +285,15 @@ fun EditRecipeScreen(
                     text = stringResource(R.string.add_steps),
                     onClick = { viewModel.addStep() },
                     modifier = Modifier.padding(bottom = 32.dp)
+                )
+            }
+
+            item {
+                SquareRoundedButton(
+                    onClick = { viewModel.updateRecipe() },
+                    text = stringResource(R.string.save_button),
+                    isLoading = false,
+                    modifier = Modifier.padding(bottom = 24.dp)
                 )
             }
         }

@@ -1,7 +1,7 @@
 package com.example.recipebook.application
 
 import android.app.Application
-import com.example.recipebook.domain.interactor.settings.SettingsInteractor
+import com.example.recipebook.domain.useCase.settings.observeTheme.ObserveThemeUseCase
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -9,12 +9,12 @@ import javax.inject.Inject
 @HiltAndroidApp
 class RecipeBookApp : Application() {
     @Inject
-    lateinit var settingsInteractor: SettingsInteractor
+    lateinit var observeThemeUseCase: ObserveThemeUseCase
 
     override fun onCreate() {
         super.onCreate()
         runBlocking {
-            settingsInteractor.getTheme()
+            observeThemeUseCase.execute()
         }
     }
 }

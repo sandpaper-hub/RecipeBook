@@ -11,9 +11,10 @@ import com.example.recipebook.domain.model.recipe.getRecipe.Ingredient
 import com.example.recipebook.domain.model.recipe.getRecipe.IngredientMeasure
 import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
 import com.example.recipebook.domain.model.recipe.step.EditStep
-import com.example.recipebook.domain.model.recipe.step.ImageSourceType
 import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCase
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailDestination
+import com.example.recipebook.presentation.util.toDomain
+import com.example.recipebook.presentation.util.toPresentation
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeStepUiState
@@ -54,11 +55,7 @@ class EditRecipeViewModel @Inject constructor(
             originalRecipe = fullRecipeInteractor.getFullRecipe(recipeId)
             _uiState.update { editRecipeUiState ->
                 editRecipeUiState.copy(
-                    recipeImageSource = when (originalRecipe.imageSourceType) {
-                        is ImageSourceType.None -> ImageSource.None
-                        is ImageSourceType.Remote -> ImageSource.Remote((originalRecipe.imageSourceType as ImageSourceType.Remote).source)
-                        is ImageSourceType.Local -> ImageSource.Local((originalRecipe.imageSourceType as ImageSourceType.Local).source)
-                    },
+                    recipeImageSource = originalRecipe.imageSourceType.toPresentation(),
                     recipeName = originalRecipe.recipeName,
                     recipeDescription = originalRecipe.recipeDescription,
                     timeEstimation = originalRecipe.recipeTimeEstimation,
@@ -74,11 +71,7 @@ class EditRecipeViewModel @Inject constructor(
                         EditRecipeStepUiState(
                             id = step.id,
                             title = step.title,
-                            imageSource = when (step.imageSourceType) {
-                                is ImageSourceType.None -> ImageSource.None
-                                is ImageSourceType.Remote -> ImageSource.Remote(step.imageSourceType.source)
-                                is ImageSourceType.Local -> ImageSource.Local(step.imageSourceType.source)
-                            },
+                            imageSource = step.imageSourceType.toPresentation(),
                             stepDescription = step.description
                         )
                     },
@@ -242,7 +235,7 @@ class EditRecipeViewModel @Inject constructor(
         }
     }
 
-    fun uploadNewRecipe() {
+    fun updateRecipe() {
         viewModelScope.launch {
             runCatching {
                 updateRecipeInteractor.updateRecipe(
@@ -251,11 +244,7 @@ class EditRecipeViewModel @Inject constructor(
                         recipeName = _uiState.value.recipeName,
                         recipeDescription = _uiState.value.recipeDescription,
                         recipeTimeEstimation = _uiState.value.timeEstimation,
-                        imageSourceType = when (_uiState.value.recipeImageSource) {
-                            is ImageSource.None -> ImageSourceType.None
-                            is ImageSource.Remote -> ImageSourceType.Remote((_uiState.value.recipeImageSource as ImageSource.Remote).url)
-                            is ImageSource.Local -> ImageSourceType.Local((_uiState.value.recipeImageSource as ImageSource.Local).uri)
-                        },
+                        imageSourceType = _uiState.value.recipeImageSource.toDomain(),
                         category = RecipeCategory.from(_uiState.value.recipeCategory),
                         ingredients = _uiState.value.ingredients.map { ingredientUiState ->
                             Ingredient(
@@ -271,11 +260,7 @@ class EditRecipeViewModel @Inject constructor(
                                 title = stepUiState.title,
                                 order = index,
                                 description = stepUiState.stepDescription,
-                                imageSourceType = when (stepUiState.imageSource) {
-                                    is ImageSource.None -> ImageSourceType.None
-                                    is ImageSource.Local -> ImageSourceType.Local(stepUiState.imageSource.uri)
-                                    is ImageSource.Remote -> ImageSourceType.Remote(stepUiState.imageSource.url)
-                                }
+                                imageSourceType = stepUiState.imageSource.toDomain()
                             )
                         }
                     ),

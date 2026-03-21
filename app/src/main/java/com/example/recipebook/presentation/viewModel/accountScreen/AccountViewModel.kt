@@ -1,25 +1,37 @@
 package com.example.recipebook.presentation.viewModel.accountScreen
 
 import android.net.Uri
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.profile.ProfileInteractor
+import com.example.recipebook.domain.interactor.profile.updateProfile.UpdateUserDataInteractor
+import com.example.recipebook.domain.useCase.userProfile.getLocales.GetLocalesUseCase
+import com.example.recipebook.domain.useCase.userProfile.observeUserProfile.ObserveUserProfileUseCase
+import com.example.recipebook.presentation.util.toDomain
+import com.example.recipebook.presentation.viewModel.accountScreen.model.AccountUiEvent
 import com.example.recipebook.presentation.viewModel.accountScreen.model.AccountUiState
+import com.example.recipebook.presentation.viewModel.model.ImageSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
-    private val profileInteractor: ProfileInteractor
+    private val observeUserProfileUseCase: ObserveUserProfileUseCase,
+    private val getLocalesUseCase: GetLocalesUseCase,
+    private val updateUserDataInteractor: UpdateUserDataInteractor
 ) : ViewModel() {
-    var uiState by mutableStateOf(AccountUiState())
-        private set
+
+    private val _uiEvents = MutableSharedFlow<AccountUiEvent>()
+    val uiEvents = _uiEvents.asSharedFlow()
+    private val _uiState = MutableStateFlow(AccountUiState())
+    val uiState = _uiState.asStateFlow()
 
     init {
         observeUserProfile()
@@ -30,100 +42,139 @@ class AccountViewModel @Inject constructor(
 
     private fun observeUserProfile() {
         viewModelScope.launch {
-            profileInteractor.observerUserProfile()
+            observeUserProfileUseCase.execute()
                 .catch { error ->
-                    uiState = uiState.copy(errorMessage = error.message)
+                    _uiState.update {
+                        it.copy(errorMessage = error.message)
+                    }
                 }
                 .collect { userProfile ->
-                    uiState = uiState.copy(
-                        fullName = userProfile.fullName,
-                        nickName = userProfile.nickName,
-                        region = userProfile.region,
-                        profileImageSource = userProfile.photoUrl,
-                        dateOfBirth = userProfile.dateOfBirth,
-                        gender = userProfile.gender
-                    )
+                    _uiState.update {
+                        it.copy(
+                            fullName = userProfile.fullName,
+                            nickName = userProfile.nickName,
+                            region = userProfile.region,
+                            profileImageSource = if (userProfile.photoUrl == null) {
+                                ImageSource.None
+                            } else {
+                                ImageSource.Remote(userProfile.photoUrl)
+                            },
+                            dateOfBirth = userProfile.dateOfBirth,
+                            gender = userProfile.gender
+                        )
+                    }
                 }
         }
     }
 
     private fun initRegionLocales() {
-        uiState = uiState.copy(regionLocales = profileInteractor.getLocales ())
+        _uiState.update {
+            it.copy(regionLocales = getLocalesUseCase.execute())
+        }
     }
 
     fun onImagePicked(uri: Uri?) {
-        uiState = uiState.copy(
-            localImageSource = uri
-        )
+        _uiState.update {
+            it.copy(
+                profileImageSource = if (uri == null) {
+                    ImageSource.None
+                } else {
+                    ImageSource.Local(uri.toString())
+                }
+            )
+        }
     }
 
     fun onNameChanged(newName: String) {
-        uiState = uiState.copy(fullName = newName)
+        _uiState.update {
+            it.copy(fullName = newName)
+        }
     }
 
     fun onNickNameChanged(newValue: String) {
-        uiState = if (allowedRegex.matches(newValue)) {
-            uiState.copy(nickName = newValue)
-        } else {
-            uiState.copy(errorMessage = "No specific symbols")
+        _uiState.update {
+            if (allowedRegex.matches(newValue)) {
+                it.copy(nickName = newValue)
+            } else {
+                it.copy(errorMessage = "No specific symbols")
+            }
         }
     }
 
     fun showCountryMenu(isOpen: Boolean) {
-        uiState = uiState.copy(showRegionMenu = isOpen)
+        _uiState.update {
+            it.copy(showRegionMenu = isOpen)
+        }
     }
 
     fun onCountryChange(country: String) {
-        uiState = uiState.copy(
-            region = country,
-            showRegionMenu = false
-        )
+        _uiState.update {
+            it.copy(
+                region = country,
+                showRegionMenu = false
+            )
+        }
     }
 
     fun showDatePicker(isOpen: Boolean) {
-        uiState = uiState.copy(showDatePicker = isOpen)
+        _uiState.update {
+            it.copy(showDatePicker = isOpen)
+        }
     }
 
     fun selectConfirmedDate(value: Long?) {
-        uiState = uiState.copy(
-            dateOfBirth = value,
-            showDatePicker = false
-        )
+        _uiState.update {
+            it.copy(
+                dateOfBirth = value,
+                showDatePicker = false
+            )
+        }
     }
 
     fun onGenderChanged(newValue: String) {
-        uiState = uiState.copy(gender = newValue)
+        _uiState.update {
+            it.copy(gender = newValue)
+        }
     }
 
-    fun onSaveClick(onBackNavigation: () -> Unit) {
+    fun onSaveClick() {
         viewModelScope.launch {
-            uiState = uiState.copy(isSaving = true)
+            _uiState.update {
+                it.copy(isSaving = true)
+            }
 
-            val result = profileInteractor.updateUserData(
+            val result = updateUserDataInteractor.invoke(
                 data = mapOf(
-                    "fullName" to uiState.fullName,
-                    "nickName" to uiState.nickName,
-                    "region" to uiState.region,
-                    "dateOfBirth" to uiState.dateOfBirth,
-                    "gender" to uiState.gender
+                    "fullName" to uiState.value.fullName,
+                    "nickName" to uiState.value.nickName,
+                    "region" to uiState.value.region,
+                    "dateOfBirth" to uiState.value.dateOfBirth,
+                    "gender" to uiState.value.gender
                 ),
-                uriString = uiState.localImageSource?.toString()
+                imageSource = _uiState.value.profileImageSource.toDomain()
             )
             delay(2000)
-            uiState = if (result.isSuccess) {
-                uiState.copy(
-                    isSaving = false,
-                    errorMessage = result.exceptionOrNull()?.message
-                )
-            } else {
-                uiState.copy(
-                    isSaving = false,
-                    errorMessage = result.exceptionOrNull()?.message
-                )
+            _uiState.update {
+                if (result.isSuccess) {
+                    it.copy(
+                        errorMessage = result.exceptionOrNull()?.message
+                    )
+                } else {
+                    it.copy(
+                        isSaving = false,
+                        errorMessage = result.exceptionOrNull()?.message
+                    )
+                }
             }
             if (result.isSuccess) {
-                onBackNavigation()
+                onBack()
             }
+        }
+    }
+
+    fun onBack() {
+        viewModelScope.launch {
+            _uiEvents.emit(AccountUiEvent.GoBack)
         }
     }
 }

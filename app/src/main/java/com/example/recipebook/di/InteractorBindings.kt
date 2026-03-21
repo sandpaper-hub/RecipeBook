@@ -1,25 +1,21 @@
 package com.example.recipebook.di
 
 import com.example.recipebook.domain.interactor.collection.createCollectionInteractor.CreateCollectionInteractor
-import com.example.recipebook.domain.interactor.collection.createCollectionInteractor.CreateCreateCollectionInteractorImpl
+import com.example.recipebook.domain.interactor.collection.createCollectionInteractor.CreateCollectionInteractorImpl
 import com.example.recipebook.domain.interactor.collection.deleteCollectionInteractor.DeleteCollectionInteractor
 import com.example.recipebook.domain.interactor.collection.deleteCollectionInteractor.DeleteCollectionInteractorImpl
 import com.example.recipebook.domain.interactor.collection.updateCollectionInteractor.UpdateCollectionInteractor
 import com.example.recipebook.domain.interactor.collection.updateCollectionInteractor.UpdateCollectionInteractorImpl
-import com.example.recipebook.domain.interactor.login.LoginInteractor
-import com.example.recipebook.domain.interactor.login.LoginInteractorImpl
-import com.example.recipebook.domain.interactor.profile.ProfileInteractor
-import com.example.recipebook.domain.interactor.profile.ProfileInteractorImpl
+import com.example.recipebook.domain.interactor.profile.updateProfile.UpdateUserDataInteractor
+import com.example.recipebook.domain.interactor.profile.updateProfile.UpdateUserDataInteractorImpl
 import com.example.recipebook.domain.interactor.recipes.fullRecipeInteractor.FullRecipeInteractor
 import com.example.recipebook.domain.interactor.recipes.fullRecipeInteractor.FullRecipeInteractorImpl
 import com.example.recipebook.domain.interactor.registration.RegistrationInteractor
 import com.example.recipebook.domain.interactor.registration.RegistrationInteractorImpl
-import com.example.recipebook.domain.interactor.settings.SettingsInteractor
-import com.example.recipebook.domain.interactor.settings.SettingsInteractorImpl
-import com.example.recipebook.domain.interactor.splash.SplashInteractor
-import com.example.recipebook.domain.interactor.splash.SplashInteractorImpl
-import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
-import com.example.recipebook.domain.interactor.recipes.RecipesInteractorImpl
+import com.example.recipebook.domain.interactor.settings.setApplicationLanguage.SetApplicationLanguageInteractor
+import com.example.recipebook.domain.interactor.settings.setApplicationLanguage.SetApplicationLanguageInteractorImpl
+import com.example.recipebook.domain.interactor.recipes.createNewRecipe.CreateNewRecipeInteractor
+import com.example.recipebook.domain.interactor.recipes.createNewRecipe.CreateNewRecipeInteractorImpl
 import com.example.recipebook.domain.interactor.recipes.deleteRecipeInteractor.DeleteRecipeInteractor
 import com.example.recipebook.domain.interactor.recipes.deleteRecipeInteractor.DeleteRecipeInteractorImpl
 import com.example.recipebook.domain.interactor.recipes.updateRecipeInteractor.UpdateRecipeInteractor
@@ -40,33 +36,13 @@ abstract class InteractorBindings {
     ): RegistrationInteractor
 
     @Binds
-    abstract fun bindLoginInteractor(
-        impl: LoginInteractorImpl
-    ): LoginInteractor
-
-    @Binds
     abstract fun bindSplashInteractor(
-        impl: SplashInteractorImpl
-    ): SplashInteractor
-
-    @Binds
-    abstract fun bindProfileInteractor(
-        impl: ProfileInteractorImpl
-    ): ProfileInteractor
-
-    @Binds
-    abstract fun bindSettingsInteractor(
-        impl: SettingsInteractorImpl
-    ): SettingsInteractor
-
-    @Binds
-    abstract fun bindUploadRecipeInteractor(
-        impl: RecipesInteractorImpl
-    ): RecipesInteractor
+        impl: SetApplicationLanguageInteractorImpl
+    ): SetApplicationLanguageInteractor
 
     @Binds
     abstract fun bindCollectionInteractor(
-        impl: CreateCreateCollectionInteractorImpl
+        impl: CreateCollectionInteractorImpl
     ): CreateCollectionInteractor
 
     @Binds
@@ -93,4 +69,14 @@ abstract class InteractorBindings {
     abstract fun bindDeleteCollectionInteractor(
         impl: DeleteCollectionInteractorImpl
     ): DeleteCollectionInteractor
+
+    @Binds
+    abstract fun bindUpdateUserDataInteractor(
+        impl: UpdateUserDataInteractorImpl
+    ): UpdateUserDataInteractor
+
+    @Binds
+    abstract fun bindCreateNewRecipeInteractor(
+        impl: CreateNewRecipeInteractorImpl
+    ): CreateNewRecipeInteractor
 }

@@ -12,7 +12,7 @@ import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeD
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.recipeDetailNavGraph
 import com.example.recipebook.navigation.mainHomeGraph.settingsGraph.settingsGraph
 import com.example.recipebook.presentation.ui.searchScreen.SearchScreen
-import com.example.recipebook.presentation.ui.collectionScreen.CollectionScreen
+import com.example.recipebook.presentation.ui.collectionScreen.CollectionsScreen
 import com.example.recipebook.presentation.ui.createCollectionScreen.CreateCollectionScreen
 import com.example.recipebook.presentation.ui.createRecipeScreen.CreateRecipeScreen
 import com.example.recipebook.presentation.ui.recipesScreen.RecipesScreen
@@ -25,10 +25,18 @@ fun MainHomeGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = BottomNavigationItem.Home.route,
+        startDestination = BottomNavigationItem.Recipes.route,
         modifier = modifier
     ) {
-        composable(BottomNavigationItem.Home.route) {
+        composable(BottomNavigationItem.Recipes.route) {
+            RecipesScreen(onRecipeDetail = { recipeId ->
+                navController.navigate(
+                    RecipeDetailRoutes.RecipeDetail.createRoute(recipeId)
+                )
+            })
+        }
+
+        composable(BottomNavigationItem.Search.route) {
             SearchScreen(
                 onRecipeDetail = { recipeId ->
                     navController.navigate(
@@ -36,14 +44,6 @@ fun MainHomeGraph(
                     )
                 }
             )
-        }
-
-        composable(BottomNavigationItem.Recipes.route) {
-            RecipesScreen(onRecipeDetail = { recipeId ->
-                navController.navigate(
-                    RecipeDetailRoutes.RecipeDetail.createRoute(recipeId)
-                )
-            })
         }
 
         recipeDetailNavGraph(navController)
@@ -65,7 +65,7 @@ fun MainHomeGraph(
         }
 
         composable(BottomNavigationItem.Collections.route) {
-            CollectionScreen(
+            CollectionsScreen(
                 onCollectionDetail = { collectionId ->
                     navController.navigate(
                         CollectionDetailRoutes.CollectionDetail.createRoute(collectionId)
@@ -88,16 +88,16 @@ sealed class BottomNavigationItem(
     val icon: Int,
     val label: String
 ) {
-    data object Home : BottomNavigationItem(
-        route = "home",
-        icon = R.drawable.home_icon,
-        label = "Home"
-    )
-
     data object Recipes : BottomNavigationItem(
         route = "recipes",
-        icon = R.drawable.cook_hat_icon,
+        icon = R.drawable.home_icon,
         label = "Recipes"
+    )
+
+    data object Search : BottomNavigationItem(
+        route = "search",
+        icon = R.drawable.search_icon,
+        label = "Search"
     )
 
     data object CreateRecipe : BottomNavigationItem(

@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -24,9 +26,10 @@ import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
 import com.example.recipebook.presentation.ui.commonUi.SubHeadingTextSmall
 import com.example.recipebook.presentation.ui.commonUi.TextDivider
 import com.example.recipebook.presentation.ui.commonUi.TitleText
-import com.example.recipebook.presentation.viewModel.model.UiEvent
 import com.example.recipebook.presentation.viewModel.registrationScreen.RegistrationViewModel
 import com.example.recipebook.presentation.util.debounce
+import com.example.recipebook.presentation.util.toStringRes
+import com.example.recipebook.presentation.viewModel.registrationScreen.model.RegistrationUiEvent
 
 @Composable
 @Suppress
@@ -36,15 +39,23 @@ fun RegistrationScreen(
     onPrivacyScreen: () -> Unit,
     viewModel: RegistrationViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.uiState
+    val uiState by viewModel.uiState.collectAsState()
     val snackBar = LocalSnackBarController.current
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
-                is UiEvent.ShowMessage -> {
-                    snackBar.showMessage(event.message)
+                is RegistrationUiEvent.NetworkError -> {
+                    snackBar.showMessage("Network error")//TODO
                 }
+
+                is RegistrationUiEvent.UnknownError -> {
+                    snackBar.showMessage("Unknown error")//TODO resources
+                }
+
+                is RegistrationUiEvent.OnHome -> onHomeScreen()
+                is RegistrationUiEvent.OnLogin -> onLoginScreen()
+                is RegistrationUiEvent.OnPrivacy -> onPrivacyScreen()
             }
         }
     }
@@ -58,7 +69,7 @@ fun RegistrationScreen(
         val (headingText, subHeadingText, fullNameText, nameTextField,
             emailText, emailTextField, passwordText, passwordTextField,
             signUpButton, privacyText, textDivider, googleSignUpButton,
-            facebookSignUpButton, emailErrorText, passwordErrorText) = createRefs()
+            emailErrorText, passwordErrorText) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -115,7 +126,7 @@ fun RegistrationScreen(
             value = uiState.email,
             onValueChange = viewModel::onEmailChanged,
             hint = stringResource(R.string.email_hint),
-            isError = uiState.emailErrorCode != null,
+            isError = uiState.emailError != null,
             modifier = Modifier
                 .constrainAs(emailTextField) {
                     start.linkTo(startGuideline)
@@ -125,9 +136,9 @@ fun RegistrationScreen(
                 }
                 .fillMaxWidth())
 
-        if (uiState.emailErrorCode != null) {
+        if (uiState.emailError != null) {
             SubHeadingTextSmall(
-                text = stringResource(uiState.emailErrorCode),
+                text = stringResource(uiState.emailError!!.toStringRes()),
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier
                     .constrainAs(emailErrorText) {
@@ -150,7 +161,7 @@ fun RegistrationScreen(
             value = uiState.password,
             onValueChange = viewModel::onPasswordChanged,
             hint = stringResource(R.string.password_hint),
-            isError = uiState.passwordErrorCode != null,
+            isError = uiState.passwordError != null,
             visible = uiState.passwordVisibility,
             changeVisibility = { viewModel.onPasswordVisibilityChange(!uiState.passwordVisibility) },
             modifier = Modifier
@@ -163,9 +174,9 @@ fun RegistrationScreen(
                 .fillMaxWidth()
         )
 
-        if (uiState.passwordErrorCode != null) {
+        if (uiState.passwordError != null) {
             SubHeadingTextSmall(
-                text = stringResource(uiState.passwordErrorCode),
+                text = stringResource(uiState.passwordError!!.toStringRes()),
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier
                     .constrainAs(passwordErrorText) {
@@ -176,12 +187,11 @@ fun RegistrationScreen(
         }
 
         SquareRoundedButton(
-            onClick = { //TODO block button
+            onClick = {
                 viewModel.register(
                     name = uiState.name,
                     email = uiState.email,
-                    password = uiState.password,
-                    onSuccess = onHomeScreen
+                    password = uiState.password
                 )
             },
             text = stringResource(R.string.sign_up_button),
@@ -191,6 +201,7 @@ fun RegistrationScreen(
                     start.linkTo(startGuideline)
                     end.linkTo(endGuideline)
                     top.linkTo(passwordTextField.bottom, 32.dp)
+                    width = Dimension.fillToConstraints
                 })
 
         MixedClickableText(
@@ -225,18 +236,5 @@ fun RegistrationScreen(
                     width = Dimension.fillToConstraints
                 }
         )
-
-        OutlinedIconButton(
-            onClick = {}, //TODO signUp with Facebook
-            text = stringResource(R.string.facebook_sign_up),
-            icon = painterResource(R.drawable.facebook_icon),
-            textColor = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier
-                .constrainAs(facebookSignUpButton) {
-                    start.linkTo(startGuideline)
-                    end.linkTo(endGuideline)
-                    top.linkTo(googleSignUpButton.bottom, margin = 24.dp)
-                    width = Dimension.fillToConstraints
-                })
     }
 }

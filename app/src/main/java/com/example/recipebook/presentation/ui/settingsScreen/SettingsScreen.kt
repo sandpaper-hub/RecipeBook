@@ -2,6 +2,9 @@ package com.example.recipebook.presentation.ui.settingsScreen
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -18,6 +21,7 @@ import com.example.recipebook.presentation.ui.commonUi.SubheadingBackgroundText
 import com.example.recipebook.presentation.viewModel.settingsScreen.SettingsViewModel
 import com.example.recipebook.presentation.util.debounce
 import com.example.recipebook.presentation.util.fromLocaleCode
+import com.example.recipebook.presentation.viewModel.settingsScreen.model.SettingsEvent
 
 @Composable
 @Suppress("FunctionName")
@@ -28,7 +32,18 @@ fun SettingsScreen(
     onLogout: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.uiState
+    val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.event.collect { event ->
+            when (event) {
+                SettingsEvent.OnAccount -> onAccountScreen()
+                SettingsEvent.OnLanguage -> onLanguageScreen()
+                SettingsEvent.OnTheme -> onThemeScreen()
+                SettingsEvent.OnLogout -> onLogout()
+            }
+        }
+    }
 
     ConstraintLayout(
         modifier = Modifier
@@ -54,7 +69,7 @@ fun SettingsScreen(
             imageUrl = uiState.imageUrl,
             fullName = uiState.fullName,
             nickName = uiState.nickName,
-            onClick = debounce { onAccountScreen() },
+            onClick = debounce { viewModel.onAccountScreen() },
             modifier = Modifier.constrainAs(profileBox) {
                 linkTo(start = startGuideline, end = endGuideline)
                 top.linkTo(headingText.bottom, margin = 16.dp)
@@ -77,7 +92,7 @@ fun SettingsScreen(
             mainText = stringResource(R.string.language),
             detailText = uiState.language?.fromLocaleCode(),
             isLogout = false,
-            onClick = debounce { onLanguageScreen() },
+            onClick = debounce { viewModel.onLanguageScreen() },
             modifier = Modifier
                 .constrainAs(languageBox) {
                     linkTo(start = startGuideline, end = endGuideline)
@@ -96,7 +111,7 @@ fun SettingsScreen(
                 ThemeMode.SYSTEM -> stringResource(R.string.system_theme)
             },
             isLogout = false,
-            onClick = debounce { onThemeScreen() },
+            onClick = debounce { viewModel.onThemeScreen() },
             modifier = Modifier
                 .constrainAs(themeBox) {
                     linkTo(start = startGuideline, end = endGuideline)
@@ -128,7 +143,6 @@ fun SettingsScreen(
             isLogout = true,
             onClick = debounce {
                 viewModel.logOut()
-                onLogout()
             },
             modifier = Modifier
                 .constrainAs(logoutBox) {

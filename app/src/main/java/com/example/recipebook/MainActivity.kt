@@ -19,8 +19,8 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContent {
             val themeViewModel: ThemeViewModel = hiltViewModel()
-            val currentTheme by themeViewModel.theme.collectAsState()
-            RecipeBookTheme(currentTheme) {
+            val uiState by themeViewModel.uiState.collectAsState()
+            RecipeBookTheme(uiState.themeMode) {
                 RootNavGraph()
             }
         }

@@ -3,7 +3,7 @@ package com.example.recipebook.presentation.viewModel.cookingScreen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.recipes.RecipesInteractor
+import com.example.recipebook.domain.interactor.recipes.getRecipeSteps.GetRecipeStepsUseCase
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailDestination
 import com.example.recipebook.presentation.viewModel.cookingScreen.model.CookingEvent
 import com.example.recipebook.presentation.viewModel.cookingScreen.model.CookingUiState
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CookingViewModel @Inject constructor(
-    private val recipesInteractor: RecipesInteractor,
+    private val getRecipeStepsUseCase: GetRecipeStepsUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -37,7 +37,7 @@ class CookingViewModel @Inject constructor(
 
     fun getRecipeStepsById(recipeId: String) {
         viewModelScope.launch {
-            val steps = recipesInteractor.getRecipeSteps(recipeId)
+            val steps = getRecipeStepsUseCase.execute(recipeId)
             _uiState.update { cookingUiState ->
                 cookingUiState.copy(
                     recipeSteps = steps.mapIndexed { index, step ->
@@ -63,6 +63,14 @@ class CookingViewModel @Inject constructor(
     fun goToPage(index: Int) {
         viewModelScope.launch {
             _events.emit(CookingEvent.GoToPage(index))
+        }
+    }
+
+    fun onBack() {
+        viewModelScope.launch {
+            _events.emit(
+                CookingEvent.GoBack
+            )
         }
     }
 }

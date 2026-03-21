@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.collection.deleteCollectionInteractor.DeleteCollectionInteractor
 import com.example.recipebook.domain.useCase.collection.observeCollectionDetailUseCase.ObserveCollectionDetailUseCase
-import com.example.recipebook.domain.useCase.getUserIdFlow.GetUserIdFlowUseCase
+import com.example.recipebook.domain.useCase.userProfile.getUserIdFlow.GetUserIdFlowUseCase
 import com.example.recipebook.domain.useCase.recipe.getRecipeListByIds.GetRecipeListByIdsUseCase
 import com.example.recipebook.navigation.mainHomeGraph.collectionDetailGraph.CollectionDetailDestination
 import com.example.recipebook.presentation.viewModel.collectionDetailScreen.model.CollectionDetailEvent
