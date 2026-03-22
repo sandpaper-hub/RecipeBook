@@ -3,6 +3,7 @@ package com.example.recipebook.presentation.ui.createRecipeScreen
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,28 +13,33 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.IngredientDialog
-import com.example.recipebook.presentation.ui.commonUi.DoubleActionTextBox
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
+import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
+import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
 import com.example.recipebook.presentation.ui.commonUi.IconTextButton
-import com.example.recipebook.presentation.ui.commonUi.RecipeStepBox
 import com.example.recipebook.presentation.ui.commonUi.ImageCover
-import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
-import com.example.recipebook.presentation.ui.commonUi.TitleText
+import com.example.recipebook.presentation.ui.commonUi.SingleActionText
+import com.example.recipebook.presentation.ui.commonUi.BodyMediumText
 import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.ui.commonUi.CustomTextButton
+import com.example.recipebook.presentation.ui.commonUi.EditDescriptionBottomSheet
+import com.example.recipebook.presentation.ui.commonUi.LimitedTextFieldBox
+import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
+import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeStepBox
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.CategoryMenuItem
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMenuItem
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.CreateRecipeViewModel
@@ -84,7 +90,7 @@ fun CreateRecipeScreen(
             )
         }
 
-        HeadingTextMedium(
+        HeadingMediumText(
             text = stringResource(R.string.create_recipe),
             modifier = Modifier
                 .constrainAs(headingText) {
@@ -104,6 +110,7 @@ fun CreateRecipeScreen(
 
         LazyColumn(
             state = listState,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
                 .constrainAs(recipeColumn) {
                     linkTo(start = startGuideline, end = endGuideline)
@@ -135,10 +142,12 @@ fun CreateRecipeScreen(
             }
 
             item {
-                TitleTextFieldBox(
+                LimitedTextFieldBox(
                     title = stringResource(R.string.recipe_name),
                     textFieldValue = uiState.recipeName,
                     onValueChange = viewModel::onRecipeNameChanged,
+                    onClearText = { viewModel.onRecipeNameChanged("") },
+                    textLengthLimit = 100,
                     textHint = stringResource(R.string.recipe_name_hint),
                     isError = false,
                     modifier = Modifier.padding(top = 32.dp)
@@ -146,12 +155,20 @@ fun CreateRecipeScreen(
             }
 
             item {
-                TitleTextFieldBox(
+                SingleActionTextBox(
                     title = stringResource(R.string.recipe_description),
-                    textFieldValue = uiState.recipeDescription,
-                    onValueChange = viewModel::onRecipeDescriptionChanged,
-                    textHint = stringResource(R.string.recipe_description_hint),
-                    isError = false
+                    value = uiState.recipeDescription.descriptionValue,
+                    hint = stringResource(R.string.recipe_description_hint),
+                    isError = false,
+                    contentDescription = stringResource(
+                        (R.string.recipe_description)
+                    ),
+                    onClick = {
+                        viewModel.showEditBottomSheet(
+                            editableObject = uiState.recipeDescription
+                        )
+                    },
+                    painter = null
                 )
             }
 
@@ -166,9 +183,13 @@ fun CreateRecipeScreen(
             }
 
             item {
-                TitleText(
+                BodyMediumText(
                     text = stringResource(R.string.add_ingredients),
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                 )
             }
 
@@ -176,7 +197,7 @@ fun CreateRecipeScreen(
                 items = uiState.ingredients,
                 key = { it.id }
             ) { ingredient ->
-                DoubleActionTextBox(
+                IngredientTextBox(
                     ingredient = ingredient.value,
                     amount = ingredient.amount,
                     measure = if (ingredient.measure.isNotEmpty()) {
@@ -198,14 +219,18 @@ fun CreateRecipeScreen(
             }
 
             item {
-                TitleText(
+                BodyMediumText(
                     text = stringResource(R.string.category),
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                 )
             }
 
             item {
-                SingleActionTextBox(
+                SingleActionText(
                     value = if (uiState.recipeCategory.isNotEmpty()) {
                         stringResource(
                             CategoryMenuItem.from(uiState.recipeCategory)
@@ -234,9 +259,13 @@ fun CreateRecipeScreen(
             }
 
             item {
-                TitleText(
+                BodyMediumText(
                     text = stringResource(R.string.step_by_step),
-                    modifier = Modifier.padding(bottom = 12.dp)
+                    modifier = Modifier.padding(bottom = 12.dp),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                 )
             }
 
@@ -253,13 +282,15 @@ fun CreateRecipeScreen(
                 RecipeStepBox(
                     imageSource = recipeStep.imageSource,
                     titleValue = recipeStep.title,
-                    descriptionValue = recipeStep.stepDescription,
+                    descriptionValue = recipeStep.stepDescription.description,
                     onImageChange = debounce { imagePicker.launch("image/*") },
                     onTitleChange = { newValue ->
                         viewModel.onStepTitleChange(recipeStep.id, newValue)
                     },
-                    onDescriptionChange = { newValue ->
-                        viewModel.onStepDescriptionChange(recipeStep.id, newValue)
+                    onDescriptionChange = {
+                        viewModel.onBottomSheetDescriptionChange(
+                            recipeStep.stepDescription
+                        )
                     },
                     onDeleteClick = debounce { viewModel.removeStep(recipeStep.id) },
                     onCancelImageClick = debounce {
@@ -280,6 +311,13 @@ fun CreateRecipeScreen(
                 )
             }
         }
+
+        EditDescriptionBottomSheet(
+            onDismiss = { viewModel.showEditBottomSheet(editableObject = null) },
+            editableObject = uiState.editableDescriptionObject,
+            onConfirm = viewModel::setDescription,
+            onDescriptionChange = viewModel::onBottomSheetDescriptionChange
+        )
 
         uiState.editingIngredientId?.let { ingredientId ->
             IngredientDialog(

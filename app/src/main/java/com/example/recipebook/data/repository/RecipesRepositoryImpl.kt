@@ -1,5 +1,6 @@
 package com.example.recipebook.data.repository
 
+import android.util.Log
 import com.example.recipebook.data.dto.getRecipe.RecipeDto
 import com.example.recipebook.data.dto.getRecipe.StepDto
 import com.example.recipebook.data.mapper.toDataError
@@ -265,18 +266,20 @@ class RecipesRepositoryImpl @Inject constructor(
             val recipes = firestore.collection("users")
                 .document(userId)
                 .collection("recipes")
-                .whereGreaterThanOrEqualTo("nameLowercase", query.lowercase())
-                .whereLessThan("nameLowercase", "${query.lowercase()}\uF7FF")
+                .whereGreaterThanOrEqualTo("nameLowerCase", query.lowercase())
+                .whereLessThan("nameLowerCase", "${query.lowercase()}\uF7FF")
                 .orderBy("createdAt", Query.Direction.DESCENDING)
                 .limit(20)
                 .get()
                 .await()
                 .toObjects(RecipeDto::class.java).map { it.toDomain() }
-
+            Log.d("UISTATETEST", recipes.toString())
             AppResult.Success(recipes)
         } catch (exception: FirebaseFirestoreException) {
+            Log.d("UISTATETEST", exception.toString())
             AppResult.Error(exception.toDataError())
-        } catch (_: Exception) {
+        } catch (exception: Exception) {
+            Log.d("UISTATETEST", exception.toString())
             AppResult.Error(DataError.Unknown)
         }
     }

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -33,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -44,15 +46,10 @@ import com.example.recipebook.R
 import com.example.recipebook.theme.TitleGray
 
 @Composable
-@Suppress("FunctionName")
-fun CustomTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    hint: String,
-    isError: Boolean = false,
-    modifier: Modifier
-) {
-    var isFocused by remember { mutableStateOf(false) }
+private fun Modifier.setTextFieldModifier(
+    isFocused: Boolean,
+    isError: Boolean
+): Modifier {
     val borderColor by animateColorAsState(
         if (isFocused) {
             MaterialTheme.colorScheme.primary
@@ -65,20 +62,39 @@ fun CustomTextField(
         if (isFocused) 0.5.dp else 1.dp
     )
 
+    return this
+        .background(
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            shape = RoundedCornerShape(14.dp)
+        )
+        .border(
+            width = borderWidth,
+            color = borderColor,
+            shape = RoundedCornerShape(14.dp)
+        )
+        .height(48.dp)
+        .padding(16.dp)
+}
+
+@Composable
+@Suppress("FunctionName")
+fun CustomTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    hint: String,
+    isError: Boolean = false,
+    keyboardType: KeyboardType = KeyboardType.Unspecified,
+    modifier: Modifier
+) {
+    var isFocused by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+
     Box(
         modifier = modifier.then(
-            Modifier
-                .background(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    shape = RoundedCornerShape(14.dp)
-                )
-                .border(
-                    width = borderWidth,
-                    color = borderColor,
-                    shape = RoundedCornerShape(14.dp)
-                )
-                .height(48.dp)
-                .padding(16.dp)
+            Modifier.setTextFieldModifier(
+                isError = isError,
+                isFocused = isFocused
+            )
         )
     ) {
         if (value.isEmpty()) {
@@ -98,71 +114,16 @@ fun CustomTextField(
                 .onFocusChanged { state ->
                     isFocused = state.isFocused
                 },
-            textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.inversePrimary),
-            singleLine = true,
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
-        )
-    }
-}
-
-@Composable
-@Suppress("FunctionName")
-fun CustomNumberTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    hint: String,
-    isError: Boolean,
-    modifier: Modifier
-) {
-    var isFocused by remember { mutableStateOf(false) }
-    val borderColor by animateColorAsState(
-        if (isFocused) {
-            MaterialTheme.colorScheme.primary
-        } else if (isError) {
-            MaterialTheme.colorScheme.error
-        } else
-            Color.Transparent
-    )
-    val borderWidth by animateDpAsState(
-        if (isFocused) 0.5.dp else 1.dp
-    )
-
-    Box(
-        modifier = modifier.then(
-            Modifier
-                .background(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    shape = RoundedCornerShape(14.dp)
-                )
-                .border(
-                    width = borderWidth,
-                    color = borderColor,
-                    shape = RoundedCornerShape(14.dp)
-                )
-                .height(48.dp)
-                .padding(16.dp)
-        )
-    ) {
-        if (value.isEmpty()) {
-            Text(
-                text = hint,
-                color = TitleGray,
-                style = MaterialTheme.typography.titleSmall
-            )
-        }
-
-        BasicTextField(
-            value = value,
-            onValueChange = onValueChange,
-            modifier = Modifier
-                .fillMaxWidth()
-                .onFocusChanged { state ->
-                    isFocused = state.isFocused
-                },
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
+                keyboardType = keyboardType,
+                imeAction = ImeAction.Done
             ),
-            textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.inversePrimary),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                }
+            ),
+            textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.inversePrimary),
             singleLine = true,
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
         )
@@ -177,35 +138,20 @@ fun CustomPasswordTextField(
     hint: String,
     isError: Boolean,
     modifier: Modifier,
-    visible: Boolean = false,
+    passwordVisibility: Boolean = false,
     changeVisibility: () -> Unit,
     enabled: Boolean = true
 ) {
     val interaction = remember { MutableInteractionSource() }
     val isFocused by interaction.collectIsFocusedAsState()
-    val shape = RoundedCornerShape(14.dp)
-    val borderColor by animateColorAsState(
-        when {
-            isError -> MaterialTheme.colorScheme.error
-            isFocused -> MaterialTheme.colorScheme.primary
-            else -> Color.Transparent
-        }
-    )
-    val borderWidth by animateDpAsState(
-        if (isFocused) 0.5.dp else 1.dp
-    )
+    val focusManager = LocalFocusManager.current
 
     Box(
         modifier = modifier.then(
-            Modifier
-                .background(MaterialTheme.colorScheme.onSurfaceVariant, shape = shape)
-                .border(
-                    width = borderWidth,
-                    color = borderColor,
-                    shape = shape
-                )
-                .height(48.dp)
-                .padding(16.dp)
+            Modifier.setTextFieldModifier(
+                isFocused = isFocused,
+                isError = isError
+            )
         )
     ) {
         BasicTextField(
@@ -216,7 +162,7 @@ fun CustomPasswordTextField(
             textStyle = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.inversePrimary
             ),
-            visualTransformation = if (visible) {
+            visualTransformation = if (passwordVisibility) {
                 VisualTransformation.None
             } else {
                 PasswordVisualTransformation()
@@ -224,6 +170,11 @@ fun CustomPasswordTextField(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                }
             ),
             modifier = Modifier
                 .fillMaxWidth(),
@@ -253,8 +204,8 @@ fun CustomPasswordTextField(
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            imageVector = if (visible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
-                            contentDescription = if (visible) {
+                            imageVector = if (passwordVisibility) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
+                            contentDescription = if (passwordVisibility) {
                                 stringResource(R.string.hide_password)
                             } else {
                                 stringResource(
@@ -279,31 +230,11 @@ fun SearchTextField(
     modifier: Modifier
 ) {
     var isFocused by remember { mutableStateOf(false) }
-    val borderColor by animateColorAsState(
-        if (isFocused) {
-            MaterialTheme.colorScheme.primary
-        } else if (isError) {
-            MaterialTheme.colorScheme.error
-        } else
-            Color.Transparent
-    )
-    val borderWidth by animateDpAsState(
-        if (isFocused) 0.5.dp else 1.dp
-    )
+    val focusManager = LocalFocusManager.current
 
     Box(
         modifier = modifier.then(
-            Modifier
-                .background(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    shape = RoundedCornerShape(14.dp)
-                )
-                .border(
-                    width = borderWidth,
-                    color = borderColor,
-                    shape = RoundedCornerShape(14.dp)
-                )
-                .height(48.dp)
+            Modifier.setTextFieldModifier(isFocused = isFocused, isError = isError)
         )
     ) {
         BasicTextField(
@@ -316,12 +247,16 @@ fun SearchTextField(
                 },
             textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.inversePrimary),
             singleLine = true,
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                }
+            ),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             decorationBox = { innerTextField ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(8.dp)
                 ) {
                     Box {
                         Icon(
@@ -345,6 +280,96 @@ fun SearchTextField(
                             )
                         }
                         innerTextField()
+                    }
+
+                    if (value.isNotBlank()) {
+                        Box(
+                            modifier = Modifier
+                                .clickable(
+                                    onClick = onClearText,
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                )
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(24.dp),
+                                painter = painterResource(R.drawable.cancel_icon),
+                                contentDescription = stringResource(R.string.cancel_icon),
+                                tint = MaterialTheme.colorScheme.inversePrimary
+                            )
+                        }
+                    }
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun LimitedTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    onClearText: () -> Unit,
+    textLengthLimit: Int,
+    hint: String,
+    isError: Boolean = false,
+    modifier: Modifier
+) {
+    var isFocused by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+
+    Box(
+        modifier = modifier.then(
+            Modifier.setTextFieldModifier(isFocused = isFocused, isError = isError)
+        )
+    ) {
+        BasicTextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged { state ->
+                    isFocused = state.isFocused
+                },
+            textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.inversePrimary),
+            singleLine = true,
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                }
+            ),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            decorationBox = { innerTextField ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        if (value.isBlank()) {
+                            Text(
+                                text = hint,
+                                style = MaterialTheme.typography.labelMedium,
+                                color = TitleGray
+                            )
+                        }
+                        innerTextField()
+                    }
+
+                    Box {
+                        SecondaryText(
+                            text = "${value.length}/$textLengthLimit",
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                color = if (value.length >= textLengthLimit) {
+                                    MaterialTheme.colorScheme.error
+                                } else {
+                                    MaterialTheme.colorScheme.onPrimary
+                                }
+                            )
+                        )
                     }
 
                     if (value.isNotBlank()) {

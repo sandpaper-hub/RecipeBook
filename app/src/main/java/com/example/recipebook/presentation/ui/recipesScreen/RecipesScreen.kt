@@ -17,7 +17,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
+import com.example.recipebook.presentation.ui.commonUi.HeadingLargeText
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeCardList
 import com.example.recipebook.presentation.util.toUpdatedAgoText
 import com.example.recipebook.presentation.viewModel.recipesScreen.RecipesViewModel
@@ -35,7 +35,7 @@ fun RecipesScreen(
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
-        HeadingTextLarge(
+        HeadingLargeText(
             text = stringResource(R.string.recipes),
             modifier = Modifier
                 .constrainAs(headingText) {

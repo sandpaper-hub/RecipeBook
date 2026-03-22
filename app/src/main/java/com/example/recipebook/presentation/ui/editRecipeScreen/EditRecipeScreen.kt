@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,24 +21,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.IngredientDialog
-import com.example.recipebook.presentation.ui.commonUi.DoubleActionTextBox
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
+import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
+import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
 import com.example.recipebook.presentation.ui.commonUi.IconTextButton
-import com.example.recipebook.presentation.ui.commonUi.RecipeStepBox
 import com.example.recipebook.presentation.ui.commonUi.ImageCover
-import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
-import com.example.recipebook.presentation.ui.commonUi.TitleText
+import com.example.recipebook.presentation.ui.commonUi.SingleActionText
+import com.example.recipebook.presentation.ui.commonUi.BodyMediumText
 import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
-import com.example.recipebook.presentation.ui.commonUi.CustomTextButton
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
+import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeStepBox
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.CategoryMenuItem
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMenuItem
 import com.example.recipebook.presentation.util.debounce
@@ -80,11 +81,11 @@ fun EditRecipeScreen(
     )
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (recipeColumn, headingText, closeButton, button) = createRefs()
+        val (recipeColumn, headingText, closeButton) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
-        HeadingTextMedium(
+        HeadingMediumText(
             text = stringResource(R.string.edit_recipe),
             modifier = Modifier
                 .constrainAs(headingText) {
@@ -173,9 +174,13 @@ fun EditRecipeScreen(
             }
 
             item {
-                TitleText(
+                BodyMediumText(
                     text = stringResource(R.string.add_ingredients),
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                 )
             }
 
@@ -183,7 +188,7 @@ fun EditRecipeScreen(
                 items = uiState.ingredients,
                 key = { it.id }
             ) { ingredient ->
-                DoubleActionTextBox(
+                IngredientTextBox(
                     ingredient = ingredient.value,
                     amount = ingredient.amount,
                     measure = if (ingredient.measure.isNotEmpty()) {
@@ -205,14 +210,18 @@ fun EditRecipeScreen(
             }
 
             item {
-                TitleText(
+                BodyMediumText(
                     text = stringResource(R.string.category),
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                 )
             }
 
             item {
-                SingleActionTextBox(
+                SingleActionText(
                     value = if (uiState.recipeCategory.isNotEmpty()) {
                         stringResource(
                             CategoryMenuItem.from(uiState.recipeCategory)
@@ -241,9 +250,13 @@ fun EditRecipeScreen(
             }
 
             item {
-                TitleText(
+                BodyMediumText(
                     text = stringResource(R.string.step_by_step),
-                    modifier = Modifier.padding(bottom = 12.dp)
+                    modifier = Modifier.padding(bottom = 12.dp),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                 )
             }
 
@@ -266,8 +279,9 @@ fun EditRecipeScreen(
                     onTitleChange = { newValue ->
                         viewModel.onStepTitleChange(recipeStep.id, newValue)
                     },
-                    onDescriptionChange = { newValue ->
-                        viewModel.onStepDescriptionChange(recipeStep.id, newValue)
+                    onDescriptionChange = {
+//                        newValue ->
+//                        viewModel.onStepDescriptionChange(recipeStep.id, newValue)
                     },
                     onDeleteClick = debounce { viewModel.removeStep(recipeStep.id) },
                     onCancelImageClick = debounce {

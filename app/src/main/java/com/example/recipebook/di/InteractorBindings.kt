@@ -10,8 +10,6 @@ import com.example.recipebook.domain.interactor.profile.updateProfile.UpdateUser
 import com.example.recipebook.domain.interactor.profile.updateProfile.UpdateUserDataInteractorImpl
 import com.example.recipebook.domain.interactor.recipes.fullRecipeInteractor.FullRecipeInteractor
 import com.example.recipebook.domain.interactor.recipes.fullRecipeInteractor.FullRecipeInteractorImpl
-import com.example.recipebook.domain.interactor.registration.RegistrationInteractor
-import com.example.recipebook.domain.interactor.registration.RegistrationInteractorImpl
 import com.example.recipebook.domain.interactor.settings.setApplicationLanguage.SetApplicationLanguageInteractor
 import com.example.recipebook.domain.interactor.settings.setApplicationLanguage.SetApplicationLanguageInteractorImpl
 import com.example.recipebook.domain.interactor.recipes.createNewRecipe.CreateNewRecipeInteractor
@@ -28,12 +26,6 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class InteractorBindings {
-
-
-    @Binds
-    abstract fun bingRegistrationInteractor(
-        impl: RegistrationInteractorImpl
-    ): RegistrationInteractor
 
     @Binds
     abstract fun bindSplashInteractor(

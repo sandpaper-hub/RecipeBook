@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ExpandableText
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
+import com.example.recipebook.presentation.ui.commonUi.HeadingLargeText
+import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
 import com.example.recipebook.presentation.ui.commonUi.ImageBanner
 import com.example.recipebook.presentation.ui.commonUi.SecondaryText
 
@@ -56,7 +56,7 @@ fun CollectionSquareCard(
                 .clip(RoundedCornerShape(12.dp))
         )
 
-        HeadingTextMedium(
+        HeadingMediumText(
             text = name,
             modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
             style = MaterialTheme.typography.bodyMedium.copy(
@@ -109,7 +109,7 @@ fun CollectionListCard(
                 contentScale = ContentScale.Crop
             )
 
-            HeadingTextMedium(
+            HeadingMediumText(
                 text = name
             )
 
@@ -152,7 +152,7 @@ fun CollectionBannerBox(
             modifier = Modifier.height(250.dp)
         )
 
-        HeadingTextLarge(
+        HeadingLargeText(
             text = collectionName,
             modifier = Modifier
                 .padding(horizontal = 24.dp)

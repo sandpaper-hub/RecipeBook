@@ -13,6 +13,7 @@ import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCas
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.NewRecipeUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeStepUiState
+import com.example.recipebook.presentation.viewModel.model.Editable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -53,8 +54,32 @@ class CreateRecipeViewModel @Inject constructor(
         uiState = uiState.copy(recipeName = value)
     }
 
-    fun onRecipeDescriptionChanged(value: String) {
-        uiState = uiState.copy(recipeDescription = value)
+    fun onBottomSheetDescriptionChange(editable: Editable) {
+        uiState = uiState.copy(
+            editableDescriptionObject = editable
+        )
+    }
+
+    fun setDescription(editableObject: Editable) {
+        uiState = when (editableObject) {
+            is Editable.RecipeDescription -> {
+                uiState.copy(
+                    recipeDescription = editableObject,
+                    editableDescriptionObject = null
+                )
+            }
+
+            is Editable.StepDescription -> {
+                uiState.copy(
+                    recipeSteps = uiState.recipeSteps.map {
+                        if (it.id == editableObject.stepId) {
+                            it.copy(stepDescription = editableObject)
+                        } else it
+                    },
+                    editableDescriptionObject = null
+                )
+            }
+        }
     }
 
     fun onRecipeTimeEstimationChanged(value: String) {
@@ -81,6 +106,12 @@ class CreateRecipeViewModel @Inject constructor(
 
     fun showCategoryMenu(isShow: Boolean) {
         uiState = uiState.copy(isCategoryMenuExpand = isShow)
+    }
+
+    fun showEditBottomSheet(editableObject: Editable?) {
+        uiState = uiState.copy(
+            editableDescriptionObject = editableObject,
+        )
     }
 
     fun onCategoryChange(value: String) {
@@ -128,14 +159,6 @@ class CreateRecipeViewModel @Inject constructor(
         )
     }
 
-    fun onStepDescriptionChange(id: String, value: String) {
-        uiState = uiState.copy(
-            recipeSteps = uiState.recipeSteps.map {
-                if (it.id == id) it.copy(stepDescription = value) else it
-            }
-        )
-    }
-
     fun onStepTitleChange(id: String, value: String) {
         uiState = uiState.copy(
             recipeSteps = uiState.recipeSteps.map {
@@ -156,7 +179,7 @@ class CreateRecipeViewModel @Inject constructor(
             runCatching {
                 createNewRecipeInteractor.invoke(
                     recipeName = uiState.recipeName,
-                    recipeDescription = uiState.recipeDescription,
+                    recipeDescription = uiState.recipeDescription.descriptionValue,
                     recipeTimeEstimation = uiState.timeEstimation,
                     recipeImageSource = uiState.recipeImageSource,
                     category = uiState.recipeCategory,
@@ -174,7 +197,7 @@ class CreateRecipeViewModel @Inject constructor(
                             title = recipeStepUiState.title,
                             order = index,
                             imageSource = recipeStepUiState.imageSource,
-                            description = recipeStepUiState.stepDescription
+                            description = recipeStepUiState.stepDescription.description
                         )
                     }
                 )

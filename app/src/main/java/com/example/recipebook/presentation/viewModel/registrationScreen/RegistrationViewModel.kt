@@ -2,9 +2,9 @@ package com.example.recipebook.presentation.viewModel.registrationScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.interactor.registration.RegistrationInteractor
 import com.example.recipebook.domain.model.authentication.AuthenticationError
 import com.example.recipebook.domain.model.authentication.AuthenticationException
+import com.example.recipebook.domain.useCase.authentication.registrationByEmail.RegistrationByEmailUseCase
 import com.example.recipebook.domain.useCase.authentication.validateAuthenticationInput.ValidateAuthenticationInputUseCase
 import com.example.recipebook.presentation.viewModel.registrationScreen.model.RegistrationUiEvent
 import com.example.recipebook.presentation.viewModel.registrationScreen.model.RegistrationUiState
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
-    private val registrationInteractor: RegistrationInteractor,
+    private val registrationByEmailUseCase: RegistrationByEmailUseCase,
     private val validateAuthenticationInputUseCase: ValidateAuthenticationInputUseCase
 
 ) : ViewModel() {
@@ -73,7 +73,7 @@ class RegistrationViewModel @Inject constructor(
 
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            registrationInteractor.register(
+            registrationByEmailUseCase.execute(
                 name = name,
                 email = email,
                 password = password

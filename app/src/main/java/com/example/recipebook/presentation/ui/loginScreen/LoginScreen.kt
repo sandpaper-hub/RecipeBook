@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -19,11 +20,10 @@ import com.example.recipebook.presentation.controller.LocalSnackBarController
 import com.example.recipebook.presentation.ui.commonUi.ClickableText
 import com.example.recipebook.presentation.ui.commonUi.CustomPasswordTextField
 import com.example.recipebook.presentation.ui.commonUi.CustomTextField
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
+import com.example.recipebook.presentation.ui.commonUi.HeadingLargeText
 import com.example.recipebook.presentation.ui.commonUi.MixedClickableText
-import com.example.recipebook.presentation.ui.commonUi.SubHeadingTextSmall
 import com.example.recipebook.presentation.ui.commonUi.TextDivider
-import com.example.recipebook.presentation.ui.commonUi.TitleText
+import com.example.recipebook.presentation.ui.commonUi.BodyMediumText
 import com.example.recipebook.presentation.ui.commonUi.OutlinedIconButton
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.viewModel.loginScreen.LoginViewModel
@@ -49,7 +49,7 @@ fun LoginScreen(
                     snackbar.showMessage(message = "Network error")
                 }
 
-                LoginUiEvent.UnknownError ->{
+                LoginUiEvent.UnknownError -> {
                     snackbar.showMessage(message = "Неизвестная ошибка")//TODO
                 }
 
@@ -72,29 +72,36 @@ fun LoginScreen(
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
-        HeadingTextLarge(
+        HeadingLargeText(
             text = stringResource(R.string.welcome),
             modifier = Modifier.constrainAs(headingText) {
                 start.linkTo(startGuideline)
                 top.linkTo(parent.top, margin = 24.dp)
             })
 
-        SubHeadingTextSmall(
+        BodyMediumText(
             text = stringResource(R.string.welcome_subheading),
-            color = MaterialTheme.colorScheme.inversePrimary,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                MaterialTheme.colorScheme.inversePrimary
+            ),
             modifier = Modifier
                 .constrainAs(subHeadingText) {
                     start.linkTo(startGuideline)
                     top.linkTo(headingText.bottom, margin = 12.dp)
                 })
 
-        TitleText(
+        BodyMediumText(
             text = stringResource(R.string.email),
             modifier = Modifier
                 .constrainAs(emailText) {
                     start.linkTo(startGuideline)
                     top.linkTo(subHeadingText.bottom, margin = 32.dp)
-                })
+                },
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        )
 
         CustomTextField(
             value = uiState.email,
@@ -110,9 +117,11 @@ fun LoginScreen(
                 })
 
         if (uiState.emailError != null) {
-            SubHeadingTextSmall(
+            BodyMediumText(
                 text = stringResource(uiState.emailError!!.toStringRes()),
-                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    MaterialTheme.colorScheme.error
+                ),
                 modifier = Modifier
                     .constrainAs(emailErrorText) {
                         linkTo(start = startGuideline, end = endGuideline, bias = 0f)
@@ -121,13 +130,18 @@ fun LoginScreen(
             )
         }
 
-        TitleText(
+        BodyMediumText(
             text = stringResource(R.string.password),
             modifier = Modifier
                 .constrainAs(passwordText) {
                     start.linkTo(startGuideline)
                     top.linkTo(emailTextField.bottom, margin = 32.dp)
-                })
+                },
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        )
 
         CustomPasswordTextField(
             value = uiState.password,
@@ -141,13 +155,15 @@ fun LoginScreen(
                     top.linkTo(passwordText.bottom, margin = 8.dp)
                     width = Dimension.fillToConstraints
                 },
-            visible = uiState.passwordVisibility,
+            passwordVisibility = uiState.passwordVisibility,
             changeVisibility = { viewModel.onPasswordVisibilityChange(!uiState.passwordVisibility) })
 
         if (uiState.passwordError != null) {
-            SubHeadingTextSmall(
+            BodyMediumText(
                 text = stringResource(uiState.passwordError!!.toStringRes()),
-                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    MaterialTheme.colorScheme.error
+                ),
                 modifier = Modifier
                     .constrainAs(passwordErrorText) {
                         linkTo(start = startGuideline, end = endGuideline, bias = 0f)

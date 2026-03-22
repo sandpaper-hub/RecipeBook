@@ -143,4 +143,9 @@
     <string name="wrong_password" translatable="true">Wrong password</string>
     <string name="wrong_email" translatable="true">Wrong email</string>
     <string name="email_already_in_use" translatable="true">Email already in use</string>
+    <string name="create_something" translatable="true">Create something</string>
+    <string name="edit_description" translatable="true">Edit description</string>
+    <string name="ok_botton" translatable="false">OK</string>
+    <string name="recipe_step_description" translatable="true">Recipe step description</string>
+    <string name="symbols_limit" translatable="true">Maximum %d symbols</string>
 </resources>

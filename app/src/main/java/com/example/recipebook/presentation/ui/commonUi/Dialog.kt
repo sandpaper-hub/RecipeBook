@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.recipebook.R
@@ -68,9 +69,13 @@ fun IngredientDialog(
                 modifier = Modifier
                     .padding(16.dp)
             ) {
-                TitleText(
+                BodyMediumText(
                     text = stringResource(R.string.ingredient_measure),
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                 )
 
                 Row {
@@ -87,7 +92,7 @@ fun IngredientDialog(
 
                     Spacer(modifier = Modifier.width(8.dp))
 
-                    CustomNumberTextField(
+                    CustomTextField(
                         value = ingredientAmount,
                         onValueChange = {
                             ingredientAmount = it
@@ -95,6 +100,7 @@ fun IngredientDialog(
                         },
                         hint = "100",
                         isError = isAmountError,
+                        keyboardType = KeyboardType.Decimal,
                         modifier = Modifier
                             .width(60.dp)
                             .background(MaterialTheme.colorScheme.background)
@@ -103,7 +109,7 @@ fun IngredientDialog(
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Column {
-                        SingleActionTextBox(
+                        SingleActionText(
                             value = if (ingredientMeasure.stringResource != 0) {
                                 stringResource(ingredientMeasure.stringResource)
                             } else "",
@@ -182,19 +188,18 @@ fun DeleteDialog(
             modifier = Modifier.width(320.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                HeadingTextMedium(
+                HeadingMediumText(
                     text = headingText,
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Medium
                     )
                 )
 
-                SubHeadingTextSmall(
+                BodyMediumText(
                     text = "${stringResource(R.string.delete_description_title)} \"$itemName\"?\n" +
                             warningText,
                     modifier = Modifier
-                        .padding(top = 8.dp),
-                    color = MaterialTheme.colorScheme.onBackground
+                        .padding(top = 8.dp)
                 )
 
                 Row(

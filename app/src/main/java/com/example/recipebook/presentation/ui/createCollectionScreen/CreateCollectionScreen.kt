@@ -23,9 +23,8 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.CustomTextButton
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
+import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
 import com.example.recipebook.presentation.ui.commonUi.ImageCover
-import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.util.debounce
@@ -84,7 +83,7 @@ fun CreateCollectionScreen(
             }
         )
 
-        HeadingTextMedium(
+        HeadingMediumText(
             text = stringResource(R.string.create_collection),
             modifier = Modifier.constrainAs(headingText) {
                 centerHorizontallyTo(parent)

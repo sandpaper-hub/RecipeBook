@@ -30,11 +30,11 @@ import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
 import com.example.recipebook.presentation.ui.commonUi.CollectionsBottomSheet
 import com.example.recipebook.presentation.ui.commonUi.DeleteDialog
 import com.example.recipebook.presentation.ui.commonUi.ImageBanner
-import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
-import com.example.recipebook.presentation.ui.commonUi.TitleTextLarge
+import com.example.recipebook.presentation.ui.commonUi.TitleLargeText
 import com.example.recipebook.presentation.ui.commonUi.TopBarBackNavigation
 import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
+import com.example.recipebook.presentation.ui.commonUi.recipe.IngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeDescription
 import com.example.recipebook.presentation.ui.recipeDetailScreen.model.RecipeDetailMenuItem
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.RecipeDetailViewModel
@@ -116,7 +116,7 @@ fun RecipeDetailScreen(
                     }
             )
 
-            TitleTextLarge(
+            TitleLargeText(
                 text = uiState.name,
                 modifier = Modifier
                     .constrainAs(recipeNameText) {

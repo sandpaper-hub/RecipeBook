@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -22,10 +23,9 @@ import com.example.recipebook.presentation.ui.commonUi.CustomTextField
 import com.example.recipebook.presentation.ui.commonUi.OutlinedIconButton
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.MixedClickableText
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
-import com.example.recipebook.presentation.ui.commonUi.SubHeadingTextSmall
+import com.example.recipebook.presentation.ui.commonUi.HeadingLargeText
 import com.example.recipebook.presentation.ui.commonUi.TextDivider
-import com.example.recipebook.presentation.ui.commonUi.TitleText
+import com.example.recipebook.presentation.ui.commonUi.BodyMediumText
 import com.example.recipebook.presentation.viewModel.registrationScreen.RegistrationViewModel
 import com.example.recipebook.presentation.util.debounce
 import com.example.recipebook.presentation.util.toStringRes
@@ -73,7 +73,7 @@ fun RegistrationScreen(
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
-        HeadingTextLarge(
+        HeadingLargeText(
             stringResource(R.string.create_account),
             modifier = Modifier
                 .constrainAs(headingText) {
@@ -92,13 +92,18 @@ fun RegistrationScreen(
                 })
 
 
-        TitleText(
+        BodyMediumText(
             text = stringResource(R.string.full_name),
             modifier = Modifier
                 .constrainAs(fullNameText) {
                     start.linkTo(startGuideline)
                     top.linkTo(subHeadingText.bottom, margin = 32.dp)
-                })
+                },
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        )
 
         CustomTextField(
             value = uiState.name,
@@ -114,13 +119,18 @@ fun RegistrationScreen(
                 }
                 .fillMaxWidth())
 
-        TitleText(
+        BodyMediumText(
             text = stringResource(R.string.email),
             modifier = Modifier
                 .constrainAs(emailText) {
                     start.linkTo(startGuideline)
                     top.linkTo(nameTextField.bottom, margin = 20.dp)
-                })
+                },
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        )
 
         CustomTextField(
             value = uiState.email,
@@ -137,9 +147,11 @@ fun RegistrationScreen(
                 .fillMaxWidth())
 
         if (uiState.emailError != null) {
-            SubHeadingTextSmall(
+            BodyMediumText(
                 text = stringResource(uiState.emailError!!.toStringRes()),
-                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    MaterialTheme.colorScheme.error
+                ),
                 modifier = Modifier
                     .constrainAs(emailErrorText) {
                         linkTo(start = startGuideline, end = endGuideline, bias = 0f)
@@ -148,13 +160,17 @@ fun RegistrationScreen(
             )
         }
 
-        TitleText(
+        BodyMediumText(
             text = stringResource(R.string.password),
             modifier = Modifier
                 .constrainAs(passwordText) {
                     start.linkTo(startGuideline)
                     top.linkTo(emailTextField.bottom, margin = 32.dp)
-                }
+                },
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         )
 
         CustomPasswordTextField(
@@ -162,7 +178,7 @@ fun RegistrationScreen(
             onValueChange = viewModel::onPasswordChanged,
             hint = stringResource(R.string.password_hint),
             isError = uiState.passwordError != null,
-            visible = uiState.passwordVisibility,
+            passwordVisibility = uiState.passwordVisibility,
             changeVisibility = { viewModel.onPasswordVisibilityChange(!uiState.passwordVisibility) },
             modifier = Modifier
                 .constrainAs(passwordTextField) {
@@ -175,9 +191,11 @@ fun RegistrationScreen(
         )
 
         if (uiState.passwordError != null) {
-            SubHeadingTextSmall(
+            BodyMediumText(
                 text = stringResource(uiState.passwordError!!.toStringRes()),
-                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    MaterialTheme.colorScheme.error
+                ),
                 modifier = Modifier
                     .constrainAs(passwordErrorText) {
                         linkTo(start = startGuideline, end = endGuideline, bias = 0f)

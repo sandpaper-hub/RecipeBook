@@ -139,8 +139,13 @@
     <string name="search_icon">Иконка поиск</string>
     <string name="no_internet">Нет интернет соединения</string>
     <string name="unknown_error">Что-то пошло не так, неизвестная ошибка</string>
-    <string name="invalid_email" translatable="true">Неверный формат email</string>
-    <string name="wrong_password" translatable="true">Неверный пароль</string>
-    <string name="wrong_email" translatable="true">Неверный email</string>
-    <string name="email_already_in_use" translatable="true">Email уже используется</string>
+    <string name="invalid_email" >Неверный формат email</string>
+    <string name="wrong_password">Неверный пароль</string>
+    <string name="wrong_email">Неверный email</string>
+    <string name="email_already_in_use">Email уже используется</string>
+    <string name="create_something">Создайте что-нибудь</string>
+    <string name="edit_description">Редактировать описание</string>
+    <!-- ok_button isn't translatabl-->
+    <string name="recipe_step_description">Описание шага рецепта</string>
+    <string name="symbols_limit" translatable="true">Максимум %d символов</string>
 </resources>

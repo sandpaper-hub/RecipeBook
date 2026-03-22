@@ -17,7 +17,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
+import com.example.recipebook.presentation.ui.commonUi.HeadingLargeText
 import com.example.recipebook.presentation.ui.commonUi.collection.CollectionSquareCard
 import com.example.recipebook.presentation.viewModel.collectionsScreen.CollectionsViewModel
 import com.example.recipebook.presentation.viewModel.collectionsScreen.model.CollectionsUiEvents
@@ -45,7 +45,7 @@ fun CollectionsScreen(
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
-        HeadingTextLarge(
+        HeadingLargeText(
             text = stringResource(R.string.collections_text),
             modifier = Modifier
                 .constrainAs(headingText) {

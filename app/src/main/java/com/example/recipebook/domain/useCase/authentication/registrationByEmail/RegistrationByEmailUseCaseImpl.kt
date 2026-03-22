@@ -1,13 +1,13 @@
-package com.example.recipebook.domain.useCase.authentication
+package com.example.recipebook.domain.useCase.authentication.registrationByEmail
 
 import com.example.recipebook.domain.repository.AuthenticationRepository
 import com.example.recipebook.presentation.util.convertToNickName
 import javax.inject.Inject
 
-class RegistrationByEmailUseCase @Inject constructor(
+class RegistrationByEmailUseCaseImpl @Inject constructor(
     private val authenticationRepository: AuthenticationRepository
-) {
-    suspend fun execute(
+): RegistrationByEmailUseCase {
+    override suspend fun execute(
         name: String,
         email: String,
         password: String
