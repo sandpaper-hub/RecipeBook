@@ -89,7 +89,7 @@ fun CollectionEditScreen(
         }
 
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.constrainAs(collectionColumn) {
                 linkTo(start = startGuideline, end = endGuideline)
                 top.linkTo(headingText.bottom, margin = 24.dp)

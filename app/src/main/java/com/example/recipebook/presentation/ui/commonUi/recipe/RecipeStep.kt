@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,7 +34,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.recipebook.R
-import com.example.recipebook.presentation.ui.commonUi.CustomTextField
+import com.example.recipebook.presentation.ui.commonUi.BodyMediumText
+import com.example.recipebook.presentation.ui.commonUi.LimitedTextField
 import com.example.recipebook.presentation.ui.commonUi.RecipeStepImage
 import com.example.recipebook.presentation.ui.commonUi.SecondaryText
 import com.example.recipebook.presentation.ui.commonUi.SingleActionText
@@ -115,6 +117,7 @@ fun StepsIndicator(
 @Composable
 @Suppress
 fun RecipeStepBox(
+    index: Int,
     imageSource: String?,
     titleValue: String,
     descriptionValue: String,
@@ -124,11 +127,19 @@ fun RecipeStepBox(
     onDeleteClick: () -> Unit,
     onCancelImageClick: () -> Unit
 ) {
-    Column(modifier = Modifier.padding(bottom = 12.dp)) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(17.dp))
+            BodyMediumText(
+                modifier = Modifier.width(12.dp),
+                text = (index + 1).toString(),
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            )
 
             if (imageSource == null) {
                 UploadImageBox(
@@ -160,12 +171,14 @@ fun RecipeStepBox(
             )
         }
 
-        CustomTextField(
+        LimitedTextField(
             value = titleValue,
             onValueChange = onTitleChange,
-            hint = "Title",
+            onClearText = { onTitleChange("") },
+            textLengthLimit = 100,
+            hint = stringResource(R.string.step_title_hint),
             isError = false,
-            modifier = Modifier.padding(top = 12.dp, start = 12.dp)
+            modifier = Modifier.padding(start = 12.dp)
         )
 
         SingleActionText(
@@ -175,7 +188,7 @@ fun RecipeStepBox(
             contentDescription = stringResource(R.string.recipe_step_description),
             onClick = onDescriptionChange,
             painter = null,
-            modifier = Modifier.padding(top = 12.dp, start = 12.dp)
+            modifier = Modifier.padding(start = 12.dp)
         )
     }
 }

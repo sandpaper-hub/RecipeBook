@@ -2,6 +2,7 @@ package com.example.recipebook.presentation.ui.commonUi
 
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 @Composable
 @Suppress("FunctionName")
@@ -13,6 +14,7 @@ fun <T> AppDropdownMenu(
     onDismiss: () -> Unit
 ) {
     DropdownMenu(
+        containerColor = MaterialTheme.colorScheme.background,
         expanded = expanded,
         onDismissRequest = onDismiss
     ) {

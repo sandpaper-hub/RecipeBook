@@ -149,4 +149,5 @@
     <string name="recipe_step_description" translatable="true">Recipe step description</string>
     <string name="symbols_limit" translatable="true">Maximum %d symbols</string>
     <string name="collection_description" translatable="true">Collection description</string>
+    <string name="step_title_hint" translatable="true">Title</string>
 </resources>

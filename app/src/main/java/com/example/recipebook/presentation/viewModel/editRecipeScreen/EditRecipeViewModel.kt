@@ -19,6 +19,7 @@ import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.In
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeStepUiState
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeUiState
+import com.example.recipebook.presentation.viewModel.model.Editable
 import com.example.recipebook.presentation.viewModel.model.ImageSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -57,7 +58,7 @@ class EditRecipeViewModel @Inject constructor(
                 editRecipeUiState.copy(
                     recipeImageSource = originalRecipe.imageSourceType.toPresentation(),
                     recipeName = originalRecipe.recipeName,
-                    recipeDescription = originalRecipe.recipeDescription,
+                    recipeDescription = Editable.Description(originalRecipe.recipeDescription),
                     timeEstimation = originalRecipe.recipeTimeEstimation,
                     ingredients = originalRecipe.ingredients.map { ingredient ->
                         IngredientUiState(
@@ -72,7 +73,10 @@ class EditRecipeViewModel @Inject constructor(
                             id = step.id,
                             title = step.title,
                             imageSource = step.imageSourceType.toPresentation(),
-                            stepDescription = step.description
+                            stepDescription = Editable.StepDescription(
+                                stepId = step.id,
+                                description = step.description
+                            )
                         )
                     },
                     recipeCategory = originalRecipe.category.name
@@ -97,9 +101,43 @@ class EditRecipeViewModel @Inject constructor(
         }
     }
 
-    fun onRecipeDescriptionChanged(value: String) {
+    fun setDescription(editable: Editable) {
+        when (editable) {
+            is Editable.Description -> {
+                _uiState.update {
+                    it.copy(
+                        recipeDescription = editable,
+                        editableObject = null
+                    )
+                }
+            }
+
+            is Editable.StepDescription -> {
+                _uiState.update {
+                    it.copy(
+                        recipeSteps = _uiState.value.recipeSteps.map { editRecipeStepUiState ->
+                            if (editRecipeStepUiState.id == editable.stepId) {
+                                editRecipeStepUiState.copy(stepDescription = editable)
+                            } else editRecipeStepUiState
+                        },
+                        editableObject = null
+                    )
+                }
+            }
+        }
+    }
+
+    fun onEditableObjectChange(editable: Editable?) {
         _uiState.update {
-            it.copy(recipeDescription = value)
+            it.copy(editableObject = editable)
+        }
+    }
+
+    fun showDescriptionBottomSheet(editable: Editable?) {
+        _uiState.update {
+            it.copy(
+                editableObject = editable
+            )
         }
     }
 
@@ -196,18 +234,6 @@ class EditRecipeViewModel @Inject constructor(
         }
     }
 
-    fun onStepDescriptionChange(id: String, value: String) {
-        _uiState.update {
-            it.copy(
-                recipeSteps = _uiState.value.recipeSteps.map { editRecipeStepUiState ->
-                    if (editRecipeStepUiState.id == id) {
-                        editRecipeStepUiState.copy(stepDescription = value)
-                    } else editRecipeStepUiState
-                }
-            )
-        }
-    }
-
     fun onStepTitleChange(id: String, value: String) {
         _uiState.update {
             it.copy(
@@ -242,7 +268,7 @@ class EditRecipeViewModel @Inject constructor(
                     editedRecipe = FullRecipe(
                         id = recipeId,
                         recipeName = _uiState.value.recipeName,
-                        recipeDescription = _uiState.value.recipeDescription,
+                        recipeDescription = _uiState.value.recipeDescription.descriptionValue,
                         recipeTimeEstimation = _uiState.value.timeEstimation,
                         imageSourceType = _uiState.value.recipeImageSource.toDomain(),
                         category = RecipeCategory.from(_uiState.value.recipeCategory),
@@ -259,7 +285,7 @@ class EditRecipeViewModel @Inject constructor(
                                 id = stepUiState.id,
                                 title = stepUiState.title,
                                 order = index,
-                                description = stepUiState.stepDescription,
+                                description = stepUiState.stepDescription.description,
                                 imageSourceType = stepUiState.imageSource.toDomain()
                             )
                         }
