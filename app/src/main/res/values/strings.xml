@@ -148,4 +148,5 @@
     <string name="ok_botton" translatable="false">OK</string>
     <string name="recipe_step_description" translatable="true">Recipe step description</string>
     <string name="symbols_limit" translatable="true">Maximum %d symbols</string>
+    <string name="collection_description" translatable="true">Collection description</string>
 </resources>

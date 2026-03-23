@@ -5,7 +5,7 @@ import com.example.recipebook.presentation.viewModel.model.Editable
 data class NewRecipeUiState(
     val recipeImageSource: String? = null,
     val recipeName: String = "",
-    val recipeDescription: Editable.RecipeDescription = Editable.RecipeDescription(""),
+    val description: Editable.Description = Editable.Description(""),
     val timeEstimation: String = "",
     val editingIngredientId: String? = null,
     val ingredients: List<IngredientUiState> = emptyList(),

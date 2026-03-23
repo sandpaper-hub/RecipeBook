@@ -157,7 +157,7 @@ fun CreateRecipeScreen(
             item {
                 SingleActionTextBox(
                     title = stringResource(R.string.recipe_description),
-                    value = uiState.recipeDescription.descriptionValue,
+                    value = uiState.description.descriptionValue,
                     hint = stringResource(R.string.recipe_description_hint),
                     isError = false,
                     contentDescription = stringResource(
@@ -165,7 +165,7 @@ fun CreateRecipeScreen(
                     ),
                     onClick = {
                         viewModel.showEditBottomSheet(
-                            editableObject = uiState.recipeDescription
+                            editableObject = uiState.description
                         )
                     },
                     painter = null

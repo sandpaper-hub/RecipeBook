@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.collection.createCollectionInteractor.CreateCollectionInteractor
 import com.example.recipebook.presentation.viewModel.createCollectionScreen.model.CreateCollectionEvent
 import com.example.recipebook.presentation.viewModel.createCollectionScreen.model.NewCollectionUiState
+import com.example.recipebook.presentation.viewModel.model.Editable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,15 +32,36 @@ class CreateCollectionViewModel @Inject constructor(
         }
     }
 
-    fun onDescriptionChange(value: String) {
-        _uiState.update {
-            it.copy(description = value)
-        }
-    }
-
     fun onImageChange(uri: Uri?) {
         _uiState.update {
             it.copy(imageSource = uri?.toString())
+        }
+    }
+
+    fun showDescriptionBottomSheet(editableObject: Editable.Description?) {
+        _uiState.update {
+            it.copy(editableObject = editableObject)
+        }
+    }
+
+    fun setDescription(editableObject: Editable) {
+        when (editableObject) {
+            is Editable.Description -> {
+                _uiState.update {
+                    it.copy(
+                        description = editableObject,
+                        editableObject = null
+                    )
+                }
+            }
+
+            else -> return
+        }
+    }
+
+    fun onEditableObjectChange(editableObject: Editable) {
+        _uiState.update {
+            it.copy(editableObject = editableObject)
         }
     }
 
@@ -47,7 +69,7 @@ class CreateCollectionViewModel @Inject constructor(
         viewModelScope.launch {
             createCollectionInteractor.createCollection(
                 name = uiState.value.name,
-                description = uiState.value.description,
+                description = _uiState.value.description.descriptionValue,
                 imageSource = uiState.value.imageSource
             )
                 .onSuccess {

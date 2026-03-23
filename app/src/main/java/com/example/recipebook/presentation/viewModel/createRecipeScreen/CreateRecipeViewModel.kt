@@ -62,9 +62,9 @@ class CreateRecipeViewModel @Inject constructor(
 
     fun setDescription(editableObject: Editable) {
         uiState = when (editableObject) {
-            is Editable.RecipeDescription -> {
+            is Editable.Description -> {
                 uiState.copy(
-                    recipeDescription = editableObject,
+                    description = editableObject,
                     editableDescriptionObject = null
                 )
             }
@@ -179,7 +179,7 @@ class CreateRecipeViewModel @Inject constructor(
             runCatching {
                 createNewRecipeInteractor.invoke(
                     recipeName = uiState.recipeName,
-                    recipeDescription = uiState.recipeDescription.descriptionValue,
+                    recipeDescription = uiState.description.descriptionValue,
                     recipeTimeEstimation = uiState.timeEstimation,
                     recipeImageSource = uiState.recipeImageSource,
                     category = uiState.recipeCategory,

@@ -3,11 +3,11 @@ package com.example.recipebook.presentation.ui.createCollectionScreen
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -23,9 +23,11 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.CustomTextButton
+import com.example.recipebook.presentation.ui.commonUi.EditDescriptionBottomSheet
 import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
 import com.example.recipebook.presentation.ui.commonUi.ImageCover
-import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
+import com.example.recipebook.presentation.ui.commonUi.LimitedTextFieldBox
+import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.util.debounce
 import com.example.recipebook.presentation.viewModel.createCollectionScreen.CreateCollectionViewModel
@@ -56,8 +58,8 @@ fun CreateCollectionScreen(
     }
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (closeButton, headingText, imagePickerBox, collectionNameBox,
-            collectionDescriptionBox, saveButton) = createRefs()
+        val (closeButton, headingText,
+            collectionColumn, saveButton) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -91,13 +93,16 @@ fun CreateCollectionScreen(
             }
         )
 
-        Box(
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
-                .constrainAs(imagePickerBox) {
-                    centerHorizontallyTo(parent)
+                .constrainAs(collectionColumn) {
+                    linkTo(start = startGuideline, end = endGuideline)
                     top.linkTo(headingText.bottom, margin = 24.dp)
+                    bottom.linkTo(parent.bottom)
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
                 }
-                .padding(horizontal = 24.dp)
         ) {
             val imageModifier = Modifier
                 .fillMaxWidth()
@@ -118,33 +123,36 @@ fun CreateCollectionScreen(
                     cornerShapeDp = 20.dp
                 )
             }
+
+            LimitedTextFieldBox(
+                title = stringResource(R.string.collection_name),
+                textFieldValue = uiState.name,
+                onValueChange = viewModel::onNameChange,
+                onClearText = {},
+                textLengthLimit = 100,
+                textHint = stringResource(R.string.collection_hint),
+                isError = false
+            )
+
+
+            SingleActionTextBox(
+                title = stringResource(R.string.recipe_description),
+                value = uiState.description.descriptionValue,
+                hint = stringResource(R.string.collection_description_hint),
+                isError = false,
+                contentDescription = stringResource(R.string.collection_description),
+                onClick = { viewModel.showDescriptionBottomSheet(uiState.description) },
+                painter = null
+            )
         }
+    }
 
-        TitleTextFieldBox(
-            title = stringResource(R.string.collection_name),
-            textFieldValue = uiState.name,
-            onValueChange = viewModel::onNameChange,
-            textHint = stringResource(R.string.collection_hint),
-            isError = false,
-            modifier = Modifier.constrainAs(collectionNameBox) {
-                linkTo(start = startGuideline, end = endGuideline)
-                top.linkTo(imagePickerBox.bottom, margin = 32.dp)
-                width = Dimension.fillToConstraints
-            }
-        )
-
-        TitleTextFieldBox(
-            title = stringResource(R.string.recipe_description),
-            textFieldValue = uiState.description,
-            onValueChange = viewModel::onDescriptionChange,
-            textHint = stringResource(R.string.collection_description_hint),
-            isError = false,
-            modifier = Modifier
-                .constrainAs(collectionDescriptionBox) {
-                    linkTo(start = startGuideline, end = endGuideline)
-                    top.linkTo(collectionNameBox.bottom)
-                    width = Dimension.fillToConstraints
-                }
+    if (uiState.editableObject != null) {
+        EditDescriptionBottomSheet(
+            onDismiss = { viewModel.showDescriptionBottomSheet(null) },
+            editableObject = uiState.editableObject,
+            onConfirm = viewModel::setDescription,
+            onDescriptionChange = viewModel::onEditableObjectChange
         )
     }
 }

@@ -160,7 +160,7 @@ fun LimitedTextFieldBox(
     textLengthLimit: Int,
     textHint: String,
     isError: Boolean,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
         BodyMediumText(
