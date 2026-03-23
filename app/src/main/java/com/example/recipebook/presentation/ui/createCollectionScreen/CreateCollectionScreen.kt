@@ -128,7 +128,7 @@ fun CreateCollectionScreen(
                 title = stringResource(R.string.collection_name),
                 textFieldValue = uiState.name,
                 onValueChange = viewModel::onNameChange,
-                onClearText = {},
+                onClearText = {viewModel.onNameChange("")},
                 textLengthLimit = 100,
                 textHint = stringResource(R.string.collection_hint),
                 isError = false

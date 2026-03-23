@@ -12,6 +12,7 @@ import com.example.recipebook.presentation.util.toDomain
 import com.example.recipebook.presentation.util.toPresentation
 import com.example.recipebook.presentation.viewModel.collectionEditScreen.model.CollectionEditUiState
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
+import com.example.recipebook.presentation.viewModel.model.Editable
 import com.example.recipebook.presentation.viewModel.model.ImageSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -48,7 +49,7 @@ class CollectionEditViewModel @Inject constructor(
             _uiState.update { collectionEditUiState ->
                 collectionEditUiState.copy(
                     name = originalCollection.name,
-                    description = originalCollection.description,
+                    description = Editable.Description(originalCollection.description),
                     imageSource = originalCollection.imageSource.toPresentation()
                 )
             }
@@ -61,9 +62,28 @@ class CollectionEditViewModel @Inject constructor(
         }
     }
 
-    fun onDescriptionChange(value: String) {
+    fun showDescriptionBottomSheet(editableObject: Editable?) {
         _uiState.update {
-            it.copy(description = value)
+            it.copy(editableObject = editableObject)
+        }
+    }
+
+    fun onEditableObjectChange(editableObject: Editable) {
+        _uiState.update {
+            it.copy(editableObject = editableObject)
+        }
+    }
+
+    fun setDescription(editableObject: Editable) {
+        when (editableObject) {
+            is Editable.Description -> _uiState.update {
+                it.copy(
+                    description = editableObject,
+                    editableObject = null
+                )
+            }
+
+            else -> return
         }
     }
 
@@ -89,7 +109,7 @@ class CollectionEditViewModel @Inject constructor(
                 editedCollection = UserCollectionEdit(
                     id = collectionId,
                     name = _uiState.value.name,
-                    description = _uiState.value.description,
+                    description = _uiState.value.description.descriptionValue,
                     imageSource = _uiState.value.imageSource.toDomain()
                 ),
                 originalCollection = originalCollection

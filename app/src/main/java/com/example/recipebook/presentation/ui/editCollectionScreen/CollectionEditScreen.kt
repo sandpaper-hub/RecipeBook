@@ -3,7 +3,9 @@ package com.example.recipebook.presentation.ui.editCollectionScreen
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,10 +24,12 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
+import com.example.recipebook.presentation.ui.commonUi.EditDescriptionBottomSheet
 import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
 import com.example.recipebook.presentation.ui.commonUi.ImageCover
+import com.example.recipebook.presentation.ui.commonUi.LimitedTextFieldBox
+import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
-import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.util.debounce
 import com.example.recipebook.presentation.util.toUiSource
@@ -59,8 +63,7 @@ fun CollectionEditScreen(
     }
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (closeButton, headingText, imagePickerBox, collectionNameBox,
-            collectionDescriptionBox, saveButton) = createRefs()
+        val (closeButton, headingText, collectionColumn) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -85,19 +88,20 @@ fun CollectionEditScreen(
             )
         }
 
-        Box(
-            modifier = Modifier
-                .constrainAs(imagePickerBox) {
-                    centerHorizontallyTo(parent)
-                    top.linkTo(headingText.bottom, margin = 24.dp)
-                }
-                .padding(horizontal = 24.dp)
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.constrainAs(collectionColumn) {
+                linkTo(start = startGuideline, end = endGuideline)
+                top.linkTo(headingText.bottom, margin = 24.dp)
+                bottom.linkTo(parent.bottom)
+                width = Dimension.fillToConstraints
+                height = Dimension.fillToConstraints
+            }
         ) {
+            val imageSource = uiState.imageSource.toUiSource()
             val imageModifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp)
-
-            val imageSource = uiState.imageSource.toUiSource()
 
             if (imageSource == null) {
                 UploadImageBox(
@@ -114,45 +118,44 @@ fun CollectionEditScreen(
                     modifier = imageModifier
                 )
             }
+
+            LimitedTextFieldBox(
+                title = stringResource(R.string.collection_name),
+                textFieldValue = uiState.name,
+                onValueChange = viewModel::onNameChange,
+                onClearText = {viewModel.onNameChange("")},
+                textLengthLimit = 100,
+                textHint = stringResource(R.string.collection_hint),
+                isError = false
+            )
+
+            SingleActionTextBox(
+                title = stringResource(R.string.recipe_description),
+                value = uiState.description.descriptionValue,
+                hint = stringResource(R.string.collection_description_hint),
+                isError = false,
+                contentDescription = stringResource(R.string.collection_description),
+                onClick = { viewModel.showDescriptionBottomSheet(uiState.description) },
+                painter = null
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            SquareRoundedButton(
+                onClick = { viewModel.updateCollection() },
+                text = stringResource(R.string.save_button),
+                isLoading = false,
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
         }
 
-        TitleTextFieldBox(
-            title = stringResource(R.string.collection_name),
-            textFieldValue = uiState.name,
-            onValueChange = viewModel::onNameChange,
-            textHint = stringResource(R.string.collection_hint),
-            isError = false,
-            modifier = Modifier.constrainAs(collectionNameBox) {
-                linkTo(start = startGuideline, end = endGuideline)
-                top.linkTo(imagePickerBox.bottom, margin = 32.dp)
-                width = Dimension.fillToConstraints
-            }
-        )
-
-        TitleTextFieldBox(
-            title = stringResource(R.string.recipe_description),
-            textFieldValue = uiState.description,
-            onValueChange = viewModel::onDescriptionChange,
-            textHint = stringResource(R.string.collection_description_hint),
-            isError = false,
-            modifier = Modifier
-                .constrainAs(collectionDescriptionBox) {
-                    linkTo(start = startGuideline, end = endGuideline)
-                    top.linkTo(collectionNameBox.bottom)
-                    width = Dimension.fillToConstraints
-                }
-        )
-
-        SquareRoundedButton(
-            onClick = { viewModel.updateCollection() },
-            text = stringResource(R.string.save_button),
-            isLoading = false,
-            modifier = Modifier
-                .constrainAs(saveButton) {
-                    linkTo(start = startGuideline, end = endGuideline)
-                    bottom.linkTo(parent.bottom, margin = 24.dp)
-                    width = Dimension.fillToConstraints
-                }
-        )
+        if (uiState.editableObject != null) {
+            EditDescriptionBottomSheet(
+                editableObject = uiState.editableObject,
+                onDismiss = { viewModel.showDescriptionBottomSheet(null) },
+                onConfirm = viewModel::setDescription,
+                onDescriptionChange = viewModel::onEditableObjectChange
+            )
+        }
     }
 }
