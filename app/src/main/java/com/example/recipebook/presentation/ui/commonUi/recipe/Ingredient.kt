@@ -27,7 +27,7 @@ fun IngredientTextBox(
     Row(
         modifier = Modifier
             .background(
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.inverseSurface,
                 shape = RoundedCornerShape(14.dp)
             )
             .fillMaxWidth()

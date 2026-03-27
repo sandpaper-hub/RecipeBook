@@ -55,7 +55,7 @@ fun SingleActionText(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .background(
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.inverseSurface,
                 shape = RoundedCornerShape(14.dp)
             )
             .border(width = 0.5.dp, color = borderColor, shape = RoundedCornerShape(14.dp))
@@ -170,7 +170,7 @@ fun IngredientTextBox(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .background(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colorScheme.inverseSurface,
                     shape = RoundedCornerShape(14.dp)
                 )
                 .fillMaxWidth()

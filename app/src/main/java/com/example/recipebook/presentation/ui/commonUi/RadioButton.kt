@@ -50,7 +50,7 @@ fun SelectableButtonBox(
                         shape = RoundedCornerShape(15.dp)
                     )
                     .background(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = MaterialTheme.colorScheme.inverseSurface,
                         shape = RoundedCornerShape(15.dp)
                     ),
                 contentAlignment = Alignment.Center

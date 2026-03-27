@@ -64,7 +64,7 @@ private fun Modifier.setTextFieldModifier(
 
     return this
         .background(
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colorScheme.inverseSurface,
             shape = RoundedCornerShape(14.dp)
         )
         .border(
