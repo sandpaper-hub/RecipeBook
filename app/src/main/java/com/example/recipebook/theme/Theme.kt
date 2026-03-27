@@ -16,11 +16,11 @@ private val DarkColorScheme = darkColorScheme(
     tertiary = Pink80,
     onPrimary = Color.White,
     inversePrimary = DarkModeBodyColor,
-    surface = Color.Red,
+    surface = DarkModeInputColor,
     onSurfaceVariant = DarkModeInputColor,
     background = DarkModeBackgroundColor,
     onBackground = Color.White,
-    error = DangerColor,
+    error = GreenAccent,
     onTertiaryContainer = DarkModeInputColor
 )
 
@@ -31,6 +31,7 @@ private val LightColorScheme = lightColorScheme(
     onPrimary = Color.Black,
     inversePrimary = TitleGray,
     onSurfaceVariant = InputColor,
+    surface = Color.White,
     background = Color.White,
     onBackground = MainTextColor,
     error = DangerColor,

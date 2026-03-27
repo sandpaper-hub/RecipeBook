@@ -134,7 +134,7 @@ fun RecipeStepBox(
             verticalAlignment = Alignment.CenterVertically
         ) {
             BodyMediumText(
-                modifier = Modifier.width(12.dp),
+                modifier = Modifier.width(16.dp),
                 text = (index + 1).toString(),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onBackground

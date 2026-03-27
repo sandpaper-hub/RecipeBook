@@ -1,8 +1,8 @@
 package com.example.recipebook.presentation.viewModel.recipesScreen.model
 
-import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
+import com.example.recipebook.presentation.viewModel.model.RecipeUiState
 
 data class RecipesUiState(
-    val newRecipes: List<Recipe> = emptyList(),
+    val recipes: List<RecipeUiState> = emptyList(),
     val isRecipesLoading: Boolean = false
 )

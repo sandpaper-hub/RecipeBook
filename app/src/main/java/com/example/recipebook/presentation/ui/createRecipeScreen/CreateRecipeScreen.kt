@@ -32,10 +32,10 @@ import com.example.recipebook.presentation.ui.commonUi.IconTextButton
 import com.example.recipebook.presentation.ui.commonUi.ImageCover
 import com.example.recipebook.presentation.ui.commonUi.SingleActionText
 import com.example.recipebook.presentation.ui.commonUi.BodyMediumText
-import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.ui.commonUi.CustomTextButton
+import com.example.recipebook.presentation.ui.commonUi.CustomTimePicker
 import com.example.recipebook.presentation.ui.commonUi.EditDescriptionBottomSheet
 import com.example.recipebook.presentation.ui.commonUi.LimitedTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
@@ -173,12 +173,17 @@ fun CreateRecipeScreen(
             }
 
             item {
-                TitleTextFieldBox(
+                SingleActionTextBox(
                     title = stringResource(R.string.time_estimation),
-                    textFieldValue = uiState.timeEstimation,
-                    onValueChange = viewModel::onRecipeTimeEstimationChanged,
-                    textHint = stringResource(R.string.recipe_time_estimation_hint),
-                    isError = false
+                    value = uiState.timeEstimationUiState?.toDisplayString(
+                        hourLabel = stringResource(R.string.time_estimation_hours),
+                        minuteLabel = stringResource(R.string.time_estimation_minutes)
+                    ).orEmpty(),
+                    hint = stringResource(R.string.recipe_time_estimation_hint),
+                    isError = false,
+                    contentDescription = "",
+                    painter = null,
+                    onClick = { viewModel.showTimePickerDialog(true) }
                 )
             }
 
@@ -193,8 +198,9 @@ fun CreateRecipeScreen(
                         )
                     )
 
-                    uiState.ingredients.forEach { ingredient ->
+                    uiState.ingredients.forEachIndexed { index, ingredient ->
                         IngredientTextBox(
+                            index = index + 1,
                             ingredient = ingredient.value,
                             amount = ingredient.amount,
                             measure = if (ingredient.measure.isNotEmpty()) {
@@ -317,6 +323,17 @@ fun CreateRecipeScreen(
             onConfirm = viewModel::setDescription,
             onDescriptionChange = viewModel::onBottomSheetDescriptionChange
         )
+
+        CustomTimePicker(
+            isShow = uiState.showTimePickerDialog,
+            initialHour = uiState.timeEstimationUiState?.hour ?: 0,
+            initialMinute = uiState.timeEstimationUiState?.minute ?: 0,
+            onDismiss = { viewModel.showTimePickerDialog(false) },
+            onConfirm = { hours, minute ->
+                viewModel.onTimeEstimationChange(hours, minute)
+            }
+        )
+
 
         uiState.editingIngredientId?.let { ingredientId ->
             IngredientDialog(

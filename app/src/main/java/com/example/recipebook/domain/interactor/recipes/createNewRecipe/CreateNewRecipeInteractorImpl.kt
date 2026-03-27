@@ -1,6 +1,7 @@
 package com.example.recipebook.domain.interactor.recipes.createNewRecipe
 
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredient
+import com.example.recipebook.domain.model.recipe.createRecipe.NewTimeEstimation
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipe
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStep
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
@@ -21,7 +22,7 @@ class CreateNewRecipeInteractorImpl @Inject constructor(
     override suspend fun invoke(
         recipeName: String,
         recipeDescription: String,
-        recipeTimeEstimation: String,
+        recipeNewTimeEstimation: NewTimeEstimation,
         recipeImageSource: String?,
         category: String,
         ingredients: List<NewRecipeIngredient>,
@@ -37,7 +38,7 @@ class CreateNewRecipeInteractorImpl @Inject constructor(
                 authorId = currentUserId,
                 recipeName = recipeName,
                 recipeDescription = recipeDescription,
-                recipeTimeEstimation = recipeTimeEstimation,
+                recipeNewTimeEstimation = recipeNewTimeEstimation,
                 imageUrl = recipeImageUrl,
                 category = category,
                 ingredients = ingredients

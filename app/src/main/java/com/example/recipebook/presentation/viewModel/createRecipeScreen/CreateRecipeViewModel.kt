@@ -8,12 +8,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.recipes.createNewRecipe.CreateNewRecipeInteractor
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredient
+import com.example.recipebook.domain.model.recipe.createRecipe.NewTimeEstimation
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
 import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCase
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.NewRecipeUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeStepUiState
 import com.example.recipebook.presentation.viewModel.model.Editable
+import com.example.recipebook.presentation.viewModel.model.TimeEstimationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -82,8 +84,14 @@ class CreateRecipeViewModel @Inject constructor(
         }
     }
 
-    fun onRecipeTimeEstimationChanged(value: String) {
-        uiState = uiState.copy(timeEstimation = value)
+    fun showTimePickerDialog(isShow: Boolean) {
+        uiState = uiState.copy(showTimePickerDialog = isShow)
+    }
+
+    fun onTimeEstimationChange(hours: Int, minute: Int) {
+        uiState = uiState.copy(
+            timeEstimationUiState = TimeEstimationUiState(hour = hours, minute = minute)
+        )
     }
 
     fun onIngredientChange(
@@ -180,7 +188,10 @@ class CreateRecipeViewModel @Inject constructor(
                 createNewRecipeInteractor.invoke(
                     recipeName = uiState.recipeName,
                     recipeDescription = uiState.description.descriptionValue,
-                    recipeTimeEstimation = uiState.timeEstimation,
+                    recipeNewTimeEstimation = NewTimeEstimation(
+                        hour = uiState.timeEstimationUiState?.hour ?: 0,
+                        minute = uiState.timeEstimationUiState?.minute ?: 0
+                    ),
                     recipeImageSource = uiState.recipeImageSource,
                     category = uiState.recipeCategory,
                     ingredients = uiState.ingredients.map { ingredient ->

@@ -69,7 +69,7 @@
     <string name="upload_photo">Загрузить фото</string>
     <string name="recipe_name">Название Рецепта</string>
     <string name="recipe_description">Описание</string>
-    <string name="time_estimation">Время Приготовления</string>
+    <string name="time_estimation">Время приготовления</string>
     <string name="add_ingredients">Добавть ингредиенты</string>
     <string name="delete_icon">Удалить</string>
     <string name="recipe_name_hint">Плов</string>
@@ -150,4 +150,6 @@
     <string name="symbols_limit">Максимум %d символов</string>
     <string name="collection_description">Описание коллекции</string>
     <string name="step_title_hint">Описание</string>
+    <string name="time_estimation_hours" translatable="true"> ч</string>
+    <string name="time_estimation_minutes" translatable="true"> мин</string>
 </resources>

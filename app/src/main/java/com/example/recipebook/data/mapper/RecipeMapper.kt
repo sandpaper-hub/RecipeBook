@@ -16,7 +16,7 @@ fun UploadRecipe.toDto(): NewRecipeDto {
         recipeName = this.recipeName,
         nameLowerCase = this.recipeName.lowercase(),
         recipeDescription = this.recipeDescription,
-        recipeTimeEstimation = this.recipeTimeEstimation,
+        recipeTimeEstimation = this.recipeNewTimeEstimation,
         imageUrl = this.imageUrl,
         category = this.category,
         ingredients = this.ingredients.map {

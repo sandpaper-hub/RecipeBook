@@ -148,6 +148,7 @@ fun IconTextBox(
 @Composable
 @Suppress("FunctionName")
 fun IngredientTextBox(
+    index: Int,
     ingredient: String,
     amount: String,
     measure: String,
@@ -155,68 +156,79 @@ fun IngredientTextBox(
     onBoxClick: () -> Unit,
     onIconClick: () -> Unit
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .background(
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                shape = RoundedCornerShape(14.dp)
-            )
-            .fillMaxWidth()
-            .height(48.dp)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onBoxClick
-            )
-    ) {
 
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(
-            text = ingredient.ifBlank {
-                hint
-            },
-            modifier = Modifier
-                .weight(1f),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        BodyMediumText(
+            modifier = Modifier.width(16.dp),
+            text = index.toString(),
             style = MaterialTheme.typography.bodyMedium.copy(
-                color = if (ingredient.isEmpty()) TitleGray else MaterialTheme.colorScheme.inversePrimary
+                color = MaterialTheme.colorScheme.onBackground
             )
         )
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .background(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    shape = RoundedCornerShape(14.dp)
+                )
+                .fillMaxWidth()
+                .height(48.dp)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onBoxClick
+                )
+        ) {
 
-        Text(
-            text = amount,
-            modifier = Modifier.widthIn(max = 54.dp),
-            style = MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.inversePrimary
+            Spacer(modifier = Modifier.width(16.dp))
+            Text(
+                text = ingredient.ifBlank {
+                    hint
+                },
+                modifier = Modifier
+                    .weight(1f),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = if (ingredient.isEmpty()) TitleGray else MaterialTheme.colorScheme.inversePrimary
+                )
             )
-        )
 
-        Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(8.dp))
 
-        Text(
-            text = measure,
-            style = MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.inversePrimary
+            Text(
+                text = amount,
+                modifier = Modifier.widthIn(max = 54.dp),
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.inversePrimary
+                )
             )
-        )
 
-        Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(4.dp))
 
-        Icon(
-            painter = painterResource(R.drawable.trash_icon),
-            contentDescription = stringResource(R.string.delete_icon),
-            modifier = Modifier.clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onIconClick
+            Text(
+                text = measure,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.inversePrimary
+                )
             )
-        )
-        Spacer(modifier = Modifier.width(16.dp))
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Icon(
+                painter = painterResource(R.drawable.trash_icon),
+                contentDescription = stringResource(R.string.delete_icon),
+                modifier = Modifier.clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onIconClick
+                )
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+        }
     }
 }

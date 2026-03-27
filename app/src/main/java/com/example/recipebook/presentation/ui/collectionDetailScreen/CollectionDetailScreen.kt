@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
+import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
 import com.example.recipebook.presentation.ui.collectionDetailScreen.model.MenuItem
 import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.ui.commonUi.DeleteDialog
@@ -95,11 +96,24 @@ fun CollectionDetailScreen(
             items(uiState.recipeList, key = { it.id }) { recipe ->
                 RecipeCardList(
                     recipeId = recipe.id,
-                    imageUrl = recipe.imageUrl,
-                    categoryResource = R.string.category,
-                    name = recipe.recipeName,
-                    timeEstimation = recipe.recipeTimeEstimation,
-                    uploadedTime = recipe.createdAt.toUpdatedAgoText(),
+                    imageUrl = recipe.imageSource,
+                    categoryResource = when (recipe.category) {
+                        RecipeCategory.APPETIZER -> R.string.appetizer
+                        RecipeCategory.SALAD -> R.string.salad
+                        RecipeCategory.SOUP -> R.string.soup
+                        RecipeCategory.MAIN -> R.string.main
+                        RecipeCategory.GARNISH -> R.string.garnish
+                        RecipeCategory.SAUCE -> R.string.sauce
+                        RecipeCategory.DESERT -> R.string.desert
+                        RecipeCategory.DRINK -> R.string.drink
+                        else -> R.string.unknown_measure
+                    },
+                    name = recipe.name,
+                    timeEstimation = recipe.timeEstimationUiState.toDisplayString(
+                        hourLabel = stringResource(R.string.time_estimation_hours),
+                        minuteLabel = stringResource(R.string.time_estimation_minutes)
+                    ),
+                    uploadedTime = recipe.uploadedTime.toUpdatedAgoText(),
                     onRecipeClick = { recipeId ->
                         viewModel.onRecipeDetail(recipeId)
                     },

@@ -1,6 +1,5 @@
 package com.example.recipebook.data.repository
 
-import android.util.Log
 import com.example.recipebook.data.dto.getRecipe.RecipeDto
 import com.example.recipebook.data.dto.getRecipe.StepDto
 import com.example.recipebook.data.mapper.toDataError
@@ -273,13 +272,10 @@ class RecipesRepositoryImpl @Inject constructor(
                 .get()
                 .await()
                 .toObjects(RecipeDto::class.java).map { it.toDomain() }
-            Log.d("UISTATETEST", recipes.toString())
             AppResult.Success(recipes)
         } catch (exception: FirebaseFirestoreException) {
-            Log.d("UISTATETEST", exception.toString())
             AppResult.Error(exception.toDataError())
         } catch (exception: Exception) {
-            Log.d("UISTATETEST", exception.toString())
             AppResult.Error(DataError.Unknown)
         }
     }

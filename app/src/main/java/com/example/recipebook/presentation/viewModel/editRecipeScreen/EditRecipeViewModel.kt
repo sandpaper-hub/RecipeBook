@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.recipes.fullRecipeInteractor.FullRecipeInteractor
 import com.example.recipebook.domain.interactor.recipes.updateRecipeInteractor.UpdateRecipeInteractor
+import com.example.recipebook.domain.model.recipe.createRecipe.NewTimeEstimation
 import com.example.recipebook.domain.model.recipe.getRecipe.FullRecipe
 import com.example.recipebook.domain.model.recipe.getRecipe.Ingredient
 import com.example.recipebook.domain.model.recipe.getRecipe.IngredientMeasure
@@ -21,6 +22,7 @@ import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.Edit
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeUiState
 import com.example.recipebook.presentation.viewModel.model.Editable
 import com.example.recipebook.presentation.viewModel.model.ImageSource
+import com.example.recipebook.presentation.viewModel.model.TimeEstimationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -59,7 +61,10 @@ class EditRecipeViewModel @Inject constructor(
                     recipeImageSource = originalRecipe.imageSourceType.toPresentation(),
                     recipeName = originalRecipe.recipeName,
                     recipeDescription = Editable.Description(originalRecipe.recipeDescription),
-                    timeEstimation = originalRecipe.recipeTimeEstimation,
+                    timeEstimationUiState = TimeEstimationUiState(
+                        hour = originalRecipe.recipeTimeEstimation.hour,
+                        minute = originalRecipe.recipeTimeEstimation.minute
+                    ),
                     ingredients = originalRecipe.ingredients.map { ingredient ->
                         IngredientUiState(
                             id = ingredient.id,
@@ -141,9 +146,19 @@ class EditRecipeViewModel @Inject constructor(
         }
     }
 
-    fun onRecipeTimeEstimationChanged(value: String) {
+    fun showTimeEstimationDialog(isShow: Boolean) {
         _uiState.update {
-            it.copy(timeEstimation = value)
+            it.copy(
+                isTimeEstimationDialogOpen = isShow
+            )
+        }
+    }
+
+    fun onTimeEstimationChanged(hour: Int, minute: Int) {
+        _uiState.update {
+            it.copy(
+                timeEstimationUiState = TimeEstimationUiState(hour = hour, minute = minute)
+            )
         }
     }
 
@@ -269,7 +284,10 @@ class EditRecipeViewModel @Inject constructor(
                         id = recipeId,
                         recipeName = _uiState.value.recipeName,
                         recipeDescription = _uiState.value.recipeDescription.descriptionValue,
-                        recipeTimeEstimation = _uiState.value.timeEstimation,
+                        recipeTimeEstimation = NewTimeEstimation(
+                            hour = _uiState.value.timeEstimationUiState.hour,
+                            minute = _uiState.value.timeEstimationUiState.minute
+                        ),
                         imageSourceType = _uiState.value.recipeImageSource.toDomain(),
                         category = RecipeCategory.from(_uiState.value.recipeCategory),
                         ingredients = _uiState.value.ingredients.map { ingredientUiState ->

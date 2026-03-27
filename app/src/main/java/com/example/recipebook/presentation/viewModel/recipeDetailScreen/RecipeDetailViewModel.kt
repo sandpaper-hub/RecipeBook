@@ -10,6 +10,7 @@ import com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUs
 import com.example.recipebook.domain.useCase.userProfile.getUserIdFlow.GetUserIdFlowUseCase
 import com.example.recipebook.domain.useCase.recipe.observeRecipeById.ObserveRecipeByIdUseCase
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailDestination
+import com.example.recipebook.presentation.viewModel.model.TimeEstimationUiState
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.CollectionUiState
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.RecipeDetailEvent
@@ -184,7 +185,10 @@ class RecipeDetailViewModel @Inject constructor(
                             name = recipe.recipeName,
                             description = recipe.recipeDescription,
                             category = recipe.category,
-                            timeEstimation = recipe.recipeTimeEstimation,
+                            timeEstimationUiState = TimeEstimationUiState(
+                                hour = recipe.recipeTimeEstimation.hour,
+                                minute = recipe.recipeTimeEstimation.minute
+                            ),
                             ingredients = recipe.ingredients.map { ingredient ->
                                 IngredientUiState(
                                     id = ingredient.id,

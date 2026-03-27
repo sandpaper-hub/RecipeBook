@@ -140,7 +140,10 @@ fun RecipeDetailScreen(
             }
 
             RecipeDescription(
-                timeEstimation = uiState.timeEstimation,
+                timeEstimation = uiState.timeEstimationUiState.toDisplayString(
+                    hourLabel = stringResource(R.string.time_estimation_hours),
+                    minuteLabel = stringResource(R.string.time_estimation_minutes)
+                ),
                 descriptionText = uiState.description,
                 categoryResource = when (uiState.category) {
                     RecipeCategory.APPETIZER -> R.string.appetizer

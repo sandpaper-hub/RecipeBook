@@ -56,11 +56,11 @@ fun RecipesScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             items(
-                items = uiState.newRecipes,
+                items = uiState.recipes,
                 key = { it.id }) { recipe ->
                 RecipeCardList(
                     recipeId = recipe.id,
-                    imageUrl = recipe.imageUrl,
+                    imageUrl = recipe.imageSource,
                     categoryResource = when (recipe.category) {
                         RecipeCategory.APPETIZER -> R.string.appetizer
                         RecipeCategory.SALAD -> R.string.salad
@@ -72,9 +72,12 @@ fun RecipesScreen(
                         RecipeCategory.DRINK -> R.string.drink
                         else -> R.string.unknown_measure
                     },
-                    name = recipe.recipeName,
-                    timeEstimation = recipe.recipeTimeEstimation,
-                    uploadedTime = recipe.createdAt.toUpdatedAgoText(),
+                    name = recipe.name,
+                    timeEstimation = recipe.timeEstimationUiState.toDisplayString(
+                        hourLabel = stringResource(R.string.time_estimation_hours),
+                        minuteLabel = stringResource(R.string.time_estimation_minutes)
+                    ),
+                    uploadedTime = recipe.uploadedTime.toUpdatedAgoText(),
                     onRecipeClick = { onRecipeDetail(recipe.id) },
                     modifier = Modifier.padding(horizontal = 24.dp)
                 )
