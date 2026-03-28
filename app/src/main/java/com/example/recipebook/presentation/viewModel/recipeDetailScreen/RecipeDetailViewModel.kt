@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.recipes.deleteRecipeInteractor.DeleteRecipeInteractor
+import com.example.recipebook.domain.model.recipe.getRecipe.IngredientMeasure
 import com.example.recipebook.domain.useCase.recipe.addRecipeToCollectionUseCase.AddRecipeToCollectionUseCase
 import com.example.recipebook.domain.useCase.collection.observeUserCollectionUseCase.ObserveUserCollectionUseCase
 import com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUseCase.RemoveBrokenIdUseCase
@@ -194,7 +195,7 @@ class RecipeDetailViewModel @Inject constructor(
                                     id = ingredient.id,
                                     value = ingredient.value,
                                     amount = ingredient.amount,
-                                    measure = ingredient.measure
+                                    measure = IngredientMeasure.from(ingredient.measure)
                                 )
                             },
                             createdAt = recipe.createdAt

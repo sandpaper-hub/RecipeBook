@@ -16,6 +16,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,6 +46,7 @@ import com.example.recipebook.presentation.ui.createRecipeScreen.model.CategoryM
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMenuItem
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.CreateRecipeViewModel
 import com.example.recipebook.presentation.util.debounce
+import com.example.recipebook.presentation.util.toUiSource
 
 @Composable
 @Suppress("FunctionName")
@@ -51,7 +54,7 @@ fun CreateRecipeScreen(
     onBack: () -> Unit,
     viewModel: CreateRecipeViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.uiState
+    val uiState by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
     val recipeImagePickerLaunch = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -124,19 +127,21 @@ fun CreateRecipeScreen(
                     .fillMaxWidth()
                     .height(150.dp)
 
-                if (uiState.recipeImageSource != null) {
-                    ImageCover(
-                        imageSource = uiState.recipeImageSource,
-                        contentDescription = stringResource(R.string.recipe_image),
-                        modifier = imageModifier,
-                        onCancelClick = { viewModel.onRecipeImagePicked(null) }
-                    )
-                } else {
+
+                val imageSource = uiState.recipeImageSource.toUiSource()
+                if (imageSource == null) {
                     UploadImageBox(
                         text = stringResource(R.string.upload_photo),
                         modifier = imageModifier,
                         onClick = debounce { recipeImagePickerLaunch.launch("image/*") },
                         cornerShapeDp = 20.dp
+                    )
+                } else {
+                    ImageCover(
+                        imageSource = imageSource,
+                        contentDescription = stringResource(R.string.recipe_image),
+                        modifier = imageModifier,
+                        onCancelClick = { viewModel.onRecipeImagePicked(null) }
                     )
                 }
             }
@@ -203,11 +208,11 @@ fun CreateRecipeScreen(
                             index = index + 1,
                             ingredient = ingredient.value,
                             amount = ingredient.amount,
-                            measure = if (ingredient.measure.isNotEmpty()) {
-                                stringResource(MeasureMenuItem.from(ingredient.measure).stringResource)
+                            measure = if (ingredient.measure != MeasureMenuItem.NULL) {
+                                stringResource(ingredient.measure.stringResource)
                             } else "",
                             hint = stringResource(R.string.add_ingredient),
-                            onBoxClick = { viewModel.showIngredientDialog(ingredient.id) },
+                            onBoxClick = { viewModel.showIngredientDialog(ingredient) },
                             onIconClick = { viewModel.removeIngredient(ingredient.id) }
                         )
                     }
@@ -334,18 +339,14 @@ fun CreateRecipeScreen(
             }
         )
 
-
-        uiState.editingIngredientId?.let { ingredientId ->
+        if (uiState.editingIngredient != null) {
             IngredientDialog(
+                editingIngredient = uiState.editingIngredient,
+                isMeasureMenuOpen = uiState.isMeasureMenuOpen,
+                showMeasureMenu = viewModel::showMeasureMenu,
+                onEditingIngredientChange = viewModel::onEditingIngredientChange,
                 onDialogDismiss = { viewModel.showIngredientDialog(null) },
-                onConfirm = { ingredientValue, amount, measure ->
-                    viewModel.onIngredientChange(
-                        id = ingredientId,
-                        value = ingredientValue,
-                        amount = amount,
-                        measure = measure
-                    )
-                }
+                onConfirm = viewModel::onIngredientChange
             )
         }
     }

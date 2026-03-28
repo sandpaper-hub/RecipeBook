@@ -15,10 +15,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,12 +25,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMenuItem
+import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
 
 @Composable
 @Suppress("FunctionName")
 fun IngredientDialog(
+    editingIngredient: IngredientUiState?,
+    isMeasureMenuOpen: Boolean,
+    showMeasureMenu: (Boolean) -> Unit,
+    onEditingIngredientChange: (ingredient: IngredientUiState) -> Unit,
     onDialogDismiss: () -> Unit,
-    onConfirm: (value: String, amount: String, measure: String) -> Unit
+    onConfirm: (editingIngredient: IngredientUiState) -> Unit
 ) {
     val measureMenuItems = listOf(
         MeasureMenuItem.TEASPOON,
@@ -46,94 +47,98 @@ fun IngredientDialog(
         MeasureMenuItem.PCS
     )
 
-    var ingredientValue by rememberSaveable { mutableStateOf("") }
-    var isValueError by rememberSaveable { mutableStateOf(false) }
-    var ingredientAmount by rememberSaveable { mutableStateOf("") }
-    var isAmountError by rememberSaveable { mutableStateOf(false) }
-    var ingredientMeasure by rememberSaveable { mutableStateOf(MeasureMenuItem.NULL) }
-    var isMeasureError by rememberSaveable { mutableStateOf(false) }
-    var isMenuExpanded by rememberSaveable { mutableStateOf(false) }
+    if (editingIngredient != null) {
 
-    Dialog(onDismissRequest = onDialogDismiss) {
-        Card(
-            shape = RoundedCornerShape(16.dp),
-            elevation = CardDefaults.cardElevation(),
-            colors = CardColors(
-                containerColor = MaterialTheme.colorScheme.background,
-                contentColor = Color.Unspecified,
-                disabledContentColor = Color.Unspecified,
-                disabledContainerColor = Color.Unspecified
-            )
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-            ) {
-                BodyMediumText(
-                    text = stringResource(R.string.ingredient_measure),
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
+
+        Dialog(onDismissRequest = onDialogDismiss) {
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                elevation = CardDefaults.cardElevation(),
+                colors = CardColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    contentColor = Color.Unspecified,
+                    disabledContentColor = Color.Unspecified,
+                    disabledContainerColor = Color.Unspecified
                 )
-
-                Row {
-                    CustomTextField(
-                        value = ingredientValue,
-                        onValueChange = {
-                            ingredientValue = it
-                            isValueError = false
-                        },
-                        hint = stringResource(R.string.enter_ingredient),
-                        isError = isValueError,
-                        modifier = Modifier.weight(1f)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                ) {
+                    BodyMediumText(
+                        text = stringResource(R.string.ingredient_measure),
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
                     )
 
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    CustomTextField(
-                        value = ingredientAmount,
-                        onValueChange = {
-                            ingredientAmount = it
-                            isAmountError = false
-                        },
-                        hint = "100",
-                        isError = isAmountError,
-                        keyboardType = KeyboardType.Decimal,
-                        modifier = Modifier
-                            .width(60.dp)
-                            .background(MaterialTheme.colorScheme.background)
-                    )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Column {
-                        SingleActionText(
-                            value = if (ingredientMeasure.stringResource != 0) {
-                                stringResource(ingredientMeasure.stringResource)
-                            } else "",
-                            hint = stringResource(R.string.empty_hint),
-                            isError = isMeasureError,
-                            contentDescription = stringResource(R.string.measure),
-                            onClick = { isMenuExpanded = true },
-                            painter = null,
-                            modifier = Modifier.width(60.dp)
+                    Row {
+                        CustomTextField(
+                            value = editingIngredient.value,
+                            onValueChange = {
+                                onEditingIngredientChange(
+                                    editingIngredient.copy(
+                                        value = it
+                                    )
+                                )
+                            },
+                            hint = stringResource(R.string.enter_ingredient),
+                            modifier = Modifier.weight(1f)
                         )
 
-                        AppDropdownMenu(
-                            expanded = isMenuExpanded,
-                            items = measureMenuItems,
-                            itemContent = { menuItem ->
-                                Text(stringResource(menuItem.stringResource))
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        CustomTextField(
+                            value = editingIngredient.amount,
+                            onValueChange = {
+                                onEditingIngredientChange(
+                                    editingIngredient.copy(
+                                        amount = it
+                                    )
+                                )
                             },
-                            onItemClick = { menuItem ->
-                                ingredientMeasure = menuItem
-                                isMeasureError = false
-                            },
-                            onDismiss = { isMenuExpanded = false },
+                            hint = "100",
+                            keyboardType = KeyboardType.Decimal,
+                            modifier = Modifier
+                                .width(60.dp)
+                                .background(MaterialTheme.colorScheme.background)
                         )
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Column {
+                            SingleActionText(
+                                value = if (editingIngredient.measure != MeasureMenuItem.NULL) {
+                                    stringResource(editingIngredient.measure.stringResource)
+                                } else "",
+                                hint = stringResource(R.string.empty_hint),
+                                isError = false,
+                                contentDescription = stringResource(R.string.measure),
+                                onClick = { showMeasureMenu(true) },
+                                painter = null,
+                                modifier = Modifier.width(60.dp)
+                            )
+
+                            AppDropdownMenu(
+                                expanded = isMeasureMenuOpen,
+                                items = measureMenuItems,
+                                itemContent = { menuItem ->
+                                    Text(stringResource(menuItem.stringResource))
+                                },
+                                onItemClick = { menuItem ->
+                                    onEditingIngredientChange(
+                                        editingIngredient.copy(
+                                            measure = menuItem
+                                        )
+                                    )
+                                },
+                                onDismiss = { showMeasureMenu(false) },
+                            )
+                        }
                     }
+
                 }
 
                 Row(
@@ -147,15 +152,7 @@ fun IngredientDialog(
                     Spacer(modifier = Modifier.width(8.dp))
 
                     TextButton(onClick = {
-                        when {
-                            ingredientValue.isBlank() -> isValueError = true
-                            ingredientAmount.isBlank() -> isAmountError = true
-                            ingredientMeasure == MeasureMenuItem.NULL -> isMeasureError = true
-                        }
-
-                        if (!isValueError && !isAmountError && !isMeasureError) {
-                            onConfirm(ingredientValue, ingredientAmount, ingredientMeasure.name)
-                        }
+                        onConfirm(editingIngredient)
                     }) {
                         Text("OK")
                     }

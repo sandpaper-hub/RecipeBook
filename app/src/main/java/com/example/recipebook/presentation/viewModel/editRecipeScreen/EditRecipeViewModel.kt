@@ -9,11 +9,11 @@ import com.example.recipebook.domain.interactor.recipes.updateRecipeInteractor.U
 import com.example.recipebook.domain.model.recipe.createRecipe.NewTimeEstimation
 import com.example.recipebook.domain.model.recipe.getRecipe.FullRecipe
 import com.example.recipebook.domain.model.recipe.getRecipe.Ingredient
-import com.example.recipebook.domain.model.recipe.getRecipe.IngredientMeasure
 import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
 import com.example.recipebook.domain.model.recipe.step.EditStep
 import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCase
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailDestination
+import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMenuItem
 import com.example.recipebook.presentation.util.toDomain
 import com.example.recipebook.presentation.util.toPresentation
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
@@ -70,7 +70,7 @@ class EditRecipeViewModel @Inject constructor(
                             id = ingredient.id,
                             value = ingredient.value,
                             amount = ingredient.amount,
-                            measure = ingredient.measure.name,
+                            measure = MeasureMenuItem.from(ingredient.measure),
                         )
                     },
                     recipeSteps = originalRecipe.steps.map { step ->
@@ -154,6 +154,12 @@ class EditRecipeViewModel @Inject constructor(
         }
     }
 
+    fun showMeasureMenu(isShow: Boolean) {
+        _uiState.update {
+            it.copy(isMeasureMenuOpen = isShow)
+        }
+    }
+
     fun onTimeEstimationChanged(hour: Int, minute: Int) {
         _uiState.update {
             it.copy(
@@ -163,23 +169,28 @@ class EditRecipeViewModel @Inject constructor(
     }
 
     fun onIngredientChange(
-        id: String,
-        value: String,
-        amount: String,
-        measure: String
+       ingredient: IngredientUiState
     ) {
         _uiState.update {
             it.copy(
                 ingredients = _uiState.value.ingredients.map { ingredientUiState ->
-                    if (ingredientUiState.id == id) {
+                    if (ingredientUiState.id == ingredient.id) {
                         ingredientUiState.copy(
-                            value = value,
-                            amount = amount,
-                            measure = measure
+                            value = ingredient.value,
+                            amount = ingredient.amount,
+                            measure = ingredient.measure
                         )
                     } else ingredientUiState
                 },
-                editingIngredientId = null
+                editingIngredient = null
+            )
+        }
+    }
+
+    fun onEditingIngredientChange(ingredient: IngredientUiState) {
+        _uiState.update {
+            it.copy(
+                editingIngredient = ingredient
             )
         }
     }
@@ -221,10 +232,10 @@ class EditRecipeViewModel @Inject constructor(
         }
     }
 
-    fun showIngredientDialog(id: String?) {
+    fun showIngredientDialog(ingredient: IngredientUiState?) {
         _uiState.update {
             it.copy(
-                editingIngredientId = id
+                editingIngredient = ingredient
             )
         }
     }
@@ -295,7 +306,7 @@ class EditRecipeViewModel @Inject constructor(
                                 id = ingredientUiState.id,
                                 value = ingredientUiState.value,
                                 amount = ingredientUiState.amount,
-                                measure = IngredientMeasure.from(ingredientUiState.measure)
+                                measure = ingredientUiState.measure.name
                             )
                         },
                         steps = _uiState.value.recipeSteps.mapIndexed { index, stepUiState ->

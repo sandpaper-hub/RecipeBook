@@ -4,5 +4,5 @@ data class Ingredient(
     val id: String = "",
     val value: String = "",
     val amount: String = "",
-    val measure: IngredientMeasure = IngredientMeasure.UNKNOWN
+    val measure: String = ""
 )

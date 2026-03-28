@@ -28,7 +28,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
-import com.example.recipebook.presentation.ui.commonUi.IngredientDialog
 import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
 import com.example.recipebook.presentation.ui.commonUi.IconTextButton
@@ -39,6 +38,7 @@ import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.ui.commonUi.CustomTimePicker
 import com.example.recipebook.presentation.ui.commonUi.EditDescriptionBottomSheet
+import com.example.recipebook.presentation.ui.commonUi.IngredientDialog
 import com.example.recipebook.presentation.ui.commonUi.LimitedTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
@@ -202,11 +202,11 @@ fun EditRecipeScreen(
                             index = index + 1,
                             ingredient = ingredient.value,
                             amount = ingredient.amount,
-                            measure = if (ingredient.measure.isNotEmpty()) {
-                                stringResource(MeasureMenuItem.from(ingredient.measure).stringResource)
+                            measure = if (ingredient.measure != MeasureMenuItem.NULL) {
+                                stringResource(ingredient.measure.stringResource)
                             } else "",
                             hint = stringResource(R.string.add_ingredient),
-                            onBoxClick = { viewModel.showIngredientDialog(ingredient.id) },
+                            onBoxClick = { viewModel.showIngredientDialog(ingredient) },
                             onIconClick = { viewModel.removeIngredient(ingredient.id) }
                         )
                     }
@@ -322,14 +322,13 @@ fun EditRecipeScreen(
             }
         }
 
-        if (uiState.editableObject != null) {
-            EditDescriptionBottomSheet(
-                onDismiss = { viewModel.onEditableObjectChange(null) },
-                editableObject = uiState.editableObject,
-                onConfirm = viewModel::setDescription,
-                onDescriptionChange = viewModel::onEditableObjectChange
-            )
-        }
+        EditDescriptionBottomSheet(
+            onDismiss = { viewModel.onEditableObjectChange(null) },
+            editableObject = uiState.editableObject,
+            onConfirm = viewModel::setDescription,
+            onDescriptionChange = viewModel::onEditableObjectChange
+        )
+
 
         CustomTimePicker(
             isShow = uiState.isTimeEstimationDialogOpen,
@@ -341,18 +340,14 @@ fun EditRecipeScreen(
             }
         )
 
-        uiState.editingIngredientId?.let { ingredientId ->
-            IngredientDialog(
-                onDialogDismiss = { viewModel.showIngredientDialog(null) },
-                onConfirm = { ingredientValue, amount, measure ->
-                    viewModel.onIngredientChange(
-                        id = ingredientId,
-                        value = ingredientValue,
-                        amount = amount,
-                        measure = measure
-                    )
-                }
-            )
-        }
+        IngredientDialog(
+            editingIngredient = uiState.editingIngredient,
+            isMeasureMenuOpen = uiState.isMeasureMenuOpen,
+            showMeasureMenu = viewModel::showMeasureMenu,
+            onEditingIngredientChange = viewModel::onEditingIngredientChange,
+            onDialogDismiss = { viewModel.showIngredientDialog(null) },
+            onConfirm = viewModel::onIngredientChange
+
+        )
     }
 }

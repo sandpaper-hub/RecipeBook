@@ -10,7 +10,7 @@ data class EditRecipeUiState(
     val recipeName: String = "",
     val recipeDescription: Editable.Description = Editable.Description(""),
     val timeEstimationUiState: TimeEstimationUiState = TimeEstimationUiState(),
-    val editingIngredientId: String? = null,
+    val editingIngredient: IngredientUiState? = null,
     val ingredients: List<IngredientUiState> = emptyList(),
     val recipeSteps: List<EditRecipeStepUiState> = emptyList(),
     val recipeCategory: String = "",
@@ -18,5 +18,6 @@ data class EditRecipeUiState(
     val isTimeEstimationDialogOpen: Boolean = false,
     val isCategoryMenuExpand: Boolean = false,
     val isEditIngredientDialogOpen: Boolean = false,
+    val isMeasureMenuOpen: Boolean = false,
     val errorMessage: String? = null
 )

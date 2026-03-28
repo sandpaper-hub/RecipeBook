@@ -1,5 +1,6 @@
 package com.example.recipebook.domain.interactor.recipes.createNewRecipe
 
+import com.example.recipebook.domain.model.ImageSourceType
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredient
 import com.example.recipebook.domain.model.recipe.createRecipe.NewTimeEstimation
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipe
@@ -18,18 +19,26 @@ class CreateNewRecipeInteractorImpl @Inject constructor(
     private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
     private val uploadNewRecipeUseCase: UploadNewRecipeUseCase,
     private val getStepImagesUrlUseCase: GetStepImagesUrlUseCase
-) : CreateNewRecipeInteractor{
+) : CreateNewRecipeInteractor {
     override suspend fun invoke(
         recipeName: String,
         recipeDescription: String,
         recipeNewTimeEstimation: NewTimeEstimation,
-        recipeImageSource: String?,
+        recipeImageSource: ImageSourceType,
         category: String,
         ingredients: List<NewRecipeIngredient>,
         steps: List<UploadRecipeStepDraft>
     ) {
         val recipeId = createRandomIdUseCase.execute()
-        val recipeImageUrl: String? = getRecipeCoverUrlUseCase.execute(recipeId, recipeImageSource)
+        val recipeImageUrl: String? =
+            if (recipeImageSource is ImageSourceType.Local) {
+                getRecipeCoverUrlUseCase.execute(
+                    recipeId,
+                    recipeImageSource.source
+                )
+            } else {
+                null
+            }
         val currentUserId = getCurrentUserIdUseCase.execute()
         val recipeSteps = buildRecipeSteps(recipeId, steps)
         uploadNewRecipeUseCase.execute(

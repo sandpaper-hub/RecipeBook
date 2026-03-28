@@ -42,7 +42,7 @@ class UpdateRecipeInteractorImpl @Inject constructor(
                     id = it.id,
                     value = it.value,
                     amount = it.amount,
-                    measure = it.measure.name
+                    measure = it.measure
                 )
             }
         )

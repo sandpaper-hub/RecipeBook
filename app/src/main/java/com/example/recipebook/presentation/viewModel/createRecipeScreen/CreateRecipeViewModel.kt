@@ -1,9 +1,6 @@
 package com.example.recipebook.presentation.viewModel.createRecipeScreen
 
 import android.net.Uri
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.recipes.createNewRecipe.CreateNewRecipeInteractor
@@ -11,12 +8,17 @@ import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredie
 import com.example.recipebook.domain.model.recipe.createRecipe.NewTimeEstimation
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
 import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCase
+import com.example.recipebook.presentation.util.toDomain
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.NewRecipeUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeStepUiState
 import com.example.recipebook.presentation.viewModel.model.Editable
+import com.example.recipebook.presentation.viewModel.model.ImageSource
 import com.example.recipebook.presentation.viewModel.model.TimeEstimationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,184 +27,248 @@ class CreateRecipeViewModel @Inject constructor(
     private val createRandomIdUseCase: CreateRandomIdUseCase,
     private val createNewRecipeInteractor: CreateNewRecipeInteractor
 ) : ViewModel() {
-    var uiState by mutableStateOf(NewRecipeUiState())
-        private set
+    private val _uiState = MutableStateFlow(NewRecipeUiState())
+    val uiState = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            uiState = uiState.copy(
-                ingredients = listOf(
-                    IngredientUiState(
-                        id = createRandomIdUseCase.execute(),
-                    )
-                ),
-                recipeSteps = listOf(
-                    RecipeStepUiState(
-                        id = createRandomIdUseCase.execute(),
+            _uiState.update {
+                it.copy(
+                    ingredients = listOf(
+                        IngredientUiState(
+                            id = createRandomIdUseCase.execute(),
+                        )
+                    ),
+                    recipeSteps = listOf(
+                        RecipeStepUiState(
+                            id = createRandomIdUseCase.execute(),
+                        )
                     )
                 )
+            }
+        }
+    }
+
+    fun onRecipeImagePicked(uri: Uri?) {
+        _uiState.update {
+            it.copy(
+                recipeImageSource = if (uri == null) {
+                    ImageSource.None
+                } else {
+                    ImageSource.Local(uri.toString())
+                }
             )
         }
     }
 
-
-    fun onRecipeImagePicked(uri: Uri?) {
-        uiState = uiState.copy(
-            recipeImageSource = uri?.toString()
-        )
-    }
-
     fun onRecipeNameChanged(value: String) {
-        uiState = uiState.copy(recipeName = value)
+        _uiState.update {
+            it.copy(recipeName = value)
+        }
     }
 
     fun onBottomSheetDescriptionChange(editable: Editable) {
-        uiState = uiState.copy(
-            editableDescriptionObject = editable
-        )
+        _uiState.update {
+            it.copy(
+                editableDescriptionObject = editable
+            )
+        }
     }
 
     fun setDescription(editableObject: Editable) {
-        uiState = when (editableObject) {
+        when (editableObject) {
             is Editable.Description -> {
-                uiState.copy(
-                    description = editableObject,
-                    editableDescriptionObject = null
-                )
+                _uiState.update {
+                    it.copy(
+                        description = editableObject,
+                        editableDescriptionObject = null
+                    )
+                }
             }
 
             is Editable.StepDescription -> {
-                uiState.copy(
-                    recipeSteps = uiState.recipeSteps.map {
-                        if (it.id == editableObject.stepId) {
-                            it.copy(stepDescription = editableObject)
-                        } else it
-                    },
-                    editableDescriptionObject = null
-                )
+                _uiState.update {
+                    it.copy(
+                        recipeSteps = _uiState.value.recipeSteps.map { editRecipeStepUiState ->
+                            if (editRecipeStepUiState.id == editableObject.stepId) {
+                                editRecipeStepUiState.copy(stepDescription = editableObject)
+                            } else editRecipeStepUiState
+                        },
+                        editableDescriptionObject = null
+                    )
+                }
             }
         }
     }
 
     fun showTimePickerDialog(isShow: Boolean) {
-        uiState = uiState.copy(showTimePickerDialog = isShow)
+        _uiState.update {
+            it.copy(showTimePickerDialog = isShow)
+        }
     }
 
     fun onTimeEstimationChange(hours: Int, minute: Int) {
-        uiState = uiState.copy(
-            timeEstimationUiState = TimeEstimationUiState(hour = hours, minute = minute)
-        )
+        _uiState.update {
+            it.copy(
+                timeEstimationUiState = TimeEstimationUiState(hour = hours, minute = minute)
+            )
+        }
     }
 
-    fun onIngredientChange(
-        id: String,
-        value: String,
-        amount: String,
-        measure: String
-    ) {
-        uiState = uiState.copy(
-            ingredients = uiState.ingredients.map {
-                if (it.id == id) it.copy(
-                    value = value,
-                    amount = amount,
-                    measure = measure
-                ) else it
-            },
-            editingIngredientId = null
-        )
+    fun onEditingIngredientChange(editingIngredient: IngredientUiState) {
+        _uiState.update {
+            it.copy(
+                editingIngredient = editingIngredient
+            )
+        }
+    }
+
+    fun showMeasureMenu(isShow: Boolean) {
+        _uiState.update {
+            it.copy(
+                isMeasureMenuOpen = isShow
+            )
+        }
+    }
+
+    fun onIngredientChange(editingIngredient: IngredientUiState) {
+        _uiState.update {
+            it.copy(
+                ingredients = _uiState.value.ingredients.map { ingredientUiState ->
+                    if (ingredientUiState.id == editingIngredient.id) {
+                        ingredientUiState.copy(
+                            value = editingIngredient.value,
+                            amount = editingIngredient.amount,
+                            measure = editingIngredient.measure
+                        )
+                    } else ingredientUiState
+                },
+                editingIngredient = null
+            )
+        }
     }
 
     fun showCategoryMenu(isShow: Boolean) {
-        uiState = uiState.copy(isCategoryMenuExpand = isShow)
+        _uiState.update {
+            it.copy(isCategoryMenuExpand = isShow)
+        }
     }
 
     fun showEditBottomSheet(editableObject: Editable?) {
-        uiState = uiState.copy(
-            editableDescriptionObject = editableObject,
-        )
+        _uiState.update {
+            it.copy(
+                editableDescriptionObject = editableObject,
+            )
+        }
     }
 
     fun onCategoryChange(value: String) {
-        uiState = uiState.copy(
-            recipeCategory = value,
-            isCategoryMenuExpand = false
-        )
+        _uiState.update {
+            it.copy(
+                recipeCategory = value,
+                isCategoryMenuExpand = false
+            )
+        }
     }
 
     fun removeIngredient(id: String) {
-        uiState = uiState.copy(
-            ingredients = uiState.ingredients.filterNot { it.id == id }
-        )
+        _uiState.update {
+            it.copy(
+                ingredients = _uiState.value.ingredients.filterNot { ingredientUiState ->
+                    ingredientUiState.id == id
+                }
+            )
+        }
     }
 
     fun addIngredient() {
         viewModelScope.launch {
-            uiState = uiState.copy(
-                ingredients = uiState.ingredients + IngredientUiState(
-                    id = createRandomIdUseCase.execute(),
+            _uiState.update {
+                it.copy(
+                    ingredients = _uiState.value.ingredients + IngredientUiState(
+                        id = createRandomIdUseCase.execute(),
+                    )
                 )
-            )
+            }
         }
     }
 
-    fun showIngredientDialog(id: String?) {
-        uiState = uiState.copy(
-            editingIngredientId = id
-        )
+    fun showIngredientDialog(editingIngredient: IngredientUiState?) {
+        _uiState.update {
+            it.copy(
+                editingIngredient = editingIngredient
+            )
+        }
     }
 
     fun addStep() {
         viewModelScope.launch {
-            uiState = uiState.copy(
-                recipeSteps = uiState.recipeSteps + RecipeStepUiState(
-                    id = createRandomIdUseCase.execute()
+            _uiState.update {
+                it.copy(
+                    recipeSteps = _uiState.value.recipeSteps + RecipeStepUiState(
+                        id = createRandomIdUseCase.execute()
+                    )
                 )
-            )
+            }
         }
     }
 
     fun removeStep(id: String) {
-        uiState = uiState.copy(
-            recipeSteps = uiState.recipeSteps.filterNot { it.id == id }
-        )
+        _uiState.update {
+            it.copy(
+                recipeSteps = _uiState.value.recipeSteps.filterNot { recipeStepUiState ->
+                    recipeStepUiState.id == id
+                }
+            )
+        }
     }
 
     fun onStepTitleChange(id: String, value: String) {
-        uiState = uiState.copy(
-            recipeSteps = uiState.recipeSteps.map {
-                if (it.id == id) it.copy(title = value) else it
-            }
-        )
+        _uiState.update {
+            it.copy(
+                recipeSteps = _uiState.value.recipeSteps.map { recipeStepUiState ->
+                    if (recipeStepUiState.id == id) {
+                        recipeStepUiState.copy(title = value)
+                    } else {
+                        recipeStepUiState
+                    }
+                }
+            )
+        }
     }
 
     fun onStepImageChange(id: String, uri: Uri?) {
-        uiState = uiState.copy(
-            recipeSteps = uiState.recipeSteps.map {
-                if (it.id == id) it.copy(imageSource = uri?.toString()) else it
-            })
+        _uiState.update {
+            it.copy(
+                recipeSteps = _uiState.value.recipeSteps.map { recipeStepUiState ->
+                    if (recipeStepUiState.id == id) {
+                        recipeStepUiState.copy(imageSource = uri?.toString())
+                    } else recipeStepUiState
+                })
+        }
     }
 
     fun uploadNewRecipe(onBack: () -> Unit) {
         viewModelScope.launch {
             runCatching {
                 createNewRecipeInteractor.invoke(
-                    recipeName = uiState.recipeName,
-                    recipeDescription = uiState.description.descriptionValue,
+                    recipeName = _uiState.value.recipeName,
+                    recipeDescription = _uiState.value.description.descriptionValue,
                     recipeNewTimeEstimation = NewTimeEstimation(
-                        hour = uiState.timeEstimationUiState?.hour ?: 0,
-                        minute = uiState.timeEstimationUiState?.minute ?: 0
+                        hour = _uiState.value.timeEstimationUiState?.hour ?: 0,
+                        minute = _uiState.value.timeEstimationUiState?.minute ?: 0
                     ),
-                    recipeImageSource = uiState.recipeImageSource,
-                    category = uiState.recipeCategory,
-                    ingredients = uiState.ingredients.map { ingredient ->
+                    recipeImageSource = _uiState.value.recipeImageSource.toDomain(),
+                    category = _uiState.value.recipeCategory,
+                    ingredients = _uiState.value.ingredients.map { ingredient ->
                         NewRecipeIngredient(
                             id = ingredient.id,
                             value = ingredient.value,
                             amount = ingredient.amount,
-                            measure = ingredient.measure
+                            measure = ingredient.measure.toString()
                         )
                     },
-                    steps = uiState.recipeSteps.mapIndexed { index, recipeStepUiState ->
+                    steps = _uiState.value.recipeSteps.mapIndexed { index, recipeStepUiState ->
                         UploadRecipeStepDraft(
                             id = recipeStepUiState.id,
                             title = recipeStepUiState.title,
@@ -215,9 +281,11 @@ class CreateRecipeViewModel @Inject constructor(
             }.onSuccess {
                 onBack()
             }.onFailure { error ->
-                uiState = uiState.copy(errorMessage = error.message)
-            }
+                _uiState.update {
+                    it.copy(errorMessage = error.message)
+                }
 
+            }
         }
     }
 }
