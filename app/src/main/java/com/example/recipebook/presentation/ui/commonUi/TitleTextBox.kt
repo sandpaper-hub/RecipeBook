@@ -159,7 +159,6 @@ fun LimitedTextFieldBox(
     errorText: String?,
     textLengthLimit: Int,
     textHint: String,
-    isError: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -180,7 +179,7 @@ fun LimitedTextFieldBox(
             onClearText = { onClearText() },
             textLengthLimit = textLengthLimit,
             hint = textHint,
-            isError = isError,
+            isError = errorText != null,
             modifier = Modifier
         )
 

@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 class DataValidatorImpl @Inject constructor() : DataValidator {
     override fun validateStringLength(value: String, lengthLimit: Int): ValidationError {
-        return if (value.length >= lengthLimit) {
+        return if (value.length > lengthLimit) {
             ValidationError.SymbolLimit
         } else {
             ValidationError.None

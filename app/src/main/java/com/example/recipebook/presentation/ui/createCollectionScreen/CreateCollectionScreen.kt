@@ -132,7 +132,6 @@ fun CreateCollectionScreen(
                 onClearText = { viewModel.onNameChange("") },
                 textLengthLimit = 100,
                 textHint = stringResource(R.string.collection_hint),
-                isError = false,
                 errorText = null
             )
 

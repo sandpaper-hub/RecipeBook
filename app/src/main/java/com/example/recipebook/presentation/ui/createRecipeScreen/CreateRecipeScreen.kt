@@ -151,13 +151,12 @@ fun CreateRecipeScreen(
             item {
                 LimitedTextFieldBox(
                     title = stringResource(R.string.recipe_name),
-                    textFieldValue = uiState.recipeName,
+                    textFieldValue = uiState.recipeName.value,
                     onValueChange = viewModel::onRecipeNameChanged,
                     onClearText = { viewModel.onRecipeNameChanged("") },
                     textLengthLimit = 100,
                     textHint = stringResource(R.string.recipe_name_hint),
-                    isError = uiState.nameError == ValidationError.Empty,
-                    errorText = when (uiState.nameError) {
+                    errorText = when (uiState.recipeName.error) {
                         is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
                         is ValidationError.SymbolLimit -> stringResource(R.string.field_length_limit)
                         else -> null

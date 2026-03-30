@@ -67,20 +67,13 @@ class CreateRecipeViewModel @Inject constructor(
 
     fun onRecipeNameChanged(value: String) {
         val nameError = dataValidator.validateStringLength(value, 100)
-        if (nameError is ValidationError.None) {
-            _uiState.update {
-                it.copy(
-                    recipeName = value,
-                    nameError = ValidationError.None
+        _uiState.update {
+            it.copy(
+                recipeName = FormField(
+                    value = value,
+                    error = nameError
                 )
-            }
-        } else {
-            _uiState.update {
-                it.copy(
-                    recipeName = value.take(100),
-                    nameError = nameError
-                )
-            }
+            )
         }
     }
 
@@ -275,7 +268,7 @@ class CreateRecipeViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 createNewRecipeInteractor.invoke(
-                    recipeName = _uiState.value.recipeName,
+                    recipeName = _uiState.value.recipeName.value,
                     recipeDescription = _uiState.value.description.value,
                     recipeNewTimeEstimation = NewTimeEstimation(
                         hour = _uiState.value.timeEstimationUiState?.hour ?: 0,

@@ -157,7 +157,7 @@ fun EditRecipeScreen(
                     onClearText = { viewModel.onRecipeNameChanged("") },
                     textLengthLimit = 100,
                     textHint = stringResource(R.string.recipe_name_hint),
-                    isError = false, errorText = null
+                    errorText = null
                 )
             }
 

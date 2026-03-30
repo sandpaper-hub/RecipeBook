@@ -363,7 +363,7 @@ fun LimitedTextField(
                         SecondaryText(
                             text = "${value.length}/$textLengthLimit",
                             style = MaterialTheme.typography.labelMedium.copy(
-                                color = if (value.length >= textLengthLimit) {
+                                color = if (value.length > textLengthLimit) {
                                     MaterialTheme.colorScheme.error
                                 } else {
                                     MaterialTheme.colorScheme.onPrimary
