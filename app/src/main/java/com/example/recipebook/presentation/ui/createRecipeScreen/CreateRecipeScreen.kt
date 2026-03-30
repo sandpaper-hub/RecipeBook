@@ -27,6 +27,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
+import com.example.recipebook.domain.model.error.validation.ValidationError
 import com.example.recipebook.presentation.ui.commonUi.IngredientDialog
 import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
@@ -47,6 +48,7 @@ import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMe
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.CreateRecipeViewModel
 import com.example.recipebook.presentation.util.debounce
 import com.example.recipebook.presentation.util.toUiSource
+import com.example.recipebook.presentation.viewModel.model.EditTarget
 
 @Composable
 @Suppress("FunctionName")
@@ -154,7 +156,12 @@ fun CreateRecipeScreen(
                     onClearText = { viewModel.onRecipeNameChanged("") },
                     textLengthLimit = 100,
                     textHint = stringResource(R.string.recipe_name_hint),
-                    isError = false,
+                    isError = uiState.nameError == ValidationError.Empty,
+                    errorText = when (uiState.nameError) {
+                        is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
+                        is ValidationError.SymbolLimit -> stringResource(R.string.field_length_limit)
+                        else -> null
+                    },
                     modifier = Modifier.padding(top = 32.dp)
                 )
             }
@@ -162,15 +169,20 @@ fun CreateRecipeScreen(
             item {
                 SingleActionTextBox(
                     title = stringResource(R.string.recipe_description),
-                    value = uiState.description.descriptionValue,
+                    value = uiState.description.value,
                     hint = stringResource(R.string.recipe_description_hint),
-                    isError = false,
+                    isError = uiState.description.error != ValidationError.None,
+                    errorText = when (uiState.description.error) {
+                        is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
+                        is ValidationError.SymbolLimit -> stringResource(R.string.field_length_limit)
+                        else -> null
+                    },
                     contentDescription = stringResource(
                         (R.string.recipe_description)
                     ),
                     onClick = {
-                        viewModel.showEditBottomSheet(
-                            editableObject = uiState.description
+                        viewModel.setEditTargetObject(
+                            editTargetObject = EditTarget.Description(uiState.description.value)
                         )
                     },
                     painter = null
@@ -186,6 +198,7 @@ fun CreateRecipeScreen(
                     ).orEmpty(),
                     hint = stringResource(R.string.recipe_time_estimation_hint),
                     isError = false,
+                    errorText = "",
                     contentDescription = "",
                     painter = null,
                     onClick = { viewModel.showTimePickerDialog(true) }
@@ -290,14 +303,17 @@ fun CreateRecipeScreen(
                             index = index,
                             imageSource = recipeStep.imageSource,
                             titleValue = recipeStep.title,
-                            descriptionValue = recipeStep.stepDescription.description,
+                            descriptionValue = recipeStep.stepDescription.value,
                             onImageChange = debounce { imagePicker.launch("image/*") },
                             onTitleChange = { newValue ->
                                 viewModel.onStepTitleChange(recipeStep.id, newValue)
                             },
                             onDescriptionChange = {
-                                viewModel.onBottomSheetDescriptionChange(
-                                    recipeStep.stepDescription
+                                viewModel.setEditTargetObject(
+                                    EditTarget.StepDescription(
+                                        stepId = recipeStep.id,
+                                        description = recipeStep.stepDescription.value
+                                    )
                                 )
                             },
                             onDeleteClick = debounce { viewModel.removeStep(recipeStep.id) },
@@ -322,12 +338,22 @@ fun CreateRecipeScreen(
             }
         }
 
+
+        val target = uiState.editTargetDescriptionObject
+        val initialText = when (target) {
+            is EditTarget.Description -> uiState.description.value
+            is EditTarget.StepDescription -> uiState.recipeSteps.first { it.id == target.stepId }.stepDescription.value
+            else -> ""
+        }
+
         EditDescriptionBottomSheet(
-            onDismiss = { viewModel.showEditBottomSheet(editableObject = null) },
-            editableObject = uiState.editableDescriptionObject,
-            onConfirm = viewModel::setDescription,
-            onDescriptionChange = viewModel::onBottomSheetDescriptionChange
+            initialText = initialText,
+            isVisible = target != null,
+            textLimit = 1500,
+            onDismiss = { viewModel.setEditTargetObject(editTargetObject = null) },
+            onConfirm = viewModel::setDescription
         )
+
 
         CustomTimePicker(
             isShow = uiState.showTimePickerDialog,
@@ -339,15 +365,13 @@ fun CreateRecipeScreen(
             }
         )
 
-        if (uiState.editingIngredient != null) {
-            IngredientDialog(
-                editingIngredient = uiState.editingIngredient,
-                isMeasureMenuOpen = uiState.isMeasureMenuOpen,
-                showMeasureMenu = viewModel::showMeasureMenu,
-                onEditingIngredientChange = viewModel::onEditingIngredientChange,
-                onDialogDismiss = { viewModel.showIngredientDialog(null) },
-                onConfirm = viewModel::onIngredientChange
-            )
-        }
+        IngredientDialog(
+            editingIngredient = uiState.editingIngredient,
+            isMeasureMenuOpen = uiState.isMeasureMenuOpen,
+            showMeasureMenu = viewModel::showMeasureMenu,
+            onEditingIngredientChange = viewModel::onEditingIngredientChange,
+            onDialogDismiss = { viewModel.showIngredientDialog(null) },
+            onConfirm = viewModel::onIngredientChange
+        )
     }
 }

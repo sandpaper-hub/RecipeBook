@@ -4,6 +4,8 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.recipes.createNewRecipe.CreateNewRecipeInteractor
+import com.example.recipebook.domain.interactor.validation.DataValidator
+import com.example.recipebook.domain.model.error.validation.ValidationError
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredient
 import com.example.recipebook.domain.model.recipe.createRecipe.NewTimeEstimation
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
@@ -12,7 +14,8 @@ import com.example.recipebook.presentation.util.toDomain
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.NewRecipeUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeStepUiState
-import com.example.recipebook.presentation.viewModel.model.Editable
+import com.example.recipebook.presentation.viewModel.model.EditTarget
+import com.example.recipebook.presentation.viewModel.model.FormField
 import com.example.recipebook.presentation.viewModel.model.ImageSource
 import com.example.recipebook.presentation.viewModel.model.TimeEstimationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +28,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateRecipeViewModel @Inject constructor(
     private val createRandomIdUseCase: CreateRandomIdUseCase,
-    private val createNewRecipeInteractor: CreateNewRecipeInteractor
+    private val createNewRecipeInteractor: CreateNewRecipeInteractor,
+    private val dataValidator: DataValidator
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(NewRecipeUiState())
     val uiState = _uiState.asStateFlow()
@@ -62,41 +66,60 @@ class CreateRecipeViewModel @Inject constructor(
     }
 
     fun onRecipeNameChanged(value: String) {
-        _uiState.update {
-            it.copy(recipeName = value)
+        val nameError = dataValidator.validateStringLength(value, 100)
+        if (nameError is ValidationError.None) {
+            _uiState.update {
+                it.copy(
+                    recipeName = value,
+                    nameError = ValidationError.None
+                )
+            }
+        } else {
+            _uiState.update {
+                it.copy(
+                    recipeName = value.take(100),
+                    nameError = nameError
+                )
+            }
         }
     }
 
-    fun onBottomSheetDescriptionChange(editable: Editable) {
-        _uiState.update {
-            it.copy(
-                editableDescriptionObject = editable
-            )
-        }
-    }
+    fun setDescription(text: String) {
+        val error = dataValidator.validateStringLength(text, 1500)
 
-    fun setDescription(editableObject: Editable) {
-        when (editableObject) {
-            is Editable.Description -> {
+        when (val editTarget = _uiState.value.editTargetDescriptionObject) {
+            is EditTarget.Description -> {
                 _uiState.update {
                     it.copy(
-                        description = editableObject,
-                        editableDescriptionObject = null
+                        description = FormField(
+                            value = text,
+                            error = error
+                        ),
+                        editTargetDescriptionObject = null
                     )
                 }
             }
 
-            is Editable.StepDescription -> {
+            is EditTarget.StepDescription -> {
                 _uiState.update {
                     it.copy(
-                        recipeSteps = _uiState.value.recipeSteps.map { editRecipeStepUiState ->
-                            if (editRecipeStepUiState.id == editableObject.stepId) {
-                                editRecipeStepUiState.copy(stepDescription = editableObject)
-                            } else editRecipeStepUiState
+                        recipeSteps = it.recipeSteps.map { stepUiState ->
+                            if (stepUiState.id == editTarget.stepId) {
+                                stepUiState.copy(
+                                    stepDescription = FormField(
+                                        value = text,
+                                        error = error
+                                    )
+                                )
+                            } else stepUiState
                         },
-                        editableDescriptionObject = null
+                        editTargetDescriptionObject = null
                     )
                 }
+            }
+
+            else -> {
+                return
             }
         }
     }
@@ -154,10 +177,10 @@ class CreateRecipeViewModel @Inject constructor(
         }
     }
 
-    fun showEditBottomSheet(editableObject: Editable?) {
+    fun setEditTargetObject(editTargetObject: EditTarget?) {
         _uiState.update {
             it.copy(
-                editableDescriptionObject = editableObject,
+                editTargetDescriptionObject = editTargetObject,
             )
         }
     }
@@ -253,7 +276,7 @@ class CreateRecipeViewModel @Inject constructor(
             runCatching {
                 createNewRecipeInteractor.invoke(
                     recipeName = _uiState.value.recipeName,
-                    recipeDescription = _uiState.value.description.descriptionValue,
+                    recipeDescription = _uiState.value.description.value,
                     recipeNewTimeEstimation = NewTimeEstimation(
                         hour = _uiState.value.timeEstimationUiState?.hour ?: 0,
                         minute = _uiState.value.timeEstimationUiState?.minute ?: 0
@@ -274,16 +297,14 @@ class CreateRecipeViewModel @Inject constructor(
                             title = recipeStepUiState.title,
                             order = index,
                             imageSource = recipeStepUiState.imageSource,
-                            description = recipeStepUiState.stepDescription.description
+                            description = recipeStepUiState.stepDescription.value
                         )
                     }
                 )
             }.onSuccess {
                 onBack()
             }.onFailure { error ->
-                _uiState.update {
-                    it.copy(errorMessage = error.message)
-                }
+
 
             }
         }

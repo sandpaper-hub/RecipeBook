@@ -18,6 +18,8 @@ import com.example.recipebook.domain.interactor.recipes.deleteRecipeInteractor.D
 import com.example.recipebook.domain.interactor.recipes.deleteRecipeInteractor.DeleteRecipeInteractorImpl
 import com.example.recipebook.domain.interactor.recipes.updateRecipeInteractor.UpdateRecipeInteractor
 import com.example.recipebook.domain.interactor.recipes.updateRecipeInteractor.UpdateRecipeInteractorImpl
+import com.example.recipebook.domain.interactor.validation.DataValidator
+import com.example.recipebook.domain.interactor.validation.DataValidatorImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -71,4 +73,9 @@ abstract class InteractorBindings {
     abstract fun bindCreateNewRecipeInteractor(
         impl: CreateNewRecipeInteractorImpl
     ): CreateNewRecipeInteractor
+
+    @Binds
+    abstract fun bindDataValidator(
+        impl: DataValidatorImpl
+    ): DataValidator
 }

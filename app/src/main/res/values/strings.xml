@@ -152,4 +152,6 @@
     <string name="step_title_hint" translatable="true">Title</string>
     <string name="time_estimation_hours" translatable="true"> hour</string>
     <string name="time_estimation_minutes" translatable="true"> minute</string>
+    <string name="field_cant_be_blank" translatable="true">Field can\'t be blank</string>
+    <string name="field_length_limit" translatable="true">Character limit reached</string>
 </resources>

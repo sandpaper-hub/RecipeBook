@@ -35,6 +35,7 @@ import com.example.recipebook.presentation.util.debounce
 import com.example.recipebook.presentation.util.toUiSource
 import com.example.recipebook.presentation.viewModel.collectionEditScreen.CollectionEditViewModel
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
+import com.example.recipebook.presentation.viewModel.model.EditTarget
 
 @Composable
 @Suppress("FunctionName")
@@ -123,19 +124,20 @@ fun CollectionEditScreen(
                 title = stringResource(R.string.collection_name),
                 textFieldValue = uiState.name,
                 onValueChange = viewModel::onNameChange,
-                onClearText = {viewModel.onNameChange("")},
+                onClearText = { viewModel.onNameChange("") },
                 textLengthLimit = 100,
                 textHint = stringResource(R.string.collection_hint),
-                isError = false
+                isError = false, errorText = null
             )
 
             SingleActionTextBox(
                 title = stringResource(R.string.recipe_description),
-                value = uiState.description.descriptionValue,
+                value = uiState.description.value,
                 hint = stringResource(R.string.collection_description_hint),
                 isError = false,
+                errorText = null,
                 contentDescription = stringResource(R.string.collection_description),
-                onClick = { viewModel.showDescriptionBottomSheet(uiState.description) },
+                onClick = { viewModel.showDescriptionBottomSheet(EditTarget.Description(uiState.description.value)) },
                 painter = null
             )
 
@@ -149,13 +151,13 @@ fun CollectionEditScreen(
             )
         }
 
-        if (uiState.editableObject != null) {
-            EditDescriptionBottomSheet(
-                editableObject = uiState.editableObject,
-                onDismiss = { viewModel.showDescriptionBottomSheet(null) },
-                onConfirm = viewModel::setDescription,
-                onDescriptionChange = viewModel::onEditableObjectChange
-            )
-        }
+
+        EditDescriptionBottomSheet(
+            initialText = uiState.description.value,
+            isVisible = uiState.editTargetObject != null,
+            textLimit = 1500,
+            onDismiss = { viewModel.showDescriptionBottomSheet(null) },
+            onConfirm = viewModel::setDescription,
+        )
     }
 }

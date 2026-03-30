@@ -28,6 +28,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
+import com.example.recipebook.domain.model.error.validation.ValidationError
 import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
 import com.example.recipebook.presentation.ui.commonUi.IconTextButton
@@ -49,6 +50,7 @@ import com.example.recipebook.presentation.util.debounce
 import com.example.recipebook.presentation.util.toUiSource
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.EditRecipeViewModel
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
+import com.example.recipebook.presentation.viewModel.model.EditTarget
 
 @Composable
 @Suppress("FunctionName")
@@ -155,18 +157,27 @@ fun EditRecipeScreen(
                     onClearText = { viewModel.onRecipeNameChanged("") },
                     textLengthLimit = 100,
                     textHint = stringResource(R.string.recipe_name_hint),
-                    isError = false
+                    isError = false, errorText = null
                 )
             }
 
             item {
                 SingleActionTextBox(
                     title = stringResource(R.string.recipe_description),
-                    value = uiState.recipeDescription.descriptionValue,
+                    value = uiState.recipeDescription.value,
                     hint = stringResource(R.string.recipe_description_hint),
-                    isError = false,
+                    errorText = when (uiState.recipeDescription.error) {
+                        is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
+                        is ValidationError.SymbolLimit -> stringResource(R.string.symbols_limit)
+                        else -> null
+                    },
+                    isError = uiState.recipeDescription.error != ValidationError.None,
                     contentDescription = stringResource(R.string.recipe_description),
-                    onClick = { viewModel.showDescriptionBottomSheet(uiState.recipeDescription) },
+                    onClick = {
+                        viewModel.showDescriptionBottomSheet(
+                            EditTarget.Description(uiState.recipeDescription.value)
+                        )
+                    },
                     painter = null
                 )
             }
@@ -180,6 +191,7 @@ fun EditRecipeScreen(
                     ),
                     hint = stringResource(R.string.recipe_time_estimation_hint),
                     isError = false,
+                    errorText = null,
                     contentDescription = stringResource(R.string.recipe_time_estimation_hint),
                     onClick = { viewModel.showTimeEstimationDialog(true) },
                     painter = null
@@ -285,12 +297,19 @@ fun EditRecipeScreen(
                             index = index,
                             imageSource = imageSource,
                             titleValue = recipeStep.title,
-                            descriptionValue = recipeStep.stepDescription.description,
+                            descriptionValue = recipeStep.stepDescription.value,
                             onImageChange = debounce { imagePicker.launch("image/*") },
                             onTitleChange = { newValue ->
                                 viewModel.onStepTitleChange(recipeStep.id, newValue)
                             },
-                            onDescriptionChange = { viewModel.showDescriptionBottomSheet(recipeStep.stepDescription) },
+                            onDescriptionChange = {
+                                viewModel.showDescriptionBottomSheet(
+                                    EditTarget.StepDescription(
+                                        stepId = recipeStep.id,
+                                        description = recipeStep.stepDescription.value
+                                    )
+                                )
+                            },
                             onDeleteClick = debounce { viewModel.removeStep(recipeStep.id) },
                             onCancelImageClick = debounce {
                                 viewModel.onStepImageChange(
@@ -322,11 +341,23 @@ fun EditRecipeScreen(
             }
         }
 
+        val target = uiState.editTargetObject
+
+        val initialText = when (target) {
+            is EditTarget.Description -> uiState.recipeDescription.value
+            is EditTarget.StepDescription -> uiState.recipeSteps.first {
+                it.id == target.stepId
+            }.stepDescription.value
+
+            else -> ""
+        }
+
         EditDescriptionBottomSheet(
-            onDismiss = { viewModel.onEditableObjectChange(null) },
-            editableObject = uiState.editableObject,
+            initialText = initialText,
+            isVisible = target != null,
+            textLimit = 1500,
+            onDismiss = { viewModel.showDescriptionBottomSheet(null) },
             onConfirm = viewModel::setDescription,
-            onDescriptionChange = viewModel::onEditableObjectChange
         )
 
 

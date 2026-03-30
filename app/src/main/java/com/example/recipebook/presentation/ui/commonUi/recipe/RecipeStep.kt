@@ -183,7 +183,7 @@ fun RecipeStepBox(
 
         SingleActionText(
             value = descriptionValue,
-            hint = "Description",
+            hint = stringResource(R.string.recipe_description),
             isError = false,
             contentDescription = stringResource(R.string.recipe_step_description),
             onClick = onDescriptionChange,

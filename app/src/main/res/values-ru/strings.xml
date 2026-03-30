@@ -149,7 +149,9 @@
     <string name="recipe_step_description">Описание шага рецепта</string>
     <string name="symbols_limit">Максимум %d символов</string>
     <string name="collection_description">Описание коллекции</string>
-    <string name="step_title_hint">Описание</string>
+    <string name="step_title_hint">Заголовок</string>
     <string name="time_estimation_hours" translatable="true"> ч</string>
     <string name="time_estimation_minutes" translatable="true"> мин</string>
+    <string name="field_cant_be_blank" translatable="true">Поле не может быть пустым</string>
+    <string name="field_length_limit" translatable="true">Достигнут лимит символов</string>
 </resources>

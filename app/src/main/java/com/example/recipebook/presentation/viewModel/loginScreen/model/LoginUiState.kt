@@ -1,6 +1,6 @@
 package com.example.recipebook.presentation.viewModel.loginScreen.model
 
-import com.example.recipebook.domain.model.authentication.AuthenticationError
+import com.example.recipebook.domain.model.error.authentication.AuthenticationError
 
 data class LoginUiState(
     val email: String = "",

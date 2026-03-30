@@ -7,7 +7,7 @@ import com.example.recipebook.data.mapper.toDomain
 import com.example.recipebook.data.mapper.toDto
 import com.example.recipebook.data.util.ImageCompressorImpl
 import com.example.recipebook.domain.model.AppResult
-import com.example.recipebook.domain.model.DataError
+import com.example.recipebook.domain.model.error.SearchDataError
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipe
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStep
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
@@ -276,7 +276,7 @@ class RecipesRepositoryImpl @Inject constructor(
         } catch (exception: FirebaseFirestoreException) {
             AppResult.Error(exception.toDataError())
         } catch (exception: Exception) {
-            AppResult.Error(DataError.Unknown)
+            AppResult.Error(SearchDataError.Unknown)
         }
     }
 }

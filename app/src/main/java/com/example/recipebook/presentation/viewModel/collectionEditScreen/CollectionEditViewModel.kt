@@ -12,7 +12,8 @@ import com.example.recipebook.presentation.util.toDomain
 import com.example.recipebook.presentation.util.toPresentation
 import com.example.recipebook.presentation.viewModel.collectionEditScreen.model.CollectionEditUiState
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
-import com.example.recipebook.presentation.viewModel.model.Editable
+import com.example.recipebook.presentation.viewModel.model.EditTarget
+import com.example.recipebook.presentation.viewModel.model.FormField
 import com.example.recipebook.presentation.viewModel.model.ImageSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -49,7 +50,7 @@ class CollectionEditViewModel @Inject constructor(
             _uiState.update { collectionEditUiState ->
                 collectionEditUiState.copy(
                     name = originalCollection.name,
-                    description = Editable.Description(originalCollection.description),
+                    description = FormField(originalCollection.description),
                     imageSource = originalCollection.imageSource.toPresentation()
                 )
             }
@@ -62,24 +63,18 @@ class CollectionEditViewModel @Inject constructor(
         }
     }
 
-    fun showDescriptionBottomSheet(editableObject: Editable?) {
+    fun showDescriptionBottomSheet(editTargetObject: EditTarget?) {
         _uiState.update {
-            it.copy(editableObject = editableObject)
+            it.copy(editTargetObject = editTargetObject)
         }
     }
 
-    fun onEditableObjectChange(editableObject: Editable) {
-        _uiState.update {
-            it.copy(editableObject = editableObject)
-        }
-    }
-
-    fun setDescription(editableObject: Editable) {
-        when (editableObject) {
-            is Editable.Description -> _uiState.update {
+    fun setDescription(text: String) {
+        when (_uiState.value.editTargetObject) {
+            is EditTarget.Description -> _uiState.update {
                 it.copy(
-                    description = editableObject,
-                    editableObject = null
+                    description = FormField(text),
+                    editTargetObject = null
                 )
             }
 
@@ -109,7 +104,7 @@ class CollectionEditViewModel @Inject constructor(
                 editedCollection = UserCollectionEdit(
                     id = collectionId,
                     name = _uiState.value.name,
-                    description = _uiState.value.description.descriptionValue,
+                    description = _uiState.value.description.value,
                     imageSource = _uiState.value.imageSource.toDomain()
                 ),
                 originalCollection = originalCollection

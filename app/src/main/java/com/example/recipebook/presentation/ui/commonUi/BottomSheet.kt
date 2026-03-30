@@ -1,5 +1,6 @@
 package com.example.recipebook.presentation.ui.commonUi
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
@@ -29,8 +36,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.collection.CollectionListCard
-import com.example.recipebook.presentation.viewModel.model.Editable
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.CollectionUiState
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -156,13 +163,34 @@ fun CollectionsBottomSheet(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditDescriptionBottomSheet(
-    editableObject: Editable?,
+    initialText: String,
+    isVisible: Boolean,
+    textLimit: Int,
     onDismiss: () -> Unit,
-    onConfirm: (Editable) -> Unit,
-    onDescriptionChange: (Editable) -> Unit
+    onConfirm: (String) -> Unit
 ) {
+
+    var text by remember { mutableStateOf(initialText) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    if (editableObject != null) {
+    val scope = rememberCoroutineScope()
+
+    val textLimitErrorColor by animateColorAsState(
+        if (text.length > textLimit) {
+            MaterialTheme.colorScheme.error
+        } else {
+            MaterialTheme.colorScheme.primary
+        }
+    )
+
+    LaunchedEffect(isVisible) {
+        if (!isVisible) {
+            sheetState.hide()
+            onDismiss()
+        }
+    }
+
+
+    if (isVisible || sheetState.isVisible) {
         ModalBottomSheet(
             sheetState = sheetState,
             sheetGesturesEnabled = false,
@@ -178,7 +206,12 @@ fun EditDescriptionBottomSheet(
                     symbolLimitText, symbolCounterText) = createRefs()
 
                 IconButton(
-                    onClick = onDismiss,
+                    onClick = {
+                        scope.launch {
+                            sheetState.hide()
+                            onDismiss()
+                        }
+                    },
                     modifier = Modifier
                         .constrainAs(dismissButton) {
                             linkTo(top = titleText.top, bottom = titleText.bottom)
@@ -205,7 +238,12 @@ fun EditDescriptionBottomSheet(
                 )
 
                 CustomTextButton(
-                    onClick = { onConfirm(editableObject) },
+                    onClick = {
+                        scope.launch {
+                            sheetState.hide()
+                            onConfirm(text)
+                        }
+                    },
                     text = stringResource(R.string.ok_botton),
                     modifier = Modifier.constrainAs(okButton) {
                         centerVerticallyTo(titleText)
@@ -218,9 +256,9 @@ fun EditDescriptionBottomSheet(
                         bottom.linkTo(parent.bottom, margin = 12.dp)
                         start.linkTo(parent.start, margin = 24.dp)
                     },
-                    text = stringResource(R.string.symbols_limit, 1500),
+                    text = stringResource(R.string.symbols_limit, textLimit),
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.primary
+                        color = textLimitErrorColor
                     )
                 )
 
@@ -229,12 +267,9 @@ fun EditDescriptionBottomSheet(
                         bottom.linkTo(parent.bottom, margin = 12.dp)
                         end.linkTo(parent.end, margin = 24.dp)
                     },
-                    text = when (editableObject) {
-                        is Editable.Description -> "${editableObject.descriptionValue.length}"
-                        is Editable.StepDescription -> "${editableObject.description.length}"
-                    } + "/1500",
+                    text = "${text.length}/$textLimit",
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.primary
+                        color = textLimitErrorColor
                     )
                 )
 
@@ -256,28 +291,8 @@ fun EditDescriptionBottomSheet(
                             width = Dimension.fillToConstraints
                             height = Dimension.fillToConstraints
                         },
-                    value = when (editableObject) {
-                        is Editable.Description -> editableObject.descriptionValue
-                        is Editable.StepDescription -> editableObject.description
-                    },
-                    onValueChange = { text ->
-                        when (editableObject) {
-                            is Editable.Description -> {
-                                onDescriptionChange(
-                                    Editable.Description(
-                                        descriptionValue = text
-                                    )
-                                )
-                            }
-
-                            is Editable.StepDescription -> onDescriptionChange(
-                                Editable.StepDescription(
-                                    stepId = editableObject.stepId,
-                                    description = text
-                                )
-                            )
-                        }
-                    },
+                    value = text,
+                    onValueChange = { text = it },
                     textStyle = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.onBackground
                     ),

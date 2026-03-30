@@ -48,8 +48,6 @@ fun IngredientDialog(
     )
 
     if (editingIngredient != null) {
-
-
         Dialog(onDismissRequest = onDialogDismiss) {
             Card(
                 shape = RoundedCornerShape(16.dp),

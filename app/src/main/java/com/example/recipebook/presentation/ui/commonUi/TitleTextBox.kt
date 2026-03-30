@@ -156,12 +156,15 @@ fun LimitedTextFieldBox(
     textFieldValue: String,
     onValueChange: (String) -> Unit,
     onClearText: () -> Unit,
+    errorText: String?,
     textLengthLimit: Int,
     textHint: String,
     isError: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier) {
         BodyMediumText(
             text = title,
             modifier = Modifier.padding(bottom = 8.dp),
@@ -180,6 +183,15 @@ fun LimitedTextFieldBox(
             isError = isError,
             modifier = Modifier
         )
+
+        if (errorText != null) {
+            SecondaryText(
+                text = errorText,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = MaterialTheme.colorScheme.error
+                )
+            )
+        }
     }
 }
 
@@ -189,15 +201,17 @@ fun SingleActionTextBox(
     value: String,
     hint: String,
     isError: Boolean,
+    errorText: String?,
     contentDescription: String,
     onClick: () -> Unit,
     painter: Painter?,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier,
+         verticalArrangement = Arrangement.spacedBy(8.dp)) {
         BodyMediumText(
             text = title,
-            modifier = Modifier.padding(bottom = 8.dp),
+            modifier = Modifier,
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onPrimary
@@ -213,5 +227,14 @@ fun SingleActionTextBox(
             painter = painter,
             modifier = Modifier
         )
+
+        if (errorText != null) {
+            SecondaryText(
+                text = errorText,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = MaterialTheme.colorScheme.error
+                )
+            )
+        }
     }
 }

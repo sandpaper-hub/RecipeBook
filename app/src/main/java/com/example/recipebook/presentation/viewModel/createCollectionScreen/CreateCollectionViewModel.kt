@@ -6,7 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.collection.createCollectionInteractor.CreateCollectionInteractor
 import com.example.recipebook.presentation.viewModel.createCollectionScreen.model.CreateCollectionEvent
 import com.example.recipebook.presentation.viewModel.createCollectionScreen.model.NewCollectionUiState
-import com.example.recipebook.presentation.viewModel.model.Editable
+import com.example.recipebook.presentation.viewModel.model.EditTarget
+import com.example.recipebook.presentation.viewModel.model.FormField
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,19 +39,19 @@ class CreateCollectionViewModel @Inject constructor(
         }
     }
 
-    fun showDescriptionBottomSheet(editableObject: Editable.Description?) {
+    fun showDescriptionBottomSheet(editTargetObject: EditTarget.Description?) {
         _uiState.update {
-            it.copy(editableObject = editableObject)
+            it.copy(editTargetObject = editTargetObject)
         }
     }
 
-    fun setDescription(editableObject: Editable) {
-        when (editableObject) {
-            is Editable.Description -> {
+    fun setDescription(text: String) {
+        when (_uiState.value.editTargetObject) {
+            is EditTarget.Description -> {
                 _uiState.update {
                     it.copy(
-                        description = editableObject,
-                        editableObject = null
+                        description = FormField(value = text),
+                        editTargetObject = null
                     )
                 }
             }
@@ -59,17 +60,11 @@ class CreateCollectionViewModel @Inject constructor(
         }
     }
 
-    fun onEditableObjectChange(editableObject: Editable) {
-        _uiState.update {
-            it.copy(editableObject = editableObject)
-        }
-    }
-
     fun createCollection() {
         viewModelScope.launch {
             createCollectionInteractor.createCollection(
                 name = uiState.value.name,
-                description = _uiState.value.description.descriptionValue,
+                description = _uiState.value.description.value,
                 imageSource = uiState.value.imageSource
             )
                 .onSuccess {

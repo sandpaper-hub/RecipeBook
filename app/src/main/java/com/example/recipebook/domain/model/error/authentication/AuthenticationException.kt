@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.model.authentication
+package com.example.recipebook.domain.model.error.authentication
 
 sealed class AuthenticationException: Exception() {
     class NetworkException: AuthenticationException()

@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.recipebook.R
 import com.example.recipebook.domain.model.ImageSourceType
-import com.example.recipebook.domain.model.authentication.AuthenticationError
+import com.example.recipebook.domain.model.error.authentication.AuthenticationError
 import com.example.recipebook.presentation.viewModel.model.ImageSource
 import java.time.Instant
 import java.time.ZoneId
