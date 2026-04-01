@@ -1,8 +1,11 @@
 package com.example.recipebook.presentation.viewModel.model
 
+import com.example.recipebook.domain.model.error.validation.ValidationError
+
 data class TimeEstimationUiState(
     val hour: Int = 0,
-    val minute: Int = 0
+    val minute: Int = 0,
+    val error: ValidationError = ValidationError.None
 ){
     fun toDisplayString(hourLabel: String, minuteLabel: String): String  =
         buildString {

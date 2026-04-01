@@ -19,11 +19,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -164,13 +163,11 @@ fun CollectionsBottomSheet(
 @Composable
 fun EditDescriptionBottomSheet(
     initialText: String,
-    isVisible: Boolean,
     textLimit: Int,
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit
 ) {
-
-    var text by remember { mutableStateOf(initialText) }
+    var text by rememberSaveable(initialText) { mutableStateOf(initialText) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
 
@@ -181,124 +178,113 @@ fun EditDescriptionBottomSheet(
             MaterialTheme.colorScheme.primary
         }
     )
-
-    LaunchedEffect(isVisible) {
-        if (!isVisible) {
-            sheetState.hide()
-            onDismiss()
-        }
-    }
-
-
-    if (isVisible || sheetState.isVisible) {
-        ModalBottomSheet(
-            sheetState = sheetState,
-            sheetGesturesEnabled = false,
-            containerColor = MaterialTheme.colorScheme.background,
-            onDismissRequest = onDismiss
+    ModalBottomSheet(
+        sheetState = sheetState,
+        sheetGesturesEnabled = false,
+        containerColor = MaterialTheme.colorScheme.background,
+        onDismissRequest = onDismiss
+    ) {
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth()
         ) {
-            ConstraintLayout(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth()
-            ) {
-                val (dismissButton, titleText, okButton, textField,
-                    symbolLimitText, symbolCounterText) = createRefs()
+            val (dismissButton, titleText, okButton, textField,
+                symbolLimitText, symbolCounterText) = createRefs()
 
-                IconButton(
-                    onClick = {
-                        scope.launch {
-                            sheetState.hide()
-                            onDismiss()
-                        }
-                    },
-                    modifier = Modifier
-                        .constrainAs(dismissButton) {
-                            linkTo(top = titleText.top, bottom = titleText.bottom)
-                            start.linkTo(parent.start, margin = 8.dp)
-                        }
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.delete_icon),
-                        contentDescription = "",
-                        tint = MaterialTheme.colorScheme.inversePrimary
-                    )
-                }
-
-                HeadingMediumText(
-                    text = stringResource(R.string.edit_description),
-                    modifier = Modifier
-                        .constrainAs(titleText) {
-                            centerHorizontallyTo(parent)
-                            top.linkTo(parent.top)
-                        },
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = FontWeight.Medium
-                    )
-                )
-
-                CustomTextButton(
-                    onClick = {
-                        scope.launch {
-                            sheetState.hide()
-                            onConfirm(text)
-                        }
-                    },
-                    text = stringResource(R.string.ok_botton),
-                    modifier = Modifier.constrainAs(okButton) {
-                        centerVerticallyTo(titleText)
-                        end.linkTo(parent.end, margin = 8.dp)
+            IconButton(
+                onClick = {
+                    scope.launch {
+                        sheetState.hide()
+                        onDismiss()
                     }
-                )
-
-                BodyMediumText(
-                    modifier = Modifier.constrainAs(symbolLimitText) {
-                        bottom.linkTo(parent.bottom, margin = 12.dp)
-                        start.linkTo(parent.start, margin = 24.dp)
-                    },
-                    text = stringResource(R.string.symbols_limit, textLimit),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = textLimitErrorColor
-                    )
-                )
-
-                BodyMediumText(
-                    modifier = Modifier.constrainAs(symbolCounterText) {
-                        bottom.linkTo(parent.bottom, margin = 12.dp)
-                        end.linkTo(parent.end, margin = 24.dp)
-                    },
-                    text = "${text.length}/$textLimit",
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = textLimitErrorColor
-                    )
-                )
-
-                BasicTextField(
-                    modifier = Modifier
-                        .constrainAs(textField) {
-                            linkTo(
-                                start = parent.start,
-                                end = parent.end,
-                                startMargin = 24.dp,
-                                endMargin = 24.dp
-                            )
-                            linkTo(
-                                top = titleText.bottom,
-                                bottom = symbolCounterText.top,
-                                topMargin = 24.dp,
-                                bottomMargin = 24.dp
-                            )
-                            width = Dimension.fillToConstraints
-                            height = Dimension.fillToConstraints
-                        },
-                    value = text,
-                    onValueChange = { text = it },
-                    textStyle = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.onBackground
-                    ),
-                    cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
+                },
+                modifier = Modifier
+                    .constrainAs(dismissButton) {
+                        linkTo(top = titleText.top, bottom = titleText.bottom)
+                        start.linkTo(parent.start, margin = 8.dp)
+                    }
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.delete_icon),
+                    contentDescription = stringResource(R.string.cancel_icon),
+                    tint = MaterialTheme.colorScheme.inversePrimary
                 )
             }
+
+            HeadingMediumText(
+                text = stringResource(R.string.edit_description),
+                modifier = Modifier
+                    .constrainAs(titleText) {
+                        centerHorizontallyTo(parent)
+                        top.linkTo(parent.top)
+                    },
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Medium
+                )
+            )
+
+            CustomTextButton(
+                onClick = {
+                    scope.launch {
+                        sheetState.hide()
+                        onConfirm(text)
+                    }
+                },
+                text = stringResource(R.string.ok_botton),
+                modifier = Modifier.constrainAs(okButton) {
+                    centerVerticallyTo(titleText)
+                    end.linkTo(parent.end, margin = 8.dp)
+                }
+            )
+
+            BodyMediumText(
+                modifier = Modifier.constrainAs(symbolLimitText) {
+                    bottom.linkTo(parent.bottom, margin = 12.dp)
+                    start.linkTo(parent.start, margin = 24.dp)
+                },
+                text = stringResource(R.string.symbols_limit, textLimit),
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = textLimitErrorColor
+                )
+            )
+
+            BodyMediumText(
+                modifier = Modifier.constrainAs(symbolCounterText) {
+                    bottom.linkTo(parent.bottom, margin = 12.dp)
+                    end.linkTo(parent.end, margin = 24.dp)
+                },
+                text = "${text.length}/$textLimit",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = textLimitErrorColor
+                )
+            )
+
+            BasicTextField(
+                modifier = Modifier
+                    .constrainAs(textField) {
+                        linkTo(
+                            start = parent.start,
+                            end = parent.end,
+                            startMargin = 24.dp,
+                            endMargin = 24.dp
+                        )
+                        linkTo(
+                            top = titleText.bottom,
+                            bottom = symbolCounterText.top,
+                            topMargin = 24.dp,
+                            bottomMargin = 24.dp
+                        )
+                        width = Dimension.fillToConstraints
+                        height = Dimension.fillToConstraints
+                    },
+                value = text,
+                onValueChange = { text = it },
+                textStyle = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground
+                ),
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
+            )
         }
     }
 }

@@ -72,7 +72,7 @@ private fun Modifier.setTextFieldModifier(
             color = borderColor,
             shape = RoundedCornerShape(14.dp)
         )
-        .height(48.dp)
+        .height(52.dp)
         .padding(16.dp)
 }
 
@@ -95,7 +95,8 @@ fun CustomTextField(
                 isError = isError,
                 isFocused = isFocused
             )
-        )
+        ),
+        contentAlignment = Alignment.CenterStart
     ) {
         if (value.isEmpty()) {
             Text(

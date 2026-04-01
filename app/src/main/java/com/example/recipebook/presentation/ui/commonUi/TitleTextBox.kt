@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -163,7 +164,8 @@ fun LimitedTextFieldBox(
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier) {
+        modifier = modifier
+    ) {
         BodyMediumText(
             text = title,
             modifier = Modifier.padding(bottom = 8.dp),
@@ -199,15 +201,16 @@ fun SingleActionTextBox(
     title: String,
     value: String,
     hint: String,
-    isError: Boolean,
     errorText: String?,
     contentDescription: String,
     onClick: () -> Unit,
     painter: Painter?,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier,
-         verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         BodyMediumText(
             text = title,
             modifier = Modifier,
@@ -220,7 +223,7 @@ fun SingleActionTextBox(
         SingleActionText(
             value = value,
             hint = hint,
-            isError = isError,
+            isError = errorText != null,
             contentDescription = contentDescription,
             onClick = onClick,
             painter = painter,

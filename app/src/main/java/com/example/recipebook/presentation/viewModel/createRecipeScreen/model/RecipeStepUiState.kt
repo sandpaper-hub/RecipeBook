@@ -4,7 +4,7 @@ import com.example.recipebook.presentation.viewModel.model.FormField
 
 data class RecipeStepUiState(
     val id: String = "",
-    val title: String = "",
+    val title: FormField<String> = FormField(""),
     val imageSource: String? = null,
     val stepDescription: FormField<String> = FormField("")
 )

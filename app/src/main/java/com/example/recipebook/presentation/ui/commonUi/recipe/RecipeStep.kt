@@ -120,7 +120,10 @@ fun RecipeStepBox(
     index: Int,
     imageSource: String?,
     titleValue: String,
+    titleLengthLimit: Int,
+    titleErrorText: String?,
     descriptionValue: String,
+    descriptionErrorText: String?,
     onImageChange: () -> Unit,
     onTitleChange: (String) -> Unit,
     onDescriptionChange: () -> Unit,
@@ -175,20 +178,41 @@ fun RecipeStepBox(
             value = titleValue,
             onValueChange = onTitleChange,
             onClearText = { onTitleChange("") },
-            textLengthLimit = 100,
+            textLengthLimit = titleLengthLimit,
             hint = stringResource(R.string.step_title_hint),
-            isError = false,
+            isError = titleErrorText != null,
             modifier = Modifier.padding(start = 12.dp)
         )
+
+        if (titleErrorText != null) {
+            SecondaryText(
+                modifier = Modifier.padding(start = 12.dp),
+                text = titleErrorText,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = MaterialTheme.colorScheme.error
+                )
+            )
+        }
+
 
         SingleActionText(
             value = descriptionValue,
             hint = stringResource(R.string.recipe_description),
-            isError = false,
+            isError = descriptionErrorText != null,
             contentDescription = stringResource(R.string.recipe_step_description),
             onClick = onDescriptionChange,
             painter = null,
             modifier = Modifier.padding(start = 12.dp)
         )
+
+        if (descriptionErrorText != null) {
+            SecondaryText(
+                modifier = Modifier.padding(start = 12.dp),
+                text = descriptionErrorText,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = MaterialTheme.colorScheme.error
+                )
+            )
+        }
     }
 }

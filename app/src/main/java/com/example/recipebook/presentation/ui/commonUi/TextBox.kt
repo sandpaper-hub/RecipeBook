@@ -16,7 +16,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,27 +29,19 @@ import androidx.compose.ui.unit.dp
 import com.example.recipebook.R
 import com.example.recipebook.theme.DarkModeBodyColor
 import com.example.recipebook.theme.TitleGray
+import com.example.recipebook.theme.borderColor
 
 @Composable
 @Suppress("FunctionName")
 fun SingleActionText(
     value: String,
     hint: String,
-    isError: Boolean?,
+    isError: Boolean,
     contentDescription: String,
     onClick: () -> Unit,
     painter: Painter?,
     modifier: Modifier
 ) {
-
-    val borderColor by animateColorAsState(
-        if (isError == true) {
-            MaterialTheme.colorScheme.error
-        } else {
-            Color.Unspecified
-        }
-    )
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -58,8 +49,12 @@ fun SingleActionText(
                 color = MaterialTheme.colorScheme.inverseSurface,
                 shape = RoundedCornerShape(14.dp)
             )
-            .border(width = 0.5.dp, color = borderColor, shape = RoundedCornerShape(14.dp))
-            .height(48.dp)
+            .border(
+                width = 0.5.dp,
+                color = borderColor(isError),
+                shape = RoundedCornerShape(14.dp)
+            )
+            .height(52.dp)
             .clickable(
                 onClick = onClick
             )
@@ -153,6 +148,7 @@ fun IngredientTextBox(
     amount: String,
     measure: String,
     hint: String,
+    errorText: String?,
     onBoxClick: () -> Unit,
     onIconClick: () -> Unit
 ) {
@@ -171,6 +167,11 @@ fun IngredientTextBox(
             modifier = Modifier
                 .background(
                     color = MaterialTheme.colorScheme.inverseSurface,
+                    shape = RoundedCornerShape(14.dp)
+                )
+                .border(
+                    width = 0.5.dp,
+                    color = borderColor(errorText == null),
                     shape = RoundedCornerShape(14.dp)
                 )
                 .fillMaxWidth()

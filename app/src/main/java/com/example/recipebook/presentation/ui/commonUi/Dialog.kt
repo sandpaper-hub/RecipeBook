@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +16,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,12 +36,13 @@ import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.In
 @Suppress("FunctionName")
 fun IngredientDialog(
     editingIngredient: IngredientUiState?,
-    isMeasureMenuOpen: Boolean,
-    showMeasureMenu: (Boolean) -> Unit,
-    onEditingIngredientChange: (ingredient: IngredientUiState) -> Unit,
-    onDialogDismiss: () -> Unit,
+    onDismiss: () -> Unit,
     onConfirm: (editingIngredient: IngredientUiState) -> Unit
 ) {
+    if (editingIngredient == null) return
+
+    var draft by remember(editingIngredient.id) { mutableStateOf(editingIngredient) }
+    var isMeasureMenuOpen by remember { mutableStateOf(false) }
     val measureMenuItems = listOf(
         MeasureMenuItem.TEASPOON,
         MeasureMenuItem.TABLESPOON,
@@ -47,76 +53,60 @@ fun IngredientDialog(
         MeasureMenuItem.PCS
     )
 
-    if (editingIngredient != null) {
-        Dialog(onDismissRequest = onDialogDismiss) {
-            Card(
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(),
-                colors = CardColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    contentColor = Color.Unspecified,
-                    disabledContentColor = Color.Unspecified,
-                    disabledContainerColor = Color.Unspecified
-                )
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(),
+            colors = CardColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                contentColor = Color.Unspecified,
+                disabledContentColor = Color.Unspecified,
+                disabledContainerColor = Color.Unspecified
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
             ) {
-                Column(
-                    modifier = Modifier
-                        .padding(16.dp)
-                ) {
-                    BodyMediumText(
-                        text = stringResource(R.string.ingredient_measure),
-                        modifier = Modifier.padding(bottom = 8.dp),
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
+                BodyMediumText(
+                    text = stringResource(R.string.ingredient_measure),
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                )
+
+                Column (verticalArrangement = Arrangement.spacedBy(8.dp)){
+                    CustomTextField(
+                        value = draft.value,
+                        onValueChange = { draft = draft.copy(value = it) },
+                        hint = stringResource(R.string.ingredient_name),
+                        modifier = Modifier.height(52.dp)
                     )
 
-                    Row {
+                    Row (horizontalArrangement = Arrangement.spacedBy(8.dp)){
                         CustomTextField(
-                            value = editingIngredient.value,
-                            onValueChange = {
-                                onEditingIngredientChange(
-                                    editingIngredient.copy(
-                                        value = it
-                                    )
-                                )
-                            },
-                            hint = stringResource(R.string.enter_ingredient),
-                            modifier = Modifier.weight(1f)
-                        )
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        CustomTextField(
-                            value = editingIngredient.amount,
-                            onValueChange = {
-                                onEditingIngredientChange(
-                                    editingIngredient.copy(
-                                        amount = it
-                                    )
-                                )
-                            },
-                            hint = "100",
+                            value = draft.amount,
+                            onValueChange = { draft = draft.copy(amount = it) },
+                            hint = stringResource(R.string.ingredient_amount),
                             keyboardType = KeyboardType.Decimal,
                             modifier = Modifier
-                                .width(60.dp)
+                                .weight(1f)
                                 .background(MaterialTheme.colorScheme.background)
                         )
 
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        Column {
+                        Column{
                             SingleActionText(
-                                value = if (editingIngredient.measure != MeasureMenuItem.NULL) {
-                                    stringResource(editingIngredient.measure.stringResource)
+                                value = if (draft.measure != MeasureMenuItem.NULL) {
+                                    stringResource(draft.measure.stringResource)
                                 } else "",
                                 hint = stringResource(R.string.empty_hint),
                                 isError = false,
                                 contentDescription = stringResource(R.string.measure),
-                                onClick = { showMeasureMenu(true) },
+                                onClick = { isMeasureMenuOpen = true },
                                 painter = null,
-                                modifier = Modifier.width(60.dp)
+                                modifier = Modifier.width(80.dp)
                             )
 
                             AppDropdownMenu(
@@ -126,34 +116,30 @@ fun IngredientDialog(
                                     Text(stringResource(menuItem.stringResource))
                                 },
                                 onItemClick = { menuItem ->
-                                    onEditingIngredientChange(
-                                        editingIngredient.copy(
-                                            measure = menuItem
-                                        )
-                                    )
+                                    draft = draft.copy(measure = menuItem)
                                 },
-                                onDismiss = { showMeasureMenu(false) },
+                                onDismiss = { isMeasureMenuOpen = false },
                             )
                         }
                     }
-
                 }
 
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.End)
-                ) {
-                    TextButton(onClick = onDialogDismiss) {
-                        Text("Cancel")
-                    }
+            }
 
-                    Spacer(modifier = Modifier.width(8.dp))
+            Row(
+                modifier = Modifier
+                    .align(Alignment.End)
+            ) {
+                TextButton(onClick = onDismiss) {
+                    Text("Cancel")
+                }
 
-                    TextButton(onClick = {
-                        onConfirm(editingIngredient)
-                    }) {
-                        Text("OK")
-                    }
+                Spacer(modifier = Modifier.width(8.dp))
+
+                TextButton(onClick = {
+                    onConfirm(draft)
+                }) {
+                    Text("OK")
                 }
             }
         }

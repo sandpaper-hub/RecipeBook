@@ -5,12 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.recipes.createNewRecipe.CreateNewRecipeInteractor
 import com.example.recipebook.domain.interactor.validation.DataValidator
-import com.example.recipebook.domain.model.error.validation.ValidationError
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredient
 import com.example.recipebook.domain.model.recipe.createRecipe.NewTimeEstimation
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
 import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCase
 import com.example.recipebook.presentation.util.toDomain
+import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.CreateRecipeEvent
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.NewRecipeUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeStepUiState
@@ -19,7 +19,9 @@ import com.example.recipebook.presentation.viewModel.model.FormField
 import com.example.recipebook.presentation.viewModel.model.ImageSource
 import com.example.recipebook.presentation.viewModel.model.TimeEstimationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -33,6 +35,8 @@ class CreateRecipeViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(NewRecipeUiState())
     val uiState = _uiState.asStateFlow()
+    private val _uiEvents = MutableSharedFlow<CreateRecipeEvent>()
+    val events = _uiEvents.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -119,7 +123,7 @@ class CreateRecipeViewModel @Inject constructor(
 
     fun showTimePickerDialog(isShow: Boolean) {
         _uiState.update {
-            it.copy(showTimePickerDialog = isShow)
+            it.copy(isTimePickerDialogOpen = isShow)
         }
     }
 
@@ -127,22 +131,6 @@ class CreateRecipeViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 timeEstimationUiState = TimeEstimationUiState(hour = hours, minute = minute)
-            )
-        }
-    }
-
-    fun onEditingIngredientChange(editingIngredient: IngredientUiState) {
-        _uiState.update {
-            it.copy(
-                editingIngredient = editingIngredient
-            )
-        }
-    }
-
-    fun showMeasureMenu(isShow: Boolean) {
-        _uiState.update {
-            it.copy(
-                isMeasureMenuOpen = isShow
             )
         }
     }
@@ -181,29 +169,45 @@ class CreateRecipeViewModel @Inject constructor(
     fun onCategoryChange(value: String) {
         _uiState.update {
             it.copy(
-                recipeCategory = value,
+                recipeCategory = FormField(value = value),
                 isCategoryMenuExpand = false
             )
         }
     }
 
     fun removeIngredient(id: String) {
-        _uiState.update {
-            it.copy(
-                ingredients = _uiState.value.ingredients.filterNot { ingredientUiState ->
-                    ingredientUiState.id == id
-                }
-            )
+        if (dataValidator.validateIngredientMinCount(_uiState.value.ingredients)) {
+            _uiState.update {
+                it.copy(
+                    ingredients = _uiState.value.ingredients.filterNot { ingredientUiState ->
+                        ingredientUiState.id == id
+                    }
+                )
+            }
+        } else {
+            viewModelScope.launch {
+                _uiEvents.emit(
+                    CreateRecipeEvent.MinIngredientCountLimit
+                )
+            }
         }
     }
 
     fun addIngredient() {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    ingredients = _uiState.value.ingredients + IngredientUiState(
-                        id = createRandomIdUseCase.execute(),
+        if (dataValidator.validateIngredientMaxCount(_uiState.value.ingredients)) {
+            viewModelScope.launch {
+                _uiState.update {
+                    it.copy(
+                        ingredients = _uiState.value.ingredients + IngredientUiState(
+                            id = createRandomIdUseCase.execute(),
+                        )
                     )
+                }
+            }
+        } else {
+            viewModelScope.launch {
+                _uiEvents.emit(
+                    CreateRecipeEvent.MaxIngredientCountLimit
                 )
             }
         }
@@ -240,11 +244,17 @@ class CreateRecipeViewModel @Inject constructor(
     }
 
     fun onStepTitleChange(id: String, value: String) {
+        val titleError = dataValidator.validateStringLength(value = value, lengthLimit = 70)
         _uiState.update {
             it.copy(
                 recipeSteps = _uiState.value.recipeSteps.map { recipeStepUiState ->
                     if (recipeStepUiState.id == id) {
-                        recipeStepUiState.copy(title = value)
+                        recipeStepUiState.copy(
+                            title = FormField(
+                                value = value,
+                                error = titleError
+                            )
+                        )
                     } else {
                         recipeStepUiState
                     }
@@ -275,7 +285,7 @@ class CreateRecipeViewModel @Inject constructor(
                         minute = _uiState.value.timeEstimationUiState?.minute ?: 0
                     ),
                     recipeImageSource = _uiState.value.recipeImageSource.toDomain(),
-                    category = _uiState.value.recipeCategory,
+                    category = _uiState.value.recipeCategory.value,
                     ingredients = _uiState.value.ingredients.map { ingredient ->
                         NewRecipeIngredient(
                             id = ingredient.id,
@@ -287,7 +297,7 @@ class CreateRecipeViewModel @Inject constructor(
                     steps = _uiState.value.recipeSteps.mapIndexed { index, recipeStepUiState ->
                         UploadRecipeStepDraft(
                             id = recipeStepUiState.id,
-                            title = recipeStepUiState.title,
+                            title = recipeStepUiState.title.value,
                             order = index,
                             imageSource = recipeStepUiState.imageSource,
                             description = recipeStepUiState.stepDescription.value

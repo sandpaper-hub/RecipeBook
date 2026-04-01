@@ -16,9 +16,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,6 +30,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.domain.model.error.validation.ValidationError
+import com.example.recipebook.presentation.controller.LocalSnackBarController
 import com.example.recipebook.presentation.ui.commonUi.IngredientDialog
 import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
@@ -48,6 +51,7 @@ import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMe
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.CreateRecipeViewModel
 import com.example.recipebook.presentation.util.debounce
 import com.example.recipebook.presentation.util.toUiSource
+import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.CreateRecipeEvent
 import com.example.recipebook.presentation.viewModel.model.EditTarget
 
 @Composable
@@ -56,6 +60,8 @@ fun CreateRecipeScreen(
     onBack: () -> Unit,
     viewModel: CreateRecipeViewModel = hiltViewModel()
 ) {
+    val resources = LocalResources.current
+    val snackBarHostState = LocalSnackBarController.current
     val uiState by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
     val recipeImagePickerLaunch = rememberLauncherForActivityResult(
@@ -75,6 +81,21 @@ fun CreateRecipeScreen(
         CategoryMenuItem.DESERT,
         CategoryMenuItem.DRINK
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is CreateRecipeEvent.MinIngredientCountLimit -> {
+                    snackBarHostState.showMessage(message = resources.getString(R.string.minIngredientCountMessage))
+                }
+
+                is CreateRecipeEvent.MaxIngredientCountLimit -> {
+                    snackBarHostState.showMessage(message = resources.getString(R.string.maxIngredientCountMessage))
+
+                }
+            }
+        }
+    }
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (recipeColumn, headingText, closeButton, button) = createRefs()
@@ -170,7 +191,6 @@ fun CreateRecipeScreen(
                     title = stringResource(R.string.recipe_description),
                     value = uiState.description.value,
                     hint = stringResource(R.string.recipe_description_hint),
-                    isError = uiState.description.error != ValidationError.None,
                     errorText = when (uiState.description.error) {
                         is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
                         is ValidationError.SymbolLimit -> stringResource(R.string.field_length_limit)
@@ -196,8 +216,7 @@ fun CreateRecipeScreen(
                         minuteLabel = stringResource(R.string.time_estimation_minutes)
                     ).orEmpty(),
                     hint = stringResource(R.string.recipe_time_estimation_hint),
-                    isError = false,
-                    errorText = "",
+                    errorText = null,
                     contentDescription = "",
                     painter = null,
                     onClick = { viewModel.showTimePickerDialog(true) }
@@ -224,6 +243,7 @@ fun CreateRecipeScreen(
                                 stringResource(ingredient.measure.stringResource)
                             } else "",
                             hint = stringResource(R.string.add_ingredient),
+                            errorText = "",
                             onBoxClick = { viewModel.showIngredientDialog(ingredient) },
                             onIconClick = { viewModel.removeIngredient(ingredient.id) }
                         )
@@ -236,35 +256,25 @@ fun CreateRecipeScreen(
                     painter = painterResource(R.drawable.upload_recipe_icon),
                     text = stringResource(R.string.add_ingredients),
                     onClick = { viewModel.addIngredient() },
-                    modifier = Modifier.padding(bottom = 32.dp)
+                    modifier = Modifier.padding(bottom = 12.dp)
                 )
             }
 
             item {
-                BodyMediumText(
-                    text = stringResource(R.string.category),
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                )
-            }
-
-            item {
-                SingleActionText(
-                    value = if (uiState.recipeCategory.isNotEmpty()) {
+                SingleActionTextBox(
+                    title = stringResource(R.string.category),
+                    value = if (uiState.recipeCategory.value.isNotEmpty()) {
                         stringResource(
-                            CategoryMenuItem.from(uiState.recipeCategory)
+                            CategoryMenuItem.from(uiState.recipeCategory.value)
                                 .stringResource
                         )
                     } else "",
                     hint = stringResource(R.string.category_hint),
-                    isError = null,
+                    errorText = null,
                     contentDescription = "",
                     onClick = { viewModel.showCategoryMenu(true) },
                     painter = null,
-                    modifier = Modifier.padding(bottom = 32.dp)
+                    modifier = Modifier.padding(bottom = 12.dp)
                 )
 
                 AppDropdownMenu(
@@ -301,8 +311,23 @@ fun CreateRecipeScreen(
                         RecipeStepBox(
                             index = index,
                             imageSource = recipeStep.imageSource,
-                            titleValue = recipeStep.title,
+                            titleValue = recipeStep.title.value,
+                            titleLengthLimit = 100,
+                            titleErrorText = when (recipeStep.title.error) {
+                                is ValidationError.SymbolLimit -> stringResource(R.string.field_length_limit)
+
+                                is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
+                                else -> null
+                            },
                             descriptionValue = recipeStep.stepDescription.value,
+                            descriptionErrorText = when (recipeStep.stepDescription.error) {
+                                is ValidationError.SymbolLimit -> stringResource(
+                                    R.string.field_length_limit
+                                )
+
+                                is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
+                                else -> null
+                            },
                             onImageChange = debounce { imagePicker.launch("image/*") },
                             onTitleChange = { newValue ->
                                 viewModel.onStepTitleChange(recipeStep.id, newValue)
@@ -332,7 +357,7 @@ fun CreateRecipeScreen(
                     painter = painterResource(R.drawable.upload_recipe_icon),
                     text = stringResource(R.string.add_steps),
                     onClick = { viewModel.addStep() },
-                    modifier = Modifier.padding(bottom = 32.dp)
+                    modifier = Modifier.padding(bottom = 12.dp)
                 )
             }
         }
@@ -345,17 +370,17 @@ fun CreateRecipeScreen(
             else -> ""
         }
 
-        EditDescriptionBottomSheet(
-            initialText = initialText,
-            isVisible = target != null,
-            textLimit = 1500,
-            onDismiss = { viewModel.setEditTargetObject(editTargetObject = null) },
-            onConfirm = viewModel::setDescription
-        )
-
+        if (target != null) {
+            EditDescriptionBottomSheet(
+                initialText = initialText,
+                textLimit = 1500,
+                onDismiss = { viewModel.setEditTargetObject(editTargetObject = null) },
+                onConfirm = viewModel::setDescription
+            )
+        }
 
         CustomTimePicker(
-            isShow = uiState.showTimePickerDialog,
+            isShow = uiState.isTimePickerDialogOpen,
             initialHour = uiState.timeEstimationUiState?.hour ?: 0,
             initialMinute = uiState.timeEstimationUiState?.minute ?: 0,
             onDismiss = { viewModel.showTimePickerDialog(false) },
@@ -366,10 +391,7 @@ fun CreateRecipeScreen(
 
         IngredientDialog(
             editingIngredient = uiState.editingIngredient,
-            isMeasureMenuOpen = uiState.isMeasureMenuOpen,
-            showMeasureMenu = viewModel::showMeasureMenu,
-            onEditingIngredientChange = viewModel::onEditingIngredientChange,
-            onDialogDismiss = { viewModel.showIngredientDialog(null) },
+            onDismiss = { viewModel.showIngredientDialog(null) },
             onConfirm = viewModel::onIngredientChange
         )
     }

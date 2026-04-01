@@ -10,13 +10,12 @@ data class NewRecipeUiState(
     val recipeName: FormField<String> = FormField(""),
     val description: FormField<String> = FormField(""),
     val timeEstimationUiState: TimeEstimationUiState? = TimeEstimationUiState(),
-    val isMeasureMenuOpen: Boolean = false,
     val ingredients: List<IngredientUiState> = emptyList(),
     val recipeSteps: List<RecipeStepUiState> = emptyList(),
-    val recipeCategory: String = "",
+    val recipeCategory: FormField<String> = FormField(""),
     val editingIngredient: IngredientUiState? = null,
     val editTargetDescriptionObject: EditTarget? = null,
-    val showTimePickerDialog: Boolean = false,
+    val isTimePickerDialogOpen: Boolean = false,
     val isCategoryMenuExpand: Boolean = false,
     val isEditIngredientDialogOpen: Boolean = false
 )

@@ -83,7 +83,7 @@
     <string name="recipe_image">Изображение рецепта</string>
     <string name="cancel_icon">Отмена</string>
     <string name="ingredient_measure">Введите ингредиент и величину</string>
-    <string name="enter_ingredient">Enter ingredient</string>
+    <string name="ingredient_name">Название игредиента</string>
     <!-- empty hint not translatable -->
     <string name="measure">Величина</string>
     <string name="measure_teaspoon">ч.л.</string>
@@ -154,4 +154,7 @@
     <string name="time_estimation_minutes" translatable="true"> мин</string>
     <string name="field_cant_be_blank" translatable="true">Поле не может быть пустым</string>
     <string name="field_length_limit" translatable="true">Достигнут лимит символов</string>
+    <string name="minIngredientCountMessage" translatable="true">Должен быть хотя бы один ингредиент</string>
+    <string name="maxIngredientCountMessage" translatable="true">Не более 20 ингредиентов</string>
+    <string name="ingredient_amount" translatable="true">Кол-во</string>
 </resources>

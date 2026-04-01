@@ -83,7 +83,7 @@
     <string name="recipe_image" translatable="true">Recipe image</string>
     <string name="cancel_icon" translatable="true">Cancel Icon</string>
     <string name="ingredient_measure" translatable="true">Enter ingredient and measure</string>
-    <string name="enter_ingredient" translatable="true">Enter ingredient</string>
+    <string name="ingredient_name" translatable="true">Ingredient name</string>
     <string name="empty_hint" translatable="false">---</string>
     <string name="measure" translatable="true">Measure</string>
     <string name="measure_teaspoon" translatable="true">tea spoon</string>
@@ -154,4 +154,7 @@
     <string name="time_estimation_minutes" translatable="true"> minute</string>
     <string name="field_cant_be_blank" translatable="true">Field can\'t be blank</string>
     <string name="field_length_limit" translatable="true">Character limit reached</string>
+    <string name="minIngredientCountMessage" translatable="true">There must be at least one ingredient</string>
+    <string name="maxIngredientCountMessage" translatable="true">No more than 20 ingredients</string>
+    <string name="ingredient_amount" translatable="true">Amount</string>
 </resources>
