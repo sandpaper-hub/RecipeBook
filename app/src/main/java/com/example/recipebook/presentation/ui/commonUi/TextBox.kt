@@ -1,10 +1,11 @@
 package com.example.recipebook.presentation.ui.commonUi
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -152,84 +153,94 @@ fun IngredientTextBox(
     onBoxClick: () -> Unit,
     onIconClick: () -> Unit
 ) {
-
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        BodyMediumText(
-            modifier = Modifier.width(16.dp),
-            text = index.toString(),
-            style = MaterialTheme.typography.bodyMedium.copy(
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        )
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .background(
-                    color = MaterialTheme.colorScheme.inverseSurface,
-                    shape = RoundedCornerShape(14.dp)
-                )
-                .border(
-                    width = 0.5.dp,
-                    color = borderColor(errorText == null),
-                    shape = RoundedCornerShape(14.dp)
-                )
-                .fillMaxWidth()
-                .height(48.dp)
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = onBoxClick
-                )
-        ) {
-
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(
-                text = ingredient.ifBlank {
-                    hint
-                },
-                modifier = Modifier
-                    .weight(1f),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            BodyMediumText(
+                modifier = Modifier.width(16.dp),
+                text = index.toString(),
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    color = if (ingredient.isEmpty()) TitleGray else MaterialTheme.colorScheme.inversePrimary
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             )
 
-            Spacer(modifier = Modifier.width(8.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .background(
+                        color = MaterialTheme.colorScheme.inverseSurface,
+                        shape = RoundedCornerShape(14.dp)
+                    )
+                    .border(
+                        width = 0.5.dp,
+                        color = borderColor(errorText != null),
+                        shape = RoundedCornerShape(14.dp)
+                    )
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = onBoxClick
+                    )
+            ) {
 
-            Text(
-                text = amount,
-                modifier = Modifier.widthIn(max = 54.dp),
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.inversePrimary
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text = ingredient.ifBlank {
+                        hint
+                    },
+                    modifier = Modifier
+                        .weight(1f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = if (ingredient.isEmpty()) TitleGray else MaterialTheme.colorScheme.inversePrimary
+                    )
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    text = amount,
+                    modifier = Modifier.widthIn(max = 54.dp),
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.inversePrimary
+                    )
+                )
+
+                Spacer(modifier = Modifier.width(4.dp))
+
+                Text(
+                    text = measure,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.inversePrimary
+                    )
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Icon(
+                    painter = painterResource(R.drawable.trash_icon),
+                    contentDescription = stringResource(R.string.delete_icon),
+                    modifier = Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = onIconClick
+                    )
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+            }
+        }
+
+        if (errorText != null) {
+            SecondaryText(
+                text = errorText,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = MaterialTheme.colorScheme.error
                 )
             )
-
-            Spacer(modifier = Modifier.width(4.dp))
-
-            Text(
-                text = measure,
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.inversePrimary
-                )
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Icon(
-                painter = painterResource(R.drawable.trash_icon),
-                contentDescription = stringResource(R.string.delete_icon),
-                modifier = Modifier.clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = onIconClick
-                )
-            )
-            Spacer(modifier = Modifier.width(16.dp))
         }
     }
 }

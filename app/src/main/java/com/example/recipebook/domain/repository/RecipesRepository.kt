@@ -3,7 +3,6 @@ package com.example.recipebook.domain.repository
 import com.example.recipebook.domain.model.AppResult
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipe
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStep
-import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
 import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
 import com.example.recipebook.domain.model.recipe.step.Step
 import kotlinx.coroutines.flow.Flow
@@ -11,11 +10,6 @@ import kotlinx.coroutines.flow.Flow
 interface RecipesRepository {
 
     suspend fun createRandomId(): String
-    suspend fun uploadStepImages(
-        recipeId: String,
-        steps: List<UploadRecipeStepDraft>
-    ): Map<String, String>
-
     suspend fun uploadStepImage(recipeId: String, stepId: String, source: String): String
     suspend fun saveRecipe(newRecipe: UploadRecipe, recipeSteps: List<UploadRecipeStep>)
     suspend fun uploadRecipeImage(recipeId: String, imageSource: String): String

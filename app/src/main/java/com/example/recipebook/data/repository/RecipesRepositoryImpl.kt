@@ -10,7 +10,6 @@ import com.example.recipebook.domain.model.AppResult
 import com.example.recipebook.domain.model.error.SearchDataError
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipe
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStep
-import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
 import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
 import com.example.recipebook.domain.model.recipe.step.Step
 import com.example.recipebook.domain.repository.RecipesRepository
@@ -20,11 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
@@ -44,26 +39,6 @@ class RecipesRepositoryImpl @Inject constructor(
             .collection("random")
             .document()
         return document.id
-    }
-
-    override suspend fun uploadStepImages(
-        recipeId: String,
-        steps: List<UploadRecipeStepDraft>
-    ): Map<String, String> = coroutineScope {
-        steps
-            .mapNotNull { step ->
-                val source = step.imageSource ?: return@mapNotNull null
-
-                async(Dispatchers.IO) {
-                    step.id to uploadStepImage(
-                        recipeId = recipeId,
-                        stepId = step.id,
-                        source = source
-                    )
-                }
-            }
-            .awaitAll()
-            .toMap()
     }
 
     override suspend fun uploadStepImage(

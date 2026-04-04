@@ -136,6 +136,8 @@ class CreateRecipeViewModel @Inject constructor(
     }
 
     fun onIngredientChange(editingIngredient: IngredientUiState) {
+        val error = dataValidator.validateStringLength(editingIngredient.value, 100)
+
         _uiState.update {
             it.copy(
                 ingredients = _uiState.value.ingredients.map { ingredientUiState ->
@@ -143,7 +145,8 @@ class CreateRecipeViewModel @Inject constructor(
                         ingredientUiState.copy(
                             value = editingIngredient.value,
                             amount = editingIngredient.amount,
-                            measure = editingIngredient.measure
+                            measure = editingIngredient.measure,
+                            error = error
                         )
                     } else ingredientUiState
                 },
@@ -151,6 +154,7 @@ class CreateRecipeViewModel @Inject constructor(
             )
         }
     }
+
 
     fun showCategoryMenu(isShow: Boolean) {
         _uiState.update {
@@ -268,7 +272,13 @@ class CreateRecipeViewModel @Inject constructor(
             it.copy(
                 recipeSteps = _uiState.value.recipeSteps.map { recipeStepUiState ->
                     if (recipeStepUiState.id == id) {
-                        recipeStepUiState.copy(imageSource = uri?.toString())
+                        recipeStepUiState.copy(
+                            imageSource = if (uri == null) {
+                                ImageSource.None
+                            } else {
+                                ImageSource.Local(uri.toString())
+                            }
+                        )
                     } else recipeStepUiState
                 })
         }
@@ -281,8 +291,8 @@ class CreateRecipeViewModel @Inject constructor(
                     recipeName = _uiState.value.recipeName.value,
                     recipeDescription = _uiState.value.description.value,
                     recipeNewTimeEstimation = NewTimeEstimation(
-                        hour = _uiState.value.timeEstimationUiState?.hour ?: 0,
-                        minute = _uiState.value.timeEstimationUiState?.minute ?: 0
+                        hour = _uiState.value.timeEstimationUiState.hour,
+                        minute = _uiState.value.timeEstimationUiState.minute
                     ),
                     recipeImageSource = _uiState.value.recipeImageSource.toDomain(),
                     category = _uiState.value.recipeCategory.value,
@@ -299,7 +309,7 @@ class CreateRecipeViewModel @Inject constructor(
                             id = recipeStepUiState.id,
                             title = recipeStepUiState.title.value,
                             order = index,
-                            imageSource = recipeStepUiState.imageSource,
+                            imageSource = recipeStepUiState.imageSource.toDomain(),
                             description = recipeStepUiState.stepDescription.value
                         )
                     }

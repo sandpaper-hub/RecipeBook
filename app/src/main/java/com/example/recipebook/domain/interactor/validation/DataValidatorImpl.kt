@@ -12,6 +12,18 @@ class DataValidatorImpl @Inject constructor() : DataValidator {
         }
     }
 
+    override fun validateIsEmpty(value: String): ValidationError {
+        return if (value.isBlank()) ValidationError.Empty else ValidationError.None
+    }
+
+    override fun validateTimeEstimation(hour: Int, minute: Int): ValidationError {
+        return if (hour == 0 && minute == 0) {
+            ValidationError.Empty
+        } else {
+            ValidationError.None
+        }
+    }
+
     override fun <T> validateIngredientMinCount(ingredientList: List<T>): Boolean {
         return ingredientList.size > 1
     }
@@ -19,6 +31,4 @@ class DataValidatorImpl @Inject constructor() : DataValidator {
     override fun <T> validateIngredientMaxCount(ingredientList: List<T>): Boolean {
         return ingredientList.size < 20
     }
-
-
 }

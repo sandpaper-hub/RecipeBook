@@ -32,17 +32,16 @@ import com.example.recipebook.R
 import com.example.recipebook.domain.model.error.validation.ValidationError
 import com.example.recipebook.presentation.controller.LocalSnackBarController
 import com.example.recipebook.presentation.ui.commonUi.IngredientDialog
-import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
 import com.example.recipebook.presentation.ui.commonUi.IconTextButton
 import com.example.recipebook.presentation.ui.commonUi.ImageCover
-import com.example.recipebook.presentation.ui.commonUi.SingleActionText
 import com.example.recipebook.presentation.ui.commonUi.BodyMediumText
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.ui.commonUi.CustomTextButton
 import com.example.recipebook.presentation.ui.commonUi.CustomTimePicker
 import com.example.recipebook.presentation.ui.commonUi.EditDescriptionBottomSheet
+import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.LimitedTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeStepBox
@@ -53,6 +52,7 @@ import com.example.recipebook.presentation.util.debounce
 import com.example.recipebook.presentation.util.toUiSource
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.CreateRecipeEvent
 import com.example.recipebook.presentation.viewModel.model.EditTarget
+import com.example.recipebook.presentation.viewModel.model.ImageSource
 
 @Composable
 @Suppress("FunctionName")
@@ -211,10 +211,10 @@ fun CreateRecipeScreen(
             item {
                 SingleActionTextBox(
                     title = stringResource(R.string.time_estimation),
-                    value = uiState.timeEstimationUiState?.toDisplayString(
+                    value = uiState.timeEstimationUiState.toDisplayString(
                         hourLabel = stringResource(R.string.time_estimation_hours),
                         minuteLabel = stringResource(R.string.time_estimation_minutes)
-                    ).orEmpty(),
+                    ),
                     hint = stringResource(R.string.recipe_time_estimation_hint),
                     errorText = null,
                     contentDescription = "",
@@ -243,7 +243,15 @@ fun CreateRecipeScreen(
                                 stringResource(ingredient.measure.stringResource)
                             } else "",
                             hint = stringResource(R.string.add_ingredient),
-                            errorText = "",
+                            errorText = when (ingredient.error) {
+                                is ValidationError.SymbolLimit -> stringResource(
+                                    R.string.symbols_limit,
+                                    100
+                                )
+
+                                is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
+                                else -> null
+                            },
                             onBoxClick = { viewModel.showIngredientDialog(ingredient) },
                             onIconClick = { viewModel.removeIngredient(ingredient.id) }
                         )
@@ -310,7 +318,10 @@ fun CreateRecipeScreen(
 
                         RecipeStepBox(
                             index = index,
-                            imageSource = recipeStep.imageSource,
+                            imageSource = when (recipeStep.imageSource) {
+                                is ImageSource.Local -> recipeStep.imageSource.uri
+                                else -> null
+                            },
                             titleValue = recipeStep.title.value,
                             titleLengthLimit = 100,
                             titleErrorText = when (recipeStep.title.error) {
@@ -381,8 +392,8 @@ fun CreateRecipeScreen(
 
         CustomTimePicker(
             isShow = uiState.isTimePickerDialogOpen,
-            initialHour = uiState.timeEstimationUiState?.hour ?: 0,
-            initialMinute = uiState.timeEstimationUiState?.minute ?: 0,
+            initialHour = uiState.timeEstimationUiState.hour,
+            initialMinute = uiState.timeEstimationUiState.minute,
             onDismiss = { viewModel.showTimePickerDialog(false) },
             onConfirm = { hours, minute ->
                 viewModel.onTimeEstimationChange(hours, minute)

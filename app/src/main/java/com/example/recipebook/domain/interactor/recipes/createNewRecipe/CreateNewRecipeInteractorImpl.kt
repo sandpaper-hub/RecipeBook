@@ -8,9 +8,9 @@ import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStep
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
 import com.example.recipebook.domain.useCase.recipe.GetCurrentUserIdUseCase
 import com.example.recipebook.domain.useCase.recipe.GetRecipeCoverUrlUseCase
-import com.example.recipebook.domain.useCase.recipe.GetStepImagesUrlUseCase
 import com.example.recipebook.domain.useCase.recipe.UploadNewRecipeUseCase
 import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCase
+import com.example.recipebook.domain.useCase.recipe.GetStepImageUrlUseCase
 import javax.inject.Inject
 
 class CreateNewRecipeInteractorImpl @Inject constructor(
@@ -18,7 +18,7 @@ class CreateNewRecipeInteractorImpl @Inject constructor(
     private val getRecipeCoverUrlUseCase: GetRecipeCoverUrlUseCase,
     private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
     private val uploadNewRecipeUseCase: UploadNewRecipeUseCase,
-    private val getStepImagesUrlUseCase: GetStepImagesUrlUseCase
+    private val getStepImageUrlUseCase: GetStepImageUrlUseCase
 ) : CreateNewRecipeInteractor {
     override suspend fun invoke(
         recipeName: String,
@@ -60,17 +60,20 @@ class CreateNewRecipeInteractorImpl @Inject constructor(
         recipeId: String,
         uploadRecipeStepDrafts: List<UploadRecipeStepDraft>
     ): List<UploadRecipeStep> {
-        val stepImageUrls = getStepImagesUrlUseCase.execute(
-            recipeId = recipeId,
-            recipeSteps = uploadRecipeStepDrafts
-        )
         return uploadRecipeStepDrafts.map { draft ->
             UploadRecipeStep(
                 id = draft.id,
                 title = draft.title,
                 order = draft.order,
                 description = draft.description,
-                imageUrl = stepImageUrls[draft.id]
+                imageUrl = when (draft.imageSource) {
+                    is ImageSourceType.Local -> getStepImageUrlUseCase.execute(
+                        recipeId = recipeId, stepId = draft.id,
+                        source = draft.imageSource.source
+                    )
+
+                    else -> null
+                }
             )
         }
     }

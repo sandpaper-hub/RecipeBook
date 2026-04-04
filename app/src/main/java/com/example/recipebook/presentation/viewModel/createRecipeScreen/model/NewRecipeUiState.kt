@@ -9,7 +9,7 @@ data class NewRecipeUiState(
     val recipeImageSource: ImageSource = ImageSource.None,
     val recipeName: FormField<String> = FormField(""),
     val description: FormField<String> = FormField(""),
-    val timeEstimationUiState: TimeEstimationUiState? = TimeEstimationUiState(),
+    val timeEstimationUiState: TimeEstimationUiState = TimeEstimationUiState(),
     val ingredients: List<IngredientUiState> = emptyList(),
     val recipeSteps: List<RecipeStepUiState> = emptyList(),
     val recipeCategory: FormField<String> = FormField(""),
