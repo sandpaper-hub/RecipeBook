@@ -10,14 +10,13 @@ import com.example.recipebook.domain.model.recipe.createRecipe.NewTimeEstimation
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
 import com.example.recipebook.domain.useCase.createRandomId.CreateRandomIdUseCase
 import com.example.recipebook.presentation.util.toDomain
+import com.example.recipebook.presentation.validator.RecipeValidator
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.CreateRecipeEvent
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.NewRecipeUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeStepUiState
 import com.example.recipebook.presentation.viewModel.model.EditTarget
-import com.example.recipebook.presentation.viewModel.model.FormField
 import com.example.recipebook.presentation.viewModel.model.ImageSource
-import com.example.recipebook.presentation.viewModel.model.TimeEstimationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +30,8 @@ import javax.inject.Inject
 class CreateRecipeViewModel @Inject constructor(
     private val createRandomIdUseCase: CreateRandomIdUseCase,
     private val createNewRecipeInteractor: CreateNewRecipeInteractor,
-    private val dataValidator: DataValidator
+    private val dataValidator: DataValidator,
+    private val recipeValidator: RecipeValidator
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(NewRecipeUiState())
     val uiState = _uiState.asStateFlow()
@@ -73,7 +73,7 @@ class CreateRecipeViewModel @Inject constructor(
         val nameError = dataValidator.validateStringLength(value, 100)
         _uiState.update {
             it.copy(
-                recipeName = FormField(
+                recipeName = it.recipeName.copy(
                     value = value,
                     error = nameError
                 )
@@ -88,7 +88,7 @@ class CreateRecipeViewModel @Inject constructor(
             is EditTarget.Description -> {
                 _uiState.update {
                     it.copy(
-                        description = FormField(
+                        description = it.description.copy(
                             value = text,
                             error = error
                         ),
@@ -103,7 +103,7 @@ class CreateRecipeViewModel @Inject constructor(
                         recipeSteps = it.recipeSteps.map { stepUiState ->
                             if (stepUiState.id == editTarget.stepId) {
                                 stepUiState.copy(
-                                    stepDescription = FormField(
+                                    description = stepUiState.description.copy(
                                         value = text,
                                         error = error
                                     )
@@ -130,7 +130,7 @@ class CreateRecipeViewModel @Inject constructor(
     fun onTimeEstimationChange(hours: Int, minute: Int) {
         _uiState.update {
             it.copy(
-                timeEstimationUiState = TimeEstimationUiState(hour = hours, minute = minute)
+                timeEstimationUiState = it.timeEstimationUiState.copy(hour = hours, minute = minute)
             )
         }
     }
@@ -173,7 +173,7 @@ class CreateRecipeViewModel @Inject constructor(
     fun onCategoryChange(value: String) {
         _uiState.update {
             it.copy(
-                recipeCategory = FormField(value = value),
+                recipeCategory = it.recipeCategory.copy(value = value),
                 isCategoryMenuExpand = false
             )
         }
@@ -254,7 +254,7 @@ class CreateRecipeViewModel @Inject constructor(
                 recipeSteps = _uiState.value.recipeSteps.map { recipeStepUiState ->
                     if (recipeStepUiState.id == id) {
                         recipeStepUiState.copy(
-                            title = FormField(
+                            title = recipeStepUiState.title.copy(
                                 value = value,
                                 error = titleError
                             )
@@ -285,18 +285,22 @@ class CreateRecipeViewModel @Inject constructor(
     }
 
     fun uploadNewRecipe(onBack: () -> Unit) {
+        val (validatedState, isValid) = recipeValidator.validateAll(_uiState.value)
+        _uiState.update { validatedState }
+
+        if (!isValid) return
         viewModelScope.launch {
             runCatching {
                 createNewRecipeInteractor.invoke(
-                    recipeName = _uiState.value.recipeName.value,
-                    recipeDescription = _uiState.value.description.value,
+                    recipeName = validatedState.recipeName.value,
+                    recipeDescription = validatedState.description.value,
                     recipeNewTimeEstimation = NewTimeEstimation(
-                        hour = _uiState.value.timeEstimationUiState.hour,
-                        minute = _uiState.value.timeEstimationUiState.minute
+                        hour = validatedState.timeEstimationUiState.hour,
+                        minute = validatedState.timeEstimationUiState.minute
                     ),
-                    recipeImageSource = _uiState.value.recipeImageSource.toDomain(),
-                    category = _uiState.value.recipeCategory.value,
-                    ingredients = _uiState.value.ingredients.map { ingredient ->
+                    recipeImageSource = validatedState.recipeImageSource.toDomain(),
+                    category = validatedState.recipeCategory.value,
+                    ingredients = validatedState.ingredients.map { ingredient ->
                         NewRecipeIngredient(
                             id = ingredient.id,
                             value = ingredient.value,
@@ -304,13 +308,13 @@ class CreateRecipeViewModel @Inject constructor(
                             measure = ingredient.measure.toString()
                         )
                     },
-                    steps = _uiState.value.recipeSteps.mapIndexed { index, recipeStepUiState ->
+                    steps = validatedState.recipeSteps.mapIndexed { index, recipeStepUiState ->
                         UploadRecipeStepDraft(
                             id = recipeStepUiState.id,
                             title = recipeStepUiState.title.value,
                             order = index,
                             imageSource = recipeStepUiState.imageSource.toDomain(),
-                            description = recipeStepUiState.stepDescription.value
+                            description = recipeStepUiState.description.value
                         )
                     }
                 )

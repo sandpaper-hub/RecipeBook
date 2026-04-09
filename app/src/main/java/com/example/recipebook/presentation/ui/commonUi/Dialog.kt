@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMenuItem
+import com.example.recipebook.presentation.util.normalizeNumber
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
 
 @Composable
@@ -88,7 +89,7 @@ fun IngredientDialog(
                     Row (horizontalArrangement = Arrangement.spacedBy(8.dp)){
                         CustomTextField(
                             value = draft.amount,
-                            onValueChange = { draft = draft.copy(amount = it) },
+                            onValueChange = { draft = draft.copy(amount = it.normalizeNumber()) },
                             hint = stringResource(R.string.ingredient_amount),
                             keyboardType = KeyboardType.Decimal,
                             modifier = Modifier

@@ -7,5 +7,5 @@ data class RecipeStepUiState(
     val id: String = "",
     val title: FormField<String> = FormField(""),
     val imageSource: ImageSource = ImageSource.None,
-    val stepDescription: FormField<String> = FormField("")
+    val description: FormField<String> = FormField("")
 )

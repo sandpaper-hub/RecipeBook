@@ -171,3 +171,32 @@ fun AuthenticationError.Password.toStringRes(): Int = when (this) {
     AuthenticationError.Password.MinLength -> R.string.password_min_digit
     AuthenticationError.Password.WrongPassword -> R.string.wrong_password
 }
+
+fun String.normalizeNumber(): String {
+    val result = StringBuilder()
+    var hasDot = false
+    var digitsAfterDot = 0
+    var hasDigitBeforeSeparator = false
+
+    for (char in this) {
+        when {
+            char.isDigit() -> {
+                if (hasDot) {
+                    if (digitsAfterDot < 2) {
+                        result.append(char)
+                        digitsAfterDot++
+                    }
+                } else {
+                    result.append(char)
+                    hasDigitBeforeSeparator = true
+                }
+            }
+            (char == '.' || char == ',') && !hasDot && hasDigitBeforeSeparator -> {
+                result.append('.')
+                hasDot = true
+            }
+        }
+    }
+
+    return result.take(4).toString()
+}

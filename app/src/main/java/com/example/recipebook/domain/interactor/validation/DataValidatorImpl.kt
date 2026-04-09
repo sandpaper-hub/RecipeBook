@@ -31,4 +31,34 @@ class DataValidatorImpl @Inject constructor() : DataValidator {
     override fun <T> validateIngredientMaxCount(ingredientList: List<T>): Boolean {
         return ingredientList.size < 20
     }
+
+    override fun validateIngredient(
+        value: String,
+        amount: String,
+        measure: String?
+    ): ValidationError {
+        val errors = listOf(
+            validateIsEmpty(value),
+            validateIsEmpty(amount),
+            validateMeasure(measure)
+        )
+
+        return if (errors.all { it == ValidationError.None }) {
+            ValidationError.None
+        } else {
+            ValidationError.Empty
+        }
+    }
+
+    override fun validateStepValue(value: String): ValidationError {
+        return validateIsEmpty(value)
+    }
+
+    private fun validateMeasure(measure: String?): ValidationError {
+        return if (measure == null) {
+            ValidationError.Empty
+        } else {
+            ValidationError.None
+        }
+    }
 }

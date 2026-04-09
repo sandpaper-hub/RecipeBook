@@ -330,8 +330,8 @@ fun CreateRecipeScreen(
                                 is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
                                 else -> null
                             },
-                            descriptionValue = recipeStep.stepDescription.value,
-                            descriptionErrorText = when (recipeStep.stepDescription.error) {
+                            descriptionValue = recipeStep.description.value,
+                            descriptionErrorText = when (recipeStep.description.error) {
                                 is ValidationError.SymbolLimit -> stringResource(
                                     R.string.field_length_limit
                                 )
@@ -347,7 +347,7 @@ fun CreateRecipeScreen(
                                 viewModel.setEditTargetObject(
                                     EditTarget.StepDescription(
                                         stepId = recipeStep.id,
-                                        description = recipeStep.stepDescription.value
+                                        description = recipeStep.description.value
                                     )
                                 )
                             },
@@ -377,7 +377,7 @@ fun CreateRecipeScreen(
         val target = uiState.editTargetDescriptionObject
         val initialText = when (target) {
             is EditTarget.Description -> uiState.description.value
-            is EditTarget.StepDescription -> uiState.recipeSteps.first { it.id == target.stepId }.stepDescription.value
+            is EditTarget.StepDescription -> uiState.recipeSteps.first { it.id == target.stepId }.description.value
             else -> ""
         }
 

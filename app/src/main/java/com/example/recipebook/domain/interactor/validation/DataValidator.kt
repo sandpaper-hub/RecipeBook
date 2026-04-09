@@ -8,4 +8,13 @@ interface DataValidator {
     fun validateTimeEstimation(hour: Int, minute: Int): ValidationError
     fun <T> validateIngredientMinCount(ingredientList: List<T>): Boolean
     fun <T> validateIngredientMaxCount(ingredientList: List<T>): Boolean
+    fun validateIngredient(
+        value: String,
+        amount: String,
+        measure: String?
+    ): ValidationError
+
+    fun validateStepValue(
+        value: String
+    ): ValidationError
 }
