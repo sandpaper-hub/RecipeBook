@@ -2,11 +2,12 @@ package com.example.recipebook.presentation.viewModel.createCollectionScreen.mod
 
 import com.example.recipebook.presentation.viewModel.model.EditTarget
 import com.example.recipebook.presentation.viewModel.model.FormField
+import com.example.recipebook.presentation.viewModel.model.ImageSource
 
-data class NewCollectionUiState(
+data class CollectionFormUiState(
     val id: String = "",
-    val name: String = "",
+    val name: FormField<String> = FormField(""),
     val description: FormField<String> = FormField(""),
     val editTargetObject: EditTarget? = null,
-    val imageSource: String? = null
+    val imageSource: ImageSource = ImageSource.None
 )
