@@ -15,7 +15,7 @@ import com.example.recipebook.presentation.util.toDomain
 import com.example.recipebook.presentation.validator.RecipeValidator
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.CreateRecipeEvent
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
-import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.NewRecipeUiState
+import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeFormUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeStepUiState
 import com.example.recipebook.presentation.viewModel.model.EditTarget
 import com.example.recipebook.presentation.viewModel.model.ImageSource
@@ -35,7 +35,7 @@ class CreateRecipeViewModel @Inject constructor(
     private val dataValidator: DataValidator,
     private val recipeValidator: RecipeValidator
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(NewRecipeUiState())
+    private val _uiState = MutableStateFlow(RecipeFormUiState())
     val uiState = _uiState.asStateFlow()
     private val _uiEvents = MutableSharedFlow<CreateRecipeEvent>()
     val events = _uiEvents.asSharedFlow()
@@ -180,7 +180,7 @@ class CreateRecipeViewModel @Inject constructor(
     fun setEditTargetObject(editTargetObject: EditTarget?) {
         _uiState.update {
             it.copy(
-                editTargetDescriptionObject = editTargetObject,
+                editTargetDescriptionObject = editTargetObject
             )
         }
     }

@@ -3,13 +3,13 @@ package com.example.recipebook.presentation.validator
 import com.example.recipebook.domain.interactor.validation.DataValidator
 import com.example.recipebook.domain.model.error.validation.ValidationError
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMenuItem
-import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.NewRecipeUiState
+import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeFormUiState
 import javax.inject.Inject
 
 class RecipeValidator @Inject constructor(
     private val dataValidator: DataValidator
 ) {
-    fun validateAll(state: NewRecipeUiState): Pair<NewRecipeUiState, Boolean> {
+    fun validateAll(state: RecipeFormUiState): Pair<RecipeFormUiState, Boolean> {
         var isValid = true
         var validatedState = state
 

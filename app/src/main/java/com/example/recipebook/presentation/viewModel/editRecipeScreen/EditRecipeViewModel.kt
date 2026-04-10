@@ -21,7 +21,7 @@ import com.example.recipebook.presentation.util.toDomain
 import com.example.recipebook.presentation.util.toPresentation
 import com.example.recipebook.presentation.validator.RecipeValidator
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
-import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.NewRecipeUiState
+import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeFormUiState
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeStepUiState
 import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
 import com.example.recipebook.presentation.viewModel.model.EditTarget
@@ -53,7 +53,7 @@ class EditRecipeViewModel @Inject constructor(
     private var _events = MutableSharedFlow<EditRecipeEvent>()
     val events = _events.asSharedFlow()
     private var originalRecipe = FullRecipe()
-    private val _uiState = MutableStateFlow(NewRecipeUiState())
+    private val _uiState = MutableStateFlow(RecipeFormUiState())
     val uiState = _uiState.asStateFlow()
 
     init {

@@ -5,7 +5,7 @@ import com.example.recipebook.presentation.viewModel.model.FormField
 import com.example.recipebook.presentation.viewModel.model.ImageSource
 import com.example.recipebook.presentation.viewModel.model.TimeEstimationUiState
 
-data class NewRecipeUiState(
+data class RecipeFormUiState(
     val recipeImageSource: ImageSource = ImageSource.None,
     val recipeName: FormField<String> = FormField(""),
     val description: FormField<String> = FormField(""),
