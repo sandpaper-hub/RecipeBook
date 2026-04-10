@@ -155,6 +155,8 @@
     <string name="field_cant_be_blank" translatable="true">Поле не может быть пустым</string>
     <string name="field_length_limit" translatable="true">Достигнут лимит символов</string>
     <string name="minIngredientCountMessage" translatable="true">Должен быть хотя бы один ингредиент</string>
-    <string name="maxIngredientCountMessage" translatable="true">Не более 20 ингредиентов</string>
+    <string name="maxIngredientCountMessage" translatable="true">Не более %d ингредиентов</string>
     <string name="ingredient_amount" translatable="true">Кол-во</string>
+    <string name="minStepsCountMessage" translatable="true">Должен быть хотя бы один шаг готовки</string>
+    <string name="maxStepsCountMessage" translatable="true">Не более %d шагов готовки</string>
 </resources>

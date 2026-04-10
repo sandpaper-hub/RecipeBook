@@ -29,6 +29,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
+import com.example.recipebook.domain.Constraints
 import com.example.recipebook.domain.model.error.validation.ValidationError
 import com.example.recipebook.presentation.controller.LocalSnackBarController
 import com.example.recipebook.presentation.ui.commonUi.IngredientDialog
@@ -41,7 +42,7 @@ import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.ui.commonUi.CustomTextButton
 import com.example.recipebook.presentation.ui.commonUi.CustomTimePicker
 import com.example.recipebook.presentation.ui.commonUi.EditDescriptionBottomSheet
-import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
+import com.example.recipebook.presentation.ui.commonUi.EditIngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.LimitedTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeStepBox
@@ -90,8 +91,26 @@ fun CreateRecipeScreen(
                 }
 
                 is CreateRecipeEvent.MaxIngredientCountLimit -> {
-                    snackBarHostState.showMessage(message = resources.getString(R.string.maxIngredientCountMessage))
+                    snackBarHostState.showMessage(
+                        message = resources.getString(
+                            R.string.maxIngredientCountMessage,
+                            Constraints.MAX_INGREDIENTS
+                        )
+                    )
 
+                }
+
+                is CreateRecipeEvent.MinStepsCountLimit -> {
+                    snackBarHostState.showMessage(message = resources.getString(R.string.minStepsCountMessage))
+                }
+
+                is CreateRecipeEvent.MaxStepsCountLimit -> {
+                    snackBarHostState.showMessage(
+                        message = resources.getString(
+                            R.string.maxStepsCountMessage,
+                            Constraints.MAX_STEPS
+                        )
+                    )
                 }
             }
         }
@@ -175,7 +194,7 @@ fun CreateRecipeScreen(
                     textFieldValue = uiState.recipeName.value,
                     onValueChange = viewModel::onRecipeNameChanged,
                     onClearText = { viewModel.onRecipeNameChanged("") },
-                    textLengthLimit = 100,
+                    textLengthLimit = Constraints.MAX_RECIPE_NAME_LENGTH,
                     textHint = stringResource(R.string.recipe_name_hint),
                     errorText = when (uiState.recipeName.error) {
                         is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
@@ -216,7 +235,10 @@ fun CreateRecipeScreen(
                         minuteLabel = stringResource(R.string.time_estimation_minutes)
                     ),
                     hint = stringResource(R.string.recipe_time_estimation_hint),
-                    errorText = null,
+                    errorText = when (uiState.timeEstimationUiState.error) {
+                        is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
+                        else -> null
+                    },
                     contentDescription = "",
                     painter = null,
                     onClick = { viewModel.showTimePickerDialog(true) }
@@ -235,7 +257,7 @@ fun CreateRecipeScreen(
                     )
 
                     uiState.ingredients.forEachIndexed { index, ingredient ->
-                        IngredientTextBox(
+                        EditIngredientTextBox(
                             index = index + 1,
                             ingredient = ingredient.value,
                             amount = ingredient.amount,
@@ -246,7 +268,7 @@ fun CreateRecipeScreen(
                             errorText = when (ingredient.error) {
                                 is ValidationError.SymbolLimit -> stringResource(
                                     R.string.symbols_limit,
-                                    100
+                                    Constraints.MAX_INGREDIENT_LENGTH
                                 )
 
                                 is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
@@ -278,7 +300,10 @@ fun CreateRecipeScreen(
                         )
                     } else "",
                     hint = stringResource(R.string.category_hint),
-                    errorText = null,
+                    errorText = when (uiState.recipeCategory.error) {
+                        is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
+                        else -> null
+                    },
                     contentDescription = "",
                     onClick = { viewModel.showCategoryMenu(true) },
                     painter = null,
@@ -323,7 +348,7 @@ fun CreateRecipeScreen(
                                 else -> null
                             },
                             titleValue = recipeStep.title.value,
-                            titleLengthLimit = 100,
+                            titleLengthLimit = Constraints.MAX_STEP_TITLE_LENGTH,
                             titleErrorText = when (recipeStep.title.error) {
                                 is ValidationError.SymbolLimit -> stringResource(R.string.field_length_limit)
 
@@ -384,7 +409,7 @@ fun CreateRecipeScreen(
         if (target != null) {
             EditDescriptionBottomSheet(
                 initialText = initialText,
-                textLimit = 1500,
+                textLimit = Constraints.MAX_DESCRIPTION_LENGTH,
                 onDismiss = { viewModel.setEditTargetObject(editTargetObject = null) },
                 onConfirm = viewModel::setDescription
             )

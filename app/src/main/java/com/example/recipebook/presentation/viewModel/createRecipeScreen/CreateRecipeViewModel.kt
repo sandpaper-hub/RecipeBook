@@ -3,8 +3,10 @@ package com.example.recipebook.presentation.viewModel.createRecipeScreen
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipebook.domain.Constraints
 import com.example.recipebook.domain.interactor.recipes.createNewRecipe.CreateNewRecipeInteractor
 import com.example.recipebook.domain.interactor.validation.DataValidator
+import com.example.recipebook.domain.model.error.validation.ValidationError
 import com.example.recipebook.domain.model.recipe.createRecipe.NewRecipeIngredient
 import com.example.recipebook.domain.model.recipe.createRecipe.NewTimeEstimation
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
@@ -70,7 +72,10 @@ class CreateRecipeViewModel @Inject constructor(
     }
 
     fun onRecipeNameChanged(value: String) {
-        val nameError = dataValidator.validateStringLength(value, 100)
+        val nameError = dataValidator.validateStringLength(
+            value = value,
+            lengthLimit = Constraints.MAX_RECIPE_NAME_LENGTH
+        )
         _uiState.update {
             it.copy(
                 recipeName = it.recipeName.copy(
@@ -82,7 +87,10 @@ class CreateRecipeViewModel @Inject constructor(
     }
 
     fun setDescription(text: String) {
-        val error = dataValidator.validateStringLength(text, 1500)
+        val error = dataValidator.validateStringLength(
+            value = text,
+            lengthLimit = Constraints.MAX_DESCRIPTION_LENGTH
+        )
 
         when (val editTarget = _uiState.value.editTargetDescriptionObject) {
             is EditTarget.Description -> {
@@ -130,13 +138,20 @@ class CreateRecipeViewModel @Inject constructor(
     fun onTimeEstimationChange(hours: Int, minute: Int) {
         _uiState.update {
             it.copy(
-                timeEstimationUiState = it.timeEstimationUiState.copy(hour = hours, minute = minute)
+                timeEstimationUiState = it.timeEstimationUiState.copy(
+                    hour = hours,
+                    minute = minute,
+                    error = ValidationError.None
+                )
             )
         }
     }
 
     fun onIngredientChange(editingIngredient: IngredientUiState) {
-        val error = dataValidator.validateStringLength(editingIngredient.value, 100)
+        val error = dataValidator.validateStringLength(
+            value = editingIngredient.value,
+            lengthLimit = Constraints.MAX_INGREDIENT_LENGTH
+        )
 
         _uiState.update {
             it.copy(
@@ -180,7 +195,11 @@ class CreateRecipeViewModel @Inject constructor(
     }
 
     fun removeIngredient(id: String) {
-        if (dataValidator.validateIngredientMinCount(_uiState.value.ingredients)) {
+        if (dataValidator.validateObjectMinCount(
+                ingredientList = _uiState.value.ingredients,
+                countLimit = Constraints.MIN_INGREDIENTS
+            )
+        ) {
             _uiState.update {
                 it.copy(
                     ingredients = _uiState.value.ingredients.filterNot { ingredientUiState ->
@@ -198,7 +217,11 @@ class CreateRecipeViewModel @Inject constructor(
     }
 
     fun addIngredient() {
-        if (dataValidator.validateIngredientMaxCount(_uiState.value.ingredients)) {
+        if (dataValidator.validateObjectMaxCount(
+                ingredientList = _uiState.value.ingredients,
+                countLimit = Constraints.MAX_INGREDIENTS
+            )
+        ) {
             viewModelScope.launch {
                 _uiState.update {
                     it.copy(
@@ -227,28 +250,49 @@ class CreateRecipeViewModel @Inject constructor(
 
     fun addStep() {
         viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    recipeSteps = _uiState.value.recipeSteps + RecipeStepUiState(
-                        id = createRandomIdUseCase.execute()
-                    )
+            if (dataValidator.validateObjectMaxCount(
+                    ingredientList = _uiState.value.recipeSteps,
+                    countLimit = Constraints.MAX_STEPS
                 )
+            ) {
+                _uiState.update {
+                    it.copy(
+                        recipeSteps = _uiState.value.recipeSteps + RecipeStepUiState(
+                            id = createRandomIdUseCase.execute()
+                        )
+                    )
+                }
+            } else {
+                _uiEvents.emit(CreateRecipeEvent.MaxStepsCountLimit)
             }
         }
     }
 
     fun removeStep(id: String) {
-        _uiState.update {
-            it.copy(
-                recipeSteps = _uiState.value.recipeSteps.filterNot { recipeStepUiState ->
-                    recipeStepUiState.id == id
-                }
+        if (dataValidator.validateObjectMinCount(
+                ingredientList = _uiState.value.recipeSteps,
+                countLimit = Constraints.MIN_STEPS
             )
+        ) {
+            _uiState.update {
+                it.copy(
+                    recipeSteps = _uiState.value.recipeSteps.filterNot { recipeStepUiState ->
+                        recipeStepUiState.id == id
+                    }
+                )
+            }
+        } else {
+            viewModelScope.launch {
+                _uiEvents.emit(CreateRecipeEvent.MaxStepsCountLimit)
+            }
         }
     }
 
     fun onStepTitleChange(id: String, value: String) {
-        val titleError = dataValidator.validateStringLength(value = value, lengthLimit = 70)
+        val titleError = dataValidator.validateStringLength(
+            value = value,
+            lengthLimit = Constraints.MAX_STEP_TITLE_LENGTH
+        )
         _uiState.update {
             it.copy(
                 recipeSteps = _uiState.value.recipeSteps.map { recipeStepUiState ->

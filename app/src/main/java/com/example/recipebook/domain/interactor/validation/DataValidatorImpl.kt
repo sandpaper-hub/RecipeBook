@@ -24,12 +24,12 @@ class DataValidatorImpl @Inject constructor() : DataValidator {
         }
     }
 
-    override fun <T> validateIngredientMinCount(ingredientList: List<T>): Boolean {
-        return ingredientList.size > 1
+    override fun <T> validateObjectMinCount(ingredientList: List<T>, countLimit: Int): Boolean {
+        return ingredientList.size > countLimit
     }
 
-    override fun <T> validateIngredientMaxCount(ingredientList: List<T>): Boolean {
-        return ingredientList.size < 20
+    override fun <T> validateObjectMaxCount(ingredientList: List<T>, countLimit: Int): Boolean {
+        return ingredientList.size < countLimit
     }
 
     override fun validateIngredient(
@@ -37,17 +37,11 @@ class DataValidatorImpl @Inject constructor() : DataValidator {
         amount: String,
         measure: String?
     ): ValidationError {
-        val errors = listOf(
+        return listOf(
             validateIsEmpty(value),
             validateIsEmpty(amount),
             validateMeasure(measure)
-        )
-
-        return if (errors.all { it == ValidationError.None }) {
-            ValidationError.None
-        } else {
-            ValidationError.Empty
-        }
+        ).firstOrNull { it != ValidationError.None } ?: ValidationError.None
     }
 
     override fun validateStepValue(value: String): ValidationError {

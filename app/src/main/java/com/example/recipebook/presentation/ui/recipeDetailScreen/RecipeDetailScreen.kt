@@ -34,7 +34,7 @@ import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleLargeText
 import com.example.recipebook.presentation.ui.commonUi.TopBarBackNavigation
 import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
-import com.example.recipebook.presentation.ui.commonUi.recipe.IngredientTextBox
+import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeDescription
 import com.example.recipebook.presentation.ui.recipeDetailScreen.model.RecipeDetailMenuItem
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.RecipeDetailViewModel

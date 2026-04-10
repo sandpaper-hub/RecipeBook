@@ -155,6 +155,8 @@
     <string name="field_cant_be_blank" translatable="true">Field can\'t be blank</string>
     <string name="field_length_limit" translatable="true">Character limit reached</string>
     <string name="minIngredientCountMessage" translatable="true">There must be at least one ingredient</string>
-    <string name="maxIngredientCountMessage" translatable="true">No more than 20 ingredients</string>
+    <string name="maxIngredientCountMessage" translatable="true">No more than %d ingredients</string>
     <string name="ingredient_amount" translatable="true">Amount</string>
+    <string name="minStepsCountMessage" translatable="true">There must be at least one step</string>
+    <string name="maxStepsCountMessage" translatable="true">No more than %d steps</string>
 </resources>
