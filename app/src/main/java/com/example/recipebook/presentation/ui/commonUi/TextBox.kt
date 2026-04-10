@@ -237,6 +237,7 @@ fun EditIngredientTextBox(
 
         if (errorText != null) {
             SecondaryText(
+                modifier = Modifier.padding(start = 16.dp),
                 text = errorText,
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = MaterialTheme.colorScheme.error

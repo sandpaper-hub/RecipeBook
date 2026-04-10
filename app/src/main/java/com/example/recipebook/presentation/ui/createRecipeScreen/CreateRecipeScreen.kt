@@ -62,7 +62,7 @@ fun CreateRecipeScreen(
     viewModel: CreateRecipeViewModel = hiltViewModel()
 ) {
     val resources = LocalResources.current
-    val snackBarHostState = LocalSnackBarController.current
+    val snackBarController = LocalSnackBarController.current
     val uiState by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
     val recipeImagePickerLaunch = rememberLauncherForActivityResult(
@@ -87,11 +87,11 @@ fun CreateRecipeScreen(
         viewModel.events.collect { event ->
             when (event) {
                 is CreateRecipeEvent.MinIngredientCountLimit -> {
-                    snackBarHostState.showMessage(message = resources.getString(R.string.minIngredientCountMessage))
+                    snackBarController.showMessage(message = resources.getString(R.string.minIngredientCountMessage))
                 }
 
                 is CreateRecipeEvent.MaxIngredientCountLimit -> {
-                    snackBarHostState.showMessage(
+                    snackBarController.showMessage(
                         message = resources.getString(
                             R.string.maxIngredientCountMessage,
                             Constraints.MAX_INGREDIENTS
@@ -101,11 +101,11 @@ fun CreateRecipeScreen(
                 }
 
                 is CreateRecipeEvent.MinStepsCountLimit -> {
-                    snackBarHostState.showMessage(message = resources.getString(R.string.minStepsCountMessage))
+                    snackBarController.showMessage(message = resources.getString(R.string.minStepsCountMessage))
                 }
 
                 is CreateRecipeEvent.MaxStepsCountLimit -> {
-                    snackBarHostState.showMessage(
+                    snackBarController.showMessage(
                         message = resources.getString(
                             R.string.maxStepsCountMessage,
                             Constraints.MAX_STEPS

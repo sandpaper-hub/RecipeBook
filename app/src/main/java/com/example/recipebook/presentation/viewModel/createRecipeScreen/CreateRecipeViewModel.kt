@@ -196,7 +196,7 @@ class CreateRecipeViewModel @Inject constructor(
 
     fun removeIngredient(id: String) {
         if (dataValidator.validateObjectMinCount(
-                ingredientList = _uiState.value.ingredients,
+                objectsList = _uiState.value.ingredients,
                 countLimit = Constraints.MIN_INGREDIENTS
             )
         ) {
@@ -218,7 +218,7 @@ class CreateRecipeViewModel @Inject constructor(
 
     fun addIngredient() {
         if (dataValidator.validateObjectMaxCount(
-                ingredientList = _uiState.value.ingredients,
+                objectsList = _uiState.value.ingredients,
                 countLimit = Constraints.MAX_INGREDIENTS
             )
         ) {
@@ -251,7 +251,7 @@ class CreateRecipeViewModel @Inject constructor(
     fun addStep() {
         viewModelScope.launch {
             if (dataValidator.validateObjectMaxCount(
-                    ingredientList = _uiState.value.recipeSteps,
+                    objectsList = _uiState.value.recipeSteps,
                     countLimit = Constraints.MAX_STEPS
                 )
             ) {
@@ -270,7 +270,7 @@ class CreateRecipeViewModel @Inject constructor(
 
     fun removeStep(id: String) {
         if (dataValidator.validateObjectMinCount(
-                ingredientList = _uiState.value.recipeSteps,
+                objectsList = _uiState.value.recipeSteps,
                 countLimit = Constraints.MIN_STEPS
             )
         ) {

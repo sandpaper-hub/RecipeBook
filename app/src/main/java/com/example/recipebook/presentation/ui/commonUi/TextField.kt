@@ -283,7 +283,7 @@ fun SearchTextField(
                         innerTextField()
                     }
 
-                    if (value.isNotBlank()) {
+                    if (value.isNotBlank() && isFocused) {
                         Box(
                             modifier = Modifier
                                 .clickable(
@@ -373,7 +373,7 @@ fun LimitedTextField(
                         )
                     }
 
-                    if (value.isNotBlank()) {
+                    if (value.isNotBlank() && isFocused) {
                         Box(
                             modifier = Modifier
                                 .clickable(

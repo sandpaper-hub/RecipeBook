@@ -24,12 +24,12 @@ class DataValidatorImpl @Inject constructor() : DataValidator {
         }
     }
 
-    override fun <T> validateObjectMinCount(ingredientList: List<T>, countLimit: Int): Boolean {
-        return ingredientList.size > countLimit
+    override fun <T> validateObjectMinCount(objectsList: List<T>, countLimit: Int): Boolean {
+        return objectsList.size > countLimit
     }
 
-    override fun <T> validateObjectMaxCount(ingredientList: List<T>, countLimit: Int): Boolean {
-        return ingredientList.size < countLimit
+    override fun <T> validateObjectMaxCount(objectsList: List<T>, countLimit: Int): Boolean {
+        return objectsList.size < countLimit
     }
 
     override fun validateIngredient(

@@ -6,8 +6,8 @@ interface DataValidator {
     fun validateStringLength(value: String, lengthLimit: Int): ValidationError
     fun validateIsEmpty(value: String): ValidationError
     fun validateTimeEstimation(hour: Int, minute: Int): ValidationError
-    fun <T> validateObjectMinCount(ingredientList: List<T>, countLimit: Int): Boolean
-    fun <T> validateObjectMaxCount(ingredientList: List<T>, countLimit: Int): Boolean
+    fun <T> validateObjectMinCount(objectsList: List<T>, countLimit: Int): Boolean
+    fun <T> validateObjectMaxCount(objectsList: List<T>, countLimit: Int): Boolean
     fun validateIngredient(
         value: String,
         amount: String,
