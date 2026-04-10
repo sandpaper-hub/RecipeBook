@@ -24,6 +24,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
+import com.example.recipebook.domain.Constraints
+import com.example.recipebook.domain.model.error.validation.ValidationError
 import com.example.recipebook.presentation.ui.commonUi.EditDescriptionBottomSheet
 import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
 import com.example.recipebook.presentation.ui.commonUi.ImageCover
@@ -34,7 +36,7 @@ import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.util.debounce
 import com.example.recipebook.presentation.util.toUiSource
 import com.example.recipebook.presentation.viewModel.collectionEditScreen.CollectionEditViewModel
-import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
+import com.example.recipebook.presentation.viewModel.collectionEditScreen.model.CollectionEditEvent
 import com.example.recipebook.presentation.viewModel.model.EditTarget
 
 @Composable
@@ -49,12 +51,13 @@ fun CollectionEditScreen(
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
             when (event) {
-                is EditRecipeEvent.GoBack -> {
+                is CollectionEditEvent.GoBack -> {
                     onBack()
                 }
             }
         }
     }
+
     val collectionImagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -122,20 +125,31 @@ fun CollectionEditScreen(
 
             LimitedTextFieldBox(
                 title = stringResource(R.string.collection_name),
-                textFieldValue = uiState.name,
+                textFieldValue = uiState.name.value,
                 onValueChange = viewModel::onNameChange,
                 onClearText = { viewModel.onNameChange("") },
-                textLengthLimit = 100,
+                textLengthLimit = Constraints.MAX_COLLECTION_NAME_LENGTH,
                 textHint = stringResource(R.string.collection_hint),
-                errorText = null
+                errorText = when (uiState.name.error) {
+                    is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
+                    is ValidationError.SymbolLimit -> stringResource(R.string.field_length_limit)
+                    else -> null
+                }
             )
 
             SingleActionTextBox(
                 title = stringResource(R.string.recipe_description),
                 value = uiState.description.value,
                 hint = stringResource(R.string.collection_description_hint),
-                isError = false,
-                errorText = null,
+                errorText = when (uiState.description.error) {
+                    is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
+                    is ValidationError.SymbolLimit -> stringResource(
+                        R.string.symbols_limit,
+                        Constraints.MAX_DESCRIPTION_LENGTH
+                    )
+
+                    else -> null
+                },
                 contentDescription = stringResource(R.string.collection_description),
                 onClick = { viewModel.showDescriptionBottomSheet(EditTarget.Description(uiState.description.value)) },
                 painter = null
@@ -151,13 +165,18 @@ fun CollectionEditScreen(
             )
         }
 
-
-        EditDescriptionBottomSheet(
-            initialText = uiState.description.value,
-            isVisible = uiState.editTargetObject != null,
-            textLimit = 1500,
-            onDismiss = { viewModel.showDescriptionBottomSheet(null) },
-            onConfirm = viewModel::setDescription,
-        )
+        val target = uiState.editTargetObject
+        val initialText = when (target) {
+            is EditTarget.Description -> target.descriptionValue
+            else -> ""
+        }
+        if (target != null) {
+            EditDescriptionBottomSheet(
+                initialText = initialText,
+                textLimit = Constraints.MAX_DESCRIPTION_LENGTH,
+                onDismiss = { viewModel.showDescriptionBottomSheet(null) },
+                onConfirm = viewModel::setDescription,
+            )
+        }
     }
 }

@@ -4,14 +4,17 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipebook.domain.Constraints
 import com.example.recipebook.domain.interactor.collection.updateCollectionInteractor.UpdateCollectionInteractor
+import com.example.recipebook.domain.interactor.validation.DataValidator
 import com.example.recipebook.domain.model.collection.UserCollectionEdit
 import com.example.recipebook.domain.useCase.collection.getUserCollectionUseCase.GetUserCollectionUseCaseImpl
 import com.example.recipebook.navigation.mainHomeGraph.collectionDetailGraph.CollectionDetailDestination
 import com.example.recipebook.presentation.util.toDomain
 import com.example.recipebook.presentation.util.toPresentation
-import com.example.recipebook.presentation.viewModel.collectionEditScreen.model.CollectionEditUiState
-import com.example.recipebook.presentation.viewModel.editRecipeScreen.model.EditRecipeEvent
+import com.example.recipebook.presentation.validator.CollectionValidator
+import com.example.recipebook.presentation.viewModel.collectionEditScreen.model.CollectionEditEvent
+import com.example.recipebook.presentation.viewModel.createCollectionScreen.model.CollectionFormUiState
 import com.example.recipebook.presentation.viewModel.model.EditTarget
 import com.example.recipebook.presentation.viewModel.model.FormField
 import com.example.recipebook.presentation.viewModel.model.ImageSource
@@ -28,15 +31,17 @@ import javax.inject.Inject
 class CollectionEditViewModel @Inject constructor(
     private val getUserCollectionUseCaseImpl: GetUserCollectionUseCaseImpl,
     private val updateCollectionInteractor: UpdateCollectionInteractor,
+    private val dataValidator: DataValidator,
+    private val collectionValidator: CollectionValidator,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val collectionId =
         checkNotNull(savedStateHandle[CollectionDetailDestination.COLLECTION_ID_ARG]).toString()
     private var originalCollection = UserCollectionEdit()
-    private val _event = MutableSharedFlow<EditRecipeEvent>()
+    private val _event = MutableSharedFlow<CollectionEditEvent>()
     val event = _event.asSharedFlow()
-    private val _uiState = MutableStateFlow(CollectionEditUiState())
+    private val _uiState = MutableStateFlow(CollectionFormUiState())
     val uiState = _uiState.asStateFlow()
 
 
@@ -49,7 +54,7 @@ class CollectionEditViewModel @Inject constructor(
             originalCollection = getUserCollectionUseCaseImpl.execute(collectionId)
             _uiState.update { collectionEditUiState ->
                 collectionEditUiState.copy(
-                    name = originalCollection.name,
+                    name = FormField(value = originalCollection.name),
                     description = FormField(originalCollection.description),
                     imageSource = originalCollection.imageSource.toPresentation()
                 )
@@ -58,8 +63,18 @@ class CollectionEditViewModel @Inject constructor(
     }
 
     fun onNameChange(value: String) {
+        val error = dataValidator.validateStringLength(
+            value = value,
+            lengthLimit = Constraints.MAX_COLLECTION_NAME_LENGTH
+        )
+
         _uiState.update {
-            it.copy(name = value)
+            it.copy(
+                name = it.name.copy(
+                    value = value,
+                    error = error
+                )
+            )
         }
     }
 
@@ -70,10 +85,18 @@ class CollectionEditViewModel @Inject constructor(
     }
 
     fun setDescription(text: String) {
+        val error = dataValidator.validateStringLength(
+            value = text,
+            lengthLimit = Constraints.MAX_DESCRIPTION_LENGTH
+        )
+
         when (_uiState.value.editTargetObject) {
             is EditTarget.Description -> _uiState.update {
                 it.copy(
-                    description = FormField(text),
+                    description = it.description.copy(
+                        value = text,
+                        error = error
+                    ),
                     editTargetObject = null
                 )
             }
@@ -94,16 +117,23 @@ class CollectionEditViewModel @Inject constructor(
 
     fun onBack() {
         viewModelScope.launch {
-            _event.emit(EditRecipeEvent.GoBack)
+            _event.emit(CollectionEditEvent.GoBack)
         }
     }
 
     fun updateCollection() {
+        val (validatedState, isValid) = collectionValidator.validateAll(
+            state = _uiState.value
+        )
+        _uiState.update { validatedState }
+
+        if (!isValid) return
+
         viewModelScope.launch {
             updateCollectionInteractor.updateCollection(
                 editedCollection = UserCollectionEdit(
                     id = collectionId,
-                    name = _uiState.value.name,
+                    name = _uiState.value.name.value,
                     description = _uiState.value.description.value,
                     imageSource = _uiState.value.imageSource.toDomain()
                 ),
