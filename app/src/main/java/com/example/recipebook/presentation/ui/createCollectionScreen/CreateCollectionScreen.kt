@@ -22,6 +22,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
+import com.example.recipebook.domain.Constraints
+import com.example.recipebook.domain.model.error.validation.ValidationError
 import com.example.recipebook.presentation.ui.commonUi.CustomTextButton
 import com.example.recipebook.presentation.ui.commonUi.EditDescriptionBottomSheet
 import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
@@ -30,6 +32,7 @@ import com.example.recipebook.presentation.ui.commonUi.LimitedTextFieldBox
 import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.util.debounce
+import com.example.recipebook.presentation.util.toUiSource
 import com.example.recipebook.presentation.viewModel.createCollectionScreen.CreateCollectionViewModel
 import com.example.recipebook.presentation.viewModel.createCollectionScreen.model.CreateCollectionEvent
 import com.example.recipebook.presentation.viewModel.model.EditTarget
@@ -109,30 +112,39 @@ fun CreateCollectionScreen(
                 .fillMaxWidth()
                 .height(150.dp)
 
-            if (uiState.imageSource != null) {
-                ImageCover(
-                    imageSource = uiState.imageSource.toString(),
-                    contentDescription = stringResource(R.string.collection_image),
-                    onCancelClick = { viewModel.onImageChange(null) },
-                    modifier = imageModifier
-                )
-            } else {
+            val imageSource = uiState.imageSource.toUiSource()
+
+            if (imageSource == null) {
                 UploadImageBox(
                     text = stringResource(R.string.upload_photo),
                     modifier = imageModifier,
                     onClick = debounce { collectionImagePickerLauncher.launch("image/*") },
                     cornerShapeDp = 20.dp
                 )
+            } else {
+                ImageCover(
+                    imageSource = imageSource,
+                    contentDescription = stringResource(R.string.collection_image),
+                    onCancelClick = { viewModel.onImageChange(null) },
+                    modifier = imageModifier
+                )
             }
 
             LimitedTextFieldBox(
                 title = stringResource(R.string.collection_name),
-                textFieldValue = uiState.name,
+                textFieldValue = uiState.name.value,
                 onValueChange = viewModel::onNameChange,
                 onClearText = { viewModel.onNameChange("") },
-                textLengthLimit = 100,
+                textLengthLimit = Constraints.MAX_COLLECTION_NAME_LENGTH,
                 textHint = stringResource(R.string.collection_hint),
-                errorText = null
+                errorText = when (uiState.name.error) {
+                    is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
+                    is ValidationError.SymbolLimit -> stringResource(
+                        R.string.field_length_limit
+                    )
+
+                    else -> null
+                }
             )
 
 
@@ -140,21 +152,33 @@ fun CreateCollectionScreen(
                 title = stringResource(R.string.recipe_description),
                 value = uiState.description.value,
                 hint = stringResource(R.string.collection_description_hint),
-                isError = false,
-                errorText = null,
+                errorText = when (uiState.description.error) {
+                    is ValidationError.SymbolLimit -> stringResource(
+                        R.string.symbols_limit, Constraints.MAX_DESCRIPTION_LENGTH
+                    )
+
+                    else -> null
+                },
                 contentDescription = stringResource(R.string.collection_description),
-                onClick = { viewModel.showDescriptionBottomSheet(EditTarget.Description(uiState.description.value)) },
+                onClick = { viewModel.setEditTargetObject(EditTarget.Description(uiState.description.value)) },
                 painter = null
             )
         }
     }
 
 
-    EditDescriptionBottomSheet(
-        initialText = uiState.description.value,
-        isVisible = uiState.editTargetObject != null,
-        textLimit = 1500,
-        onDismiss = { viewModel.showDescriptionBottomSheet(null) },
-        onConfirm = viewModel::setDescription
-    )
+    val target = uiState.editTargetObject
+    val initialText = when (target) {
+        is EditTarget.Description -> uiState.description.value
+        else -> ""
+    }
+
+    if (target != null) {
+        EditDescriptionBottomSheet(
+            initialText = initialText,
+            textLimit = 1500,
+            onDismiss = { viewModel.setEditTargetObject(null) },
+            onConfirm = viewModel::setDescription
+        )
+    }
 }
