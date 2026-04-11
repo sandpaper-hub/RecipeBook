@@ -32,8 +32,7 @@ fun MainScreenContainer(onLogout: () -> Unit) {
             if (bottomBarVisibility) {
                 MainBottomNavigationBar(navController = bottomNavController)
             }
-        },
-        applySystemInsets = false
+        }
     ) { innerPadding ->
         MainHomeGraph(
             navController = bottomNavController,
