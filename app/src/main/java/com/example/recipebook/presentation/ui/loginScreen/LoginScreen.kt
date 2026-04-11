@@ -9,6 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -41,6 +42,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     RootScaffold { innerPadding ->
+        val resources = LocalResources.current
         val snackbar = LocalSnackBarController.current
         val uiState by viewModel.uiState.collectAsState()
 
@@ -48,11 +50,11 @@ fun LoginScreen(
             viewModel.events.collect { event ->
                 when (event) {
                     LoginUiEvent.NetworkError -> {
-                        snackbar.showMessage(message = "Network error")
+                        snackbar.showMessage(message = resources.getString(R.string.network_error))
                     }
 
                     LoginUiEvent.UnknownError -> {
-                        snackbar.showMessage(message = "Неизвестная ошибка")//TODO
+                        snackbar.showMessage(message = resources.getString(R.string.unknown_error))
                     }
 
                     LoginUiEvent.OnHomeScreen -> {
@@ -185,7 +187,7 @@ fun LoginScreen(
                     })
 
             SquareRoundedButton(
-                onClick = { viewModel.signIn() }, //TODO block button
+                onClick = { viewModel.signIn() },
                 text = stringResource(R.string.sign_in_button),
                 isLoading = uiState.isLoading,
                 modifier = Modifier

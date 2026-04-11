@@ -159,4 +159,5 @@
     <string name="ingredient_amount" translatable="true">Amount</string>
     <string name="minStepsCountMessage" translatable="true">There must be at least one step</string>
     <string name="maxStepsCountMessage" translatable="true">No more than %d steps</string>
+    <string name="network_error" translatable="true">Network error</string>
 </resources>

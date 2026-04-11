@@ -159,4 +159,5 @@
     <string name="ingredient_amount" translatable="true">Кол-во</string>
     <string name="minStepsCountMessage" translatable="true">Должен быть хотя бы один шаг готовки</string>
     <string name="maxStepsCountMessage" translatable="true">Не более %d шагов готовки</string>
+    <string name="network_error" translatable="true">Ошибка сети</string>
 </resources>
