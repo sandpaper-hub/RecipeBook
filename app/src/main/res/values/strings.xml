@@ -69,7 +69,7 @@
     <string name="upload_photo" translatable="true">Upload photo</string>
     <string name="recipe_name" translatable="true">Recipe Name</string>
     <string name="recipe_description" translatable="true">Description</string>
-    <string name="time_estimation" translatable="true">Time Estimation</string>
+    <string name="time_estimation" translatable="true">Time estimation</string>
     <string name="add_ingredients" translatable="true">Add more ingredients</string>
     <string name="delete_icon" translatable="true">Delete</string>
     <string name="recipe_name_hint" translatable="true">Plov</string>
@@ -83,7 +83,7 @@
     <string name="recipe_image" translatable="true">Recipe image</string>
     <string name="cancel_icon" translatable="true">Cancel Icon</string>
     <string name="ingredient_measure" translatable="true">Enter ingredient and measure</string>
-    <string name="enter_ingredient" translatable="true">Enter ingredient</string>
+    <string name="ingredient_name" translatable="true">Ingredient name</string>
     <string name="empty_hint" translatable="false">---</string>
     <string name="measure" translatable="true">Measure</string>
     <string name="measure_teaspoon" translatable="true">tea spoon</string>
@@ -143,4 +143,21 @@
     <string name="wrong_password" translatable="true">Wrong password</string>
     <string name="wrong_email" translatable="true">Wrong email</string>
     <string name="email_already_in_use" translatable="true">Email already in use</string>
+    <string name="create_something" translatable="true">Create something</string>
+    <string name="edit_description" translatable="true">Edit description</string>
+    <string name="ok_botton" translatable="false">OK</string>
+    <string name="recipe_step_description" translatable="true">Recipe step description</string>
+    <string name="symbols_limit" translatable="true">Maximum %d symbols</string>
+    <string name="collection_description" translatable="true">Collection description</string>
+    <string name="step_title_hint" translatable="true">Title</string>
+    <string name="time_estimation_hours" translatable="true"> hour</string>
+    <string name="time_estimation_minutes" translatable="true"> minute</string>
+    <string name="field_cant_be_blank" translatable="true">Field can\'t be blank</string>
+    <string name="field_length_limit" translatable="true">Character limit reached</string>
+    <string name="minIngredientCountMessage" translatable="true">There must be at least one ingredient</string>
+    <string name="maxIngredientCountMessage" translatable="true">No more than %d ingredients</string>
+    <string name="ingredient_amount" translatable="true">Amount</string>
+    <string name="minStepsCountMessage" translatable="true">There must be at least one step</string>
+    <string name="maxStepsCountMessage" translatable="true">No more than %d steps</string>
+    <string name="network_error" translatable="true">Network error</string>
 </resources>

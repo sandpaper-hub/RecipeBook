@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,24 +18,32 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMenuItem
+import com.example.recipebook.presentation.util.normalizeNumber
+import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
 
 @Composable
 @Suppress("FunctionName")
 fun IngredientDialog(
-    onDialogDismiss: () -> Unit,
-    onConfirm: (value: String, amount: String, measure: String) -> Unit
+    editingIngredient: IngredientUiState?,
+    onDismiss: () -> Unit,
+    onConfirm: (editingIngredient: IngredientUiState) -> Unit
 ) {
+    if (editingIngredient == null) return
+
+    var draft by remember(editingIngredient.id) { mutableStateOf(editingIngredient) }
+    var isMeasureMenuOpen by remember { mutableStateOf(false) }
     val measureMenuItems = listOf(
         MeasureMenuItem.TEASPOON,
         MeasureMenuItem.TABLESPOON,
@@ -45,15 +54,7 @@ fun IngredientDialog(
         MeasureMenuItem.PCS
     )
 
-    var ingredientValue by rememberSaveable { mutableStateOf("") }
-    var isValueError by rememberSaveable { mutableStateOf(false) }
-    var ingredientAmount by rememberSaveable { mutableStateOf("") }
-    var isAmountError by rememberSaveable { mutableStateOf(false) }
-    var ingredientMeasure by rememberSaveable { mutableStateOf(MeasureMenuItem.NULL) }
-    var isMeasureError by rememberSaveable { mutableStateOf(false) }
-    var isMenuExpanded by rememberSaveable { mutableStateOf(false) }
-
-    Dialog(onDismissRequest = onDialogDismiss) {
+    Dialog(onDismissRequest = onDismiss) {
         Card(
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(),
@@ -68,91 +69,78 @@ fun IngredientDialog(
                 modifier = Modifier
                     .padding(16.dp)
             ) {
-                TitleText(
+                BodyMediumText(
                     text = stringResource(R.string.ingredient_measure),
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                 )
 
-                Row {
+                Column (verticalArrangement = Arrangement.spacedBy(8.dp)){
                     CustomTextField(
-                        value = ingredientValue,
-                        onValueChange = {
-                            ingredientValue = it
-                            isValueError = false
-                        },
-                        hint = stringResource(R.string.enter_ingredient),
-                        isError = isValueError,
-                        modifier = Modifier.weight(1f)
+                        value = draft.value,
+                        onValueChange = { draft = draft.copy(value = it) },
+                        hint = stringResource(R.string.ingredient_name),
+                        modifier = Modifier.height(52.dp)
                     )
 
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    CustomNumberTextField(
-                        value = ingredientAmount,
-                        onValueChange = {
-                            ingredientAmount = it
-                            isAmountError = false
-                        },
-                        hint = "100",
-                        isError = isAmountError,
-                        modifier = Modifier
-                            .width(60.dp)
-                            .background(MaterialTheme.colorScheme.background)
-                    )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Column {
-                        SingleActionTextBox(
-                            value = if (ingredientMeasure.stringResource != 0) {
-                                stringResource(ingredientMeasure.stringResource)
-                            } else "",
-                            hint = stringResource(R.string.empty_hint),
-                            isError = isMeasureError,
-                            contentDescription = stringResource(R.string.measure),
-                            onClick = { isMenuExpanded = true },
-                            painter = null,
-                            modifier = Modifier.width(60.dp)
+                    Row (horizontalArrangement = Arrangement.spacedBy(8.dp)){
+                        CustomTextField(
+                            value = draft.amount,
+                            onValueChange = { draft = draft.copy(amount = it.normalizeNumber()) },
+                            hint = stringResource(R.string.ingredient_amount),
+                            keyboardType = KeyboardType.Decimal,
+                            modifier = Modifier
+                                .weight(1f)
+                                .background(MaterialTheme.colorScheme.background)
                         )
 
-                        AppDropdownMenu(
-                            expanded = isMenuExpanded,
-                            items = measureMenuItems,
-                            itemContent = { menuItem ->
-                                Text(stringResource(menuItem.stringResource))
-                            },
-                            onItemClick = { menuItem ->
-                                ingredientMeasure = menuItem
-                                isMeasureError = false
-                            },
-                            onDismiss = { isMenuExpanded = false },
-                        )
+                        Column{
+                            SingleActionText(
+                                value = if (draft.measure != MeasureMenuItem.NULL) {
+                                    stringResource(draft.measure.stringResource)
+                                } else "",
+                                hint = stringResource(R.string.empty_hint),
+                                isError = false,
+                                contentDescription = stringResource(R.string.measure),
+                                onClick = { isMeasureMenuOpen = true },
+                                painter = null,
+                                modifier = Modifier.width(80.dp)
+                            )
+
+                            AppDropdownMenu(
+                                expanded = isMeasureMenuOpen,
+                                items = measureMenuItems,
+                                itemContent = { menuItem ->
+                                    Text(stringResource(menuItem.stringResource))
+                                },
+                                onItemClick = { menuItem ->
+                                    draft = draft.copy(measure = menuItem)
+                                },
+                                onDismiss = { isMeasureMenuOpen = false },
+                            )
+                        }
                     }
                 }
 
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.End)
-                ) {
-                    TextButton(onClick = onDialogDismiss) {
-                        Text("Cancel")
-                    }
+            }
 
-                    Spacer(modifier = Modifier.width(8.dp))
+            Row(
+                modifier = Modifier
+                    .align(Alignment.End)
+            ) {
+                TextButton(onClick = onDismiss) {
+                    Text("Cancel")
+                }
 
-                    TextButton(onClick = {
-                        when {
-                            ingredientValue.isBlank() -> isValueError = true
-                            ingredientAmount.isBlank() -> isAmountError = true
-                            ingredientMeasure == MeasureMenuItem.NULL -> isMeasureError = true
-                        }
+                Spacer(modifier = Modifier.width(8.dp))
 
-                        if (!isValueError && !isAmountError && !isMeasureError) {
-                            onConfirm(ingredientValue, ingredientAmount, ingredientMeasure.name)
-                        }
-                    }) {
-                        Text("OK")
-                    }
+                TextButton(onClick = {
+                    onConfirm(draft)
+                }) {
+                    Text("OK")
                 }
             }
         }
@@ -182,19 +170,18 @@ fun DeleteDialog(
             modifier = Modifier.width(320.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                HeadingTextMedium(
+                HeadingMediumText(
                     text = headingText,
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Medium
                     )
                 )
 
-                SubHeadingTextSmall(
+                BodyMediumText(
                     text = "${stringResource(R.string.delete_description_title)} \"$itemName\"?\n" +
                             warningText,
                     modifier = Modifier
-                        .padding(top = 8.dp),
-                    color = MaterialTheme.colorScheme.onBackground
+                        .padding(top = 8.dp)
                 )
 
                 Row(

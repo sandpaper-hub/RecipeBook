@@ -1,5 +1,10 @@
 package com.example.recipebook.theme
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 val GreenAccent = Color(0xFF22A45D)
@@ -11,10 +16,22 @@ val Pink40 = Color(0xFF7D5260)
 
 val TitleGray = Color(0xFF757575)
 val TitleGrayTransparent = Color(0x0D757575)
-val InputColor = Color(0xFFF6F8FC)
+val ShadowWhite = Color(0xFFF6F8FC)
 val DarkModeBodyColor = Color(0xFFADADAD)
 val DarkModeInputColor = Color(0xFF2F3233)
 val DarkModeBackgroundColor = Color(0xFF1F2123)
 val MainTextColor = Color(0xFF010F07)
 val DangerColor = Color(0xFFE23D24)
 val LightGreen = Color(0xFFF0FFFA)
+
+@Composable
+fun borderColor(isError: Boolean): Color {
+    val color by animateColorAsState(
+        if (isError) {
+            MaterialTheme.colorScheme.error
+        } else {
+            Color.Unspecified
+        }
+    )
+    return color
+}

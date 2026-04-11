@@ -45,8 +45,7 @@ fun MainBottomNavigationBar(navController: NavController) {
     var showSheet by rememberSaveable { mutableStateOf(false) }
 
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.background,
-        modifier = Modifier.height(66.dp)
+        containerColor = MaterialTheme.colorScheme.background
     ) {
         items.forEach { item ->
             val selected = currentDestination

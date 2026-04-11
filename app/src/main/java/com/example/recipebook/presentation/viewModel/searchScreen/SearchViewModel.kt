@@ -1,12 +1,12 @@
 package com.example.recipebook.presentation.viewModel.searchScreen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.model.AppResult
-import com.example.recipebook.domain.model.DataError
-import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
+import com.example.recipebook.domain.model.error.SearchDataError
 import com.example.recipebook.domain.useCase.recipe.searchRecipe.SearchRecipeUseCase
+import com.example.recipebook.presentation.viewModel.model.RecipeUiState
+import com.example.recipebook.presentation.viewModel.model.TimeEstimationUiState
 import com.example.recipebook.presentation.viewModel.searchScreen.model.ContentState
 import com.example.recipebook.presentation.viewModel.searchScreen.model.SearchUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -68,7 +68,19 @@ class SearchViewModel @Inject constructor(
                             contentState = if (result.data.isEmpty()) {
                                 ContentState.NothingsFound
                             } else {
-                                ContentState.SearchContent(result.data)
+                                ContentState.SearchContent(result.data.map { recipe ->
+                                    RecipeUiState(
+                                        id = recipe.id,
+                                        imageSource = recipe.imageUrl,
+                                        category = recipe.category,
+                                        name = recipe.recipeName,
+                                        timeEstimationUiState = TimeEstimationUiState(
+                                            hour = recipe.recipeTimeEstimation.hour,
+                                            minute = recipe.recipeTimeEstimation.minute
+                                        ),
+                                        uploadedTime = recipe.createdAt
+                                    )
+                                })
                             }
                         )
                     }
@@ -78,11 +90,11 @@ class SearchViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             contentState = when (result.error) {
-                                DataError.NoInternet -> {
+                                SearchDataError.NoInternet -> {
                                     ContentState.NoInternet
                                 }
 
-                                DataError.Timeout -> {
+                                SearchDataError.Timeout -> {
                                     ContentState.NothingsFound
                                 }
 

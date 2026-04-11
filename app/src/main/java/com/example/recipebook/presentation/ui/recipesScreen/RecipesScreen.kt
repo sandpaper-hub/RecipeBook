@@ -17,7 +17,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
+import com.example.recipebook.presentation.ui.commonUi.HeadingLargeText
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeCardList
 import com.example.recipebook.presentation.util.toUpdatedAgoText
 import com.example.recipebook.presentation.viewModel.recipesScreen.RecipesViewModel
@@ -35,7 +35,7 @@ fun RecipesScreen(
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
-        HeadingTextLarge(
+        HeadingLargeText(
             text = stringResource(R.string.recipes),
             modifier = Modifier
                 .constrainAs(headingText) {
@@ -56,11 +56,11 @@ fun RecipesScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             items(
-                items = uiState.newRecipes,
+                items = uiState.recipes,
                 key = { it.id }) { recipe ->
                 RecipeCardList(
                     recipeId = recipe.id,
-                    imageUrl = recipe.imageUrl,
+                    imageUrl = recipe.imageSource,
                     categoryResource = when (recipe.category) {
                         RecipeCategory.APPETIZER -> R.string.appetizer
                         RecipeCategory.SALAD -> R.string.salad
@@ -72,9 +72,12 @@ fun RecipesScreen(
                         RecipeCategory.DRINK -> R.string.drink
                         else -> R.string.unknown_measure
                     },
-                    name = recipe.recipeName,
-                    timeEstimation = recipe.recipeTimeEstimation,
-                    uploadedTime = recipe.createdAt.toUpdatedAgoText(),
+                    name = recipe.name,
+                    timeEstimation = recipe.timeEstimationUiState.toDisplayString(
+                        hourLabel = stringResource(R.string.time_estimation_hours),
+                        minuteLabel = stringResource(R.string.time_estimation_minutes)
+                    ),
+                    uploadedTime = recipe.uploadedTime.toUpdatedAgoText(),
                     onRecipeClick = { onRecipeDetail(recipe.id) },
                     modifier = Modifier.padding(horizontal = 24.dp)
                 )

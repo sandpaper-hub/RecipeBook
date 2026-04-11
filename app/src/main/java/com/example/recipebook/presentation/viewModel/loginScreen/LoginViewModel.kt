@@ -2,8 +2,8 @@ package com.example.recipebook.presentation.viewModel.loginScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipebook.domain.model.authentication.AuthenticationException
-import com.example.recipebook.domain.model.authentication.AuthenticationError
+import com.example.recipebook.domain.model.error.authentication.AuthenticationException
+import com.example.recipebook.domain.model.error.authentication.AuthenticationError
 import com.example.recipebook.domain.useCase.authentication.loginByEmail.LoginByEmailUseCase
 import com.example.recipebook.domain.useCase.authentication.validateAuthenticationInput.ValidateAuthenticationInputUseCase
 import com.example.recipebook.presentation.viewModel.loginScreen.model.LoginUiEvent

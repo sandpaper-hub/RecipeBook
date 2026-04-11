@@ -210,7 +210,7 @@ fun TitleIconButton(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .background(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colorScheme.inverseSurface,
                     shape = RoundedCornerShape(14.dp)
                 )
                 .size(78.dp)

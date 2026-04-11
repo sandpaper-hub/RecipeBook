@@ -7,10 +7,9 @@ import com.example.recipebook.data.mapper.toDomain
 import com.example.recipebook.data.mapper.toDto
 import com.example.recipebook.data.util.ImageCompressorImpl
 import com.example.recipebook.domain.model.AppResult
-import com.example.recipebook.domain.model.DataError
+import com.example.recipebook.domain.model.error.SearchDataError
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipe
 import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStep
-import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStepDraft
 import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
 import com.example.recipebook.domain.model.recipe.step.Step
 import com.example.recipebook.domain.repository.RecipesRepository
@@ -20,11 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
@@ -44,26 +39,6 @@ class RecipesRepositoryImpl @Inject constructor(
             .collection("random")
             .document()
         return document.id
-    }
-
-    override suspend fun uploadStepImages(
-        recipeId: String,
-        steps: List<UploadRecipeStepDraft>
-    ): Map<String, String> = coroutineScope {
-        steps
-            .mapNotNull { step ->
-                val source = step.imageSource ?: return@mapNotNull null
-
-                async(Dispatchers.IO) {
-                    step.id to uploadStepImage(
-                        recipeId = recipeId,
-                        stepId = step.id,
-                        source = source
-                    )
-                }
-            }
-            .awaitAll()
-            .toMap()
     }
 
     override suspend fun uploadStepImage(
@@ -265,19 +240,18 @@ class RecipesRepositoryImpl @Inject constructor(
             val recipes = firestore.collection("users")
                 .document(userId)
                 .collection("recipes")
-                .whereGreaterThanOrEqualTo("nameLowercase", query.lowercase())
-                .whereLessThan("nameLowercase", "${query.lowercase()}\uF7FF")
+                .whereGreaterThanOrEqualTo("nameLowerCase", query.lowercase())
+                .whereLessThan("nameLowerCase", "${query.lowercase()}\uF7FF")
                 .orderBy("createdAt", Query.Direction.DESCENDING)
                 .limit(20)
                 .get()
                 .await()
                 .toObjects(RecipeDto::class.java).map { it.toDomain() }
-
             AppResult.Success(recipes)
         } catch (exception: FirebaseFirestoreException) {
             AppResult.Error(exception.toDataError())
-        } catch (_: Exception) {
-            AppResult.Error(DataError.Unknown)
+        } catch (exception: Exception) {
+            AppResult.Error(SearchDataError.Unknown)
         }
     }
 }

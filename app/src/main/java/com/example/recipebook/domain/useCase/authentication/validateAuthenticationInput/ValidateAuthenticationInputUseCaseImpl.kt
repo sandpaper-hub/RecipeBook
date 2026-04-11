@@ -1,6 +1,6 @@
 package com.example.recipebook.domain.useCase.authentication.validateAuthenticationInput
 
-import com.example.recipebook.domain.model.authentication.AuthenticationError
+import com.example.recipebook.domain.model.error.authentication.AuthenticationError
 import javax.inject.Inject
 
 class ValidateAuthenticationInputUseCaseImpl @Inject constructor(): ValidateAuthenticationInputUseCase {

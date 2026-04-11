@@ -1,8 +1,6 @@
 package com.example.recipebook.presentation.ui.commonUi
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -13,10 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -98,138 +92,6 @@ fun MixedClickableText(
 
 @Composable
 @Suppress("FunctionName")
-fun SingleActionTextBox(
-    value: String,
-    hint: String,
-    isError: Boolean?,
-    contentDescription: String,
-    onClick: () -> Unit,
-    painter: Painter?,
-    modifier: Modifier
-) {
-
-    val borderColor by animateColorAsState(
-        if (isError == true) {
-            MaterialTheme.colorScheme.error
-        } else {
-            Color.Unspecified
-        }
-    )
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .background(
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                shape = RoundedCornerShape(14.dp)
-            )
-            .border(width = 0.5.dp, color = borderColor, shape = RoundedCornerShape(14.dp))
-            .height(48.dp)
-            .clickable(
-                onClick = onClick
-            )
-    ) {
-        Spacer(modifier = Modifier.width(16.dp))
-
-        if (painter != null) {
-            Icon(
-                painter,
-                contentDescription = contentDescription,
-                modifier = Modifier.padding(start = 16.dp)
-            )
-
-            Spacer(modifier = Modifier.width(12.dp))
-        }
-
-        Text(
-            text = value.ifEmpty { hint },
-            color = if (value.isEmpty()) TitleGray else MaterialTheme.colorScheme.inversePrimary,
-            style = if (value.isEmpty()) MaterialTheme.typography.labelMedium else MaterialTheme.typography.bodyMedium
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-    }
-}
-
-@Composable
-@Suppress("FunctionName")
-fun DoubleActionTextBox(
-    ingredient: String,
-    amount: String,
-    measure: String,
-    hint: String,
-    onBoxClick: () -> Unit,
-    onIconClick: () -> Unit
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(bottom = 12.dp)
-            .background(
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                shape = RoundedCornerShape(14.dp)
-            )
-            .fillMaxWidth()
-            .height(48.dp)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onBoxClick
-            )
-    ) {
-
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(
-            text = ingredient.ifBlank {
-                hint
-            },
-            modifier = Modifier
-                .weight(1f),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                color = if (ingredient.isEmpty()) TitleGray else MaterialTheme.colorScheme.inversePrimary
-            )
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Text(
-            text = amount,
-            modifier = Modifier.widthIn(max = 54.dp),
-            style = MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.inversePrimary
-            )
-        )
-
-        Spacer(modifier = Modifier.width(4.dp))
-
-        Text(
-            text = measure,
-            style = MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.inversePrimary
-            )
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Icon(
-            painter = painterResource(R.drawable.trash_icon),
-            contentDescription = stringResource(R.string.delete_icon),
-            modifier = Modifier.clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onIconClick
-            )
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-    }
-}
-
-@Composable
-@Suppress("FunctionName")
 fun TextDivider(modifier: Modifier) {
     Row(
         modifier = modifier.then(
@@ -262,7 +124,7 @@ fun TextDivider(modifier: Modifier) {
 
 @Composable
 @Suppress("FunctionName")
-fun HeadingTextLarge(text: String, modifier: Modifier) {
+fun HeadingLargeText(text: String, modifier: Modifier) {
     Text(
         text = text,
         modifier = modifier,
@@ -275,7 +137,7 @@ fun HeadingTextLarge(text: String, modifier: Modifier) {
 
 @Composable
 @Suppress
-fun HeadingTextMedium(
+fun HeadingMediumText(
     text: String,
     modifier: Modifier = Modifier,
     style: TextStyle = MaterialTheme.typography.bodyLarge,
@@ -289,7 +151,7 @@ fun HeadingTextMedium(
 
 @Composable
 @Suppress("FunctionName")
-fun TitleTextLarge(text: String, modifier: Modifier) {
+fun TitleLargeText(text: String, modifier: Modifier) {
     Text(
         text = text,
         maxLines = 1,
@@ -303,28 +165,15 @@ fun TitleTextLarge(text: String, modifier: Modifier) {
 
 @Composable
 @Suppress("FunctionName")
-fun SubHeadingTextSmall(
+fun BodyMediumText(
+    modifier: Modifier,
     text: String,
-    color: Color,
-    modifier: Modifier
+    style: TextStyle = MaterialTheme.typography.bodyMedium
 ) {
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.bodyMedium.copy(color = color)
-    )
-}
-
-@Composable
-@Suppress("FunctionName")
-fun TitleText(text: String, modifier: Modifier) {
-    Text(
-        text = text,
-        modifier = modifier,
-        style = MaterialTheme.typography.bodyMedium.copy(
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.onPrimary
-        )
+        style = style
     )
 }
 
@@ -459,7 +308,7 @@ fun ExpandableText(
     var isExpanded by remember { mutableStateOf(false) }
     var isOverflowing by remember { mutableStateOf(false) }
 
-    Column(modifier =modifier) {
+    Column(modifier = modifier) {
         Text(
             text = text,
             maxLines = if (isExpanded) Int.MAX_VALUE else minimizedMaxLines,

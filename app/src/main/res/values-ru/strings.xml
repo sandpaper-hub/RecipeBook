@@ -69,7 +69,7 @@
     <string name="upload_photo">Загрузить фото</string>
     <string name="recipe_name">Название Рецепта</string>
     <string name="recipe_description">Описание</string>
-    <string name="time_estimation">Время Приготовления</string>
+    <string name="time_estimation">Время приготовления</string>
     <string name="add_ingredients">Добавть ингредиенты</string>
     <string name="delete_icon">Удалить</string>
     <string name="recipe_name_hint">Плов</string>
@@ -83,7 +83,7 @@
     <string name="recipe_image">Изображение рецепта</string>
     <string name="cancel_icon">Отмена</string>
     <string name="ingredient_measure">Введите ингредиент и величину</string>
-    <string name="enter_ingredient">Enter ingredient</string>
+    <string name="ingredient_name">Название игредиента</string>
     <!-- empty hint not translatable -->
     <string name="measure">Величина</string>
     <string name="measure_teaspoon">ч.л.</string>
@@ -94,7 +94,7 @@
     <string name="measure_kg">кг</string>
     <string name="measure_pcs">шт</string>
     <string name="recipe_step_image">Изображение для шага готовки</string>
-    <string name="step_by_step">Step by step</string>
+    <string name="step_by_step">Шаг за шагом</string>
     <string name="uploaded_now">Загружено сейчас</string>
     <string name="more_action_button">Больше действий</string>
     <string name="follow_button">Подписаться</string>
@@ -139,8 +139,25 @@
     <string name="search_icon">Иконка поиск</string>
     <string name="no_internet">Нет интернет соединения</string>
     <string name="unknown_error">Что-то пошло не так, неизвестная ошибка</string>
-    <string name="invalid_email" translatable="true">Неверный формат email</string>
-    <string name="wrong_password" translatable="true">Неверный пароль</string>
-    <string name="wrong_email" translatable="true">Неверный email</string>
-    <string name="email_already_in_use" translatable="true">Email уже используется</string>
+    <string name="invalid_email" >Неверный формат email</string>
+    <string name="wrong_password">Неверный пароль</string>
+    <string name="wrong_email">Неверный email</string>
+    <string name="email_already_in_use">Email уже используется</string>
+    <string name="create_something">Создайте что-нибудь</string>
+    <string name="edit_description">Редактировать описание</string>
+    <!-- ok_button isn't translatabl-->
+    <string name="recipe_step_description">Описание шага рецепта</string>
+    <string name="symbols_limit">Максимум %d символов</string>
+    <string name="collection_description">Описание коллекции</string>
+    <string name="step_title_hint">Заголовок</string>
+    <string name="time_estimation_hours" translatable="true"> ч</string>
+    <string name="time_estimation_minutes" translatable="true"> мин</string>
+    <string name="field_cant_be_blank" translatable="true">Поле не может быть пустым</string>
+    <string name="field_length_limit" translatable="true">Достигнут лимит символов</string>
+    <string name="minIngredientCountMessage" translatable="true">Должен быть хотя бы один ингредиент</string>
+    <string name="maxIngredientCountMessage" translatable="true">Не более %d ингредиентов</string>
+    <string name="ingredient_amount" translatable="true">Кол-во</string>
+    <string name="minStepsCountMessage" translatable="true">Должен быть хотя бы один шаг готовки</string>
+    <string name="maxStepsCountMessage" translatable="true">Не более %d шагов готовки</string>
+    <string name="network_error" translatable="true">Ошибка сети</string>
 </resources>

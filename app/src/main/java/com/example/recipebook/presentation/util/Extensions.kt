@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.recipebook.R
 import com.example.recipebook.domain.model.ImageSourceType
-import com.example.recipebook.domain.model.authentication.AuthenticationError
+import com.example.recipebook.domain.model.error.authentication.AuthenticationError
 import com.example.recipebook.presentation.viewModel.model.ImageSource
 import java.time.Instant
 import java.time.ZoneId
@@ -170,4 +170,33 @@ fun AuthenticationError.Password.toStringRes(): Int = when (this) {
     AuthenticationError.Password.Empty -> R.string.blank_password
     AuthenticationError.Password.MinLength -> R.string.password_min_digit
     AuthenticationError.Password.WrongPassword -> R.string.wrong_password
+}
+
+fun String.normalizeNumber(): String {
+    val result = StringBuilder()
+    var hasDot = false
+    var digitsAfterDot = 0
+    var hasDigitBeforeSeparator = false
+
+    for (char in this) {
+        when {
+            char.isDigit() -> {
+                if (hasDot) {
+                    if (digitsAfterDot < 2) {
+                        result.append(char)
+                        digitsAfterDot++
+                    }
+                } else {
+                    result.append(char)
+                    hasDigitBeforeSeparator = true
+                }
+            }
+            (char == '.' || char == ',') && !hasDot && hasDigitBeforeSeparator -> {
+                result.append('.')
+                hasDot = true
+            }
+        }
+    }
+
+    return result.take(4).toString()
 }

@@ -6,6 +6,7 @@ import com.example.recipebook.domain.model.recipe.createRecipe.UploadRecipeStep
 import com.example.recipebook.domain.model.recipe.getRecipe.FullRecipe
 import com.example.recipebook.domain.model.recipe.step.EditStep
 import com.example.recipebook.domain.model.ImageSourceType
+import com.example.recipebook.domain.model.recipe.createRecipe.NewTimeEstimation
 import com.example.recipebook.domain.service.StepImageProcessor
 import com.example.recipebook.domain.useCase.recipe.GetRecipeCoverUrlUseCase
 import com.example.recipebook.domain.useCase.recipe.UpdateRecipeUseCase
@@ -30,7 +31,10 @@ class UpdateRecipeInteractorImpl @Inject constructor(
             authorId = editedRecipe.authorId,
             recipeName = editedRecipe.recipeName,
             recipeDescription = editedRecipe.recipeDescription,
-            recipeTimeEstimation = editedRecipe.recipeTimeEstimation,
+            recipeNewTimeEstimation = NewTimeEstimation(
+                hour = editedRecipe.recipeTimeEstimation.hour,
+                minute = editedRecipe.recipeTimeEstimation.minute
+            ),
             imageUrl = recipeImageSource,
             category = editedRecipe.category.name,
             ingredients = editedRecipe.ingredients.map {
@@ -38,7 +42,7 @@ class UpdateRecipeInteractorImpl @Inject constructor(
                     id = it.id,
                     value = it.value,
                     amount = it.amount,
-                    measure = it.measure.name
+                    measure = it.measure
                 )
             }
         )

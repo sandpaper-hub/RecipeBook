@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.useCase.recipe.observeRecipeListByIds.ObserveRecipeListByIdsUseCase
 import com.example.recipebook.domain.useCase.userProfile.getUserIdFlow.GetUserIdFlowUseCase
+import com.example.recipebook.presentation.viewModel.model.TimeEstimationUiState
+import com.example.recipebook.presentation.viewModel.model.RecipeUiState
 import com.example.recipebook.presentation.viewModel.recipesScreen.model.RecipesUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -50,7 +52,19 @@ class RecipesViewModel @Inject constructor(
             .onEach { recipes ->
                 _uiState.update {
                     it.copy(
-                        newRecipes = recipes,
+                        recipes = recipes.map { recipe ->
+                            RecipeUiState(
+                                id = recipe.id,
+                                imageSource = recipe.imageUrl,
+                                category = recipe.category,
+                                name = recipe.recipeName,
+                                timeEstimationUiState = TimeEstimationUiState(
+                                    recipe.recipeTimeEstimation.hour,
+                                    recipe.recipeTimeEstimation.minute
+                                ),
+                                uploadedTime = recipe.createdAt
+                            )
+                        },
                         isRecipesLoading = false
                     )
                 }

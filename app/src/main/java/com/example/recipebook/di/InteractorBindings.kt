@@ -10,8 +10,6 @@ import com.example.recipebook.domain.interactor.profile.updateProfile.UpdateUser
 import com.example.recipebook.domain.interactor.profile.updateProfile.UpdateUserDataInteractorImpl
 import com.example.recipebook.domain.interactor.recipes.fullRecipeInteractor.FullRecipeInteractor
 import com.example.recipebook.domain.interactor.recipes.fullRecipeInteractor.FullRecipeInteractorImpl
-import com.example.recipebook.domain.interactor.registration.RegistrationInteractor
-import com.example.recipebook.domain.interactor.registration.RegistrationInteractorImpl
 import com.example.recipebook.domain.interactor.settings.setApplicationLanguage.SetApplicationLanguageInteractor
 import com.example.recipebook.domain.interactor.settings.setApplicationLanguage.SetApplicationLanguageInteractorImpl
 import com.example.recipebook.domain.interactor.recipes.createNewRecipe.CreateNewRecipeInteractor
@@ -20,6 +18,8 @@ import com.example.recipebook.domain.interactor.recipes.deleteRecipeInteractor.D
 import com.example.recipebook.domain.interactor.recipes.deleteRecipeInteractor.DeleteRecipeInteractorImpl
 import com.example.recipebook.domain.interactor.recipes.updateRecipeInteractor.UpdateRecipeInteractor
 import com.example.recipebook.domain.interactor.recipes.updateRecipeInteractor.UpdateRecipeInteractorImpl
+import com.example.recipebook.domain.interactor.validation.DataValidator
+import com.example.recipebook.domain.interactor.validation.DataValidatorImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -28,12 +28,6 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class InteractorBindings {
-
-
-    @Binds
-    abstract fun bingRegistrationInteractor(
-        impl: RegistrationInteractorImpl
-    ): RegistrationInteractor
 
     @Binds
     abstract fun bindSplashInteractor(
@@ -79,4 +73,9 @@ abstract class InteractorBindings {
     abstract fun bindCreateNewRecipeInteractor(
         impl: CreateNewRecipeInteractorImpl
     ): CreateNewRecipeInteractor
+
+    @Binds
+    abstract fun bindDataValidator(
+        impl: DataValidatorImpl
+    ): DataValidator
 }

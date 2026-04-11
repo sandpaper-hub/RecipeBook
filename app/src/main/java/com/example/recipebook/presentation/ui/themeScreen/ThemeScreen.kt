@@ -16,7 +16,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.domain.model.ThemeMode
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
+import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
 import com.example.recipebook.presentation.ui.commonUi.SelectableText
 import com.example.recipebook.presentation.viewModel.themeScreen.ThemeViewModel
 import com.example.recipebook.presentation.viewModel.themeScreen.model.ThemeEvent
@@ -61,7 +61,7 @@ fun ThemeScreen(
             onClick = { viewModel.onBack() }
         )
 
-        HeadingTextMedium(
+        HeadingMediumText(
             text = stringResource(R.string.theme),
             modifier = Modifier
                 .constrainAs(headingText) {

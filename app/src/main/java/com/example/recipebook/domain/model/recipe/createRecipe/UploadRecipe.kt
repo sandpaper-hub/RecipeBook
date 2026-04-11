@@ -5,7 +5,7 @@ data class UploadRecipe(
     val authorId: String = "",
     val recipeName: String = "",
     val recipeDescription: String = "",
-    val recipeTimeEstimation: String = "",
+    val recipeNewTimeEstimation: NewTimeEstimation = NewTimeEstimation(),
     val imageUrl: String? = null,
     val category: String = "",
     val ingredients: List<NewRecipeIngredient> = emptyList(),

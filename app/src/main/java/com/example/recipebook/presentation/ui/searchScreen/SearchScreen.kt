@@ -27,12 +27,12 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
-import com.example.recipebook.domain.model.recipe.getRecipe.Recipe
 import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
+import com.example.recipebook.presentation.ui.commonUi.HeadingLargeText
 import com.example.recipebook.presentation.ui.commonUi.SearchTextField
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeCardList
 import com.example.recipebook.presentation.util.toUpdatedAgoText
+import com.example.recipebook.presentation.viewModel.model.RecipeUiState
 import com.example.recipebook.presentation.viewModel.searchScreen.SearchViewModel
 import com.example.recipebook.presentation.viewModel.searchScreen.model.ContentState
 
@@ -49,7 +49,7 @@ fun SearchScreen(
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
-        HeadingTextLarge(
+        HeadingLargeText(
             text = stringResource(R.string.search_text),
             modifier = Modifier
                 .constrainAs(headingText) {
@@ -119,7 +119,7 @@ fun SearchScreen(
 
 @Composable
 private fun SearchContent(
-    items: List<Recipe>,
+    items: List<RecipeUiState>,
     onItemClick: (String) -> Unit
 ) {
     LazyColumn(
@@ -129,7 +129,7 @@ private fun SearchContent(
         items(items, key = { it.id }) { recipe ->
             RecipeCardList(
                 recipeId = recipe.id,
-                imageUrl = recipe.imageUrl,
+                imageUrl = recipe.imageSource,
                 categoryResource = when (recipe.category) {
                     RecipeCategory.APPETIZER -> R.string.appetizer
                     RecipeCategory.SALAD -> R.string.salad
@@ -141,9 +141,12 @@ private fun SearchContent(
                     RecipeCategory.DRINK -> R.string.drink
                     else -> R.string.unknown_measure
                 },
-                name = recipe.recipeName,
-                timeEstimation = recipe.recipeTimeEstimation,
-                uploadedTime = recipe.createdAt.toUpdatedAgoText(),
+                name = recipe.name,
+                timeEstimation = recipe.timeEstimationUiState.toDisplayString(
+                    hourLabel = stringResource(R.string.time_estimation_hours),
+                    minuteLabel = stringResource(R.string.time_estimation_minutes)
+                ),
+                uploadedTime = recipe.uploadedTime.toUpdatedAgoText(),
                 onRecipeClick = onItemClick,
                 modifier = Modifier
             )

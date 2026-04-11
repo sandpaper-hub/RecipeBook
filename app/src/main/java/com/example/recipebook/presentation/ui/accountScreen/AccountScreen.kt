@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -25,12 +27,12 @@ import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
 import com.example.recipebook.presentation.ui.commonUi.CustomCircleIconButton
 import com.example.recipebook.presentation.ui.commonUi.CustomTextField
 import com.example.recipebook.presentation.ui.commonUi.DatePickerDialog
-import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
+import com.example.recipebook.presentation.ui.commonUi.SingleActionText
+import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
 import com.example.recipebook.presentation.ui.commonUi.ProfileAvatar
 import com.example.recipebook.presentation.ui.commonUi.SelectableButtonBox
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
-import com.example.recipebook.presentation.ui.commonUi.TitleText
+import com.example.recipebook.presentation.ui.commonUi.BodyMediumText
 import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.util.debounce
 import com.example.recipebook.presentation.viewModel.accountScreen.AccountViewModel
@@ -91,7 +93,7 @@ fun AccountScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            HeadingTextMedium(text = stringResource(R.string.account_text))
+            HeadingMediumText(text = stringResource(R.string.account_text))
 
             Spacer(modifier = Modifier.weight(1.15f))
         }
@@ -119,13 +121,17 @@ fun AccountScreen(
                 }
         )
 
-        TitleText(
-            text = stringResource(R.string.full_name),
+        BodyMediumText(
             modifier = Modifier
                 .constrainAs(nameText) {
                     start.linkTo(startGuideline)
                     top.linkTo(profileImage.bottom, margin = 32.dp)
-                }
+                },
+            text = stringResource(R.string.full_name),
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         )
 
         CustomTextField(
@@ -141,13 +147,17 @@ fun AccountScreen(
                 }
         )
 
-        TitleText(
+        BodyMediumText(
             text = stringResource(R.string.nick_name),
             modifier = Modifier
                 .constrainAs(userNameText) {
                     start.linkTo(startGuideline)
                     top.linkTo(nameTextField.bottom, margin = 28.dp)
-                }
+                },
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         )
 
         CustomTextField(
@@ -163,19 +173,23 @@ fun AccountScreen(
                 }
         )
 
-        TitleText(
+        BodyMediumText(
             text = stringResource(R.string.region),
             modifier = Modifier
                 .constrainAs(regionText) {
                     start.linkTo(startGuideline)
                     top.linkTo(userNameTextField.bottom, margin = 28.dp)
-                }
+                },
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         )
 
-        SingleActionTextBox(
+        SingleActionText(
             value = uiState.region,
             hint = stringResource(R.string.region_hint),
-            isError = null,
+            isError = false,
             contentDescription = stringResource(R.string.region),
             onClick = { viewModel.showCountryMenu(true) },
             painter = null,
@@ -199,19 +213,23 @@ fun AccountScreen(
             }
         )
 
-        TitleText(
+        BodyMediumText(
             text = stringResource(R.string.date_of_birth),
             modifier = Modifier
                 .constrainAs(dateBirthText) {
                     start.linkTo(startGuideline)
                     top.linkTo(regionTextField.bottom, margin = 28.dp)
-                }
+                },
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         )
 
-        SingleActionTextBox(
+        SingleActionText(
             value = uiState.dateOfBirth?.toFormatedDate() ?: "",
             hint = stringResource(R.string.date_of_birth_hint),
-            isError = null,
+            isError = false,
             contentDescription = stringResource(R.string.date_of_birth),
             onClick = { viewModel.showDatePicker(true) },
             painter = painterResource(R.drawable.date_icon),
@@ -232,13 +250,17 @@ fun AccountScreen(
             }
         )
 
-        TitleText(
+        BodyMediumText(
             text = stringResource(R.string.gender),
             modifier = Modifier
                 .constrainAs(genderText) {
                     start.linkTo(startGuideline)
                     top.linkTo(dateBirthTextField.bottom, margin = 28.dp)
-                }
+                },
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         )
 
         SelectableButtonBox(

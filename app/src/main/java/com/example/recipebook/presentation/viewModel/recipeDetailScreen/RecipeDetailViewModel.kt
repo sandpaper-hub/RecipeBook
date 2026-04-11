@@ -4,12 +4,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.interactor.recipes.deleteRecipeInteractor.DeleteRecipeInteractor
+import com.example.recipebook.domain.model.recipe.getRecipe.IngredientMeasure
 import com.example.recipebook.domain.useCase.recipe.addRecipeToCollectionUseCase.AddRecipeToCollectionUseCase
 import com.example.recipebook.domain.useCase.collection.observeUserCollectionUseCase.ObserveUserCollectionUseCase
 import com.example.recipebook.domain.useCase.recipe.removeRecipeFromCollectionUseCase.RemoveBrokenIdUseCase
 import com.example.recipebook.domain.useCase.userProfile.getUserIdFlow.GetUserIdFlowUseCase
 import com.example.recipebook.domain.useCase.recipe.observeRecipeById.ObserveRecipeByIdUseCase
 import com.example.recipebook.navigation.mainHomeGraph.recipeDetailGraph.RecipeDetailDestination
+import com.example.recipebook.presentation.viewModel.model.TimeEstimationUiState
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.CollectionUiState
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.IngredientUiState
 import com.example.recipebook.presentation.viewModel.recipeDetailScreen.model.RecipeDetailEvent
@@ -184,13 +186,16 @@ class RecipeDetailViewModel @Inject constructor(
                             name = recipe.recipeName,
                             description = recipe.recipeDescription,
                             category = recipe.category,
-                            timeEstimation = recipe.recipeTimeEstimation,
+                            timeEstimationUiState = TimeEstimationUiState(
+                                hour = recipe.recipeTimeEstimation.hour,
+                                minute = recipe.recipeTimeEstimation.minute
+                            ),
                             ingredients = recipe.ingredients.map { ingredient ->
                                 IngredientUiState(
                                     id = ingredient.id,
                                     value = ingredient.value,
                                     amount = ingredient.amount,
-                                    measure = ingredient.measure
+                                    measure = IngredientMeasure.from(ingredient.measure)
                                 )
                             },
                             createdAt = recipe.createdAt

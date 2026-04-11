@@ -10,6 +10,8 @@ import com.example.recipebook.domain.useCase.recipe.getRecipeListByIds.GetRecipe
 import com.example.recipebook.navigation.mainHomeGraph.collectionDetailGraph.CollectionDetailDestination
 import com.example.recipebook.presentation.viewModel.collectionDetailScreen.model.CollectionDetailEvent
 import com.example.recipebook.presentation.viewModel.collectionDetailScreen.model.CollectionDetailUiState
+import com.example.recipebook.presentation.viewModel.model.RecipeUiState
+import com.example.recipebook.presentation.viewModel.model.TimeEstimationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -67,7 +69,21 @@ CollectionDetailViewModel @Inject constructor(
                             imageSource = collection.imageSource,
                             description = collection.description,
                             collectionSize = collection.recipeIds.size,
-                            recipeList = getRecipeListByIdsUseCase.execute(collection.recipeIds),
+                            recipeList = getRecipeListByIdsUseCase.execute(collection.recipeIds)
+                                .map { recipe ->
+                                    RecipeUiState(
+                                        id = recipe.id,
+                                        imageSource = recipe.imageUrl,
+                                        category = recipe.category,
+                                        name = recipe.recipeName,
+                                        timeEstimationUiState = TimeEstimationUiState(
+                                            hour = recipe.recipeTimeEstimation.hour,
+                                            minute = recipe.recipeTimeEstimation.minute
+
+                                        ),
+                                        uploadedTime = recipe.createdAt
+                                    )
+                                },
                         )
                     }
                 }

@@ -1,19 +1,19 @@
 package com.example.recipebook.data.mapper
 
-import com.example.recipebook.domain.model.DataError
-import com.example.recipebook.domain.model.authentication.AuthenticationException
+import com.example.recipebook.domain.model.error.SearchDataError
+import com.example.recipebook.domain.model.error.authentication.AuthenticationException
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.firestore.FirebaseFirestoreException
 
-fun FirebaseFirestoreException.toDataError(): DataError {
+fun FirebaseFirestoreException.toDataError(): SearchDataError {
     return when (code) {
         FirebaseFirestoreException.Code.UNAVAILABLE ->
-            DataError.NoInternet
+            SearchDataError.NoInternet
 
-        FirebaseFirestoreException.Code.DEADLINE_EXCEEDED -> DataError.Timeout
-        else -> DataError.Unknown
+        FirebaseFirestoreException.Code.DEADLINE_EXCEEDED -> SearchDataError.Timeout
+        else -> SearchDataError.Unknown
     }
 }
 

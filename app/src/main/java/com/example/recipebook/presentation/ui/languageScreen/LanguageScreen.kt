@@ -15,7 +15,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ClickableIcon
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
+import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
 import com.example.recipebook.presentation.ui.commonUi.SelectableText
 import com.example.recipebook.presentation.viewModel.languageScreen.LanguageViewModel
 import com.example.recipebook.presentation.viewModel.languageScreen.model.LanguageEvent
@@ -58,7 +58,7 @@ fun LanguageScreen(
             onClick = { viewModel.goBack() }
         )
 
-        HeadingTextMedium(
+        HeadingMediumText(
             text = stringResource(R.string.language),
             modifier = Modifier
                 .constrainAs(headingText) {

@@ -15,7 +15,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
 import com.example.recipebook.domain.model.ThemeMode
 import com.example.recipebook.presentation.ui.commonUi.ClickableProfileBox
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextLarge
+import com.example.recipebook.presentation.ui.commonUi.HeadingLargeText
 import com.example.recipebook.presentation.ui.commonUi.IconTextBox
 import com.example.recipebook.presentation.ui.commonUi.SubheadingBackgroundText
 import com.example.recipebook.presentation.viewModel.settingsScreen.SettingsViewModel
@@ -50,18 +50,27 @@ fun SettingsScreen(
             .fillMaxSize()
     ) {
 
-        val (headingText, profileBox, subheadingSettingsText,
+        val (headingText, subheadingProfileText, profileBox, subheadingSettingsText,
             languageBox, themeBox, helpBox, logoutBox) = createRefs()
 
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
-        HeadingTextLarge(
+        HeadingLargeText(
             text = stringResource(R.string.settings_text),
             modifier = Modifier
                 .constrainAs(headingText) {
                     start.linkTo(startGuideline)
                     top.linkTo(parent.top, margin = 24.dp)
+                }
+        )
+
+        SubheadingBackgroundText(
+            text = stringResource(R.string.profile_text),
+            modifier = Modifier
+                .constrainAs(subheadingProfileText) {
+                    linkTo(start = parent.start, end = parent.end)
+                    top.linkTo(headingText.bottom, margin = 16.dp)
                 }
         )
 
@@ -72,7 +81,7 @@ fun SettingsScreen(
             onClick = debounce { viewModel.onAccountScreen() },
             modifier = Modifier.constrainAs(profileBox) {
                 linkTo(start = startGuideline, end = endGuideline)
-                top.linkTo(headingText.bottom, margin = 16.dp)
+                top.linkTo(subheadingProfileText.bottom)
                 width = Dimension.fillToConstraints
             }
         )

@@ -8,6 +8,8 @@ import com.example.recipebook.domain.useCase.authentication.loginByEmail.LoginBy
 import com.example.recipebook.domain.useCase.authentication.loginByEmail.LoginByEmailUseCaseImpl
 import com.example.recipebook.domain.useCase.authentication.logout.LogOutUseCase
 import com.example.recipebook.domain.useCase.authentication.logout.LogOutUseCaseImpl
+import com.example.recipebook.domain.useCase.authentication.registrationByEmail.RegistrationByEmailUseCase
+import com.example.recipebook.domain.useCase.authentication.registrationByEmail.RegistrationByEmailUseCaseImpl
 import com.example.recipebook.domain.useCase.authentication.validateAuthenticationInput.ValidateAuthenticationInputUseCase
 import com.example.recipebook.domain.useCase.authentication.validateAuthenticationInput.ValidateAuthenticationInputUseCaseImpl
 import com.example.recipebook.domain.useCase.recipe.addRecipeToCollectionUseCase.AddRecipeIdToCollectionUseCaseImpl
@@ -169,4 +171,9 @@ abstract class UseCaseBindings {
     abstract fun bindChangeThemeUseCase(
         impl: ChangeThemeUseCaseImpl
     ): ChangeThemeUseCase
+
+    @Binds
+    abstract fun bindRegistrationByEmailUseCase(
+        impl: RegistrationByEmailUseCaseImpl
+    ): RegistrationByEmailUseCase
 }

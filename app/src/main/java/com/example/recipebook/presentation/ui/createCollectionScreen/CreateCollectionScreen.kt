@@ -3,11 +3,11 @@ package com.example.recipebook.presentation.ui.createCollectionScreen
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -22,15 +22,20 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
+import com.example.recipebook.domain.Constraints
+import com.example.recipebook.domain.model.error.validation.ValidationError
 import com.example.recipebook.presentation.ui.commonUi.CustomTextButton
-import com.example.recipebook.presentation.ui.commonUi.HeadingTextMedium
+import com.example.recipebook.presentation.ui.commonUi.EditDescriptionBottomSheet
+import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
 import com.example.recipebook.presentation.ui.commonUi.ImageCover
-import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
-import com.example.recipebook.presentation.ui.commonUi.TitleTextFieldBox
+import com.example.recipebook.presentation.ui.commonUi.LimitedTextFieldBox
+import com.example.recipebook.presentation.ui.commonUi.SingleActionTextBox
 import com.example.recipebook.presentation.ui.commonUi.UploadImageBox
 import com.example.recipebook.presentation.util.debounce
+import com.example.recipebook.presentation.util.toUiSource
 import com.example.recipebook.presentation.viewModel.createCollectionScreen.CreateCollectionViewModel
 import com.example.recipebook.presentation.viewModel.createCollectionScreen.model.CreateCollectionEvent
+import com.example.recipebook.presentation.viewModel.model.EditTarget
 
 @Composable
 @Suppress("FunctionName")
@@ -57,8 +62,8 @@ fun CreateCollectionScreen(
     }
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (closeButton, headingText, imagePickerBox, collectionNameBox,
-            collectionDescriptionBox, saveButton) = createRefs()
+        val (closeButton, headingText,
+            collectionColumn, saveButton) = createRefs()
         val startGuideline = createGuidelineFromStart(24.dp)
         val endGuideline = createGuidelineFromEnd(24.dp)
 
@@ -84,7 +89,7 @@ fun CreateCollectionScreen(
             }
         )
 
-        HeadingTextMedium(
+        HeadingMediumText(
             text = stringResource(R.string.create_collection),
             modifier = Modifier.constrainAs(headingText) {
                 centerHorizontallyTo(parent)
@@ -92,60 +97,88 @@ fun CreateCollectionScreen(
             }
         )
 
-        Box(
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
-                .constrainAs(imagePickerBox) {
-                    centerHorizontallyTo(parent)
+                .constrainAs(collectionColumn) {
+                    linkTo(start = startGuideline, end = endGuideline)
                     top.linkTo(headingText.bottom, margin = 24.dp)
+                    bottom.linkTo(parent.bottom)
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
                 }
-                .padding(horizontal = 24.dp)
         ) {
             val imageModifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp)
 
-            if (uiState.imageSource != null) {
-                ImageCover(
-                    imageSource = uiState.imageSource.toString(),
-                    contentDescription = stringResource(R.string.collection_image),
-                    onCancelClick = { viewModel.onImageChange(null) },
-                    modifier = imageModifier
-                )
-            } else {
+            val imageSource = uiState.imageSource.toUiSource()
+
+            if (imageSource == null) {
                 UploadImageBox(
                     text = stringResource(R.string.upload_photo),
                     modifier = imageModifier,
                     onClick = debounce { collectionImagePickerLauncher.launch("image/*") },
                     cornerShapeDp = 20.dp
                 )
+            } else {
+                ImageCover(
+                    imageSource = imageSource,
+                    contentDescription = stringResource(R.string.collection_image),
+                    onCancelClick = { viewModel.onImageChange(null) },
+                    modifier = imageModifier
+                )
             }
-        }
 
-        TitleTextFieldBox(
-            title = stringResource(R.string.collection_name),
-            textFieldValue = uiState.name,
-            onValueChange = viewModel::onNameChange,
-            textHint = stringResource(R.string.collection_hint),
-            isError = false,
-            modifier = Modifier.constrainAs(collectionNameBox) {
-                linkTo(start = startGuideline, end = endGuideline)
-                top.linkTo(imagePickerBox.bottom, margin = 32.dp)
-                width = Dimension.fillToConstraints
-            }
-        )
+            LimitedTextFieldBox(
+                title = stringResource(R.string.collection_name),
+                textFieldValue = uiState.name.value,
+                onValueChange = viewModel::onNameChange,
+                onClearText = { viewModel.onNameChange("") },
+                textLengthLimit = Constraints.MAX_COLLECTION_NAME_LENGTH,
+                textHint = stringResource(R.string.collection_hint),
+                errorText = when (uiState.name.error) {
+                    is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
+                    is ValidationError.SymbolLimit -> stringResource(
+                        R.string.field_length_limit
+                    )
 
-        TitleTextFieldBox(
-            title = stringResource(R.string.recipe_description),
-            textFieldValue = uiState.description,
-            onValueChange = viewModel::onDescriptionChange,
-            textHint = stringResource(R.string.collection_description_hint),
-            isError = false,
-            modifier = Modifier
-                .constrainAs(collectionDescriptionBox) {
-                    linkTo(start = startGuideline, end = endGuideline)
-                    top.linkTo(collectionNameBox.bottom)
-                    width = Dimension.fillToConstraints
+                    else -> null
                 }
+            )
+
+
+            SingleActionTextBox(
+                title = stringResource(R.string.recipe_description),
+                value = uiState.description.value,
+                hint = stringResource(R.string.collection_description_hint),
+                errorText = when (uiState.description.error) {
+                    is ValidationError.SymbolLimit -> stringResource(
+                        R.string.symbols_limit, Constraints.MAX_DESCRIPTION_LENGTH
+                    )
+
+                    else -> null
+                },
+                contentDescription = stringResource(R.string.collection_description),
+                onClick = { viewModel.setEditTargetObject(EditTarget.Description(uiState.description.value)) },
+                painter = null
+            )
+        }
+    }
+
+
+    val target = uiState.editTargetObject
+    val initialText = when (target) {
+        is EditTarget.Description -> uiState.description.value
+        else -> ""
+    }
+
+    if (target != null) {
+        EditDescriptionBottomSheet(
+            initialText = initialText,
+            textLimit = 1500,
+            onDismiss = { viewModel.setEditTargetObject(null) },
+            onConfirm = viewModel::setDescription
         )
     }
 }
