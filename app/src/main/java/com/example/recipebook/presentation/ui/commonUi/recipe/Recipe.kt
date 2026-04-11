@@ -23,10 +23,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.ExpandableText
+import com.example.recipebook.presentation.ui.commonUi.SecondaryText
 
 @Composable
 @Suppress("FunctionName")
@@ -66,7 +68,7 @@ fun RecipeCardList(
         Spacer(modifier = Modifier.width(20.dp))
 
         Column {
-            Text(
+            SecondaryText(
                 text = stringResource(categoryResource),
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = MaterialTheme.colorScheme.primary
@@ -75,7 +77,9 @@ fun RecipeCardList(
 
             Text(
                 text = name,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
             )
 
             Text(

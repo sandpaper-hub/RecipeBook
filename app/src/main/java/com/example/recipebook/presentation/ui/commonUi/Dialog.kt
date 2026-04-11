@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.recipebook.R
+import com.example.recipebook.domain.Constraints
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMenuItem
 import com.example.recipebook.presentation.util.normalizeNumber
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.IngredientUiState
@@ -78,15 +79,18 @@ fun IngredientDialog(
                     )
                 )
 
-                Column (verticalArrangement = Arrangement.spacedBy(8.dp)){
-                    CustomTextField(
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    LimitedTextField(
                         value = draft.value,
                         onValueChange = { draft = draft.copy(value = it) },
+                        onClearText = { draft = draft.copy(value = "") },
+                        textLengthLimit = Constraints.MAX_INGREDIENT_LENGTH,
                         hint = stringResource(R.string.ingredient_name),
+                        isError = draft.value.length > Constraints.MAX_INGREDIENT_LENGTH,
                         modifier = Modifier.height(52.dp)
                     )
 
-                    Row (horizontalArrangement = Arrangement.spacedBy(8.dp)){
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         CustomTextField(
                             value = draft.amount,
                             onValueChange = { draft = draft.copy(amount = it.normalizeNumber()) },
@@ -97,7 +101,7 @@ fun IngredientDialog(
                                 .background(MaterialTheme.colorScheme.background)
                         )
 
-                        Column{
+                        Column {
                             SingleActionText(
                                 value = if (draft.measure != MeasureMenuItem.NULL) {
                                     stringResource(draft.measure.stringResource)
