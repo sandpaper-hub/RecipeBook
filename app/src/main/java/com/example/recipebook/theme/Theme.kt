@@ -1,12 +1,15 @@
 package com.example.recipebook.theme
 
+import android.view.Window
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.core.view.WindowCompat
 import com.example.recipebook.domain.model.ThemeMode
 
 
@@ -54,13 +57,21 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun RecipeBookTheme(
+    window: Window,
     mode: ThemeMode,
     content: @Composable () -> Unit
 ) {
+    WindowCompat.setDecorFitsSystemWindows(window, false)
+
     val isDarkTheme = when (mode) {
         ThemeMode.LIGHT -> false
         ThemeMode.DARK -> true
         ThemeMode.SYSTEM -> isSystemInDarkTheme()
+    }
+
+    SideEffect {
+        WindowCompat.getInsetsController(window, window.decorView)
+            .isAppearanceLightStatusBars = !isDarkTheme
     }
     val colorScheme = if (isDarkTheme) DarkColorScheme else LightColorScheme
     val locale = LocalConfiguration.current.locales[0]

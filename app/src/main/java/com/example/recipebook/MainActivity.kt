@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.core.view.WindowCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.navigation.rootNavGraph.RootNavGraph
 import com.example.recipebook.presentation.viewModel.themeScreen.ThemeViewModel
@@ -20,7 +21,10 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val themeViewModel: ThemeViewModel = hiltViewModel()
             val uiState by themeViewModel.uiState.collectAsState()
-            RecipeBookTheme(uiState.themeMode) {
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+            RecipeBookTheme(
+                window = window,
+                mode = uiState.themeMode) {
                 RootNavGraph()
             }
         }
