@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.recipebook.R
 import com.example.recipebook.presentation.ui.commonUi.BodyMediumText
+import com.example.recipebook.presentation.ui.commonUi.HeadingMediumText
 import com.example.recipebook.presentation.ui.commonUi.LimitedTextField
 import com.example.recipebook.presentation.ui.commonUi.RecipeStepImage
 import com.example.recipebook.presentation.ui.commonUi.SecondaryText
@@ -72,11 +73,8 @@ fun RecipeStep(
             modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 32.dp, bottom = 16.dp)
         )
 
-        SecondaryText(
+        HeadingMediumText(
             text = description,
-            style = MaterialTheme.typography.labelMedium.copy(
-                color = MaterialTheme.colorScheme.inversePrimary
-            ),
             modifier = Modifier.padding(horizontal = 24.dp)
         )
     }

@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.recipebook.R
@@ -80,7 +81,11 @@ fun CookingScreen(
                     expanded = uiState.isPagesMenuExpanded,
                     items = uiState.recipeSteps,
                     itemContent = { step ->
-                        Text(step.title)
+                        Text(
+                            text = step.title,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 1
+                        )
                     },
                     onItemClick = { step ->
                         viewModel.goToPage(step.index)

@@ -154,8 +154,6 @@ fun HeadingMediumText(
 fun TitleLargeText(text: String, modifier: Modifier) {
     Text(
         text = text,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
         style = MaterialTheme.typography.titleLarge.copy(
             fontWeight = FontWeight.Medium
         ),
