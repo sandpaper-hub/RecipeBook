@@ -1,5 +1,7 @@
 package com.example.recipebook.data.repository
 
+import com.example.recipebook.data.mapper.mapFailure
+import com.example.recipebook.data.mapper.toDataError
 import com.example.recipebook.data.util.ImageCompressorImpl
 import com.example.recipebook.domain.repository.ProfileRepository
 import com.example.recipebook.domain.model.profile.UserProfile
@@ -9,10 +11,9 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
-import kotlin.coroutines.resume
 
 class ProfileRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
@@ -70,23 +71,27 @@ class ProfileRepositoryImpl @Inject constructor(
         return ref.downloadUrl.await().toString()
     }
 
-    override suspend fun updateUserData(data: Map<String, Any?>): Result<Unit> {
+    override suspend fun updateUserData(userProfile: UserProfile): Result<Unit> {
+        val data = mapOf(
+            "fullName" to userProfile.fullName,
+            "nickName" to userProfile.nickName,
+            "region" to userProfile.region,
+            "dataOfBirth" to userProfile.dateOfBirth,
+            "gender" to userProfile.gender,
+            "photoUrl" to userProfile.photoUrl
+        )
         val uid = getCurrentUserUidOrNull()
             ?: return Result.failure(Exception("User isn't authenticated"))
-        return suspendCancellableCoroutine { continuation ->
-            firestore.collection("users")
-                .document(uid)
-                .update(data)
-                .addOnSuccessListener {
-                    if (continuation.isActive) {
-                        continuation.resume(Result.success(Unit))
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    if (continuation.isActive) {
-                        continuation.resume(Result.failure(exception))
-                    }
-                }
+        return runCatching {
+            withTimeout(10000L) {
+                firestore.collection("users")
+                    .document(uid)
+                    .update(data)
+                    .await()
+                Unit
+            }
+        }.mapFailure {
+            it.toDataError()
         }
     }
 

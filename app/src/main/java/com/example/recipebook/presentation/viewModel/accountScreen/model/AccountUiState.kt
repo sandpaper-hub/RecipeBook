@@ -8,7 +8,7 @@ data class AccountUiState(
     val nickName: FormField<String> = FormField(""),
     val region: String = "",
     val regionLocales: List<String> = listOf(),
-    val dateOfBirth: Long? = null,
+    val dateOfBirth: Long = 0,
     val profileImageSource: ImageSource = ImageSource.None,
     val showDatePicker: Boolean = false,
     val showRegionMenu: Boolean = false,

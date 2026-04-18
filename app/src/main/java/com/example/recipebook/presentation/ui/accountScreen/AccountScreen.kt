@@ -68,6 +68,14 @@ fun AccountScreen(
                         R.string.no_specific_symbols_error
                     )
                 )
+
+                AccountUiEvent.ServerNotAvailable -> snackBarController.showMessage(
+                    resources.getString(R.string.server_not_available)
+                )
+
+                AccountUiEvent.UnknownError -> snackBarController.showMessage(
+                    resources.getString(R.string.unknown_error)
+                )
             }
         }
     }
@@ -126,6 +134,7 @@ fun AccountScreen(
                         R.string.max_symbols_limit,
                         Constraints.MAX_NICKNAME_LENGTH
                     )
+
                     is ValidationError.MinSymbolLimit -> stringResource(
                         R.string.min_symbols_limit, Constraints.MIN_NICKNAME_LENGTH
                     )
@@ -160,7 +169,7 @@ fun AccountScreen(
 
             SingleActionTextBox(
                 title = stringResource(R.string.date_of_birth),
-                value = uiState.dateOfBirth?.toFormatedDate() ?: "",
+                value = uiState.dateOfBirth.toFormatedDate(),
                 hint = stringResource(R.string.date_of_birth_hint),
                 errorText = null,
                 contentDescription = stringResource(R.string.date_of_birth),

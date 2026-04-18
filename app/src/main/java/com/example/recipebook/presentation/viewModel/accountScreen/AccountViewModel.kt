@@ -1,10 +1,12 @@
 package com.example.recipebook.presentation.viewModel.accountScreen
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.Constraints
 import com.example.recipebook.domain.interactor.profile.updateProfile.UpdateUserDataInteractor
+import com.example.recipebook.domain.model.error.dataError.DataError
 import com.example.recipebook.domain.service.validation.DataValidator
 import com.example.recipebook.domain.model.error.validation.ValidationError
 import com.example.recipebook.domain.useCase.userProfile.getLocales.GetLocalesUseCase
@@ -146,7 +148,7 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun selectConfirmedDate(value: Long?) {
+    fun selectConfirmedDate(value: Long) {
         _uiState.update {
             it.copy(
                 dateOfBirth = value,
@@ -174,32 +176,26 @@ class AccountViewModel @Inject constructor(
                 it.copy(isSaving = true)
             }
 
-            val result = updateUserDataInteractor.invoke(
-                data = mapOf(
-                    "fullName" to uiState.value.fullName,
-                    "nickName" to uiState.value.nickName,
-                    "region" to uiState.value.region,
-                    "dateOfBirth" to uiState.value.dateOfBirth,
-                    "gender" to uiState.value.gender
-                ),
-                imageSource = _uiState.value.profileImageSource.toDomain()
+            updateUserDataInteractor.invoke(
+                image = validatedState.profileImageSource.toDomain(),
+                fullName = validatedState.fullName.value,
+                nickName = validatedState.nickName.value,
+                region = validatedState.region,
+                dateOdBirth = validatedState.dateOfBirth,
+                gender = validatedState.gender
             )
-            delay(2000)
-            _uiState.update {
-                if (result.isSuccess) {
-                    it.copy(
-                        errorMessage = result.exceptionOrNull()?.message
-                    )
-                } else {
-                    it.copy(
-                        isSaving = false,
-                        errorMessage = result.exceptionOrNull()?.message
+                .onSuccess {
+                    onBack()
+                }
+                .onFailure { exception ->
+                    _uiState.update {
+                        it.copy(isSaving = false)
+                    }
+                    _uiEvents.emit(
+                        if (exception is DataError.Unavailable) AccountUiEvent.ServerNotAvailable
+                        else AccountUiEvent.UnknownError
                     )
                 }
-            }
-            if (result.isSuccess) {
-                onBack()
-            }
         }
     }
 

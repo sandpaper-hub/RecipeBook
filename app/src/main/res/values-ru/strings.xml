@@ -162,4 +162,5 @@
     <string name="maxStepsCountMessage" translatable="true">Не более %d шагов готовки</string>
     <string name="network_error" translatable="true">Ошибка сети</string>
     <string name="no_specific_symbols_error" translatable="true">Можно использовать только буквы, цифры, символы подчеркивания и точки</string>
+    <string name="server_not_available" translatable="true">Сервер не отвечает</string>
 </resources>

@@ -7,6 +7,6 @@ interface ProfileRepository {
 
     fun observeUserProfile(): Flow<UserProfile>
     suspend fun uploadUserAvatar(imageSource: String): String
-    suspend fun updateUserData(data: Map<String, Any?>): Result<Unit>
+    suspend fun updateUserData(userProfile: UserProfile): Result<Unit>
     fun currentUserUidFlow(): Flow<String?>
 }

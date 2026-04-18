@@ -162,4 +162,5 @@
     <string name="maxStepsCountMessage" translatable="true">No more than %d steps</string>
     <string name="network_error" translatable="true">Network error</string>
     <string name="no_specific_symbols_error" translatable="true">You can only use letters, numbers, underscores, and dots</string>
+    <string name="server_not_available" translatable="true">Server not responding</string>
 </resources>
