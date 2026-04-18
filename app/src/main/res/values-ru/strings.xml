@@ -147,7 +147,8 @@
     <string name="edit_description">Редактировать описание</string>
     <!-- ok_button isn't translatabl-->
     <string name="recipe_step_description">Описание шага рецепта</string>
-    <string name="symbols_limit">Максимум %d символов</string>
+    <string name="max_symbols_limit">Максимум %d символов</string>
+    <string name="min_symbols_limit" translatable="true">Минимум %d символов</string>
     <string name="collection_description">Описание коллекции</string>
     <string name="step_title_hint">Заголовок</string>
     <string name="time_estimation_hours" translatable="true"> ч</string>

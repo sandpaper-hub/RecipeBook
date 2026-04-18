@@ -1,6 +1,6 @@
 package com.example.recipebook.presentation.validator
 
-import com.example.recipebook.domain.interactor.validation.DataValidator
+import com.example.recipebook.domain.service.validation.DataValidator
 import com.example.recipebook.domain.model.error.validation.ValidationError
 import com.example.recipebook.presentation.ui.createRecipeScreen.model.MeasureMenuItem
 import com.example.recipebook.presentation.viewModel.createRecipeScreen.model.RecipeFormUiState
@@ -16,7 +16,7 @@ class RecipeValidator @Inject constructor(
 
         val nameError = dataValidator.validateIsEmpty(state.recipeName.value)
         when {
-            state.recipeName.error is ValidationError.SymbolLimit -> isValid = false
+            state.recipeName.error is ValidationError.MaxSymbolLimit -> isValid = false
             nameError is ValidationError.Empty -> {
                 validatedState = validatedState.copy(
                     recipeName = validatedState.recipeName.copy(error = nameError)
@@ -27,7 +27,7 @@ class RecipeValidator @Inject constructor(
 
         val descriptionError = dataValidator.validateIsEmpty(state.description.value)
         when {
-            state.description.error is ValidationError.SymbolLimit -> isValid = false
+            state.description.error is ValidationError.MaxSymbolLimit -> isValid = false
             descriptionError is ValidationError.Empty -> {
                 validatedState = validatedState.copy(
                     description = validatedState.description.copy(error = descriptionError)

@@ -103,8 +103,8 @@ fun AccountScreen(
                 onClearText = { viewModel.onNameChanged("") },
                 errorText = when (uiState.fullName.error) {
                     is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
-                    is ValidationError.SymbolLimit -> stringResource(
-                        R.string.symbols_limit,
+                    is ValidationError.MaxSymbolLimit -> stringResource(
+                        R.string.max_symbols_limit,
                         Constraints.MAX_FULL_NAME_LENGTH
                     )
 
@@ -122,9 +122,12 @@ fun AccountScreen(
                 onClearText = { viewModel.onNickNameChanged("") },
                 errorText = when (uiState.nickName.error) {
                     is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
-                    is ValidationError.SymbolLimit -> stringResource(
-                        R.string.symbols_limit,
+                    is ValidationError.MaxSymbolLimit -> stringResource(
+                        R.string.max_symbols_limit,
                         Constraints.MAX_NICKNAME_LENGTH
+                    )
+                    is ValidationError.MinSymbolLimit -> stringResource(
+                        R.string.min_symbols_limit, Constraints.MIN_NICKNAME_LENGTH
                     )
 
                     else -> null

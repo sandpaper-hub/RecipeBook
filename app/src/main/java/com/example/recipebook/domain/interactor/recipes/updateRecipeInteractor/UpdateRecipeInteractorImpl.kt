@@ -7,7 +7,7 @@ import com.example.recipebook.domain.model.recipe.getRecipe.FullRecipe
 import com.example.recipebook.domain.model.recipe.step.EditStep
 import com.example.recipebook.domain.model.ImageSourceType
 import com.example.recipebook.domain.model.recipe.createRecipe.NewTimeEstimation
-import com.example.recipebook.domain.service.StepImageProcessor
+import com.example.recipebook.domain.service.imageProcessor.StepImageProcessor
 import com.example.recipebook.domain.useCase.recipe.GetRecipeCoverUrlUseCase
 import com.example.recipebook.domain.useCase.recipe.UpdateRecipeUseCase
 import com.example.recipebook.domain.useCase.recipe.deleteRecipeImage.DeleteRecipeImageUseCase

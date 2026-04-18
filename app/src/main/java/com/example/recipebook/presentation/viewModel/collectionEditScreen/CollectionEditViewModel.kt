@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.Constraints
 import com.example.recipebook.domain.interactor.collection.updateCollectionInteractor.UpdateCollectionInteractor
-import com.example.recipebook.domain.interactor.validation.DataValidator
+import com.example.recipebook.domain.service.validation.DataValidator
 import com.example.recipebook.domain.model.collection.UserCollectionEdit
 import com.example.recipebook.domain.useCase.collection.getUserCollectionUseCase.GetUserCollectionUseCaseImpl
 import com.example.recipebook.navigation.mainHomeGraph.collectionDetailGraph.CollectionDetailDestination

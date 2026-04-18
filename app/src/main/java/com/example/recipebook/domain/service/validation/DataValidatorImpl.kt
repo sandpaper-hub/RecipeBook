@@ -1,4 +1,4 @@
-package com.example.recipebook.domain.interactor.validation
+package com.example.recipebook.domain.service.validation
 
 import com.example.recipebook.domain.model.error.validation.ValidationError
 import javax.inject.Inject
@@ -6,9 +6,22 @@ import javax.inject.Inject
 class DataValidatorImpl @Inject constructor() : DataValidator {
     override fun validateStringLength(value: String, lengthLimit: Int): ValidationError {
         return if (value.length > lengthLimit) {
-            ValidationError.SymbolLimit
+            ValidationError.MaxSymbolLimit
         } else {
             ValidationError.None
+        }
+    }
+
+    override fun validateStringLength(
+        value: String,
+        maxLength: Int,
+        minLength: Int
+    ): ValidationError {
+        return when{
+            value.isBlank() -> ValidationError.Empty
+            value.length > maxLength -> ValidationError.MaxSymbolLimit
+            value.length < minLength -> ValidationError.MinSymbolLimit
+            else -> ValidationError.None
         }
     }
 

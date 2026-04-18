@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.Constraints
 import com.example.recipebook.domain.interactor.recipes.fullRecipeInteractor.FullRecipeInteractor
 import com.example.recipebook.domain.interactor.recipes.updateRecipeInteractor.UpdateRecipeInteractor
-import com.example.recipebook.domain.interactor.validation.DataValidator
+import com.example.recipebook.domain.service.validation.DataValidator
 import com.example.recipebook.domain.model.error.validation.ValidationError
 import com.example.recipebook.domain.model.recipe.createRecipe.NewTimeEstimation
 import com.example.recipebook.domain.model.recipe.getRecipe.FullRecipe

@@ -5,11 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.Constraints
 import com.example.recipebook.domain.interactor.profile.updateProfile.UpdateUserDataInteractor
-import com.example.recipebook.domain.interactor.validation.DataValidator
+import com.example.recipebook.domain.service.validation.DataValidator
 import com.example.recipebook.domain.model.error.validation.ValidationError
 import com.example.recipebook.domain.useCase.userProfile.getLocales.GetLocalesUseCase
 import com.example.recipebook.domain.useCase.userProfile.observeUserProfile.ObserveUserProfileUseCase
 import com.example.recipebook.presentation.util.toDomain
+import com.example.recipebook.presentation.validator.AccountValidator
 import com.example.recipebook.presentation.viewModel.accountScreen.model.AccountUiEvent
 import com.example.recipebook.presentation.viewModel.accountScreen.model.AccountUiState
 import com.example.recipebook.presentation.viewModel.model.FormField
@@ -30,7 +31,8 @@ class AccountViewModel @Inject constructor(
     private val observeUserProfileUseCase: ObserveUserProfileUseCase,
     private val getLocalesUseCase: GetLocalesUseCase,
     private val updateUserDataInteractor: UpdateUserDataInteractor,
-    private val dataValidator: DataValidator
+    private val dataValidator: DataValidator,
+    private val accountValidator: AccountValidator
 ) : ViewModel() {
 
     private val _uiEvents = MutableSharedFlow<AccountUiEvent>()
@@ -159,7 +161,14 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun onSaveClick() {//TODO
+    fun onSaveClick() {
+        val (validatedState, isValid) = accountValidator.validateAll(
+            state = _uiState.value
+        )
+        _uiState.update { validatedState }
+
+        if (!isValid) return
+
         viewModelScope.launch {
             _uiState.update {
                 it.copy(isSaving = true)
