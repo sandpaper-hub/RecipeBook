@@ -32,6 +32,15 @@ class DataValidatorImpl @Inject constructor() : DataValidator {
         return objectsList.size < countLimit
     }
 
+    override fun validateNickName(value: String, lengthLimit: Int): ValidationError {
+        val allowedRegex = Regex("^[A-Za-z0-9._]*$")
+        return if (allowedRegex.matches(value)){
+            validateStringLength(value, lengthLimit)
+        } else{
+            ValidationError.NoSpecificSymbol
+        }
+    }
+
     override fun validateIngredient(
         value: String,
         amount: String,

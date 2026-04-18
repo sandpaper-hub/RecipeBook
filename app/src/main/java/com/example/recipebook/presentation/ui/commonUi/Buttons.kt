@@ -114,10 +114,9 @@ fun CustomCircleIconButton(
     painter: Painter,
     contentDescription: String,
     onClick: () -> Unit,
-    modifier: Modifier
 ) {
     Box(
-        modifier = modifier
+        modifier = Modifier
             .size(size = size)
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.primary)

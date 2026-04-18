@@ -29,7 +29,7 @@ import com.example.recipebook.theme.DarkModeBodyColor
 @Composable
 @Suppress("FunctionName")
 fun ProfileAvatar(
-    imageUrl: Any?,
+    imageUrl: String?,
     contentDescription: String,
     size: Dp,
     modifier: Modifier
@@ -46,6 +46,28 @@ fun ProfileAvatar(
             placeholder = painterResource(R.drawable.profile_image),
             contentDescription = contentDescription,
             contentScale = ContentScale.Crop
+        )
+    }
+}
+
+@Composable
+fun EditProfileAvatar(
+    imageUrl: String?,
+    onClick: () -> Unit
+) {
+    Box(contentAlignment = Alignment.BottomEnd) {
+        ProfileAvatar(
+            imageUrl = imageUrl,
+            contentDescription = stringResource(R.string.profile_image),
+            size = 120.dp,
+            modifier = Modifier
+        )
+
+        CustomCircleIconButton(
+            size = 35.dp,
+            painter = painterResource(R.drawable.edit_icon),
+            contentDescription = stringResource(R.string.edit_profile),
+            onClick = onClick
         )
     }
 }

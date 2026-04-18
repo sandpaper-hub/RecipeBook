@@ -101,7 +101,7 @@ fun MainBottomNavigationBar(navController: NavController) {
 
 @Composable
 @Suppress("FunctionName")
-fun TopBarBackNavigation(
+fun TopBarMoreAction(
     onBackClick: () -> Unit,
     onMenuClick: () -> Unit,
     content: @Composable () -> Unit
@@ -134,5 +134,35 @@ fun TopBarBackNavigation(
         }
 
         Spacer(modifier = Modifier.width(24.dp))
+    }
+}
+
+@Composable
+fun TopBarTitle(
+    onBackClick: () -> Unit,
+    title: String
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(58.dp)
+    ) {
+        Box(
+            modifier = Modifier.weight(1f),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            ClickableIcon(
+                painter = painterResource(R.drawable.back_arrow_icon),
+                contentDescription = stringResource(R.string.back_button),
+                onClick = onBackClick
+            )
+        }
+
+        HeadingMediumText(
+            text = title
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
     }
 }

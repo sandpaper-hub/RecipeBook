@@ -21,7 +21,7 @@ import com.example.recipebook.domain.model.recipe.getRecipe.RecipeCategory
 import com.example.recipebook.presentation.ui.collectionDetailScreen.model.MenuItem
 import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.ui.commonUi.DeleteDialog
-import com.example.recipebook.presentation.ui.commonUi.TopBarBackNavigation
+import com.example.recipebook.presentation.ui.commonUi.TopBarMoreAction
 import com.example.recipebook.presentation.ui.commonUi.collection.CollectionBannerBox
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeCardList
 import com.example.recipebook.presentation.util.toUpdatedAgoText
@@ -53,7 +53,7 @@ fun CollectionDetailScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        TopBarBackNavigation(
+        TopBarMoreAction(
             onBackClick = { viewModel.onBack() },
             onMenuClick = { viewModel.expandMenu(true) }
         ) {

@@ -3,12 +3,16 @@ package com.example.recipebook.presentation.viewModel.accountScreen
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipebook.domain.Constraints
 import com.example.recipebook.domain.interactor.profile.updateProfile.UpdateUserDataInteractor
+import com.example.recipebook.domain.interactor.validation.DataValidator
+import com.example.recipebook.domain.model.error.validation.ValidationError
 import com.example.recipebook.domain.useCase.userProfile.getLocales.GetLocalesUseCase
 import com.example.recipebook.domain.useCase.userProfile.observeUserProfile.ObserveUserProfileUseCase
 import com.example.recipebook.presentation.util.toDomain
 import com.example.recipebook.presentation.viewModel.accountScreen.model.AccountUiEvent
 import com.example.recipebook.presentation.viewModel.accountScreen.model.AccountUiState
+import com.example.recipebook.presentation.viewModel.model.FormField
 import com.example.recipebook.presentation.viewModel.model.ImageSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -25,7 +29,8 @@ import javax.inject.Inject
 class AccountViewModel @Inject constructor(
     private val observeUserProfileUseCase: ObserveUserProfileUseCase,
     private val getLocalesUseCase: GetLocalesUseCase,
-    private val updateUserDataInteractor: UpdateUserDataInteractor
+    private val updateUserDataInteractor: UpdateUserDataInteractor,
+    private val dataValidator: DataValidator
 ) : ViewModel() {
 
     private val _uiEvents = MutableSharedFlow<AccountUiEvent>()
@@ -38,8 +43,6 @@ class AccountViewModel @Inject constructor(
         initRegionLocales()
     }
 
-    val allowedRegex = Regex("^[A-Za-z0-9._]*$")
-
     private fun observeUserProfile() {
         viewModelScope.launch {
             observeUserProfileUseCase.execute()
@@ -51,8 +54,8 @@ class AccountViewModel @Inject constructor(
                 .collect { userProfile ->
                     _uiState.update {
                         it.copy(
-                            fullName = userProfile.fullName,
-                            nickName = userProfile.nickName,
+                            fullName = FormField(userProfile.fullName),
+                            nickName = FormField(userProfile.nickName),
                             region = userProfile.region,
                             profileImageSource = if (userProfile.photoUrl == null) {
                                 ImageSource.None
@@ -86,17 +89,36 @@ class AccountViewModel @Inject constructor(
     }
 
     fun onNameChanged(newName: String) {
+        val error = dataValidator.validateStringLength(
+            value = newName,
+            lengthLimit = 100
+        )
         _uiState.update {
-            it.copy(fullName = newName)
+            it.copy(
+                fullName = it.fullName.copy(
+                    value = newName,
+                    error = error
+                )
+            )
         }
     }
 
     fun onNickNameChanged(newValue: String) {
-        _uiState.update {
-            if (allowedRegex.matches(newValue)) {
-                it.copy(nickName = newValue)
-            } else {
-                it.copy(errorMessage = "No specific symbols")
+        val error = dataValidator.validateNickName(newValue, Constraints.MAX_NICKNAME_LENGTH)
+        if (error is ValidationError.NoSpecificSymbol) {
+            viewModelScope.launch {
+                _uiEvents.emit(
+                    AccountUiEvent.NoSpecificSymbol
+                )
+            }
+        } else {
+            _uiState.update {
+                it.copy(
+                    nickName = it.nickName.copy(
+                        value = newValue,
+                        error = error
+                    )
+                )
             }
         }
     }
@@ -137,7 +159,7 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun onSaveClick() {
+    fun onSaveClick() {//TODO
         viewModelScope.launch {
             _uiState.update {
                 it.copy(isSaving = true)
