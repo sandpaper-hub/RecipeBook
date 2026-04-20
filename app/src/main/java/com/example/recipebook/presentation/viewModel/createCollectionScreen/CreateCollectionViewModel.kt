@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipebook.domain.Constraints
 import com.example.recipebook.domain.interactor.collection.createCollectionInteractor.CreateCollectionInteractor
-import com.example.recipebook.domain.interactor.validation.DataValidator
+import com.example.recipebook.domain.service.validation.DataValidator
 import com.example.recipebook.presentation.util.toDomain
 import com.example.recipebook.presentation.validator.CollectionValidator
 import com.example.recipebook.presentation.viewModel.createCollectionScreen.model.CreateCollectionEvent

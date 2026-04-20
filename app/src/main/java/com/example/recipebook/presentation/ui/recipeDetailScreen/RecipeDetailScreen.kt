@@ -32,7 +32,7 @@ import com.example.recipebook.presentation.ui.commonUi.DeleteDialog
 import com.example.recipebook.presentation.ui.commonUi.ImageBanner
 import com.example.recipebook.presentation.ui.commonUi.SquareRoundedButton
 import com.example.recipebook.presentation.ui.commonUi.TitleLargeText
-import com.example.recipebook.presentation.ui.commonUi.TopBarBackNavigation
+import com.example.recipebook.presentation.ui.commonUi.TopBarMoreAction
 import com.example.recipebook.presentation.ui.commonUi.AppDropdownMenu
 import com.example.recipebook.presentation.ui.commonUi.IngredientTextBox
 import com.example.recipebook.presentation.ui.commonUi.recipe.RecipeDescription
@@ -70,7 +70,7 @@ fun RecipeDetailScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        TopBarBackNavigation(
+        TopBarMoreAction(
             onBackClick = { viewModel.goBack() },
             onMenuClick = { viewModel.showDropdownMenu(true) }
         ) {

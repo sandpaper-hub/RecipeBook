@@ -6,8 +6,6 @@ data class UserProfile(
     val email: String = "",
     val nickName: String = "",
     val photoUrl: String? = null,
-    val createdAt: Long = 0L,
-    val lastLoginAt: Long = 0L,
     val region: String = "",
     val dateOfBirth: Long = 0L,
     val gender: String = ""

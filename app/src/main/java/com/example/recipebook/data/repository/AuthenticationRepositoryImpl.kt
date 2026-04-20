@@ -71,8 +71,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
                     "fullName" to userProfile.fullName,
                     "email" to userProfile.email,
                     "nickName" to userProfile.nickName,
-                    "photoUrl" to userProfile.photoUrl,
-                    "createdAt" to userProfile.createdAt
+                    "photoUrl" to userProfile.photoUrl
                 )
                 docRef.set(data).await()
             }

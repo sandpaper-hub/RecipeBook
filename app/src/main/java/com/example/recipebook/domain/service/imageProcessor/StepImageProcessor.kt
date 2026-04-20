@@ -1,9 +1,9 @@
-package com.example.recipebook.domain.service
+package com.example.recipebook.domain.service.imageProcessor
 
-import com.example.recipebook.domain.model.recipe.step.EditStep
 import com.example.recipebook.domain.model.ImageSourceType
-import com.example.recipebook.domain.useCase.recipe.GetStepImageUrlUseCase
+import com.example.recipebook.domain.model.recipe.step.EditStep
 import com.example.recipebook.domain.useCase.recipe.DeleteStepImageUseCase
+import com.example.recipebook.domain.useCase.recipe.GetStepImageUrlUseCase
 import javax.inject.Inject
 
 class StepImageProcessor @Inject constructor(

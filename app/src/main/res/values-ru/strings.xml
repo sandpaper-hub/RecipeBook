@@ -147,7 +147,8 @@
     <string name="edit_description">Редактировать описание</string>
     <!-- ok_button isn't translatabl-->
     <string name="recipe_step_description">Описание шага рецепта</string>
-    <string name="symbols_limit">Максимум %d символов</string>
+    <string name="max_symbols_limit">Максимум %d символов</string>
+    <string name="min_symbols_limit" translatable="true">Минимум %d символов</string>
     <string name="collection_description">Описание коллекции</string>
     <string name="step_title_hint">Заголовок</string>
     <string name="time_estimation_hours" translatable="true"> ч</string>
@@ -160,4 +161,6 @@
     <string name="minStepsCountMessage" translatable="true">Должен быть хотя бы один шаг готовки</string>
     <string name="maxStepsCountMessage" translatable="true">Не более %d шагов готовки</string>
     <string name="network_error" translatable="true">Ошибка сети</string>
+    <string name="no_specific_symbols_error" translatable="true">Можно использовать только буквы, цифры, символы подчеркивания и точки</string>
+    <string name="server_not_available" translatable="true">Сервер не отвечает</string>
 </resources>

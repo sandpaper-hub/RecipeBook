@@ -139,7 +139,7 @@ fun CreateCollectionScreen(
                 textHint = stringResource(R.string.collection_hint),
                 errorText = when (uiState.name.error) {
                     is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
-                    is ValidationError.SymbolLimit -> stringResource(
+                    is ValidationError.MaxSymbolLimit -> stringResource(
                         R.string.field_length_limit
                     )
 
@@ -153,8 +153,8 @@ fun CreateCollectionScreen(
                 value = uiState.description.value,
                 hint = stringResource(R.string.collection_description_hint),
                 errorText = when (uiState.description.error) {
-                    is ValidationError.SymbolLimit -> stringResource(
-                        R.string.symbols_limit, Constraints.MAX_DESCRIPTION_LENGTH
+                    is ValidationError.MaxSymbolLimit -> stringResource(
+                        R.string.max_symbols_limit, Constraints.MAX_DESCRIPTION_LENGTH
                     )
 
                     else -> null

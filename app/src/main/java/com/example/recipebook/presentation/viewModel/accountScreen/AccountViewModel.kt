@@ -3,15 +3,20 @@ package com.example.recipebook.presentation.viewModel.accountScreen
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipebook.domain.Constraints
 import com.example.recipebook.domain.interactor.profile.updateProfile.UpdateUserDataInteractor
+import com.example.recipebook.domain.model.error.dataError.DataError
+import com.example.recipebook.domain.service.validation.DataValidator
+import com.example.recipebook.domain.model.error.validation.ValidationError
 import com.example.recipebook.domain.useCase.userProfile.getLocales.GetLocalesUseCase
 import com.example.recipebook.domain.useCase.userProfile.observeUserProfile.ObserveUserProfileUseCase
 import com.example.recipebook.presentation.util.toDomain
+import com.example.recipebook.presentation.validator.AccountValidator
 import com.example.recipebook.presentation.viewModel.accountScreen.model.AccountUiEvent
 import com.example.recipebook.presentation.viewModel.accountScreen.model.AccountUiState
+import com.example.recipebook.presentation.viewModel.model.FormField
 import com.example.recipebook.presentation.viewModel.model.ImageSource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -25,7 +30,9 @@ import javax.inject.Inject
 class AccountViewModel @Inject constructor(
     private val observeUserProfileUseCase: ObserveUserProfileUseCase,
     private val getLocalesUseCase: GetLocalesUseCase,
-    private val updateUserDataInteractor: UpdateUserDataInteractor
+    private val updateUserDataInteractor: UpdateUserDataInteractor,
+    private val dataValidator: DataValidator,
+    private val accountValidator: AccountValidator
 ) : ViewModel() {
 
     private val _uiEvents = MutableSharedFlow<AccountUiEvent>()
@@ -38,8 +45,6 @@ class AccountViewModel @Inject constructor(
         initRegionLocales()
     }
 
-    val allowedRegex = Regex("^[A-Za-z0-9._]*$")
-
     private fun observeUserProfile() {
         viewModelScope.launch {
             observeUserProfileUseCase.execute()
@@ -51,8 +56,8 @@ class AccountViewModel @Inject constructor(
                 .collect { userProfile ->
                     _uiState.update {
                         it.copy(
-                            fullName = userProfile.fullName,
-                            nickName = userProfile.nickName,
+                            fullName = FormField(userProfile.fullName),
+                            nickName = FormField(userProfile.nickName),
                             region = userProfile.region,
                             profileImageSource = if (userProfile.photoUrl == null) {
                                 ImageSource.None
@@ -86,17 +91,36 @@ class AccountViewModel @Inject constructor(
     }
 
     fun onNameChanged(newName: String) {
+        val error = dataValidator.validateStringLength(
+            value = newName,
+            lengthLimit = 100
+        )
         _uiState.update {
-            it.copy(fullName = newName)
+            it.copy(
+                fullName = it.fullName.copy(
+                    value = newName,
+                    error = error
+                )
+            )
         }
     }
 
     fun onNickNameChanged(newValue: String) {
-        _uiState.update {
-            if (allowedRegex.matches(newValue)) {
-                it.copy(nickName = newValue)
-            } else {
-                it.copy(errorMessage = "No specific symbols")
+        val error = dataValidator.validateNickName(newValue, Constraints.MAX_NICKNAME_LENGTH)
+        if (error is ValidationError.NoSpecificSymbol) {
+            viewModelScope.launch {
+                _uiEvents.emit(
+                    AccountUiEvent.NoSpecificSymbol
+                )
+            }
+        } else {
+            _uiState.update {
+                it.copy(
+                    nickName = it.nickName.copy(
+                        value = newValue,
+                        error = error
+                    )
+                )
             }
         }
     }
@@ -122,7 +146,7 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun selectConfirmedDate(value: Long?) {
+    fun selectConfirmedDate(value: Long) {
         _uiState.update {
             it.copy(
                 dateOfBirth = value,
@@ -138,37 +162,38 @@ class AccountViewModel @Inject constructor(
     }
 
     fun onSaveClick() {
+        val (validatedState, isValid) = accountValidator.validateAll(
+            state = _uiState.value
+        )
+        _uiState.update { validatedState }
+
+        if (!isValid) return
+
         viewModelScope.launch {
             _uiState.update {
                 it.copy(isSaving = true)
             }
 
-            val result = updateUserDataInteractor.invoke(
-                data = mapOf(
-                    "fullName" to uiState.value.fullName,
-                    "nickName" to uiState.value.nickName,
-                    "region" to uiState.value.region,
-                    "dateOfBirth" to uiState.value.dateOfBirth,
-                    "gender" to uiState.value.gender
-                ),
-                imageSource = _uiState.value.profileImageSource.toDomain()
+            updateUserDataInteractor.invoke(
+                image = validatedState.profileImageSource.toDomain(),
+                fullName = validatedState.fullName.value,
+                nickName = validatedState.nickName.value,
+                region = validatedState.region,
+                dateOdBirth = validatedState.dateOfBirth,
+                gender = validatedState.gender
             )
-            delay(2000)
-            _uiState.update {
-                if (result.isSuccess) {
-                    it.copy(
-                        errorMessage = result.exceptionOrNull()?.message
-                    )
-                } else {
-                    it.copy(
-                        isSaving = false,
-                        errorMessage = result.exceptionOrNull()?.message
+                .onSuccess {
+                    onBack()
+                }
+                .onFailure { exception ->
+                    _uiState.update {
+                        it.copy(isSaving = false)
+                    }
+                    _uiEvents.emit(
+                        if (exception is DataError.Unavailable) AccountUiEvent.ServerNotAvailable
+                        else AccountUiEvent.UnknownError
                     )
                 }
-            }
-            if (result.isSuccess) {
-                onBack()
-            }
         }
     }
 

@@ -190,8 +190,8 @@ fun EditRecipeScreen(
                     textLengthLimit = Constraints.MAX_RECIPE_NAME_LENGTH,
                     textHint = stringResource(R.string.recipe_name_hint),
                     errorText = when (uiState.recipeName.error) {
-                        is ValidationError.SymbolLimit -> stringResource(
-                            R.string.symbols_limit,
+                        is ValidationError.MaxSymbolLimit -> stringResource(
+                            R.string.max_symbols_limit,
                             Constraints.MAX_RECIPE_NAME_LENGTH
                         )
 
@@ -208,8 +208,8 @@ fun EditRecipeScreen(
                     hint = stringResource(R.string.recipe_description_hint),
                     errorText = when (uiState.description.error) {
                         is ValidationError.Empty -> stringResource(R.string.field_cant_be_blank)
-                        is ValidationError.SymbolLimit -> stringResource(
-                            R.string.symbols_limit,
+                        is ValidationError.MaxSymbolLimit -> stringResource(
+                            R.string.max_symbols_limit,
                             Constraints.MAX_DESCRIPTION_LENGTH
                         )
 
@@ -264,8 +264,8 @@ fun EditRecipeScreen(
                             } else "",
                             hint = stringResource(R.string.add_ingredient),
                             errorText = when (ingredient.error) {
-                                is ValidationError.SymbolLimit -> stringResource(
-                                    R.string.symbols_limit,
+                                is ValidationError.MaxSymbolLimit -> stringResource(
+                                    R.string.max_symbols_limit,
                                     Constraints.MAX_INGREDIENT_LENGTH
                                 )
 
@@ -349,8 +349,8 @@ fun EditRecipeScreen(
                             titleValue = recipeStep.title.value,
                             titleLengthLimit = Constraints.MAX_STEP_TITLE_LENGTH,
                             titleErrorText = when (recipeStep.title.error) {
-                                is ValidationError.SymbolLimit -> stringResource(
-                                    R.string.symbols_limit,
+                                is ValidationError.MaxSymbolLimit -> stringResource(
+                                    R.string.max_symbols_limit,
                                     Constraints.MAX_STEP_TITLE_LENGTH
                                 )
 
@@ -359,8 +359,8 @@ fun EditRecipeScreen(
                             },
                             descriptionValue = recipeStep.description.value,
                             descriptionErrorText = when (recipeStep.description.error) {
-                                is ValidationError.SymbolLimit -> stringResource(
-                                    R.string.symbols_limit,
+                                is ValidationError.MaxSymbolLimit -> stringResource(
+                                    R.string.max_symbols_limit,
                                     Constraints.MAX_DESCRIPTION_LENGTH
                                 )
 

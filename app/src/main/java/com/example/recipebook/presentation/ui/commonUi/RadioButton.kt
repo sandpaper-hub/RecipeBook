@@ -2,7 +2,9 @@ package com.example.recipebook.presentation.ui.commonUi
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -17,8 +19,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.recipebook.R
 
 @Composable
 @Suppress("FunctionName")
@@ -28,48 +33,62 @@ fun SelectableButtonBox(
     onValueSelected: (String) -> Unit,
     modifier: Modifier
 ) {
-    Row(
-        modifier = modifier
-            .height(48.dp)
-            .selectableGroup()
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        values.forEachIndexed { index, gender ->
+        BodyMediumText(
+            text = stringResource(R.string.gender),
+            modifier = Modifier,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        )
 
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .selectable(
-                        selected = gender == selectedValue,
-                        onClick = { onValueSelected(gender) },
-                        role = Role.RadioButton
-                    )
-                    .border(
-                        width = 1.dp,
-                        color = if (gender == selectedValue) MaterialTheme.colorScheme.primary
-                        else Color.Unspecified,
-                        shape = RoundedCornerShape(15.dp)
-                    )
-                    .background(
-                        color = MaterialTheme.colorScheme.inverseSurface,
-                        shape = RoundedCornerShape(15.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = gender,
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        color = if (gender == selectedValue) {
-                            MaterialTheme.colorScheme.onPrimary
-                        } else {
-                            MaterialTheme.colorScheme.inversePrimary
-                        }
-                    ),
-                    modifier = Modifier.padding(vertical = 15.dp)
-                )
-            }
+        Row(
+            modifier = modifier
+                .height(48.dp)
+                .selectableGroup()
+        ) {
+            values.forEachIndexed { index, gender ->
 
-            if (index < values.size - 1) {
-                Spacer(modifier = Modifier.width(28.dp))
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .selectable(
+                            selected = gender == selectedValue,
+                            onClick = { onValueSelected(gender) },
+                            role = Role.RadioButton
+                        )
+                        .border(
+                            width = 1.dp,
+                            color = if (gender == selectedValue) MaterialTheme.colorScheme.primary
+                            else Color.Unspecified,
+                            shape = RoundedCornerShape(15.dp)
+                        )
+                        .background(
+                            color = MaterialTheme.colorScheme.inverseSurface,
+                            shape = RoundedCornerShape(15.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = gender,
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            color = if (gender == selectedValue) {
+                                MaterialTheme.colorScheme.onPrimary
+                            } else {
+                                MaterialTheme.colorScheme.inversePrimary
+                            }
+                        ),
+                        modifier = Modifier.padding(vertical = 15.dp)
+                    )
+                }
+
+                if (index < values.size - 1) {
+                    Spacer(modifier = Modifier.width(28.dp))
+                }
             }
         }
     }

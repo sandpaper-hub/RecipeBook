@@ -20,7 +20,7 @@ import java.time.ZoneId
 @Suppress("FunctionName")
 fun DatePickerDialog(
     isOpen: Boolean,
-    onConfirm: (Long?) -> Unit,
+    onConfirm: (Long) -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier
 ) {
@@ -54,7 +54,7 @@ fun DatePickerDialog(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onConfirm(datePickerState.selectedDateMillis)
+                        onConfirm(datePickerState.selectedDateMillis!!)
                     },
                     enabled = confirmEnabled.value
                 ) {

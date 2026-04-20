@@ -360,7 +360,7 @@ fun LimitedTextField(
                         innerTextField()
                     }
 
-                    Box {
+                    if (isFocused) {
                         SecondaryText(
                             text = "${value.length}/$textLengthLimit",
                             style = MaterialTheme.typography.labelMedium.copy(

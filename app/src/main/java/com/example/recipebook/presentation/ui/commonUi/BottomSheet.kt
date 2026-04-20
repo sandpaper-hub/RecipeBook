@@ -243,7 +243,7 @@ fun EditDescriptionBottomSheet(
                     bottom.linkTo(parent.bottom, margin = 12.dp)
                     start.linkTo(parent.start, margin = 24.dp)
                 },
-                text = stringResource(R.string.symbols_limit, textLimit),
+                text = stringResource(R.string.max_symbols_limit, textLimit),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = textLimitErrorColor
                 )
